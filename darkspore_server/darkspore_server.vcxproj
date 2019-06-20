@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>E:\DevFolder\C++ Libraries\pugixml\include;E:\DevFolder\C++ Libraries\rapidjson\include;E:\DevFolder\C++ Libraries\openssl-1.1.1b\include;E:\DevFolder\C++ Libraries\boost_1_70_0;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\DevFolder\C++ Libraries\pugixml\lib;E:\DevFolder\C++ Libraries\openssl-1.1.1b\lib;E:\DevFolder\C++ Libraries\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
+    <LibraryPath>libs\pugixml-1.9\lib;libs\openssl-1.1.1b\lib;libs\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,6 +90,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>libs\openssl-1.1.1b\include;libs\pugixml-1.9;libs\rapidjson-1.1.0\include;libs\boost_1_70_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,11 +121,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/experimental:newLambdaProcessor- %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
