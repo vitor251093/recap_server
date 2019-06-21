@@ -1,0 +1,108 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(992,5): warning MSB8027: Two or more files with the name of client.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are source\blaze\client.cpp, source\network\client.cpp.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(992,5): warning MSB8027: Two or more files with the name of server.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are source\blaze\server.cpp, source\http\server.cpp.
+  client.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  associationcomponent.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  authcomponent.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  gamemanagercomponent.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  redirectorcomponent.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  roomscomponent.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  usersessioncomponent.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  utilcomponent.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  server.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  tdf.cpp
+  databuffer.cpp
+  api.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(736,34): warning C4244:  '=': conversão de 'uint64_t' para 'uint32_t', possível perda de dados
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(896,69): warning C4244:  'argumento': conversão de 'uint64_t' para 'uint32_t', possível perda de dados
+  config.cpp
+  creature.cpp
+  squad.cpp
+  user.cpp
+  multipart.cpp
+  router.cpp
+  server.cpp
+  session.cpp
+  Gerando Código...
+  Compilando...
+  uri.cpp
+  main.cpp
+  client.cpp
+  tcptest.cpp
+  udptest.cpp
+  functions.cpp
+  Gerando Código...
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244:  'inicializando': conversão de 'uint64_t' para 'uint32_t', possível perda de dados
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\libs\boost_1_70_0\boost\utility\string_view.hpp(283) : error C4700: variável local não inicializada 'cur' usada
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+C:\Users\Isabela\source\repos\darkspore_server\darkspore_server\source\game\api.cpp(918,23): warning C4244: Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(429,5): error MSB6006: "CL.exe" foi encerrado com o código 2.

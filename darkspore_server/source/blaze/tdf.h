@@ -10,6 +10,7 @@
 #include "../databuffer.h"
 #include "types.h"
 #include <rapidjson/document.h>
+#include <memory>
 
 // Blaze
 namespace Blaze {
