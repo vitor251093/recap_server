@@ -1,0 +1,3 @@
+"libs\regex\build\..\src\cpp_regex_traits.cpp" -Fo"boost-build\boost\bin.v2\libs\regex\build\msvc-14.2\debug\address-model-64\link-static\threading-multi\cpp_regex_traits.obj"    -TP /Z7 /Od /Ob0 /W4 /GR /MDd /Zc:forScope /Zc:wchar_t /favor:blend /wd4675 /EHs -c 
+-DBOOST_ALL_NO_LIB=1 
+"-I."
