@@ -302,12 +302,16 @@ namespace Game {
 				game_status_getBroadcastList(session, response);
 			} else if (method == "api.inventory.getPartList") {
 				game_inventory_getPartList(session, response);
+			} else if (method == "api.inventory.getPartOfferList") {
+				game_inventory_getPartOfferList(session, response);
 			} else if (method == "api.account.auth") {
 				game_account_auth(session, response);
 			} else if (method == "api.account.getAccount") {
 				game_account_getAccount(session, response);
 			} else if (method == "api.account.logout") {
 				game_account_logout(session, response);
+			} else if (method == "api.account.unlock") {
+				game_account_unlock(session, response);
 			} else if (method == "api.game.getGame" || method == "api.game.getRandomGame") {
 				game_game_getGame(session, response);
 			} else if (method == "api.creature.resetCreature") {
@@ -323,6 +327,17 @@ namespace Game {
 				empty_xml_response(response);
 			}
 		});
+
+		/*
+Undefined /game/api method: api.deck.updateDecks
+method = api.deck.updateDecks
+pve_active_slot = 1
+pve_creatures = 10,11,3948469269,0,0,0,0,0,0
+pvp_active_slot = 28614456
+pvp_creatures = 0,0,0,0,0,0,0,0,0
+token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+version = 1
+		*/
 
 		// Png
 		router->add("/template_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -612,6 +627,7 @@ namespace Game {
 
 		auto docResponse = document.append_child("response");
 		if (auto parts = docResponse.append_child("parts")) {
+			/*
 			if (auto part = parts.append_child("part")) {
 				utils::xml_add_text_node(part, "is_flair", "0");
 				utils::xml_add_text_node(part, "cost", "1");
@@ -629,9 +645,47 @@ namespace Game {
 				utils::xml_add_text_node(part, "usage", "0");
 				utils::xml_add_text_node(part, "creation_date", "0");
 			}
+			*/
 		}
 
 		add_common_keys(docResponse);
+
+		xml_string_writer writer;
+		document.save(writer, "\t", 1U, pugi::encoding_latin1);
+
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = std::move(writer.result);
+	}
+
+	void API::game_inventory_getPartOfferList(HTTP::Session& session, HTTP::Response& response) {
+		pugi::xml_document document;
+
+		if (auto docResponse = document.append_child("response")) {
+			auto timestamp = utils::get_unix_time();
+
+			utils::xml_add_text_node(docResponse, "expires", timestamp + (3 * 60 * 60 * 1000));
+			if (auto parts = docResponse.append_child("parts")) {
+				if (auto part = parts.append_child("part")) {
+					utils::xml_add_text_node(part, "is_flair", "0");
+					utils::xml_add_text_node(part, "cost", "100");
+					utils::xml_add_text_node(part, "creature_id", static_cast<uint64_t>(CreatureID::BlitzAlpha));
+					utils::xml_add_text_node(part, "id", "1");
+					utils::xml_add_text_node(part, "level", "1");
+					utils::xml_add_text_node(part, "market_status", "1");
+					utils::xml_add_text_node(part, "prefix_asset_id", 0x010C);
+					utils::xml_add_text_node(part, "prefix_secondary_asset_id", "0");
+					utils::xml_add_text_node(part, "rarity", "1");
+					utils::xml_add_text_node(part, "reference_id", 1);
+					utils::xml_add_text_node(part, "rigblock_asset_id", 1); // 0xA14538E5
+					utils::xml_add_text_node(part, "status", "1");
+					utils::xml_add_text_node(part, "suffix_asset_id", 0x0005);
+					utils::xml_add_text_node(part, "usage", "1");
+					utils::xml_add_text_node(part, "creation_date", timestamp);
+				}
+			}
+			
+			add_common_keys(docResponse);
+		}
 
 		xml_string_writer writer;
 		document.save(writer, "\t", 1U, pugi::encoding_latin1);
@@ -775,7 +829,18 @@ namespace Game {
 			}
 
 			if (request.uri.parameter("include_server_tuning") == "true") {
-				docResponse.append_child("server_tuning");
+				if (auto server_tuning = docResponse.append_child("server_tuning")) {
+					auto timestamp = utils::get_unix_time();
+					utils::xml_add_text_node(server_tuning, "itemstore_offer_period", timestamp);
+					utils::xml_add_text_node(server_tuning, "itemstore_current_expiration", timestamp + (3 * 60 * 60 * 1000));
+					utils::xml_add_text_node(server_tuning, "itemstore_cost_multiplier_basic", 1);
+					utils::xml_add_text_node(server_tuning, "itemstore_cost_multiplier_uncommon", 1.1);
+					utils::xml_add_text_node(server_tuning, "itemstore_cost_multiplier_rare", 1.2);
+					utils::xml_add_text_node(server_tuning, "itemstore_cost_multiplier_epic", 1.3);
+					utils::xml_add_text_node(server_tuning, "itemstore_cost_multiplier_unique", 1.4);
+					utils::xml_add_text_node(server_tuning, "itemstore_cost_multiplier_rareunique", 1.5);
+					utils::xml_add_text_node(server_tuning, "itemstore_cost_multiplier_epicunique", 1.6);
+				}
 			}
 
 			if (request.uri.parameter("include_settings") == "true") {
@@ -838,6 +903,18 @@ namespace Game {
 		if (user) {
 			user->Logout();
 		}
+	}
+
+	void API::game_account_unlock(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+
+		const auto& user = session.get_user();
+		if (user) {
+			uint32_t unlockId = request.uri.parameteru("unlock_id");
+			user->UnlockUpgrade(unlockId);
+		}
+
+		game_account_getAccount(session, response);
 	}
 
 	void API::game_game_getGame(HTTP::Session& session, HTTP::Response& response) {
@@ -1009,6 +1086,24 @@ namespace Game {
 		response.body() = std::move(writer.result);
 		*/
 	}
+
+	/*
+/game/api?version=1&token=cookie
+cost = 0
+gear = 0.000
+id = 749013658
+large = iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAgAElEQVR4nOy9Z7Bl13WY+e1wwk0v
+large_crc = 692908162
+method = api.creature.updateCreature
+parts = 117957934
+points = 300.000
+stats = STR,14,0;DEX,13,0;MIND,23,0;HLTH,100,70;MANA,125,23;PDEF,50,78;EDEF,150,138;CRTR,50,52
+stats_ability_keyvalues = 885660025!minDamage,5;885660025!maxDamage,8;885660025!percentToHeal,20;1152331895!duration,20;1152331895!spawnMax,2;424126604!radius,8;424126604!healing,5;424126604!duration,6;424126604!minHealing,21;424126604!maxHealing,32;1577880566!Enrage.damage,9;1577880566!Enrage.duration,30;1577880566!Enrage.healing,35;1829107826!diameter,12;1829107826!damage,6;1829107826!duration,10;1829107826!speedDebuff,75
+thumb = iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAgAElEQVR4nGy8adRm11kduJ9zh3f6
+thumb_crc = 1921048798
+token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+version = 1
+	*/
 
 	void API::survey_survey_getSurveyList(HTTP::Session& session, HTTP::Response& response) {
 		pugi::xml_document document;

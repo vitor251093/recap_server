@@ -28,6 +28,7 @@ namespace Game {
 
 		level = utils::xml_get_text_node<uint32_t>(account, "level");
 		xp = utils::xml_get_text_node<uint32_t>(account, "xp");
+		dna = utils::xml_get_text_node<uint32_t>(account, "dna");
 		avatarId = std::clamp<uint32_t>(utils::xml_get_text_node<uint32_t>(account, "avatar_id"), 0, 16);
 		id = utils::xml_get_text_node<uint32_t>(account, "id");
 
@@ -66,6 +67,7 @@ namespace Game {
 			utils::xml_add_text_node(account, "avatar_id", avatarId);
 			utils::xml_add_text_node(account, "blaze_id", id);
 			utils::xml_add_text_node(account, "id", id);
+			utils::xml_add_text_node(account, "dna", dna);
 			utils::xml_add_text_node(account, "new_player_inventory", newPlayerInventory);
 			utils::xml_add_text_node(account, "new_player_progress", newPlayerProgress);
 			utils::xml_add_text_node(account, "cashout_bonus_time", cashoutBonusTime);
@@ -97,6 +99,14 @@ namespace Game {
 		Save();
 	}
 
+	bool User::UpdateState(uint32_t newState) {
+		if (mState != newState) {
+			mState = newState;
+			return true;
+		}
+		return false;
+	}
+
 	Creature* User::GetCreatureById(uint32_t id) {
 		Creature* creaturePtr = nullptr;
 		for (auto& creature : mCreatures) {
@@ -123,6 +133,34 @@ namespace Game {
 		if (mAccount.creatureRewards > 0) {
 			mCreatures.Add(templateId);
 			mAccount.creatureRewards--;
+		}
+	}
+
+	void User::UnlockUpgrade(uint32_t unlockId) {
+		switch (unlockId) {
+			case 1: // Catalysts
+				mAccount.unlockCatalysts++;
+				break;
+
+			case 8: // Stats
+			case 9:
+				mAccount.unlockStats++;
+				break;
+
+			case 36: // PVE Squads
+				mAccount.unlockPveDecks++;
+				break;
+
+			case 38: // PVP Squads
+				mAccount.unlockPvpDecks++;
+				break;
+
+			case 46: // Editor detail slots
+				mAccount.unlockEditorFlairSlots++;
+				break;
+
+			default:
+				break;
 		}
 	}
 

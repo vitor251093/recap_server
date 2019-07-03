@@ -210,7 +210,7 @@ namespace Blaze {
 			packet.PutInteger(&valuStruct, "IP", 0);
 			packet.PutInteger(&valuStruct, "PORT", port);
 		}
-		packet.PutInteger(nullptr, "TYPE", 1);
+		packet.PutInteger(nullptr, "TYPE", AddressInfoType::ExternalIp);
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);

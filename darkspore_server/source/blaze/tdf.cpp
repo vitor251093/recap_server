@@ -112,6 +112,7 @@ namespace Blaze {
 
 		// Parser
 		void Parse(DataBuffer& buffer, rapidjson::Document& document) {
+			// TODO: fix this memory leak, only after the game is playable however.
 			rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 			if (!document.IsObject()) {
 				document.SetObject();
@@ -352,6 +353,9 @@ namespace Blaze {
 			for (uint8_t i = 0; i < mapSize; i++) {
 				auto key = GetMapItem(static_cast<Type>(keyType));
 				auto value = GetMapItem(static_cast<Type>(valueType));
+				if (static_cast<Type>(keyType) == Type::Integer) {
+					key = rapidjson::Value(std::to_string(key.GetUint64()), allocator);
+				}
 				mapContent.AddMember(key, value, allocator);
 			}
 
@@ -574,7 +578,6 @@ namespace Blaze {
 						for (rapidjson::SizeType i = 0; i < content.Size(); ++i) {
 							WriteType(buffer, static_cast<Type>(listType), nullptr, content[i]);
 						}
-						buffer.write<uint8_t>(0x00);
 					} else {
 						for (uint8_t i = 0; i < contentLength; ++i) {
 							WriteType(buffer, static_cast<Type>(listType), nullptr, content[i]);

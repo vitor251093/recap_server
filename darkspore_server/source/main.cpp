@@ -33,19 +33,17 @@ Application& Application::GetApp() {
 }
 
 bool Application::OnInit() {
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, "C");
 
 	AllocConsole();
 	(void)freopen("CONOUT$", "w", stdout);
 	(void)freopen("CONOUT$", "w", stderr);
 	SetConsoleOutputCP(CP_UTF8);
 
-	// Game
-	if (!Game::Config::Load("config.xml")) {
-		std::cout << "Could not load config.xml" << std::endl;
-		return false;
-	}
+	// Config
+	Game::Config::Load("config.xml");
 
+	// Game
 	mGameAPI = std::make_unique<Game::API>("5.3.0.127");
 
 	// Blaze

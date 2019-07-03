@@ -48,7 +48,6 @@
 		0x46 = NotifyRoomHostTransfer
 		0x50 = NotifyRoomAttributesSet
 
-
 	Blaze fields
 		RoomReplicationContext
 			SEID = 0x38
@@ -102,6 +101,15 @@ namespace Blaze {
 
 	void RoomsComponent::NotifyRoomViewUpdated(Client* client, uint32_t viewId) {
 		TDF::Packet packet;
+		packet.PutString(nullptr, "DISP", "");
+		{
+			auto& gmetMap = packet.CreateMap(nullptr, "GMET", TDF::Type::String, TDF::Type::Struct);
+		} {
+			auto& metaMap = packet.CreateMap(nullptr, "META", TDF::Type::String, TDF::Type::Struct);
+		}
+		packet.PutInteger(nullptr, "MXRM", viewId);
+		packet.PutString(nullptr, "NAME", "Dalkon's Room");
+		packet.PutInteger(nullptr, "USRM", viewId);
 		packet.PutInteger(nullptr, "VWID", viewId);
 
 		DataBuffer outBuffer;
@@ -139,19 +147,174 @@ namespace Blaze {
 		client->notify(std::move(header), outBuffer);
 	}
 
+	void RoomsComponent::NotifyRoomViewRemoved(Client* client, uint32_t viewId) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "VWID", viewId);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x0C;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void RoomsComponent::NotifyRoomCategoryUpdated(Client* client) {
+
+	}
+
+	void RoomsComponent::NotifyRoomCategoryAdded(Client* client) {
+
+	}
+
+	void RoomsComponent::NotifyRoomCategoryRemoved(Client* client, uint32_t categoryId) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "CTID", categoryId);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x16;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void RoomsComponent::NotifyRoomUpdated(Client* client) {
+
+	}
+
+	void RoomsComponent::NotifyRoomAdded(Client* client) {
+
+	}
+
+	void RoomsComponent::NotifyRoomRemoved(Client* client, uint32_t roomId) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "RMID", roomId);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x20;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void RoomsComponent::NotifyRoomPopulationUpdated(Client* client) {
+		TDF::Packet packet;
+		{
+			auto& popaMap = packet.CreateMap(nullptr, "POPA", TDF::Type::String, TDF::Type::String);
+		} {
+			auto& popmMap = packet.CreateMap(nullptr, "POPM", TDF::Type::String, TDF::Type::String);
+		}
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x28;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void RoomsComponent::NotifyRoomMemberJoined(Client* client) {
+
+	}
+
+	void RoomsComponent::NotifyRoomMemberLeft(Client* client, uint32_t roomId, uint32_t memberId) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "MBID", memberId);
+		packet.PutInteger(nullptr, "RMID", roomId);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x33;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void RoomsComponent::NotifyRoomMemberUpdated(Client* client) {
+		
+	}
+
+	void RoomsComponent::NotifyRoomKick(Client* client, uint32_t roomId, uint32_t memberId) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "MBID", memberId);
+		packet.PutInteger(nullptr, "RMID", roomId);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x3C;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void RoomsComponent::NotifyRoomHostTransfer(Client* client, uint32_t roomId, uint32_t memberId) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "MBID", memberId);
+		packet.PutInteger(nullptr, "RMID", roomId);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x46;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void RoomsComponent::NotifyRoomAttributesSet(Client* client, uint32_t roomId) {
+		// TODO: add a map<string, string> for attributes
+		TDF::Packet packet;
+		{
+			auto& attrMap = packet.CreateMap(nullptr, "ATTR", TDF::Type::String, TDF::Type::String);
+		}
+		packet.PutInteger(nullptr, "RMID", roomId);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::Rooms;
+		header.command = 0x50;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
 	void RoomsComponent::SelectViewUpdates(Client* client, Header header) {
 		auto& request = client->get_request();
 
 		bool update = request["UPDT"].GetUint() != 0;
 		if (update) {
-			NotifyRoomViewUpdated(client, 0);
+			uint32_t viewId = 0;
+
 			// What do we send here?
-			/*
 			TDF::Packet packet;
-			packet.PutInteger(nullptr, "SEID", 1);
-			packet.PutInteger(nullptr, "UPRE", 0);
+			packet.PutInteger(nullptr, "SEID", 0);
+			packet.PutInteger(nullptr, "UPRE", 1);
 			packet.PutInteger(nullptr, "USID", 1);
-			packet.PutInteger(nullptr, "VWID", 1);
+			packet.PutInteger(nullptr, "VWID", viewId);
 
 			DataBuffer outBuffer;
 			packet.Write(outBuffer);
@@ -161,7 +324,8 @@ namespace Blaze {
 			header.error_code = 0;
 
 			client->reply(std::move(header), outBuffer);
-			*/
+			
+			NotifyRoomViewUpdated(client, viewId);
 		}
 	}
 
@@ -170,5 +334,7 @@ namespace Blaze {
 
 		uint32_t viewId = request["VWID"].GetUint();
 		SendSelectCategoryUpdates(client, viewId);
+
+		NotifyRoomCategoryUpdated(client);
 	}
 }

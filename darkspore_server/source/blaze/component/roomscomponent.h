@@ -20,6 +20,20 @@ namespace Blaze {
 			// Notifications
 			static void NotifyRoomViewUpdated(Client* client, uint32_t viewId);
 			static void NotifyRoomViewAdded(Client* client, uint32_t viewId);
+			static void NotifyRoomViewRemoved(Client* client, uint32_t viewId);
+			static void NotifyRoomCategoryUpdated(Client* client);
+			static void NotifyRoomCategoryAdded(Client* client);
+			static void NotifyRoomCategoryRemoved(Client* client, uint32_t categoryId);
+			static void NotifyRoomUpdated(Client* client);
+			static void NotifyRoomAdded(Client* client);
+			static void NotifyRoomRemoved(Client* client, uint32_t roomId);
+			static void NotifyRoomPopulationUpdated(Client* client);
+			static void NotifyRoomMemberJoined(Client* client);
+			static void NotifyRoomMemberLeft(Client* client, uint32_t roomId, uint32_t memberId);
+			static void NotifyRoomMemberUpdated(Client* client);
+			static void NotifyRoomKick(Client* client, uint32_t roomId, uint32_t memberId);
+			static void NotifyRoomHostTransfer(Client* client, uint32_t roomId, uint32_t memberId);
+			static void NotifyRoomAttributesSet(Client* client, uint32_t roomId);
 
 		private:
 			static void SelectViewUpdates(Client* client, Header header);

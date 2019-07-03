@@ -2,14 +2,11 @@
 #ifndef _BLAZE_TDF_HEADER
 #define _BLAZE_TDF_HEADER
 
-#ifndef RAPIDJSON_HAS_STDSTRING
-#	define RAPIDJSON_HAS_STDSTRING 1
-#endif
-
 // Include
 #include "../databuffer.h"
 #include "types.h"
 #include <rapidjson/document.h>
+#include <memory>
 
 // Blaze
 namespace Blaze {
@@ -88,6 +85,11 @@ namespace Blaze {
 				rapidjson::Value& CreateUnion(rapidjson::Value* parent, const std::string& label, NetworkAddressMember addressMember);
 				rapidjson::Value& CreateList(rapidjson::Value* parent, const std::string& label, Type listType, bool isStub = false);
 				rapidjson::Value& CreateMap(rapidjson::Value* parent, const std::string& label, Type keyType, Type valueType);
+
+				template<typename T>
+				std::enable_if_t<std::is_enum_v<T>, void> PutInteger(rapidjson::Value* parent, const std::string& label, T value) {
+					PutInteger(parent, label, static_cast<uint64_t>(value));
+				}
 
 			private:
 				rapidjson::Value& AddMember(rapidjson::Value* parent, const std::string& name, rapidjson::Value& value);

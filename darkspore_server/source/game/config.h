@@ -23,11 +23,14 @@ namespace Game {
 	// Config
 	class Config {
 		public:
-			static bool Load(const std::string& path);
+			static void Load(const std::string& path);
 
 			static const std::string& Get(ConfigValue key);
 			static bool GetBool(ConfigValue key);
 			static void Set(ConfigValue key, const std::string& value);
+
+		private:
+			static void GenerateDefault(const std::string& path);
 		
 		private:
 			static std::array<std::string, CONFIG_END> mConfig;

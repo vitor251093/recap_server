@@ -9,6 +9,8 @@
 #include "component/gamemanagercomponent.h"
 #include "component/associationcomponent.h"
 #include "component/roomscomponent.h"
+#include "component/messagingcomponent.h"
+#include "component/playgroupscomponent.h"
 
 #include <boost/bind.hpp>
 #include <iostream>
@@ -213,6 +215,14 @@ namespace Blaze {
 
 			case Blaze::Component::Redirector:
 				Blaze::RedirectorComponent::Parse(this, header);
+				break;
+
+			case Blaze::Component::Messaging:
+				Blaze::MessagingComponent::Parse(this, header);
+				break;
+
+			case Blaze::Component::Playgroups:
+				Blaze::PlaygroupsComponent::Parse(this, header);
 				break;
 
 			case Blaze::Component::Util:

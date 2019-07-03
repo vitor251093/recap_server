@@ -12,15 +12,16 @@ namespace Game {
 		if (nodeName != "creature") {
 			return;
 		}
-
+		
 		name = utils::xml_get_text_node(node, "name");
 		pngThumbUrl = utils::xml_get_text_node(node, "png_thumb_url");
 
+		gearScore = utils::xml_get_text_node<double>(node, "gear_score");
+		itemPoints = utils::xml_get_text_node<double>(node, "item_points");
+
 		id = utils::xml_get_text_node<uint32_t>(node, "id");
-		nounId = utils::xml_get_text_node<uint32_t>(node, "noun_id");
+		nounId = utils::xml_get_text_node<uint64_t>(node, "noun_id");
 		version = utils::xml_get_text_node<uint32_t>(node, "version");
-		gearScore = utils::xml_get_text_node<uint32_t>(node, "gear_score");
-		itemPoints = utils::xml_get_text_node<uint32_t>(node, "item_points");
 	}
 
 	void Creature::Write(pugi::xml_node& node) const {

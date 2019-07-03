@@ -38,10 +38,12 @@ namespace Game {
 			void game_status_getBroadcastList(HTTP::Session& session, HTTP::Response& response);
 
 			void game_inventory_getPartList(HTTP::Session& session, HTTP::Response& response);
+			void game_inventory_getPartOfferList(HTTP::Session& session, HTTP::Response& response);
 
 			void game_account_auth(HTTP::Session& session, HTTP::Response& response);
 			void game_account_getAccount(HTTP::Session& session, HTTP::Response& response);
 			void game_account_logout(HTTP::Session& session, HTTP::Response& response);
+			void game_account_unlock(HTTP::Session& session, HTTP::Response& response);
 
 			void game_game_getGame(HTTP::Session& session, HTTP::Response& response);
 

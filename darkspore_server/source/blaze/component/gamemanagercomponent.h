@@ -23,14 +23,19 @@ namespace Blaze {
 			static void NotifyGameCreated(Client* client);
 			static void NotifyGameRemoved(Client* client);
 			static void NotifyGameSetup(Client* client);
-			static void NotifyPlayerJoining(Client* client);
-			static void NotifyPlayerJoinCompleted(Client* client);
-			static void NotifyGameStateChange(Client* client, uint64_t gameId, uint64_t gameState);
+			static void NotifyPlayerJoining(Client* client, uint32_t gameId);
+			static void NotifyPlayerJoinCompleted(Client* client, uint32_t gameId);
+			static void NotifyPlatformHostInitialized(Client* client, uint64_t gameId);
+			static void NotifyGameStateChange(Client* client, uint64_t gameId, GameState gameState);
+			static void NotifyGameReset(Client* client);
+			static void NotifyGamePlayerStateChange(Client* client, uint64_t gameId, uint32_t playerState);
 			static void NotifyCreateDynamicDedicatedServerGame(Client* client);
 
 		private:
 			static void CreateGame(Client* client, Header header);
 			static void JoinGame(Client* client, Header header);
+			static void StartMatchmaking(Client* client, Header header);
+			static void CancelMatchmaking(Client* client, Header header);
 			static void ResetDedicatedServer(Client* client, Header header);
 	};
 }

@@ -14,12 +14,14 @@ namespace Game {
 		}
 
 		name = utils::xml_get_text_node(node, "name");
+		category = utils::xml_get_text_node(node, "category");
 
 		id = utils::xml_get_text_node<uint32_t>(node, "id");
-		category = utils::xml_get_text_node<uint32_t>(node, "category");
 		slot = utils::xml_get_text_node<uint32_t>(node, "slot");
 
 		locked = utils::xml_get_text_node<uint32_t>(node, "locked");
+
+		creatures.Read(node);
 	}
 
 	void Squad::Write(pugi::xml_node& node) const {

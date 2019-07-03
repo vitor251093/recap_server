@@ -12,9 +12,9 @@ namespace Game {
 		Creatures creatures;
 
 		std::string name;
+		std::string category;
 
 		uint32_t id = 0;
-		uint32_t category = 0; // PVE or PVP?
 		uint32_t slot = 0;
 
 		bool locked = true;

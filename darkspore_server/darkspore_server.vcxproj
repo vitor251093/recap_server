@@ -121,7 +121,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_NETWORK_ENABLE_HTTPS;WIN32_LEAN_AND_MEAN;NOMINMAX;RAPIDJSON_HAS_STDSTRING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -141,6 +141,8 @@
     <ClInclude Include="source\blaze\component\associationcomponent.h" />
     <ClInclude Include="source\blaze\component\authcomponent.h" />
     <ClInclude Include="source\blaze\component\gamemanagercomponent.h" />
+    <ClInclude Include="source\blaze\component\messagingcomponent.h" />
+    <ClInclude Include="source\blaze\component\playgroupscomponent.h" />
     <ClInclude Include="source\blaze\component\redirectorcomponent.h" />
     <ClInclude Include="source\blaze\component\roomscomponent.h" />
     <ClInclude Include="source\blaze\component\usersessioncomponent.h" />
@@ -152,6 +154,7 @@
     <ClInclude Include="source\game\api.h" />
     <ClInclude Include="source\game\config.h" />
     <ClInclude Include="source\game\creature.h" />
+    <ClInclude Include="source\game\game.h" />
     <ClInclude Include="source\game\squad.h" />
     <ClInclude Include="source\game\user.h" />
     <ClInclude Include="source\http\multipart.h" />
@@ -170,6 +173,8 @@
     <ClCompile Include="source\blaze\component\associationcomponent.cpp" />
     <ClCompile Include="source\blaze\component\authcomponent.cpp" />
     <ClCompile Include="source\blaze\component\gamemanagercomponent.cpp" />
+    <ClCompile Include="source\blaze\component\messagingcomponent.cpp" />
+    <ClCompile Include="source\blaze\component\playgroupscomponent.cpp" />
     <ClCompile Include="source\blaze\component\redirectorcomponent.cpp" />
     <ClCompile Include="source\blaze\component\roomscomponent.cpp" />
     <ClCompile Include="source\blaze\component\usersessioncomponent.cpp" />
@@ -180,6 +185,7 @@
     <ClCompile Include="source\game\api.cpp" />
     <ClCompile Include="source\game\config.cpp" />
     <ClCompile Include="source\game\creature.cpp" />
+    <ClCompile Include="source\game\game.cpp" />
     <ClCompile Include="source\game\squad.cpp" />
     <ClCompile Include="source\game\user.cpp" />
     <ClCompile Include="source\http\multipart.cpp" />

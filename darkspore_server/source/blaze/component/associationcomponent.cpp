@@ -134,7 +134,7 @@ namespace Blaze {
 
 	void AssociationComponent::GetLists(Client* client, Header header) {
 		// Log(client->get_current_request());
-		// SendLists(client);
-		NotifyUpdateListMembership(client);
+		SendLists(client);
+		// NotifyUpdateListMembership(client);
 	}
 }
