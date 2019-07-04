@@ -170,7 +170,7 @@ namespace Game {
 	}
 
 	bool User::Load() {
-		std::string filepath = "data/user/" + mEmail + ".xml";
+		std::string filepath = Config::Get(CONFIG_STORAGE_PATH) + "users/" + mEmail + ".xml";
 
 		pugi::xml_document document;
 		if (!document.load_file(filepath.c_str())) {
@@ -191,7 +191,7 @@ namespace Game {
 	}
 
 	bool User::Save() {
-		std::string filepath = "data/user/" + mEmail + ".xml";
+		std::string filepath = Config::Get(CONFIG_STORAGE_PATH) + "users/" + mEmail + ".xml";
 
 		pugi::xml_document document;
 		if (auto user = document.append_child("user")) {
