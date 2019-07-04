@@ -395,7 +395,9 @@ version = 1
 		});
 
 		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) + "www/register.html";
+			std::string path = Config::Get(CONFIG_STORAGE_PATH) +
+				"www/" +
+				Config::Get(CONFIG_DARKSPORE_REGISTER_PAGE_PATH);
 			std::string file_data = utils::get_file_text(path);
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);

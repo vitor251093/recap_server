@@ -6,6 +6,7 @@
 	<config key="SERVER_HOST" value="127.0.0.1" />
 	<config key="STORAGE_PATH" value="storage/" />
 	<config key="DARKSPORE_INDEX_PAGE_PATH" value="index.html" />
+	<config key="DARKSPORE_REGISTER_PAGE_PATH" value="register.html" />
 	<config key="DARKSPORE_LAUNCHER_NOTES_PATH" value="bootstrap/launcher/notes.html" />
 	<config key="DARKSPORE_LAUNCHER_THEMES_PATH" value="bootstrap/launcher/" />
 </configs>

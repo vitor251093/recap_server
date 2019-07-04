@@ -36,6 +36,8 @@ namespace Game {
 				mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = value;
 			} else if (name == "DARKSPORE_LAUNCHER_NOTES_PATH") {
 				mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = value;
+			} else if (name == "DARKSPORE_REGISTER_PAGE_PATH") {
+				mConfig[CONFIG_DARKSPORE_REGISTER_PAGE_PATH] = value;
 			} else if (name == "DARKSPORE_LAUNCHER_THEMES_PATH") {
 				mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = get_path_value(value);
 			} else {
@@ -49,6 +51,7 @@ namespace Game {
 		mConfig[CONFIG_SERVER_HOST] = "127.0.0.1";
 		mConfig[CONFIG_STORAGE_PATH] = "storage/";
 		mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = "index.html";
+		mConfig[CONFIG_DARKSPORE_REGISTER_PAGE_PATH] = "register.html";
 		mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = "bootstrap/launcher/notes.html";
 		mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = "bootstrap/launcher/";
 
@@ -90,6 +93,7 @@ namespace Game {
 				case CONFIG_SERVER_HOST: return "SERVER_HOST";
 				case CONFIG_STORAGE_PATH: return "STORAGE_PATH";
 				case CONFIG_DARKSPORE_INDEX_PAGE_PATH: return "DARKSPORE_INDEX_PAGE_PATH";
+				case CONFIG_DARKSPORE_REGISTER_PAGE_PATH: return "DARKSPORE_REGISTER_PAGE_PATH";
 				case CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH: return "DARKSPORE_LAUNCHER_NOTES_PATH";
 				case CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH: return "DARKSPORE_LAUNCHER_THEMES_PATH";
 				default: return "UNKNOWN";
