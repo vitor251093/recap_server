@@ -72,6 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
     <LibraryPath>libs\pugixml-1.9\lib;libs\openssl-1.1.1b\lib;libs\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\build\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -83,6 +84,9 @@
     <Link>
       <SubSystem>Console</SubSystem>
     </Link>
+    <CustomBuildStep>
+      <Command>COPY /Y ${SolutionDir}/x64/Release/darkspore_server.exe ${SolutionDir}/build/darkspore_server.exe </Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -135,6 +139,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>libssl.lib;libcrypto.lib;pugixml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>xcopy /y $(ProjectDir)x64\Release\darkspore_server.exe $(ProjectDir)build\darkspore_server.exe </Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\blaze\client.h" />
