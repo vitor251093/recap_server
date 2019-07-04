@@ -394,6 +394,13 @@ version = 1
 			response.body() = "<html><head><title>x</title></head><body>Announces</body></html>";
 		});
 
+		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			std::string path = Config::Get(CONFIG_STORAGE_PATH) + "www/register.html";
+			std::string file_data = utils::get_file_text(path);
+			response.set(boost::beast::http::field::content_type, "text/html");
+			response.body() = std::move(file_data);
+		});
+
 		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = "";
