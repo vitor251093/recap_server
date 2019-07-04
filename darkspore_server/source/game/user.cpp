@@ -1,6 +1,8 @@
 
 // Include
 #include "user.h"
+#include "config.h"
+
 #include "../utils/functions.h"
 #include <algorithm>
 
