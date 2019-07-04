@@ -856,7 +856,11 @@ namespace Blaze {
 			client->set_user(user);
 			SendLogin(client, std::move(header));
 		} else {
-			std::cout << "User with email " << email << " not found." << std::endl;
+			if (user) {
+				std::cout << "Wrong password for email " << email << "." << std::endl;
+			} else {
+				std::cout << "User with email " << email << " not found." << std::endl;
+			}
 
 			header.component = Component::Authentication;
 			header.command = 0x28;
