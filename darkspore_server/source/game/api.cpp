@@ -128,6 +128,14 @@ namespace Game {
 		xmlHttp.send(null);
 	};
 	DLSClient.request = function(name, params, callback) {
+		if (params !== undefined && typeof params === 'object') {
+			var str = [];
+			for (var p in params)
+				if (params.hasOwnProperty(p)) {
+					str.push(encodeURIComponent(p) + "=" + encodeURIComponent(params[p]));
+				}
+			params = str.join("&");
+		}
 		DLSClient.getRequest("http://{{host}}/dls/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback);
 	};
 </script>
@@ -155,6 +163,8 @@ namespace Game {
 				dls_launcher_setTheme(session, response);
 			} else if (method == "api.launcher.listThemes") {
 				dls_launcher_listThemes(session, response);
+			} else if (method == "api.game.registration") {
+				dls_game_registration(session, response);
 			} else {
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
@@ -398,7 +408,13 @@ version = 1
 			std::string path = Config::Get(CONFIG_STORAGE_PATH) +
 				"www/" +
 				Config::Get(CONFIG_DARKSPORE_REGISTER_PAGE_PATH);
+
+			std::string client_script(dlsClientScript);
+			utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+
 			std::string file_data = utils::get_file_text(path);
+			utils::string_replace(file_data, "</head>", client_script + "</head>");
+
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
 		});
@@ -493,6 +509,33 @@ version = 1
 		// selectedTheme
 		document.AddMember(rapidjson::Value("selectedTheme"), rapidjson::Value("default"), allocator);
 
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		document.Accept(writer);
+
+		response.set(boost::beast::http::field::content_type, "application/json");
+		response.body() = buffer.GetString();
+	}
+
+	void API::dls_game_registration(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+		auto name = request.uri.parameter("name");
+		auto mail = request.uri.parameter("mail");
+		auto pass = request.uri.parameter("pass");
+
+		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
+
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
+
+		rapidjson::Document document;
+		if (user == NULL) {
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+		}
+		else {
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
+		}
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		document.Accept(writer);
 

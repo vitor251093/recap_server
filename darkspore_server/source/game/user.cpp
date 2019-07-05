@@ -93,7 +93,7 @@ namespace Game {
 	}
 
 	// User
-	User::User(const std::string& email) : mEmail(email) {
+	User::User(const std::string& name, const std::string& email, const std::string& password) : mName(name), mEmail(email), mPassword(password) {
 		// Empty
 	}
 
@@ -219,7 +219,20 @@ namespace Game {
 		if (it != sUsersByEmail.end()) {
 			user = it->second;
 		} else {
-			user = std::make_shared<User>(email);
+			return NULL;
+		}
+
+		return user;
+	}
+
+	UserPtr UserManager::CreateUserWithNameMailAndPassword(const std::string& name, const std::string& email, const std::string& password) {
+		UserPtr user;
+
+		auto it = sUsersByEmail.find(email);
+		if (it != sUsersByEmail.end()) {
+			return NULL;
+		} else {
+			user = std::make_shared<User>(name, email, password);
 			if (user->Load()) {
 				sUsersByEmail.emplace(email, user);
 			} else {
