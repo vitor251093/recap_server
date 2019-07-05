@@ -477,6 +477,7 @@ version = 1
 		buffer.Clear();
 
 		rapidjson::Document document;
+		document.SetObject();
 
 		// stat
 		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
@@ -493,6 +494,8 @@ version = 1
 		buffer.Clear();
 
 		rapidjson::Document document;
+		document.SetObject();
+
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 		// stat

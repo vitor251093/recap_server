@@ -509,7 +509,7 @@ namespace Blaze {
 				packet.PutInteger(&playerStruct, "EXID", 0);
 				packet.PutInteger(&playerStruct, "GID", 1);
 				packet.PutInteger(&playerStruct, "LOC", 1701729619);
-				packet.PutString(&playerStruct, "NAME", "Dalkon");
+				packet.PutString(&playerStruct, "NAME", user->name);
 				{
 					// PATT
 				}
@@ -575,7 +575,7 @@ namespace Blaze {
 			packet.PutBlob(&pdatStruct, "BLOB", nullptr, 0);
 			packet.PutInteger(&pdatStruct, "EXID", 0);
 			packet.PutInteger(&pdatStruct, "LOC", 1701729619); // request["CINF"]["LOC"].GetUint64()
-			packet.PutString(&pdatStruct, "NAME", "Dalkon");
+			packet.PutString(&pdatStruct, "NAME", user->name);
 			{
 				auto& pattMap = packet.CreateMap(&pdatStruct, "PATT", TDF::Type::String, TDF::Type::String);
 				packet.PutString(&pattMap, "Premium", "True");
@@ -933,12 +933,17 @@ namespace Blaze {
 	}
 
 	void GameManagerComponent::JoinGame(Client* client, Header header) {
+		const auto& user = client->get_user();
+		if (!user) {
+			return;
+		}
+
 		auto& request = client->get_request();
 
 		uint32_t gameId = request["GID"].GetUint();
 		SendJoinGame(client, gameId);
 
-		UserSessionComponent::NotifyUserAdded(client, 1, "Dalkon");
+		UserSessionComponent::NotifyUserAdded(client, 1, user->name);
 		UserSessionComponent::NotifyUserUpdated(client, 1);
 
 		NotifyPlayerJoining(client, gameId);
