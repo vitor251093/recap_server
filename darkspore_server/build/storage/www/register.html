@@ -282,6 +282,23 @@
         </style>
     </head>
     <body>
+        <script>
+            function register() {
+            DLSClient.request("api.game.registration", {
+            "name": document.getElementById("name").value,
+            "mail": document.getElementById("email").value,
+            "pass": document.getElementById("password").value
+            }, function(data) {
+            var response = JSON.parse(data);
+            if (response.stat === 'ok') {
+            document.getElementById("message").innerHTML = "Success! Your account was created!";
+            }
+            else {
+            document.getElementById("message").innerHTML = "Error! Your account could not be created!";
+            }
+            });
+            }
+        </script>
         <div class="main">
             <section class="signup">
                 <div class="container">
@@ -298,14 +315,14 @@
                                 <input type="text" class="form-input" name="password" id="password" placeholder="Password" />
                             </div>
                             <!--<div class="form-group">
-                                <input type="password" class="form-input" name="re_password" id="re_password" placeholder="Repeat your password" />
-                            </div>-->
+                            <input type="password" class="form-input" name="re_password" id="re_password" placeholder="Repeat your password" />
+                        </div>-->
                             <div class="form-group">
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
                                 <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in <a href="#" class="term-service">Terms of service</a></label>
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="submit" id="submit" class="form-submit" value="Sign up" onclick="return register();" />
+                                <div name="submit" id="submit" class="form-submit" onMouseUp="register();">Sign up</div>
                             </div>
                         </form>
                     </div>
@@ -315,22 +332,5 @@
                 </div>
             </section>
         </div>
-        <script>
-            function register() {
-                DLSClient.request("api.game.registration", {
-                    "name": document.getElementById("name").value,
-                    "mail": document.getElementById("email").value,
-                    "pass": document.getElementById("password").value
-                }, function(data) {
-                    var response = JSON.parse(data);
-                    if (response.stat === 'ok') {
-                        document.getElementById("message").innerHTML = "Success! Your account was created!";
-                    }
-                    else {
-                        document.getElementById("message").innerHTML = "Error! Your account could not be created!";
-                    }
-                });
-            }
-        </script>
     </body>
 </html>
