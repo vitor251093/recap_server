@@ -385,7 +385,7 @@ namespace Blaze {
 			auto& plstList = packet.CreateList(nullptr, "PLST", TDF::Type::Struct);
 			{
 				auto& pdtlStruct = packet.CreateStruct(&plstList, "");
-				packet.PutString(&pdtlStruct, "DSNM", user->name);
+				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", currentTime);
 				packet.PutInteger(&pdtlStruct, "PID", 1); // user id?
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
@@ -427,7 +427,7 @@ namespace Blaze {
 		packet.PutString(nullptr, "MAIL", request["MAIL"].GetString());
 		{
 			auto& pdtlStruct = packet.CreateStruct(nullptr, "PDTL");
-			packet.PutString(&pdtlStruct, "DSNM", user->name);
+			packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 			packet.PutInteger(&pdtlStruct, "LAST", currentTime);
 			packet.PutInteger(&pdtlStruct, "PID", 1); // user id?
 			packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
@@ -469,7 +469,7 @@ namespace Blaze {
 			packet.PutString(&sessStruct, "MAIL", request["MAIL"].GetString());
 			{
 				auto& pdtlStruct = packet.CreateStruct(&sessStruct, "PDTL");
-				packet.PutString(&pdtlStruct, "DSNM", user->name);
+				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", currentTime);
 				packet.PutInteger(&pdtlStruct, "PID", 0);
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
@@ -514,7 +514,7 @@ namespace Blaze {
 			packet.PutString(&sessStruct, "MAIL", request["MAIL"].GetString());
 			{
 				auto& pdtlStruct = packet.CreateStruct(&sessStruct, "PDTL");
-				packet.PutString(&pdtlStruct, "DSNM", user->name);
+				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", currentTime);
 				packet.PutInteger(&pdtlStruct, "PID", 0);
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
@@ -915,7 +915,7 @@ namespace Blaze {
 			packet.PutString(&sessStruct, "MAIL", request["MAIL"].GetString());
 			{
 				auto& pdtlStruct = packet.CreateStruct(nullptr, "PDTL");
-				packet.PutString(&pdtlStruct, "DSNM", user->name);
+				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", 0);
 				packet.PutInteger(&pdtlStruct, "PID", 0);
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Unknown);
@@ -946,7 +946,7 @@ namespace Blaze {
 
 		SendLoginPersona(client, std::move(header));
 
-		UserSessionComponent::NotifyUserAdded(client, 1, user->name);
+		UserSessionComponent::NotifyUserAdded(client, 1, user->get_name());
 		UserSessionComponent::NotifyUserUpdated(client, 1);
 
 		// GameManagerComponent::NotifyGameStateChange(client, 0, 2);
