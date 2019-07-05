@@ -62,7 +62,7 @@ namespace Game {
 	// User
 	class User {
 		public:
-			User(const std::string& email);
+			User(const std::string& name, const std::string& email, const std::string& password);
 			~User();
 
 			//
@@ -125,6 +125,7 @@ namespace Game {
 	class UserManager {
 		public:
 			static UserPtr GetUserByEmail(const std::string& email);
+			static UserPtr CreateUserWithNameMailAndPassword(const std::string& name, const std::string& email, const std::string& password);
 			static UserPtr GetUserByAuthToken(const std::string& authToken);
 
 		private:
