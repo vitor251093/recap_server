@@ -528,6 +528,7 @@ version = 1
 		buffer.Clear();
 
 		rapidjson::Document document;
+		document.SetObject();
 		if (user == NULL) {
 			// stat
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
