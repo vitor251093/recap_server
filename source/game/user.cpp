@@ -224,7 +224,7 @@ namespace Game {
 			user = it->second;
 		} else {
 			user = std::make_shared<User>(email);
-			if (user.Load()) {
+			if (user->Load()) {
 				sUsersByEmail.emplace(email, user);
 			}
 			else {
@@ -243,7 +243,7 @@ namespace Game {
 			return NULL;
 		} else {
 			user = std::make_shared<User>(name, email, password);
-			if (user.Save()) {
+			if (user->Save()) {
 				sUsersByEmail.emplace(email, user);
 			}
 			else {
