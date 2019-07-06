@@ -227,7 +227,7 @@ namespace HTTP {
 	void URI::parse_query(std::string_view query) {
 		for (const auto& variable : utils::explode_string(query, '&')) {
 			auto separator = variable.find('=');
-			auto variableValue = variable.substr(separator + 1);
+			auto variableValue = std::string(variable.substr(separator + 1));
 
 			std::string decodedVariableValue;
 			if (separator != std::string::npos) {
