@@ -193,11 +193,49 @@ namespace HTTP {
 		}
 	}
 	*/
+	
+	bool urlDecode(const std::string& in, std::string& out) {
+		// Reference:
+		// https://www.boost.org/doc/libs/1_47_0/doc/html/boost_asio/example/http/server3/request_handler.cpp
+		
+		out.clear();
+		out.reserve(in.size());
+		for (std::size_t i = 0; i < in.size(); ++i) {
+			if (in[i] == '%') {
+				if (i + 3 <= in.size()) {
+					int value = 0;
+					std::istringstream is(in.substr(i + 1, 2));
+					if (is >> std::hex >> value) {
+						out += static_cast<char>(value);
+						i += 2;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			else if (in[i] == '+') {
+				out += ' ';
+			} else {
+				out += in[i];
+			}
+		}
+		return true;
+	}
+
 	void URI::parse_query(std::string_view query) {
 		for (const auto& variable : utils::explode_string(query, '&')) {
 			auto separator = variable.find('=');
+			auto variableValue = variable.substr(separator + 1);
+
+			std::string decodedVariableValue;
 			if (separator != std::string::npos) {
-				mQuery.emplace(variable.substr(0, separator), variable.substr(separator + 1));
+				if (urlDecode(variableValue, decodedVariableValue)) {
+					mQuery.emplace(variable.substr(0, separator), decodedVariableValue);
+				} else {
+					mQuery.emplace(variable.substr(0, separator), variableValue);
+				}
 			} else {
 				mQuery.emplace(variable, std::string());
 			}
