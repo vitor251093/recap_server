@@ -63,6 +63,7 @@ namespace Game {
 	class User {
 		public:
 			User(const std::string& name, const std::string& email, const std::string& password);
+			User(const std::string& email) : mEmail(email);
 			~User();
 
 			//

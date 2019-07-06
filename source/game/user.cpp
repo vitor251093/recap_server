@@ -97,8 +97,12 @@ namespace Game {
 		// Empty
 	}
 
+	User::User(const std::string& email) : mEmail(email) {
+		// Empty
+	}
+
 	User::~User() {
-		Save();
+		
 	}
 
 	bool User::UpdateState(uint32_t newState) {
@@ -212,11 +216,29 @@ namespace Game {
 	// UserManager
 	std::map<std::string, UserPtr> UserManager::sUsersByEmail;
 
+	std::map<std::string, UserPtr> UserManager::GetUsersByMail() {
+		if (sUsersByEmail.size() == 0) {
+			std::string folderpath = Config::Get(CONFIG_STORAGE_PATH) + "users";
+			for (const auto & entry : fs::directory_iterator(folderpath)) {
+				auto filepath = entry.path();
+				if (filepath.extension().string() == "xml") {
+					auto email = filepath.stem();
+
+					UserPtr user = std::make_shared<User>(email);
+					user.Load();
+					sUsersByEmail.emplace(email, user);
+				}
+			}
+		}
+		return sUsersByEmail;
+	}
+
 	UserPtr UserManager::GetUserByEmail(const std::string& email) {
 		UserPtr user;
 
-		auto it = sUsersByEmail.find(email);
-		if (it != sUsersByEmail.end()) {
+		auto userByEmail = GetUsersByMail();
+		auto it = userByEmail.find(email);
+		if (it != userByEmail.end()) {
 			user = it->second;
 		} else {
 			return NULL;
@@ -228,16 +250,14 @@ namespace Game {
 	UserPtr UserManager::CreateUserWithNameMailAndPassword(const std::string& name, const std::string& email, const std::string& password) {
 		UserPtr user;
 
-		auto it = sUsersByEmail.find(email);
-		if (it != sUsersByEmail.end()) {
+		auto userByEmail = GetUsersByMail();
+		auto it = userByEmail.find(email);
+		if (it != userByEmail.end()) {
 			return NULL;
 		} else {
 			user = std::make_shared<User>(name, email, password);
-			if (user->Load()) {
-				sUsersByEmail.emplace(email, user);
-			} else {
-				user.reset();
-			}
+			user.Save();
+			userByEmail.emplace(email, user);
 		}
 
 		return user;
@@ -253,9 +273,10 @@ namespace Game {
 	}
 
 	void UserManager::RemoveUser(const std::string& email) {
-		auto it = sUsersByEmail.find(email);
-		if (it != sUsersByEmail.end()) {
-			sUsersByEmail.erase(it);
+		auto userByEmail = GetUsersByMail();
+		auto it = userByEmail.find(email);
+		if (it != userByEmail.end()) {
+			userByEmail.erase(it);
 		}
 	}
 }
