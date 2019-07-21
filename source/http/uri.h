@@ -14,6 +14,9 @@ namespace HTTP {
 	// URI
 	class URI {
 		public:
+			static std::string encode(std::string_view str);
+			static std::string decode(std::string_view str);
+
 			void parse(std::string_view path);
 			
 			decltype(auto) begin() { return mQuery.begin(); }

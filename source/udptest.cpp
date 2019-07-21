@@ -27,7 +27,11 @@ void UDPTest::receive() {
 void UDPTest::handle_receive(const boost::system::error_code& error, size_t bytes_transferred) {
 	std::cout << "UDP connection" << std::endl;
 	if (!error || error == boost::asio::error::message_size) {
-		std::shared_ptr<std::string> message;
+		auto file = fopen("udp.txt", "wb");
+		fwrite(mData.data(), 1, std::min<size_t>(bytes_transferred, mData.size()), file);
+		fclose(file);
+
+		auto message = std::make_shared<std::string>("testing 123");
 		mSocket.async_send_to(boost::asio::buffer(*message), mRemoteEndpoint,
 			boost::bind(&UDPTest::handle_send, this, message, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 

@@ -85,6 +85,10 @@ void Application::Run() {
 	}
 }
 
+boost::asio::io_context& Application::get_io_service() {
+	return mIoService;
+}
+
 Game::API* Application::get_game_api() const {
 	return mGameAPI.get();
 }

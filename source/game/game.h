@@ -11,6 +11,9 @@
 #include <map>
 #include <memory>
 
+// RakNet
+namespace RakNet { class Server; }
+
 // Game
 namespace Game {
 	// IP
@@ -30,7 +33,7 @@ namespace Game {
 		std::string level;
 		std::string type;
 
-		uint64_t id = std::numeric_limits<uint64_t>::max();
+		uint32_t id = std::numeric_limits<uint32_t>::max();
 		uint64_t settings = 0;
 
 		int64_t clientId = 0;
@@ -80,15 +83,18 @@ namespace Game {
 		public:
 			// Game
 			static GameInfoPtr CreateGame();
-			static void RemoveGame(uint64_t id);
+			static void RemoveGame(uint32_t id);
 
-			static GameInfoPtr GetGame(uint64_t id);
+			static GameInfoPtr GetGame(uint32_t id);
+			static void StartGame(uint32_t id);
 
 			// Matchmaking
 			static Matchmaking& StartMatchmaking();
 
 		private:
-			static std::map<uint64_t, GameInfoPtr> sGames;
+			static std::map<uint32_t, std::unique_ptr<RakNet::Server>> sActiveGames;
+
+			static std::map<uint32_t, GameInfoPtr> sGames;
 			static std::map<std::string, Matchmaking> sMatchmaking;
 	};
 }

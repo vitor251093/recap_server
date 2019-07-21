@@ -328,6 +328,10 @@ namespace Blaze {
 			case 0x09:
 				JoinGame(client, header);
 				break;
+			
+			case 0x0B:
+				RemovePlayer(client, header);
+				break;
 
 			case 0x0D:
 				StartMatchmaking(client, header);
@@ -337,8 +341,16 @@ namespace Blaze {
 				CancelMatchmaking(client, header);
 				break;
 
+			case 0x0F:
+				FinalizeGameCreation(client, header);
+				break;
+
 			case 0x19:
 				ResetDedicatedServer(client, header);
+				break;
+
+			case 0x1D:
+				UpdateMeshConnection(client, header);
 				break;
 
 			default:
@@ -392,9 +404,9 @@ namespace Blaze {
 		client->reply(std::move(header), outBuffer);
 	}
 
-	void GameManagerComponent::NotifyGameCreated(Client* client) {
+	void GameManagerComponent::NotifyGameCreated(Client* client, uint32_t gameId) {
 		TDF::Packet packet;
-		packet.PutInteger(nullptr, "GID", 1);
+		packet.PutInteger(nullptr, "GID", gameId);
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);
@@ -412,6 +424,14 @@ namespace Blaze {
 	}
 
 	void GameManagerComponent::NotifyGameSetup(Client* client) {
+		/*
+			HNET internals
+
+			0x1C
+			0x18
+			0x18
+			0x10
+		*/
 		auto& request = client->get_request();
 
 		const auto& user = client->get_user();
@@ -456,13 +476,30 @@ namespace Blaze {
 			{
 				auto& hnetList = packet.CreateList(&gameStruct, "HNET", TDF::Type::Struct, true);
 				{
-					auto& inipStruct = packet.CreateStruct(&hnetList, "INIP");
-					packet.PutInteger(&inipStruct, "IP", gameInfo->internalIP.address);
-					packet.PutInteger(&inipStruct, "PORT", gameInfo->internalIP.port);
-				} {
-					auto& exipStruct = packet.CreateStruct(&hnetList, "EXIP");
-					packet.PutInteger(&exipStruct, "IP", gameInfo->externalIP.address);
-					packet.PutInteger(&exipStruct, "PORT", gameInfo->externalIP.port);
+#if 1
+					auto& valuStruct = packet.CreateStruct(&hnetList, "");
+					{
+						auto& exipStruct = packet.CreateStruct(&valuStruct, "EXIP");
+						packet.PutInteger(&exipStruct, "IP", gameInfo->externalIP.address);
+						packet.PutInteger(&exipStruct, "PORT", gameInfo->externalIP.port);
+					} {
+						auto& inipStruct = packet.CreateStruct(&valuStruct, "INIP");
+						packet.PutInteger(&inipStruct, "IP", gameInfo->internalIP.address);
+						packet.PutInteger(&inipStruct, "PORT", gameInfo->internalIP.port);
+					}
+#else
+					auto& hnetMemberUnion = packet.CreateUnion(&hnetList, "", NetworkAddressMember::IpPairAddress);
+					auto& valuStruct = packet.CreateStruct(&hnetMemberUnion, "VALU");
+					{
+						auto& exipStruct = packet.CreateStruct(&valuStruct, "EXIP");
+						packet.PutInteger(&exipStruct, "IP", gameInfo->externalIP.address);
+						packet.PutInteger(&exipStruct, "PORT", gameInfo->externalIP.port);
+					} {
+						auto& inipStruct = packet.CreateStruct(&valuStruct, "INIP");
+						packet.PutInteger(&inipStruct, "IP", gameInfo->internalIP.address);
+						packet.PutInteger(&inipStruct, "PORT", gameInfo->internalIP.port);
+					}
+#endif
 				}
 			}
 			packet.PutInteger(&gameStruct, "HSES", 13666);
@@ -507,13 +544,13 @@ namespace Blaze {
 				auto& playerStruct = packet.CreateStruct(&prosList, "");
 				packet.PutBlob(&playerStruct, "BLOB", nullptr, 0);
 				packet.PutInteger(&playerStruct, "EXID", 0);
-				packet.PutInteger(&playerStruct, "GID", 1);
-				packet.PutInteger(&playerStruct, "LOC", 1701729619);
+				packet.PutInteger(&playerStruct, "GID", gameInfo->id);
+				packet.PutInteger(&playerStruct, "LOC", client->localization());
 				packet.PutString(&playerStruct, "NAME", user->get_name());
 				{
 					// PATT
 				}
-				packet.PutInteger(&playerStruct, "PID", 1);
+				packet.PutInteger(&playerStruct, "PID", user->get_id());
 				{
 					auto& pnetUnion = packet.CreateUnion(&playerStruct, "PNET", NetworkAddressMember::IpPairAddress);
 					auto& valuStruct = packet.CreateStruct(&pnetUnion, "VALU");
@@ -533,7 +570,7 @@ namespace Blaze {
 				packet.PutInteger(&playerStruct, "TIDX", 0xFFFF);
 				packet.PutInteger(&playerStruct, "TIME", utils::get_unix_time());
 				packet.PutVector3(&playerStruct, "UGID", 0, 0, 0);
-				packet.PutInteger(&playerStruct, "UID", 1);
+				packet.PutInteger(&playerStruct, "UID", client->get_id());
 			}
 		} {
 			auto& reasUnion = packet.CreateUnion(nullptr, "REAS", NetworkAddressMember::XboxClientAddress);
@@ -574,13 +611,13 @@ namespace Blaze {
 			auto& pdatStruct = packet.CreateStruct(nullptr, "PDAT");
 			packet.PutBlob(&pdatStruct, "BLOB", nullptr, 0);
 			packet.PutInteger(&pdatStruct, "EXID", 0);
-			packet.PutInteger(&pdatStruct, "LOC", 1701729619); // request["CINF"]["LOC"].GetUint64()
+			packet.PutInteger(&pdatStruct, "LOC", client->localization());
 			packet.PutString(&pdatStruct, "NAME", user->get_name());
 			{
 				auto& pattMap = packet.CreateMap(&pdatStruct, "PATT", TDF::Type::String, TDF::Type::String);
 				packet.PutString(&pattMap, "Premium", "True");
 			}
-			packet.PutInteger(&pdatStruct, "PID", 1);
+			packet.PutInteger(&pdatStruct, "PID", user->get_id());
 			{
 				auto& pnetUnion = packet.CreateUnion(nullptr, "PNET", NetworkAddressMember::IpPairAddress);
 				auto& valuStruct = packet.CreateStruct(&pnetUnion, "VALU");
@@ -600,45 +637,9 @@ namespace Blaze {
 			packet.PutInteger(&pdatStruct, "TIDX", 0xFFFF);
 			packet.PutInteger(&pdatStruct, "TIME", utils::get_unix_time());
 			packet.PutVector3(&pdatStruct, "UGID", 0, 0, 0);
-			packet.PutInteger(&pdatStruct, "UID", 1);
+			packet.PutInteger(&pdatStruct, "UID", client->get_id());
 		}
-		/*
-			new TdfStruct("PDAT", new List<Tdf>
-			{
-				new TdfInteger("EXID", 0),
-				new TdfInteger("GID", client.GameID),
-				new TdfInteger("LOC", client.Localization),
-				new TdfString("NAME", client.User.Name),
-				new TdfMap("PATT", TdfBaseType.String, TdfBaseType.String, new Dictionary<object, object>
-				{
-					{ "Premium", "False" }
-				}),
-				new TdfInteger("PID", client.User.ID),
-				new TdfUnion("PNET", NetworkAddressMember.IPPAirAddress, new List<Tdf>
-				{
-					new TdfStruct("VALU", new List<Tdf>
-					{
-						new TdfStruct("EXIP", new List<Tdf>
-						{
-							new TdfInteger("IP", client.ExternalIP),
-							new TdfInteger("PORT", client.ExternalPort)
-						}),
-						new TdfStruct("INIP", new List<Tdf>
-						{
-							new TdfInteger("IP", client.InternalIP),
-							new TdfInteger("PORT", client.InternalPort)
-						})
-					})
-				}),
-				new TdfInteger("SID", (ulong)slotID),
-				new TdfInteger("SLOT", 0),
-				new TdfInteger("STAT", 0),
-				new TdfInteger("TIDX", 65535),
-				new TdfInteger("TIME", 0),
-				new TdfVector3("UGID", 0, 0, 0),
-				new TdfInteger("UID", (ulong)client.ID)
-			})
-		*/
+
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);
 
@@ -650,13 +651,10 @@ namespace Blaze {
 		client->notify(std::move(header), outBuffer);
 	}
 
-	void GameManagerComponent::NotifyPlayerJoinCompleted(Client* client, uint32_t gameId) {
-		auto& request = client->get_request();
-		// Log(request);
-
+	void GameManagerComponent::NotifyPlayerJoinCompleted(Client* client, uint32_t gameId, uint32_t personaId) {
 		TDF::Packet packet;
 		packet.PutInteger(nullptr, "GID", gameId);
-		packet.PutInteger(nullptr, "PID", 1);
+		packet.PutInteger(nullptr, "PID", personaId);
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);
@@ -664,6 +662,24 @@ namespace Blaze {
 		Header header;
 		header.component = Component::GameManager;
 		header.command = 0x1E;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void GameManagerComponent::NotifyPlayerRemoved(Client* client, uint32_t gameId, uint32_t personaId, PlayerRemovedReason reason) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "CNTX", 0);
+		packet.PutInteger(nullptr, "GID", gameId);
+		packet.PutInteger(nullptr, "PID", personaId);
+		packet.PutInteger(nullptr, "REAS", reason);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::GameManager;
+		header.command = 0x28;
 		header.error_code = 0;
 
 		client->notify(std::move(header), outBuffer);
@@ -803,10 +819,27 @@ namespace Blaze {
 		client->notify(std::move(header), outBuffer);
 	}
 
-	void GameManagerComponent::NotifyGamePlayerStateChange(Client* client, uint64_t gameId, uint32_t playerState) {
+	void GameManagerComponent::NotifyGameSessionUpdated(Client* client, uint32_t gameId) {
 		TDF::Packet packet;
 		packet.PutInteger(nullptr, "GID", gameId);
-		packet.PutInteger(nullptr, "PID", 1);
+		packet.PutBlob(nullptr, "XNNC", nullptr, 0);
+		packet.PutBlob(nullptr, "XSES", nullptr, 0);
+
+		DataBuffer outBuffer;
+		packet.Write(outBuffer);
+
+		Header header;
+		header.component = Component::GameManager;
+		header.command = 0x73;
+		header.error_code = 0;
+
+		client->notify(std::move(header), outBuffer);
+	}
+
+	void GameManagerComponent::NotifyGamePlayerStateChange(Client* client, uint32_t gameId, uint32_t personaId, PlayerState playerState) {
+		TDF::Packet packet;
+		packet.PutInteger(nullptr, "GID", gameId);
+		packet.PutInteger(nullptr, "PID", personaId);
 		packet.PutInteger(nullptr, "STAT", playerState);
 
 		DataBuffer outBuffer;
@@ -933,30 +966,53 @@ namespace Blaze {
 	}
 
 	void GameManagerComponent::JoinGame(Client* client, Header header) {
-		const auto& user = client->get_user();
-		if (!user) {
-			return;
-		}
-
 		auto& request = client->get_request();
 
 		uint32_t gameId = request["GID"].GetUint();
 		SendJoinGame(client, gameId);
 
-		UserSessionComponent::NotifyUserAdded(client, 1, user->get_name());
+		UserSessionComponent::NotifyUserAdded(client, 1, "Dalkon");
 		UserSessionComponent::NotifyUserUpdated(client, 1);
 
 		NotifyPlayerJoining(client, gameId);
 	}
 
+	void GameManagerComponent::RemovePlayer(Client* client, Header header) {
+		auto& request = client->get_request();
+
+		uint32_t gameId = request["GID"].GetUint();
+		uint32_t personaId = request["PID"].GetUint();
+		PlayerRemovedReason reason = static_cast<PlayerRemovedReason>(request["REAS"].GetUint());
+
+		header.error_code = 0;
+		client->reply(std::move(header));
+
+		NotifyPlayerRemoved(client, gameId, personaId, reason);
+	}
+
 	void GameManagerComponent::StartMatchmaking(Client* client, Header header) {
-		// Log(client->get_current_request());
 		SendStartMatchmaking(client, 1);
 	}
 
 	void GameManagerComponent::CancelMatchmaking(Client* client, Header header) {
-		Log(client->get_current_request());
 		// SendStartMatchmaking(client, 1);
+	}
+
+	void GameManagerComponent::FinalizeGameCreation(Client* client, Header header) {
+		const auto& user = client->get_user();
+		if (!user) {
+			return;
+		}
+
+		const auto& gameInfo = user->get_game_info();
+		if (!gameInfo) {
+			return;
+		}
+
+		Game::Manager::StartGame(gameInfo->id);
+
+		header.error_code = 0;
+		client->reply(std::move(header));
 	}
 
 	void GameManagerComponent::ResetDedicatedServer(Client* client, Header header) {
@@ -975,7 +1031,6 @@ namespace Blaze {
 0x00040004 Unable to start planet. Returning to ship.
 		*/
 
-		// Log(client->get_current_request());
 		auto& request = client->get_request();
 
 		const auto& user = client->get_user();
@@ -1022,7 +1077,7 @@ namespace Blaze {
 		gameInfo->maxPlayers = request["PMAX"].GetUint();
 		gameInfo->queueCapacity = request["QCAP"].GetUint();
 
-		gameInfo->resetable = request["NRES"].GetUint() == 0;
+		gameInfo->resetable = request["NRES"].GetUint() != 0;
 
 		/////////////////
 
@@ -1030,12 +1085,51 @@ namespace Blaze {
 		// SendStartMatchmaking(client, gameInfo->id);
 		
 		// NotifyCreateDynamicDedicatedServerGame(client);
-		NotifyGameCreated(client);
+		// NotifyGameCreated(client);
 		NotifyGameStateChange(client, gameInfo->id, gameInfo->state);
 		NotifyGameSetup(client);
 		// NotifyGameReset(client);
 
 		// NotifyPlayerJoining(client, gameInfo->id);
 		// NotifyPlayerJoinCompleted(client, gameInfo->id);
+	}
+
+	void GameManagerComponent::UpdateMeshConnection(Client* client, Header header) {
+		auto& request = client->get_request();
+		auto& targetData = request["TARG"]["_Content"][0];
+
+		uint32_t gameId = request["GID"].GetUint();
+		uint32_t personaId = targetData["PID"].GetUint();
+
+		PlayerState playerState = static_cast<PlayerState>(targetData["STAT"].GetUint());
+		ClientType type = client->type();
+
+		if (playerState == PlayerState::Connecting) {
+			if (type == ClientType::GameplayUser) {
+				const auto& user = client->get_user();
+				if (user) {
+					NotifyGamePlayerStateChange(client, gameId, user->get_id(), PlayerState::Connected);
+					NotifyPlayerJoinCompleted(client, gameId, user->get_id());
+				}
+			} else if (type == ClientType::DedicatedServer) {
+				NotifyGamePlayerStateChange(client, gameId, personaId, PlayerState::Connected);
+				NotifyPlayerJoinCompleted(client, gameId, personaId);
+			}
+		} else if (playerState == PlayerState::Reserved) {
+			if (type == ClientType::GameplayUser) {
+				// var game = GameManager.Games[gameID.Value];
+				// game.Slots.Remove(playerID.Value);
+
+				NotifyPlayerRemoved(client, gameId, personaId, PlayerRemovedReason::PlayerConnLost);
+			} else if (type == ClientType::DedicatedServer) {
+				// var game = GameManager.Games[gameID.Value];
+				// game.Slots.Remove(playerID.Value);
+
+				NotifyPlayerRemoved(client, gameId, personaId, PlayerRemovedReason::PlayerConnLost);
+			}
+		}
+
+		header.error_code = 0;
+		client->reply(std::move(header));
 	}
 }

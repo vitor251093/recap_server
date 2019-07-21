@@ -175,12 +175,12 @@ namespace Blaze {
 		client->notify(std::move(header), outBuffer);
 	}
 
-	void PlaygroupsComponent::NotifyMemberJoinedPlaygroup(Client* client, uint32_t playgroundId) {
+	void PlaygroupsComponent::NotifyMemberJoinedPlaygroup(Client* client, uint32_t playgroupId) {
 		TDF::Packet packet;
 		{
 			auto& membStruct = packet.CreateStruct(nullptr, "MEMB");
 		}
-		packet.PutInteger(nullptr, "PGID", playgroundId);
+		packet.PutInteger(nullptr, "PGID", playgroupId);
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);

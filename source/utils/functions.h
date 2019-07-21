@@ -46,6 +46,50 @@ namespace utils {
 	std::vector<std::string_view> explode_string(std::string_view str, char delim, int32_t limit = -1);
 	std::vector<std::string_view> explode_string(std::string_view str, std::string_view delim, int32_t limit = -1);
 
+	// Numbers
+	template<typename T>
+	std::enable_if_t<std::is_enum_v<T>, T> to_number(const std::string& str) {
+		return static_cast<T>(tonumber<std::underlying_type_t<T>>(str));
+	}
+
+	template<typename T>
+	std::enable_if_t<std::is_integral_v<T>, T> to_number(const std::string& str, int base = 10) {
+		T value;
+		try {
+			if constexpr (std::is_signed_v<T>) {
+				if constexpr (sizeof(T) >= sizeof(int64_t)) {
+					value = std::stoll(str, nullptr, base);
+				} else {
+					value = static_cast<T>(std::stoi(str, nullptr, base));
+				}
+			} else if constexpr (sizeof(T) >= sizeof(uint64_t)) {
+				value = std::stoull(str, nullptr, base);
+			} else {
+				value = static_cast<T>(std::stoul(str, nullptr, base));
+			}
+		} catch (...) {
+			value = static_cast<T>(0);
+		}
+		return value;
+	}
+
+	template<typename T>
+	std::enable_if_t<std::is_floating_point_v<T>, T> to_number(const std::string& str) {
+		T value;
+		try {
+			if constexpr (std::is_same_v<T, double>) {
+				value = std::stod(str);
+			} else if constexpr (std::is_same_v<T, float>) {
+				value = std::stof(str);
+			} else {
+				value = static_cast<T>(0);
+			}
+		} catch (...) {
+			value = static_cast<T>(0);
+		}
+		return value;
+	}
+
 	// XML
 	void xml_add_text_node(pugi::xml_node& node, const std::string& name, const std::string& value);
 	std::string xml_get_text_node(const pugi::xml_node& node, const std::string& name);
@@ -57,30 +101,7 @@ namespace utils {
 
 	template<typename T>
 	std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, T> xml_get_text_node(const pugi::xml_node& node, const std::string& name) {
-		T value;
-
-		auto text = xml_get_text_node(node, name);
-		try {
-			if constexpr (std::is_same_v<T, double>) {
-				value = std::stod(text);
-			} else if constexpr (std::is_same_v<T, float>) {
-				value = std::stof(text);
-			} else if constexpr (std::is_signed_v<T>) {
-				if constexpr (sizeof(T) >= sizeof(int64_t)) {
-					value = std::stoll(text);
-				} else {
-					value = std::stoi(text);
-				}
-			} else if constexpr (sizeof(T) >= sizeof(uint64_t)) {
-				value = std::stoull(text);
-			} else {
-				value = std::stoul(text);
-			}
-		} catch (...) {
-			value = static_cast<T>(0);
-		}
-
-		return value;
+		return to_number<T>(xml_get_text_node(node, name));
 	}
 }
 

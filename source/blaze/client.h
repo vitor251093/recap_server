@@ -18,11 +18,18 @@ namespace Blaze {
 
 			auto& get_socket() { return mSocket.lowest_layer(); }
 
+			auto get_id() const { return mId; }
+
 			const auto& get_user() const { return mUser; }
 			void set_user(const Game::UserPtr& user) { mUser = user; }
 
 			const auto& get_request() const { return mRequest; }
-			const auto& get_current_request() const { return mCurrentRequest; }
+
+			auto& type() { return mType; }
+			const auto& type() const { return mType; }
+
+			auto& localization() { return mLocalization; }
+			const auto& localization() const { return mLocalization; }
 
 			void start();
 
@@ -42,13 +49,16 @@ namespace Blaze {
 			boost::asio::ssl::stream<boost::asio::ip::tcp::socket> mSocket;
 
 			rapidjson::Document mRequest;
-			rapidjson::Document mCurrentRequest;
 
 			std::vector<DataBuffer> mWriteBuffers;
 
 			Game::UserPtr mUser;
+
+			ClientType mType;
+			uint32_t mLocalization;
 			
 			uint32_t mCurrentMessageId;
+			uint32_t mId;
 	};
 }
 

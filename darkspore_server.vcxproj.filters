@@ -49,6 +49,12 @@
     <Filter Include="Header Files\game">
       <UniqueIdentifier>{4c9908cb-b8d4-4bf4-badb-d96977a7d263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\raknet">
+      <UniqueIdentifier>{ee432f61-463a-4816-818a-af0eac945c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\raknet">
+      <UniqueIdentifier>{cebb3b25-878b-417c-804d-74cdd6f37307}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\udptest.h">
@@ -141,6 +147,12 @@
     <ClInclude Include="source\blaze\component\messagingcomponent.h">
       <Filter>Header Files\blaze\component</Filter>
     </ClInclude>
+    <ClInclude Include="source\raknet\client.h">
+      <Filter>Header Files\raknet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\raknet\server.h">
+      <Filter>Header Files\raknet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -229,6 +241,12 @@
     </ClCompile>
     <ClCompile Include="source\blaze\component\messagingcomponent.cpp">
       <Filter>Source Files\blaze\component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\raknet\client.cpp">
+      <Filter>Source Files\raknet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\raknet\server.cpp">
+      <Filter>Source Files\raknet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

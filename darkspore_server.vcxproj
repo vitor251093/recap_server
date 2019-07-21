@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
-    <LibraryPath>libs\pugixml-1.9\lib;libs\openssl-1.1.1b\lib;libs\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>libs\raknet3\Source;libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
+    <LibraryPath>libs\RakNet\lib;libs\pugixml-1.9\lib;libs\openssl-1.1.1b\lib;libs\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\build\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -137,7 +137,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libssl.lib;libcrypto.lib;pugixml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;pugixml.lib;RakNetDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
       <Command>xcopy /y $(ProjectDir)x64\Release\darkspore_server.exe $(ProjectDir)build\darkspore_server.exe </Command>
@@ -171,6 +171,8 @@
     <ClInclude Include="source\http\uri.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\network\client.h" />
+    <ClInclude Include="source\raknet\client.h" />
+    <ClInclude Include="source\raknet\server.h" />
     <ClInclude Include="source\tcptest.h" />
     <ClInclude Include="source\udptest.h" />
     <ClInclude Include="source\utils\functions.h" />
@@ -202,6 +204,8 @@
     <ClCompile Include="source\http\uri.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\network\client.cpp" />
+    <ClCompile Include="source\raknet\client.cpp" />
+    <ClCompile Include="source\raknet\server.cpp" />
     <ClCompile Include="source\tcptest.cpp" />
     <ClCompile Include="source\udptest.cpp" />
     <ClCompile Include="source\utils\functions.cpp" />

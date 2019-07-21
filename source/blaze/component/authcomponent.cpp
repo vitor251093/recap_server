@@ -71,26 +71,26 @@
 			4 = IndirectMatchmakingSetupContext
 
 	Blaze types
-		0x04 = Integer
+		0x04 = Integer (Time, U64)
 		0x08 = Vector3
 		0x0C = Vector2
 		0x10 = Integer List
 		0x14 = Union
 		0x18 = Struct
-		0x1C = Enum
+		0x1C = Enum (calls 0x3C internally, so its a int32_t)
 		0x20 = Blob
 		0x24 = String
-		0x28 = Enum
+		0x28 = Enum (Callback?)
 		0x2C = Float
-		0x30 = Integer
-		0x34 = Integer
-		0x38 = Integer (IPs and such?)
-		0x3C = Integer
-		0x40 = Integer (Ports and more?)
-		0x44 = Integer
-		0x48 = Integer
-		0x4C = Integer
-		0x50 = Boolean
+		0x30 = Integer (uint64_t)
+		0x34 = Integer (int64_t)
+		0x38 = Integer (uint32_t)
+		0x3C = Integer (int32_t)
+		0x40 = Integer (uint16_t)
+		0x44 = Integer (int16_t)
+		0x48 = Integer (uint8_t)
+		0x4C = Integer (int8_t)
+		0x50 = Boolean (integer where true != 0)
 		0x54 = Map
 		0x58 = Array
 
@@ -372,10 +372,10 @@ namespace Blaze {
 	void AuthComponent::SendLogin(Client* client, Header header) {
 		const auto& user = client->get_user();
 		if (!user) {
+			// Send some error
 			return;
 		}
 
-		auto& request = client->get_request();
 		uint64_t currentTime = utils::get_unix_time();
 
 		TDF::Packet packet;
@@ -387,7 +387,7 @@ namespace Blaze {
 				auto& pdtlStruct = packet.CreateStruct(&plstList, "");
 				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", currentTime);
-				packet.PutInteger(&pdtlStruct, "PID", 1); // user id?
+				packet.PutInteger(&pdtlStruct, "PID", user->get_id());
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
 				packet.PutInteger(&pdtlStruct, "XREF", 0);
 				packet.PutInteger(&pdtlStruct, "XTYP", ExternalRefType::Unknown);
@@ -398,7 +398,7 @@ namespace Blaze {
 		packet.PutInteger(nullptr, "SPAM", 1);
 		packet.PutString(nullptr, "THST", "");
 		packet.PutString(nullptr, "TURI", "");
-		packet.PutInteger(nullptr, "UID", 1); // client id
+		packet.PutInteger(nullptr, "UID", client->get_id());
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);
@@ -413,28 +413,28 @@ namespace Blaze {
 	void AuthComponent::SendLoginPersona(Client* client, Header header) {
 		const auto& user = client->get_user();
 		if (!user) {
+			// Send some error
 			return;
 		}
-
-		auto& request = client->get_request();
+		
 		uint64_t currentTime = utils::get_unix_time();
 
 		TDF::Packet packet;
-		packet.PutInteger(nullptr, "BUID", 1); // user id?
+		packet.PutInteger(nullptr, "BUID", user->get_id()); // blaze user id?
 		packet.PutInteger(nullptr, "FRST", 0);
 		packet.PutString(nullptr, "KEY", "");
 		packet.PutInteger(nullptr, "LLOG", currentTime);
-		packet.PutString(nullptr, "MAIL", request["MAIL"].GetString());
+		packet.PutString(nullptr, "MAIL", user->get_username());
 		{
 			auto& pdtlStruct = packet.CreateStruct(nullptr, "PDTL");
 			packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 			packet.PutInteger(&pdtlStruct, "LAST", currentTime);
-			packet.PutInteger(&pdtlStruct, "PID", 1); // user id?
+			packet.PutInteger(&pdtlStruct, "PID", user->get_id());
 			packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
 			packet.PutInteger(&pdtlStruct, "XREF", 0);
 			packet.PutInteger(&pdtlStruct, "XTYP", ExternalRefType::Unknown);
 		}
-		packet.PutInteger(nullptr, "UID", 1); // client id?
+		packet.PutInteger(nullptr, "UID", client->get_id());
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);
@@ -449,10 +449,10 @@ namespace Blaze {
 	void AuthComponent::SendFullLogin(Client* client, Header header) {
 		const auto& user = client->get_user();
 		if (!user) {
+			// Send some error
 			return;
 		}
 
-		auto& request = client->get_request();
 		uint64_t currentTime = utils::get_unix_time();
 
 		TDF::Packet packet;
@@ -462,21 +462,21 @@ namespace Blaze {
 		packet.PutString(nullptr, "PRIV", "");
 		{
 			auto& sessStruct = packet.CreateStruct(nullptr, "SESS");
-			packet.PutInteger(&sessStruct, "BUID", 0);
+			packet.PutInteger(&sessStruct, "BUID", user->get_id());
 			packet.PutInteger(&sessStruct, "FRST", 0);
 			packet.PutString(&sessStruct, "KEY", "");
 			packet.PutInteger(&sessStruct, "LLOG", currentTime);
-			packet.PutString(&sessStruct, "MAIL", request["MAIL"].GetString());
+			packet.PutString(&sessStruct, "MAIL", user->get_username());
 			{
 				auto& pdtlStruct = packet.CreateStruct(&sessStruct, "PDTL");
 				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", currentTime);
-				packet.PutInteger(&pdtlStruct, "PID", 0);
+				packet.PutInteger(&pdtlStruct, "PID", user->get_id());
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
 				packet.PutInteger(&pdtlStruct, "XREF", 0);
 				packet.PutInteger(&pdtlStruct, "XTYP", ExternalRefType::Unknown);
 			}
-			packet.PutInteger(&sessStruct, "UID", 1);
+			packet.PutInteger(&sessStruct, "UID", client->get_id());
 		}
 		packet.PutInteger(nullptr, "SPAM", 0);
 		packet.PutString(nullptr, "THST", "");
@@ -495,10 +495,10 @@ namespace Blaze {
 	void AuthComponent::SendConsoleLogin(Client* client, Header header) {
 		const auto& user = client->get_user();
 		if (!user) {
+			// Send some error
 			return;
 		}
 
-		auto& request = client->get_request();
 		uint64_t currentTime = utils::get_unix_time();
 
 		TDF::Packet packet;
@@ -507,21 +507,21 @@ namespace Blaze {
 		packet.PutString(nullptr, "PRIV", "");
 		{
 			auto& sessStruct = packet.CreateStruct(nullptr, "SESS");
-			packet.PutInteger(&sessStruct, "BUID", 0);
+			packet.PutInteger(&sessStruct, "BUID", user->get_id());
 			packet.PutInteger(&sessStruct, "FRST", 0);
 			packet.PutString(&sessStruct, "KEY", "");
 			packet.PutInteger(&sessStruct, "LLOG", currentTime);
-			packet.PutString(&sessStruct, "MAIL", request["MAIL"].GetString());
+			packet.PutString(&sessStruct, "MAIL", user->get_username());
 			{
 				auto& pdtlStruct = packet.CreateStruct(&sessStruct, "PDTL");
 				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", currentTime);
-				packet.PutInteger(&pdtlStruct, "PID", 0);
+				packet.PutInteger(&pdtlStruct, "PID", user->get_id());
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Active);
 				packet.PutInteger(&pdtlStruct, "XREF", 0);
 				packet.PutInteger(&pdtlStruct, "XTYP", ExternalRefType::Unknown);
 			}
-			packet.PutInteger(&sessStruct, "UID", 1);
+			packet.PutInteger(&sessStruct, "UID", client->get_id());
 		}
 		packet.PutInteger(nullptr, "SPAM", 1);
 		packet.PutString(nullptr, "THST", "");
@@ -868,19 +868,15 @@ namespace Blaze {
 	void AuthComponent::Login(Client* client, Header header) {
 		auto& request = client->get_request();
 
-		std::string email = request["MAIL"].GetString();
+		std::string username = request["MAIL"].GetString();
 		std::string password = request["PASS"].GetString();
 
-		const auto& user = Game::UserManager::GetUserByEmail(email);
+		const auto& user = Game::UserManager::GetUserByEmail(username);
 		if (user && user->get_password() == password) {
 			client->set_user(user);
 			SendLogin(client, std::move(header));
 		} else {
-			if (user) {
-				std::cout << "Wrong password for email " << email << "." << std::endl;
-			} else {
-				std::cout << "User with email " << email << " not found." << std::endl;
-			}
+			std::cout << "User '" << username << "' not found." << std::endl;
 
 			header.component = Component::Authentication;
 			header.command = 0x28;
@@ -893,12 +889,11 @@ namespace Blaze {
 	void AuthComponent::SilentLogin(Client* client, Header header) {
 		const auto& user = client->get_user();
 		if (!user) {
+			// Send some error
 			return;
 		}
 
 		std::cout << "Silent Login" << std::endl;
-
-		auto& request = client->get_request();
 
 		TDF::Packet packet;
 		packet.PutInteger(nullptr, "AGUP", 0);
@@ -908,21 +903,21 @@ namespace Blaze {
 		packet.PutString(nullptr, "PRIV", "");
 		{
 			auto& sessStruct = packet.CreateStruct(nullptr, "SESS");
-			packet.PutInteger(&sessStruct, "BUID", 0);
+			packet.PutInteger(&sessStruct, "BUID", user->get_id());
 			packet.PutInteger(&sessStruct, "FRST", 0);
 			packet.PutString(&sessStruct, "KEY", "SessionKey_1337");
 			packet.PutInteger(&sessStruct, "LLOG", 0);
-			packet.PutString(&sessStruct, "MAIL", request["MAIL"].GetString());
+			packet.PutString(&sessStruct, "MAIL", user->get_username());
 			{
 				auto& pdtlStruct = packet.CreateStruct(nullptr, "PDTL");
 				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
 				packet.PutInteger(&pdtlStruct, "LAST", 0);
-				packet.PutInteger(&pdtlStruct, "PID", 0);
+				packet.PutInteger(&pdtlStruct, "PID", user->get_id());
 				packet.PutInteger(&pdtlStruct, "STAS", PersonaStatus::Unknown);
 				packet.PutInteger(&pdtlStruct, "XREF", 0);
 				packet.PutInteger(&pdtlStruct, "XTYP", ExternalRefType::Unknown);
 			}
-			packet.PutInteger(&sessStruct, "UID", 1);
+			packet.PutInteger(&sessStruct, "UID", client->get_id());
 		}
 		packet.PutInteger(nullptr, "SPAM", 0);
 		packet.PutString(nullptr, "THST", "");
@@ -937,19 +932,15 @@ namespace Blaze {
 	}
 
 	void AuthComponent::LoginPersona(Client* client, Header header) {
-		const auto& user = client->get_user();
-		if (!user) {
-			return;
-		}
-
 		std::cout << "Login persona" << std::endl;
 
 		SendLoginPersona(client, std::move(header));
 
-		UserSessionComponent::NotifyUserAdded(client, 1, user->get_name());
-		UserSessionComponent::NotifyUserUpdated(client, 1);
-
-		// GameManagerComponent::NotifyGameStateChange(client, 0, 2);
+		const auto& user = client->get_user();
+		if (user) {
+			UserSessionComponent::NotifyUserAdded(client, user->get_id(), user->get_name());
+			UserSessionComponent::NotifyUserUpdated(client, user->get_id());
+		}
 	}
 
 	void AuthComponent::Logout(Client* client, Header header) {

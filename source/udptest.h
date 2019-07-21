@@ -23,7 +23,7 @@ class UDPTest {
 		boost::asio::ip::udp::socket mSocket;
 		boost::asio::ip::udp::endpoint mRemoteEndpoint;
 
-		std::array<uint8_t, 1024> mData;
+		std::array<uint8_t, 10240> mData;
 };
 
 #endif

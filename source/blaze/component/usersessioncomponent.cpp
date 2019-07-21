@@ -103,8 +103,6 @@ namespace Blaze {
 	void UserSessionComponent::NotifyUserSessionExtendedDataUpdate(Client* client, uint64_t userId) {
 		std::cout << "UserSession: User extended data" << std::endl;
 
-		auto& request = client->get_request();
-
 		TDF::Packet packet;
 		{
 			auto& dataStruct = packet.CreateStruct(nullptr, "DATA");
@@ -120,7 +118,7 @@ namespace Blaze {
 			{
 				auto& qdatStruct = packet.CreateStruct(&dataStruct, "QDAT");
 				packet.PutInteger(&qdatStruct, "DBPS", 0);
-				packet.PutInteger(&qdatStruct, "NATT", static_cast<uint64_t>(NatType::Open));
+				packet.PutInteger(&qdatStruct, "NATT", NatType::Open);
 				packet.PutInteger(&qdatStruct, "UBPS", 0);
 			}
 			packet.PutInteger(&dataStruct, "UATT", 0);
@@ -139,6 +137,11 @@ namespace Blaze {
 	}
 
 	void UserSessionComponent::NotifyUserAdded(Client* client, uint64_t userId, const std::string& userName) {
+		const auto& user = client->get_user();
+		if (!user) {
+			return;
+		}
+
 		std::cout << "UserSession: Add user" << std::endl;
 
 		auto& request = client->get_request();
@@ -158,14 +161,14 @@ namespace Blaze {
 			{
 				auto& qdatStruct = packet.CreateStruct(&dataStruct, "QDAT");
 				packet.PutInteger(&qdatStruct, "DBPS", 1);
-				packet.PutInteger(&qdatStruct, "NATT", static_cast<uint64_t>(NatType::Open));
+				packet.PutInteger(&qdatStruct, "NATT", NatType::Open);
 				packet.PutInteger(&qdatStruct, "UBPS", 1);
 			}
 			packet.PutInteger(&dataStruct, "UATT", 0);
 		} {
 			auto& userStruct = packet.CreateStruct(nullptr, "USER");
 			packet.PutInteger(&userStruct, "AID", userId);
-			packet.PutInteger(&userStruct, "ALOC", request["CINF"]["LOC"].GetUint64());
+			packet.PutInteger(&userStruct, "ALOC", client->localization());
 			packet.PutBlob(&userStruct, "EXBB", nullptr, 0);
 			packet.PutInteger(&userStruct, "EXID", 0);
 			packet.PutInteger(&userStruct, "ID", userId);
@@ -187,7 +190,7 @@ namespace Blaze {
 		auto& request = client->get_request();
 
 		TDF::Packet packet;
-		packet.PutInteger(nullptr, "FLGS", static_cast<uint32_t>(SessionState::Authenticated));
+		packet.PutInteger(nullptr, "FLGS", SessionState::Authenticated);
 		packet.PutInteger(nullptr, "ID", userId);
 
 		DataBuffer outBuffer;
@@ -202,9 +205,30 @@ namespace Blaze {
 	}
 
 	void UserSessionComponent::UpdateNetworkInfo(Client* client, Header header) {
-		// Log(client->get_current_request());
 		std::cout << "Update network info" << std::endl;
 
+		auto& request = client->get_request();
+
+		const auto& addrData = request["ADDR"]["VALU"];
+		/*
+		"ADDR": {
+			"_Type": 6,
+				"_AddressMember" : 2,
+				"VALU" : {
+				"_Type": 3,
+					"EXIP" : {
+					"_Type": 3,
+						"IP" : 0,
+						"PORT" : 0
+				},
+					"INIP" : {
+						"_Type": 3,
+							"IP" : 3232235954,
+							"PORT" : 3659
+					}
+			}
+		},
+		*/
 		header.error_code = 0;
 		client->reply(std::move(header));
 
@@ -229,8 +253,6 @@ namespace Blaze {
 	}
 
 	void UserSessionComponent::UpdateUserSessionClientData(Client* client, Header header) {
-		// Log(client->get_current_request());
-
 		header.error_code = 0;
 		client->reply(std::move(header));
 

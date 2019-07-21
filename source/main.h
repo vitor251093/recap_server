@@ -22,6 +22,8 @@ class Application {
 
 		void Run();
 
+		boost::asio::io_context& get_io_service();
+
 		Game::API* get_game_api() const;
 		Blaze::Server* get_redirector_server() const;
 		Blaze::Server* get_blaze_server() const;

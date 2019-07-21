@@ -9,7 +9,42 @@
 // HTTP
 namespace HTTP {
 	// URI
+	std::string URI::encode(std::string_view str) {
+		// Cant bother atm
+		return std::string();
+	}
+
+	std::string URI::decode(std::string_view str, std::string& out) {
+		out.clear();
+		out.reserve(str.size());
+
+		std::string tmp(2, '\0');
+		for (auto i = 0; i < str.size(); ++i) {
+			char symbol = str[i];
+			if (symbol == '%') {
+				if (i + 3 <= str.size()) {
+					tmp[0] = str[++i];
+					tmp[1] = str[++i];
+					out += utils::to_number<char>(tmp, 16);
+				}
+				else {
+					return false;
+				}
+			} else if (symbol == '+') {
+				out += ' ';
+			} else {
+				out += symbol;
+			}
+		}
+
+		return true;
+	}
+
 	void URI::parse(std::string_view path) {
+		std::string decoded_path;
+		decode(path, decoded_path);
+		path = decoded_path;
+
 		auto scheme_end = parse_scheme(path);
 		auto authority_end = parse_authority(path, scheme_end);
 		if ((authority_end + 1) < path.length()) {
@@ -193,45 +228,14 @@ namespace HTTP {
 		}
 	}
 	*/
-	
-	bool urlDecode(const std::string& in, std::string& out) {
-		// Reference:
-		// https://www.boost.org/doc/libs/1_47_0/doc/html/boost_asio/example/http/server3/request_handler.cpp
-		
-		out.clear();
-		out.reserve(in.size());
-		for (std::size_t i = 0; i < in.size(); ++i) {
-			if (in[i] == '%') {
-				if (i + 3 <= in.size()) {
-					int value = 0;
-					std::istringstream is(in.substr(i + 1, 2));
-					if (is >> std::hex >> value) {
-						out += static_cast<char>(value);
-						i += 2;
-					} else {
-						return false;
-					}
-				} else {
-					return false;
-				}
-			}
-			else if (in[i] == '+') {
-				out += ' ';
-			} else {
-				out += in[i];
-			}
-		}
-		return true;
-	}
-
 	void URI::parse_query(std::string_view query) {
 		for (const auto& variable : utils::explode_string(query, '&')) {
 			auto separator = variable.find('=');
-			auto variableValue = std::string(variable.substr(separator + 1));
-
-			std::string decodedVariableValue;
 			if (separator != std::string::npos) {
-				if (urlDecode(variableValue, decodedVariableValue)) {
+				auto variableValue = std::string(variable.substr(separator + 1));
+				std::string decodedVariableValue;
+
+				if (decode(variableValue, decodedVariableValue)) {
 					mQuery.emplace(variable.substr(0, separator), decodedVariableValue);
 				} else {
 					mQuery.emplace(variable.substr(0, separator), variableValue);

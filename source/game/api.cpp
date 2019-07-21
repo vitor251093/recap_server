@@ -324,6 +324,8 @@ namespace Game {
 				game_account_unlock(session, response);
 			} else if (method == "api.game.getGame" || method == "api.game.getRandomGame") {
 				game_game_getGame(session, response);
+			} else if (method == "api.game.exitGame") {
+				game_game_exitGame(session, response);
 			} else if (method == "api.creature.resetCreature") {
 				game_creature_resetCreature(session, response);
 			} else if (method == "api.creature.unlockCreature") {
@@ -721,6 +723,7 @@ version = 1
 
 			utils::xml_add_text_node(docResponse, "expires", timestamp + (3 * 60 * 60 * 1000));
 			if (auto parts = docResponse.append_child("parts")) {
+				/*
 				if (auto part = parts.append_child("part")) {
 					utils::xml_add_text_node(part, "is_flair", "0");
 					utils::xml_add_text_node(part, "cost", "100");
@@ -732,12 +735,13 @@ version = 1
 					utils::xml_add_text_node(part, "prefix_secondary_asset_id", "0");
 					utils::xml_add_text_node(part, "rarity", "1");
 					utils::xml_add_text_node(part, "reference_id", 1);
-					utils::xml_add_text_node(part, "rigblock_asset_id", 1); // 0xA14538E5
+					utils::xml_add_text_node(part, "rigblock_asset_id", 0x27A1); // 0xA14538E5
 					utils::xml_add_text_node(part, "status", "1");
 					utils::xml_add_text_node(part, "suffix_asset_id", 0x0005);
 					utils::xml_add_text_node(part, "usage", "1");
 					utils::xml_add_text_node(part, "creation_date", timestamp);
 				}
+				*/
 			}
 			
 			add_common_keys(docResponse);
@@ -871,16 +875,10 @@ version = 1
 			}
 
 			if (request.uri.parameter("include_feed") == "true") {
-				if (auto feed = docResponse.append_child("feed")) {
-					/*
-					auto items = feed.append_child("items");
-					if (auto item = items.append_child("item")) {
-						utils::xml_add_text_node(item, "account_id", "1");
-						utils::xml_add_text_node(item, "id", "1");
-						utils::xml_add_text_node(item, "message_id", "0");
-						utils::xml_add_text_node(item, "metadata", "");
-					}
-					*/
+				if (user) {
+					user->get_feed().Write(docResponse);
+				} else {
+					docResponse.append_child("feed");
 				}
 			}
 
@@ -930,18 +928,29 @@ version = 1
 
 		pugi::xml_document document;
 		if (auto docResponse = document.append_child("response")) {
+			bool include_creatures = request.uri.parameter("include_creatures") == "true";
 			bool include_decks = request.uri.parameter("include_decks") == "true";
+			bool include_feed = request.uri.parameter("include_feed") == "true";
+			bool include_stats = request.uri.parameter("include_stats") == "true";
 			if (user) {
 				user->get_account().Write(docResponse);
-				if (include_decks) {
-					user->get_squads().Write(docResponse);
+
+				if (include_creatures) { user->get_creatures().Write(docResponse); }
+				if (include_decks) { user->get_squads().Write(docResponse); }
+				if (include_feed) { user->get_feed().Write(docResponse); }
+				if (include_stats) {
+					auto stats = docResponse.append_child("stats");
+					auto stat = stats.append_child("stat");
+					utils::xml_add_text_node(stat, "wins", 0);
 				}
 			} else {
 				Game::Account account;
 				account.Write(docResponse);
-				if (include_decks) {
-					docResponse.append_child("decks");
-				}
+
+				if (include_creatures) { docResponse.append_child("creatures"); }
+				if (include_decks) { docResponse.append_child("decks"); }
+				if (include_feed) { docResponse.append_child("feed"); }
+				if (include_stats) { docResponse.append_child("stats"); }
 			}
 
 			add_common_keys(docResponse);
@@ -1008,6 +1017,19 @@ version = 1
 			}
 		}
 
+		add_common_keys(docResponse);
+
+		xml_string_writer writer;
+		document.save(writer, "\t", 1U, pugi::encoding_latin1);
+
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = std::move(writer.result);
+	}
+
+	void API::game_game_exitGame(HTTP::Session& session, HTTP::Response& response) {
+		pugi::xml_document document;
+
+		auto docResponse = document.append_child("response");
 		add_common_keys(docResponse);
 
 		xml_string_writer writer;

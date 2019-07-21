@@ -54,6 +54,10 @@ namespace Game {
 	// Creature
 	struct Creature {
 		std::string name;
+		std::string nameLocaleId;
+		std::string elementType;
+		std::string classType;
+		std::string pngLargeUrl;
 		std::string pngThumbUrl;
 
 		double gearScore = 0;

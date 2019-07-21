@@ -240,7 +240,7 @@ namespace Blaze {
 
 			packet.PutString(&teleStruct, "DISA", "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ");
 			packet.PutString(&teleStruct, "FILT", "");
-			packet.PutInteger(&teleStruct, "LOC", request["CINF"]["LOC"].GetUint64());
+			packet.PutInteger(&teleStruct, "LOC", client->localization());
 
 			packet.PutString(&teleStruct, "NOOK", "US,CA,MX");
 			packet.PutInteger(&teleStruct, "PORT", 9988);
@@ -256,7 +256,7 @@ namespace Blaze {
 			packet.PutString(&tickStruct, "SKEY", "0,127.0.0.1:8999,darkspore-pc,10,50,50,50,50,0,0");
 		} {
 			auto& uropStruct = packet.CreateStruct(nullptr, "UROP");
-			packet.PutInteger(&uropStruct, "TMOP", static_cast<uint64_t>(TelemetryOpt::OptOut));
+			packet.PutInteger(&uropStruct, "TMOP", TelemetryOpt::OptOut);
 		}
 
 		DataBuffer outBuffer;
@@ -264,8 +264,6 @@ namespace Blaze {
 
 		header.error_code = 0;
 		client->reply(header, outBuffer);
-
-		// http send api.account.auth?
 	}
 
 	void UtilComponent::SendGetTickerServer(Client* client) {
@@ -287,7 +285,7 @@ namespace Blaze {
 
 	void UtilComponent::SendUserOptions(Client* client) {
 		TDF::Packet packet;
-		packet.PutInteger(nullptr, "TMOP", static_cast<uint64_t>(TelemetryOpt::OptIn));
+		packet.PutInteger(nullptr, "TMOP", TelemetryOpt::OptIn);
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);
@@ -336,7 +334,7 @@ namespace Blaze {
 
 		TDF::WriteString(outBuffer, "DISA", "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ");
 		TDF::WriteString(outBuffer, "FILT", "");
-		TDF::WriteInteger(outBuffer, "LOC", request["CINF"]["LOC"].GetUint64());
+		TDF::WriteInteger(outBuffer, "LOC", client->localization());
 
 		TDF::WriteString(outBuffer, "NOOK", "US,CA,MX");
 		TDF::WriteInteger(outBuffer, "PORT", 9988);
@@ -355,6 +353,11 @@ namespace Blaze {
 		std::cout << "Client 0 pre-authenticating" << std::endl;
 
 		auto& request = client->get_request();
+		auto& clientData = request["CDAT"];
+		auto& clientInfo = request["CINF"];
+
+		client->type() = static_cast<ClientType>(clientData["TYPE"].GetUint());
+		client->localization() = clientInfo["LOC"].GetUint();
 
 		TDF::Packet packet;
 		packet.PutString(nullptr, "ASRC", "321915");
@@ -394,10 +397,10 @@ namespace Blaze {
 #endif
 			}
 		}
-		packet.PutString(nullptr, "INST", request["CDAT"]["SVCN"].GetString());
+		packet.PutString(nullptr, "INST", clientData["SVCN"].GetString());
 		packet.PutString(nullptr, "NASP", "cem_ea_id");
 		packet.PutString(nullptr, "PILD", "");
-		packet.PutString(nullptr, "PLAT", request["CINF"]["PLAT"].GetString());
+		packet.PutString(nullptr, "PLAT", clientInfo["PLAT"].GetString());
 		{
 			auto& qossStruct = packet.CreateStruct(nullptr, "QOSS");
 			{

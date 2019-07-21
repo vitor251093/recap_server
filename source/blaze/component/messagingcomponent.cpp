@@ -99,7 +99,6 @@ namespace Blaze {
 	}
 
 	void MessagingComponent::OnSendMessage(Client* client, Header header) {
-		Log(client->get_current_request());
 		std::cout << "OnSendMessage" << std::endl;
 		OnSendMessageResponse(client);
 	}

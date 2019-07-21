@@ -21,6 +21,10 @@ namespace Blaze {
 	Client::Client(boost::asio::io_context& io_service, boost::asio::ssl::context& context) :
 		Network::Client(io_service), mSocket(io_service, context)
 	{
+		static uint32_t id = 0;
+		mId = ++id;
+		
+		//
 		int timeout = -1;
 
 		auto nativeHandle = get_socket().native_handle();
@@ -189,11 +193,9 @@ namespace Blaze {
 		*/
 
 		auto pos = mReadBuffer.position();
-		TDF::Parse(mReadBuffer, mRequest);
 
-		mReadBuffer.set_position(pos);
-		mCurrentRequest = {};
-		TDF::Parse(mReadBuffer, mCurrentRequest);
+		mRequest = {};
+		TDF::Parse(mReadBuffer, mRequest);
 		
 		if (header.component != Blaze::Component::UserSessions) {
 			// Log(mRequest);

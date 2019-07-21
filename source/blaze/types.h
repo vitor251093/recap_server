@@ -80,8 +80,12 @@ namespace Blaze {
 	};
 
 	enum class PlayerState {
-		Disconnected,
-		Connected = 2
+		Reserved = 0,
+		Queued,
+		Connecting,
+		Migrating,
+		Connected,
+		KickPending
 	};
 
 	enum class PersonaStatus {
@@ -167,6 +171,16 @@ namespace Blaze {
 		InternalIp = 0,
 		ExternalIp,
 		XboxServerAddress
+	};
+
+	enum class GameType {
+		Tutorial = 1,
+		Chain = 2,
+		Arena = 3,
+		KillRace = 4,
+		Juggernaut = 5,
+		Quickplay = 6,
+		DirectEntry = 7
 	};
 
 	// Header

@@ -20,7 +20,7 @@ namespace Blaze {
 			// Notifications
 			static void NotifyDestroyPlaygroup(Client* client, uint32_t playgroupId, uint32_t reason);
 			static void NotifyJoinPlaygroup(Client* client);
-			static void NotifyMemberJoinedPlaygroup(Client* client, uint32_t playgroundId);
+			static void NotifyMemberJoinedPlaygroup(Client* client, uint32_t playgroupId);
 			static void NotifyMemberRemovedFromPlaygroup(Client* client, uint32_t playgroupId, uint32_t reason);
 			static void NotifyPlaygroupAttributesSet(Client* client, uint32_t playgroupId);
 			static void NotifyMemberAttributesSet(Client* client, uint32_t playgroupId);

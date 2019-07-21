@@ -12,8 +12,12 @@ namespace Game {
 		if (nodeName != "creature") {
 			return;
 		}
-		
+
 		name = utils::xml_get_text_node(node, "name");
+		nameLocaleId = utils::xml_get_text_node(node, "name_locale_id");
+		elementType = utils::xml_get_text_node(node, "type_a");
+		classType = utils::xml_get_text_node(node, "class");
+		pngLargeUrl = utils::xml_get_text_node(node, "png_large_url");
 		pngThumbUrl = utils::xml_get_text_node(node, "png_thumb_url");
 
 		gearScore = utils::xml_get_text_node<double>(node, "gear_score");
@@ -28,6 +32,10 @@ namespace Game {
 		if (auto creature = node.append_child("creature")) {
 			utils::xml_add_text_node(creature, "id", id);
 			utils::xml_add_text_node(creature, "name", name);
+			utils::xml_add_text_node(creature, "name_locale_id", nameLocaleId);
+			utils::xml_add_text_node(creature, "type_a", elementType);
+			utils::xml_add_text_node(creature, "class", classType);
+			utils::xml_add_text_node(creature, "png_large_url", pngLargeUrl);
 			utils::xml_add_text_node(creature, "png_thumb_url", pngThumbUrl);
 			utils::xml_add_text_node(creature, "noun_id", nounId);
 			utils::xml_add_text_node(creature, "version", version);

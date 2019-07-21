@@ -92,7 +92,7 @@ namespace Blaze {
 		}
 		packet.PutInteger(nullptr, "GRP", 0);
 		packet.PutInteger(nullptr, "LVL", 1);
-		packet.PutInteger(nullptr, "STAT", 4);
+		packet.PutInteger(nullptr, "STAT", PlayerState::Connected);
 		packet.PutInteger(nullptr, "XTRA", 0);
 
 		DataBuffer outBuffer;
@@ -133,7 +133,6 @@ namespace Blaze {
 	}
 
 	void AssociationComponent::GetLists(Client* client, Header header) {
-		// Log(client->get_current_request());
 		SendLists(client);
 		// NotifyUpdateListMembership(client);
 	}
