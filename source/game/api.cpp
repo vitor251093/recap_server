@@ -154,8 +154,11 @@ namespace Game {
 		auto& request = session.get_request();
 		std::string name = request.uri.resource();
 		if (name == "/") name = "";
+		responseWithFileInStorageAtPath(session, response, path + name);
+	}
 
-		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + path + name;
+	void API::responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path) {
+		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + path;
 
 		response.version() |= 0x1000'0000;
 		response.body() = std::move(wholePath);
@@ -374,11 +377,11 @@ version = 1
 
 		// Browser launcher
 		router->add("/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
+			responseWithFileInStorageAtPath(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
 		});
 
 		router->add("/home", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
+			responseWithFileInStorageAtPath(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
 		});
 
 		router->add("/favicon.ico", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {

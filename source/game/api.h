@@ -60,6 +60,7 @@ namespace Game {
 		private:
 			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response);
 			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path);
+			void responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path);
 
 			void add_broadcasts(pugi::xml_node& node);
 
