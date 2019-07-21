@@ -17,6 +17,7 @@
 #include <boost/beast/version.hpp>
 
 #include <iostream>
+#include <filesystem>
 
 /*
 	api.account.auth
@@ -508,8 +509,11 @@ version = 1
 		
 		// themes
 		{
+			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) +
+					"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
 			rapidjson::Value value(rapidjson::kArrayType);
-			value.PushBack(rapidjson::Value("default"), allocator);
+			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath))
+				value.PushBack(rapidjson::Value(entry.path()), allocator);
 
 			document.AddMember(rapidjson::Value("themes"), value, allocator);
 		}
