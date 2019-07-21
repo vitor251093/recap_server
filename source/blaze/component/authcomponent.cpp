@@ -424,7 +424,7 @@ namespace Blaze {
 		packet.PutInteger(nullptr, "FRST", 0);
 		packet.PutString(nullptr, "KEY", "");
 		packet.PutInteger(nullptr, "LLOG", currentTime);
-		packet.PutString(nullptr, "MAIL", user->get_username());
+		packet.PutString(nullptr, "MAIL", user->get_email());
 		{
 			auto& pdtlStruct = packet.CreateStruct(nullptr, "PDTL");
 			packet.PutString(&pdtlStruct, "DSNM", user->get_name());
@@ -466,7 +466,7 @@ namespace Blaze {
 			packet.PutInteger(&sessStruct, "FRST", 0);
 			packet.PutString(&sessStruct, "KEY", "");
 			packet.PutInteger(&sessStruct, "LLOG", currentTime);
-			packet.PutString(&sessStruct, "MAIL", user->get_username());
+			packet.PutString(&sessStruct, "MAIL", user->get_email());
 			{
 				auto& pdtlStruct = packet.CreateStruct(&sessStruct, "PDTL");
 				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
@@ -511,7 +511,7 @@ namespace Blaze {
 			packet.PutInteger(&sessStruct, "FRST", 0);
 			packet.PutString(&sessStruct, "KEY", "");
 			packet.PutInteger(&sessStruct, "LLOG", currentTime);
-			packet.PutString(&sessStruct, "MAIL", user->get_username());
+			packet.PutString(&sessStruct, "MAIL", user->get_email());
 			{
 				auto& pdtlStruct = packet.CreateStruct(&sessStruct, "PDTL");
 				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
@@ -907,7 +907,7 @@ namespace Blaze {
 			packet.PutInteger(&sessStruct, "FRST", 0);
 			packet.PutString(&sessStruct, "KEY", "SessionKey_1337");
 			packet.PutInteger(&sessStruct, "LLOG", 0);
-			packet.PutString(&sessStruct, "MAIL", user->get_username());
+			packet.PutString(&sessStruct, "MAIL", user->get_email());
 			{
 				auto& pdtlStruct = packet.CreateStruct(nullptr, "PDTL");
 				packet.PutString(&pdtlStruct, "DSNM", user->get_name());
