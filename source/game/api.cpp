@@ -377,7 +377,7 @@ version = 1
 
 		// Browser launcher
 		router->add("/favicon.ico", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "/www/static");
+			responseWithFileInStorage(session, response, "/www");
 		});
 
 		router->add("/panel", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
