@@ -15,7 +15,7 @@ namespace HTTP {
 	class URI {
 		public:
 			static std::string encode(std::string_view str);
-			static std::string decode(std::string_view str);
+			static std::string decode(std::string_view str, std::string& out);
 
 			void parse(std::string_view path);
 			
