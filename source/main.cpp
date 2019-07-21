@@ -113,10 +113,12 @@ HTTP::Server* Application::get_qos_server() const {
 int main(int argc, char* argv[]) {
 	Application& app = Application::InitApp(argc, argv);
 	if (!app.OnInit()) {
+		std::cout << "Server terminated with error" << std::endl;
 		app.OnExit();
 		return 1;
 	}
 
+	std::cout << "Server started" << std::endl;
 	app.Run();
 	return app.OnExit();
 }
