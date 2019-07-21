@@ -147,11 +147,7 @@ namespace Game {
 	}
 
 	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response) {
-		auto& request = session.get_request();
-		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + request.uri.resource();
-
-		response.version() |= 0x1000'0000;
-		response.body() = std::move(wholePath);
+		responseWithFileInStorage(session, response, "");
 	}
 
 	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path) {
@@ -378,6 +374,10 @@ version = 1
 
 		// Browser launcher
 		router->add("/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
+		});
+
+		router->add("/home", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
 		});
 
