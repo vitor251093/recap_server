@@ -14,7 +14,7 @@ namespace HTTP {
 		return std::string();
 	}
 
-	std::string URI::decode(std::string_view str, std::string& out) {
+	bool URI::decode(std::string_view str, std::string& out) {
 		out.clear();
 		out.reserve(str.size());
 
