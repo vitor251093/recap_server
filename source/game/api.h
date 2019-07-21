@@ -58,6 +58,9 @@ namespace Game {
 			void survey_survey_getSurveyList(HTTP::Session& session, HTTP::Response& response);
 
 		private:
+			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response);
+			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path);
+
 			void add_broadcasts(pugi::xml_node& node);
 
 			void add_common_keys(pugi::xml_node& node);

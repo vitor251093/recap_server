@@ -44,7 +44,8 @@ bool Application::OnInit() {
 	Game::Config::Load("config.xml");
 
 	// Game
-	mGameAPI = std::make_unique<Game::API>("5.3.0.127");
+	std::string darksporeVersion = "5.3.0.127";
+	mGameAPI = std::make_unique<Game::API>(darksporeVersion);
 
 	// Blaze
 	mRedirectorServer = std::make_unique<Blaze::Server>(mIoService, 42127);

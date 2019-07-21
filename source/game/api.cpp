@@ -146,6 +146,25 @@ namespace Game {
 		// Empty
 	}
 
+	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + name;
+
+		response.version() |= 0x1000'0000;
+		response.body() = std::move(wholePath);
+	}
+
+	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path) {
+		auto& request = session.get_request();
+		std::string name = request.uri.resource();
+		if (name == "/") name = "";
+
+		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + path + name;
+
+		response.version() |= 0x1000'0000;
+		response.body() = std::move(wholePath);
+	}
+
 	void API::setup() {
 		const auto& router = Application::GetApp().get_http_server()->get_router();
 
@@ -174,19 +193,13 @@ namespace Game {
 		router->add("/bootstrap/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
 
-			auto version = request.uri.parameter("version");
-			auto build = request.uri.parameter("build");
 			auto method = request.uri.parameter("method");
-
-			if (version.empty()) { version = "1"; }
-			if (build.empty()) { build = "5.3.0.127"; }
-			if (method.empty()) { method = "api.config.getConfigs"; }
-
-			if (method.find("api.config.") == 0) {
-				if (method == "api.config.getConfigs") {
-					bootstrap_config_getConfig(session, response);
-				}
+			if (method == "api.config.getConfigs") {
+				bootstrap_config_getConfig(session, response);
+				return;
 			}
+
+			response.result() = boost::beast::http::status::internal_server_error;
 		});
 
 		router->add("/bootstrap/launcher/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -351,40 +364,35 @@ token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
 version = 1
 		*/
 
+
+
 		// Png
 		router->add("/template_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			auto& request = session.get_request();
-
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) + request.uri.resource();
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
+			responseWithFileInStorage(session, response);
 		});
 
 		router->add("/creature_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			auto& request = session.get_request();
-
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) + request.uri.resource();
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
+			responseWithFileInStorage(session, response);
 		});
 
-		// Icon
+
+		// Browser launcher
+		router->add("/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "/www/" + Config::Get(DARKSPORE_INDEX_PAGE_PATH));
+		});
+
 		router->add("/favicon.ico", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			auto& request = session.get_request();
-
-			auto version = request.uri.parameter("version");
-			auto method = request.uri.parameter("method");
-
-			if (method == "api.survey.getSurveyList") {
-				survey_survey_getSurveyList(session, response);
-			} else {
-				empty_xml_response(response);
-			}
-
-			// return send_from_directory(staticFolderPath, 'favicon.ico', mimetype = 'image/vnd.microsoft.icon')
+			responseWithFileInStorage(session, response, "/www/static");
 		});
+
+		router->add("/images/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "/www/static/images");
+		});
+
+		router->add("/launcher/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "/www/static/launcher");
+		});
+
 
 		// Survey
 		router->add("/survey/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
