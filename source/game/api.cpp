@@ -376,24 +376,16 @@ version = 1
 
 
 		// Browser launcher
-		router->add("/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorageAtPath(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
-		});
-
-		router->add("/home", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorageAtPath(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
-		});
-
 		router->add("/favicon.ico", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response, "/www/static");
 		});
 
-		router->add("/images/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "/www/static/images");
+		router->add("/panel", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorageAtPath(session, response, "/www/" + Config::Get(CONFIG_DARKSPORE_INDEX_PAGE_PATH));
 		});
 
-		router->add("/launcher/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "/www/static/launcher");
+		router->add("/panel/([/a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "/www");
 		});
 
 
