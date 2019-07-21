@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 2.6)
+project(DLL)
+FILE(GLOB ALL_HEADER_SRCS ${RakNet_SOURCE_DIR}/Source/*.h)
+FILE(GLOB ALL_CPP_SRCS ${RakNet_SOURCE_DIR}/Source/*.cpp)
+include_directories(${RakNet_SOURCE_DIR}/Source) 
+
+IF(WIN32 AND NOT UNIX)
+	SET( CMAKE_CXX_FLAGS "/D WIN32 /D _RAKNET_DLL /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
+ENDIF(WIN32 AND NOT UNIX)
+
+IF(WIN32 AND NOT UNIX)
+	add_library(DLL SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+	target_link_libraries (DLL ${RAKNET_LIBRARY_LIBS})
+ELSE(WIN32 AND NOT UNIX)
+	add_library(RakNetDynamic SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+	target_link_libraries (RakNetDynamic ${RAKNET_LIBRARY_LIBS})
+	INSTALL(TARGETS RakNetDynamic DESTINATION ${RakNet_SOURCE_DIR}/Lib/DLL)
+ENDIF(WIN32 AND NOT UNIX)
