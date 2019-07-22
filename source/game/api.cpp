@@ -513,7 +513,8 @@ version = 1
 					"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
 			rapidjson::Value value(rapidjson::kArrayType);
 			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath))
-				value.PushBack(rapidjson::Value(entry.path()), allocator);
+				value.PushBack(rapidjson::Value{}.SetString(entry.path().string().c_str(), 
+														    entry.path().string().length(), allocator), allocator);
 
 			document.AddMember(rapidjson::Value("themes"), value, allocator);
 		}
