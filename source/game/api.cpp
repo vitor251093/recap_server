@@ -475,10 +475,11 @@ version = 1
 	}
 
 	void API::dls_launcher_setTheme(HTTP::Session& session, HTTP::Response& response) {
-		/*
-		theme = requestUtils.get(request, 'theme', str)
-		server.setActiveTheme(theme)
-		*/
+		auto& request = session.get_request();
+		auto themeName = request.uri.parameter("theme");
+
+		mActiveTheme = themeName;
+		
 		rapidjson::StringBuffer buffer;
 		buffer.Clear();
 
@@ -512,15 +513,19 @@ version = 1
 			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) +
 					"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
 			rapidjson::Value value(rapidjson::kArrayType);
-			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath))
-				value.PushBack(rapidjson::Value{}.SetString(entry.path().string().c_str(), 
-														    entry.path().string().length(), allocator), allocator);
+			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath)) {
+				if (entry.is_directory()) {
+					value.PushBack(rapidjson::Value{}.SetString(entry.path().filename().string().c_str(), 
+														    	entry.path().filename().string().length(), allocator), allocator);
+				}
+			}
 
 			document.AddMember(rapidjson::Value("themes"), value, allocator);
 		}
 
 		// selectedTheme
-		document.AddMember(rapidjson::Value("selectedTheme"), rapidjson::Value("default"), allocator);
+		document.AddMember(rapidjson::Value("selectedTheme"), 
+				rapidjson::Value{}.SetString(mActiveTheme.c_str(), mActiveTheme.length(), allocator), allocator);
 
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		document.Accept(writer);
