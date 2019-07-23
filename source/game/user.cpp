@@ -314,7 +314,7 @@ namespace Game {
 		
 		std::string folderPath = Config::Get(CONFIG_STORAGE_PATH) + "users/";
 		for (const auto & entry : std::filesystem::directory_iterator(folderPath)) {
-			if (entry.path().extension().string() == "xml") {
+			if (entry.path().extension() == ".xml") {
 				users.push_back(entry.path().stem().string());
 			}
 		}
