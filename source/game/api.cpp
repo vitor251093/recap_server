@@ -564,9 +564,11 @@ version = 1
 		const auto users = Game::UserManager::GetUsers();
 
 		pugi::xml_document document;
-		for (const auto& user : users) {
-			auto userXml = user->ToXml();
-			document.append_child(userXml.last_child());
+		if (auto usersXml = document.append_child("users")) {
+			for (const auto& user : users) {
+				auto userXml = user->ToXml();
+				usersXml.append_move(userXml.last_child());
+			}
 		}
 
 		xml_string_writer writer;
