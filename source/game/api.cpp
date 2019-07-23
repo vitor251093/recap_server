@@ -381,7 +381,7 @@ version = 1
 			responseWithFileInStorage(session, response, "/www");
 		});
 
-		router->add("/panel", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+		router->add("/panel/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorageAtPath(session, response, "/www/panel/index.html");
 		});
 
