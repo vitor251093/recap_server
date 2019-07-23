@@ -184,6 +184,8 @@ namespace Game {
 				dls_launcher_listThemes(session, response);
 			} else if (method == "api.game.registration") {
 				dls_game_registration(session, response);
+			} else if (method == "api.game.listUsers") {
+				dls_game_listUsers(session, response);
 			} else {
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
@@ -556,6 +558,22 @@ version = 1
 
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = buffer.GetString();
+	}
+
+	void API::dls_game_listUsers(HTTP::Session& session, HTTP::Response& response) {
+		const auto users = Game::UserManager::GetUsers();
+
+		pugi::xml_document document;
+		for (const auto& user : users) {
+			auto userXml = user->ToXml();
+			document.append_child(userXml.last_child());
+		}
+
+		xml_string_writer writer;
+		document.save(writer, "\t", 1U, pugi::encoding_latin1);
+
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = std::move(writer.result);
 	}
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {

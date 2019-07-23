@@ -141,6 +141,8 @@ namespace Game {
 			bool Load();
 			bool Save();
 
+			pugi::xml_document ToXml();
+
 		private:
 			Account mAccount;
 
@@ -164,6 +166,7 @@ namespace Game {
 	// UserManager
 	class UserManager {
 		public:
+			static std::vector<UserPtr> UserManager::GetUsers();
 			static UserPtr GetUserByEmail(const std::string& email);
 			static UserPtr CreateUserWithNameMailAndPassword(const std::string& name, const std::string& email, const std::string& password);
 			static UserPtr GetUserByAuthToken(const std::string& authToken);

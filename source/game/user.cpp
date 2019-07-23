@@ -285,8 +285,12 @@ namespace Game {
 	}
 
 	bool User::Save() {
+		pugi::xml_document document = ToXml();
 		std::string filepath = Config::Get(CONFIG_STORAGE_PATH) + "users/" + mEmail + ".xml";
+		return document.save_file(filepath.c_str(), "\t", 1U, pugi::encoding_latin1);
+	}
 
+	pugi::xml_document User::ToXml() {
 		pugi::xml_document document;
 		if (auto user = document.append_child("user")) {
 			utils::xml_add_text_node(user, "name", mName);
@@ -298,12 +302,19 @@ namespace Game {
 			mSquads.Write(user);
 			mFeed.Write(user);
 		}
-
-		return document.save_file(filepath.c_str(), "\t", 1U, pugi::encoding_latin1);
+		return document;
 	}
 
 	// UserManager
 	std::map<std::string, UserPtr> UserManager::sUsersByEmail;
+
+	std::vector<UserPtr> UserManager::GetUsers() {
+		std::vector<UserPtr> users;
+		for (auto const& pair : sUsersByEmail) {
+			users.push_back(pair.second);
+		}
+		return users;
+	}
 
 	UserPtr UserManager::GetUserByEmail(const std::string& email) {
 		UserPtr user;
