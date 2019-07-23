@@ -69,7 +69,7 @@ namespace Game {
 		
 		private:
 			std::string mVersion;
-			srd::string mActiveTheme = "default";
+			std::string mActiveTheme = "default";
 
 			uint32_t mPacketId = 0;
 	};
