@@ -213,7 +213,7 @@ namespace Game {
 				std::string path = Config::Get(CONFIG_STORAGE_PATH) +
 					"www/" +
 					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) +
-					"default/index.html";
+					mActiveTheme + "/index.html";
 
 				std::string client_script(dlsClientScript);
 				utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
@@ -234,7 +234,7 @@ namespace Game {
 			std::string path = Config::Get(CONFIG_STORAGE_PATH) +
 				"www/" +
 				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) +
-				"default/images/" +
+				mActiveTheme + "/images/" +
 				resource.substr(resource.rfind('/') + 1);
 
 			response.version() |= 0x1000'0000;
