@@ -154,7 +154,7 @@ namespace Game {
 	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path) {
 		auto& request = session.get_request();
 		std::string name = request.uri.resource();
-		if (name == "/") name = "";
+		if (name.ends_with("/")) name = name + "index.html";
 		responseWithFileInStorageAtPath(session, response, path + name);
 	}
 
@@ -381,11 +381,7 @@ version = 1
 			responseWithFileInStorage(session, response, "/www");
 		});
 
-		router->add("/panel/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorageAtPath(session, response, "/www/panel/index.html");
-		});
-
-		router->add("/panel/([/a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+		router->add("/panel/([/a-zA-Z0-9_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response, "/www");
 		});
 
