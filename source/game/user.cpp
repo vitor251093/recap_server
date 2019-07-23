@@ -308,11 +308,16 @@ namespace Game {
 	// UserManager
 	std::map<std::string, UserPtr> UserManager::sUsersByEmail;
 
-	std::vector<UserPtr> UserManager::GetUsers() {
-		std::vector<UserPtr> users;
-		for (auto const& pair : sUsersByEmail) {
-			users.push_back(pair.second);
+	std::vector<std::string> UserManager::GetAllUserNames() {
+		std::vector<std::string> users;
+		
+		std::string folderPath = Config::Get(CONFIG_STORAGE_PATH) + "users/";
+		for (const auto & entry : std::filesystem::directory_iterator(folderPath)) {
+			if (entry.path().extension().string() == "xml") {
+				value.PushBack(entry.path().steam().string());
+			}
 		}
+
 		return users;
 	}
 

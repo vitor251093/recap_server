@@ -561,21 +561,35 @@ version = 1
 	}
 
 	void API::dls_game_listUsers(HTTP::Session& session, HTTP::Response& response) {
-		const auto users = Game::UserManager::GetUsers();
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
 
-		pugi::xml_document document;
-		if (auto usersXml = document.append_child("users")) {
-			for (const auto& user : users) {
-				auto userXml = user->ToXml();
-				usersXml.append_move(userXml.last_child());
+		rapidjson::Document document;
+		document.SetObject();
+
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+		// stat
+		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+		
+		// themes
+		{
+			const auto users = Game::UserManager::GetAllUserNames();
+
+			rapidjson::Value value(rapidjson::kArrayType);
+			for (const auto & entry : users) {
+				value.PushBack(rapidjson::Value{}.SetString(entry.c_str(), 
+															entry.length(), allocator), allocator);
 			}
+			
+			document.AddMember(rapidjson::Value("users"), value, allocator);
 		}
 
-		xml_string_writer writer;
-		document.save(writer, "\t", 1U, pugi::encoding_latin1);
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		document.Accept(writer);
 
-		response.set(boost::beast::http::field::content_type, "text/xml");
-		response.body() = std::move(writer.result);
+		response.set(boost::beast::http::field::content_type, "application/json");
+		response.body() = buffer.GetString();
 	}
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
