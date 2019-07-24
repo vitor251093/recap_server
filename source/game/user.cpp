@@ -322,6 +322,16 @@ namespace Game {
 		return users;
 	}
 
+	std::vector<std::string> UserManager::GetLoggedUserNames() {
+		std::vector<std::string> users;
+		
+		for (const auto & pair : sUsersByEmail) {
+			users.push_back(pair.first);
+		}
+
+		return users;
+	}
+
 	UserPtr UserManager::GetUserByEmail(const std::string& email) {
 		UserPtr user;
 

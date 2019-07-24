@@ -554,11 +554,16 @@ version = 1
 		// themes
 		{
 			const auto users = Game::UserManager::GetAllUserNames();
+			const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
 
 			rapidjson::Value value(rapidjson::kArrayType);
 			for (const auto & entry : users) {
-				value.PushBack(rapidjson::Value{}.SetString(entry.c_str(), 
-															entry.length(), allocator), allocator);
+				bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
+				
+				rapidjson::Value object(rapidjson::kObjectType);
+				object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
+				object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
+				value.PushBack(object, allocator);
 			}
 			
 			document.AddMember(rapidjson::Value("users"), value, allocator);

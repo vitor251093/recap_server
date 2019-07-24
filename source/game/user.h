@@ -167,6 +167,7 @@ namespace Game {
 	class UserManager {
 		public:
 			static std::vector<std::string> GetAllUserNames();
+			static std::vector<std::string> UserManager::GetLoggedUserNames();
 			static UserPtr GetUserByEmail(const std::string& email);
 			static UserPtr CreateUserWithNameMailAndPassword(const std::string& name, const std::string& email, const std::string& password);
 			static UserPtr GetUserByAuthToken(const std::string& authToken);
