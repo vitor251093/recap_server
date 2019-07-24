@@ -62,4 +62,15 @@ namespace utils {
 	std::string xml_get_text_node(const pugi::xml_node& node, const std::string& name) {
 		return node.child(name.c_str()).text().get();
 	}
+
+	// JSON
+	std::string json_document_to_string(rapidjson::Document document) {
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
+
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		document.Accept(writer);
+
+		return buffer.GetString();
+	}
 }

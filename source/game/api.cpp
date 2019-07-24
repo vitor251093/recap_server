@@ -478,26 +478,17 @@ version = 1
 
 		mActiveTheme = themeName;
 		
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
 		rapidjson::Document document;
 		document.SetObject();
 
 		// stat
 		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
 
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
+		response.body() = utils::json_document_to_string(document);
 	}
 
 	void API::dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
 		rapidjson::Document document;
 		document.SetObject();
 
@@ -525,11 +516,8 @@ version = 1
 		document.AddMember(rapidjson::Value("selectedTheme"), 
 				rapidjson::Value{}.SetString(mActiveTheme.c_str(), mActiveTheme.length(), allocator), allocator);
 
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
+		response.body() = utils::json_document_to_string(document);
 	}
 
 	void API::dls_game_registration(HTTP::Session& session, HTTP::Response& response) {
@@ -539,9 +527,6 @@ version = 1
 		auto pass = request.uri.parameter("pass");
 
 		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
-
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
 
 		rapidjson::Document document;
 		document.SetObject();
@@ -553,17 +538,11 @@ version = 1
 			// stat
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
 		}
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
+		response.body() = utils::json_document_to_string(document);
 	}
 
 	void API::dls_game_listUsers(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
 		rapidjson::Document document;
 		document.SetObject();
 
@@ -585,11 +564,8 @@ version = 1
 			document.AddMember(rapidjson::Value("users"), value, allocator);
 		}
 
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
+		response.body() = utils::json_document_to_string(document);
 	}
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
