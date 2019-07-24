@@ -64,7 +64,7 @@ namespace utils {
 	}
 
 	// JSON
-	std::string json_document_to_string(rapidjson::Document document) {
+	std::string json_document_to_string(const rapidjson::Document& document) {
 		rapidjson::StringBuffer buffer;
 		buffer.Clear();
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <pugixml.hpp>
+#include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
@@ -107,7 +108,7 @@ namespace utils {
 	}
 
 	// JSON
-	std::string json_document_to_string(rapidjson::Document document);
+	std::string json_document_to_string(const rapidjson::Document& document);
 }
 
 #endif
