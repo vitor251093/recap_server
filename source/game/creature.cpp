@@ -44,6 +44,22 @@ namespace Game {
 		}
 	}
 
+	rapidjson::Value Creature::Write(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value object(rapidjson::kObjectType);
+		utils::json_add_text_to_object(object, "name",           name,         allocator);
+		utils::json_add_text_to_object(object, "name_locale_id", nameLocaleId, allocator);
+		utils::json_add_text_to_object(object, "type_a",         elementType,  allocator);
+		utils::json_add_text_to_object(object, "class",          classType,    allocator);
+		utils::json_add_text_to_object(object, "png_large_url",  pngLargeUrl,  allocator);
+		utils::json_add_text_to_object(object, "png_thumb_url",  pngThumbUrl,  allocator);
+		object.AddMember("gear_score",     rapidjson::Value{}.SetDouble(gearScore),  allocator);
+		object.AddMember("item_points",    rapidjson::Value{}.SetDouble(itemPoints), allocator);
+		object.AddMember("noun_id",        rapidjson::Value{}.SetUint64(nounId),     allocator);
+		object.AddMember("id",             rapidjson::Value{}.SetUint(id),           allocator);
+		object.AddMember("version",        rapidjson::Value{}.SetUint(version),      allocator);
+		return object;
+	}
+
 	// Creatures
 	void Creatures::Read(const pugi::xml_node& node) {
 		auto creatures = node.child("creatures");
@@ -63,6 +79,14 @@ namespace Game {
 				creature.Write(creatures);
 			}
 		}
+	}
+
+	rapidjson::Value Creatures::Write(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value value(rapidjson::kArrayType);
+		for (const auto& creature : mCreatures) {
+			value.PushBack(creature.Write(allocator), allocator);
+		}
+		return value;
 	}
 
 	void Creatures::Add(uint32_t templateId) {

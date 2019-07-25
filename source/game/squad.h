@@ -21,6 +21,8 @@ namespace Game {
 
 		void Read(const pugi::xml_node& node);
 		void Write(pugi::xml_node& node) const;
+
+		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
 	// Squads
@@ -36,6 +38,8 @@ namespace Game {
 
 			void Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
+
+			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 
 		private:
 			std::vector<Squad> mSquads;

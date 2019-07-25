@@ -35,6 +35,16 @@ namespace Game {
 		}
 	}
 
+	rapidjson::Value Squad::Write(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value object(rapidjson::kObjectType);
+		utils::json_add_text_to_object(object, "name",     name,     allocator);
+		utils::json_add_text_to_object(object, "category", category, allocator);
+		object.AddMember("id",     rapidjson::Value{}.SetUint(id),     allocator);
+		object.AddMember("slot",   rapidjson::Value{}.SetUint(slot),   allocator);
+		object.AddMember("locked", rapidjson::Value{}.SetBool(locked), allocator);
+		return object;
+	}
+
 	// Squads
 	void Squads::Read(const pugi::xml_node& node) {
 		auto decks = node.child("decks");
@@ -54,5 +64,13 @@ namespace Game {
 				squad.Write(decks);
 			}
 		}
+	}
+
+	rapidjson::Value Squads::Write(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value value(rapidjson::kArrayType);
+		for (const auto& squad : mSquads) {
+			value.PushBack(squad.Write(allocator), allocator);
+		}
+		return value;
 	}
 }

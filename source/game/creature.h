@@ -8,6 +8,8 @@
 #include <vector>
 #include <pugixml.hpp>
 
+#include "../utils/functions.h"
+
 // Game
 namespace Game {
 	// Creature template IDs
@@ -69,6 +71,8 @@ namespace Game {
 
 		void Read(const pugi::xml_node& node);
 		void Write(pugi::xml_node& node) const;
+
+		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
 	// Creatures
@@ -84,6 +88,8 @@ namespace Game {
 
 			void Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
+
+			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 
 			void Add(uint32_t templateId);
 

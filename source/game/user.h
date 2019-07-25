@@ -11,6 +11,8 @@
 #include <map>
 #include <pugixml.hpp>
 
+#include "../utils/functions.h"
+
 // Game
 namespace Game {
 	// Account
@@ -57,6 +59,8 @@ namespace Game {
 
 		void Read(const pugi::xml_node& node);
 		void Write(pugi::xml_node& node) const;
+
+		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
 	// FeedItem
@@ -84,6 +88,8 @@ namespace Game {
 
 			void Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
+
+			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 
 			void Add(FeedItem&& item);
 

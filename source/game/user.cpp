@@ -142,6 +142,42 @@ namespace Game {
 		}
 	}
 
+	rapidjson::Value Account::Write(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value object(rapidjson::kObjectType);
+		object.AddMember("tutorial_completed",        rapidjson::Value{}.SetBool(tutorialCompleted),       allocator);
+		object.AddMember("chain_progression",         rapidjson::Value{}.SetUint(chainProgression),        allocator);
+		object.AddMember("creature_rewards",          rapidjson::Value{}.SetUint(creatureRewards),         allocator);
+		object.AddMember("current_game_id",           rapidjson::Value{}.SetUint(currentGameId),           allocator);
+		object.AddMember("current_playgroup_id",      rapidjson::Value{}.SetUint(currentPlaygroupId),      allocator);
+		object.AddMember("default_deck_pve_id",       rapidjson::Value{}.SetUint(defaultDeckPveId),        allocator);
+		object.AddMember("default_deck_pvp_id",       rapidjson::Value{}.SetUint(defaultDeckPvpId),        allocator);
+		object.AddMember("level",                     rapidjson::Value{}.SetUint(level),                   allocator);
+		object.AddMember("avatar_id",                 rapidjson::Value{}.SetUint(avatarId),                allocator);
+		object.AddMember("blaze_id",                  rapidjson::Value{}.SetUint(id),                      allocator);
+		object.AddMember("id",                        rapidjson::Value{}.SetUint(id),                      allocator);
+		object.AddMember("dna",                       rapidjson::Value{}.SetUint(dna),                     allocator);
+		object.AddMember("new_player_inventory",      rapidjson::Value{}.SetUint(newPlayerInventory),      allocator);
+		object.AddMember("new_player_progress",       rapidjson::Value{}.SetUint(newPlayerProgress),       allocator);
+		object.AddMember("cashout_bonus_time",        rapidjson::Value{}.SetUint(cashoutBonusTime),        allocator);
+		object.AddMember("star_level",                rapidjson::Value{}.SetUint(starLevel),               allocator);
+		object.AddMember("unlock_catalysts",          rapidjson::Value{}.SetUint(unlockCatalysts),         allocator);
+		object.AddMember("unlock_diagonal_catalysts", rapidjson::Value{}.SetUint(unlockDiagonalCatalysts), allocator);
+		object.AddMember("unlock_fuel_tanks",         rapidjson::Value{}.SetUint(unlockFuelTanks),         allocator);
+		object.AddMember("unlock_inventory",          rapidjson::Value{}.SetUint(unlockInventoryIdentify), allocator);
+		object.AddMember("unlock_pve_decks",          rapidjson::Value{}.SetUint(unlockPveDecks),          allocator);
+		object.AddMember("unlock_pvp_decks",          rapidjson::Value{}.SetUint(unlockPvpDecks),          allocator);
+		object.AddMember("unlock_stats",              rapidjson::Value{}.SetUint(unlockStats),             allocator);
+		object.AddMember("unlock_inventory_identify", rapidjson::Value{}.SetUint(unlockInventoryIdentify), allocator);
+		object.AddMember("unlock_editor_flair_slots", rapidjson::Value{}.SetUint(unlockEditorFlairSlots),  allocator);
+		object.AddMember("upsell",                    rapidjson::Value{}.SetUint(upsell),                  allocator);
+		object.AddMember("xp",                        rapidjson::Value{}.SetUint(xp),                      allocator);
+		object.AddMember("grant_all_access",          rapidjson::Value{}.SetBool(grantAllAccess),          allocator);
+		object.AddMember("grant_online_access",       rapidjson::Value{}.SetBool(grantOnlineAccess),       allocator);
+		object.AddMember("cap_level",                 rapidjson::Value{}.SetUint(capLevel),                allocator);
+		object.AddMember("cap_progression",           rapidjson::Value{}.SetUint(capProgression),          allocator);
+		return object;
+	}
+
 	// Feed
 	void Feed::Read(const pugi::xml_node& node) {
 		auto feed = node.child("feed");
@@ -178,6 +214,21 @@ namespace Game {
 				utils::xml_add_text_node(item, "time", feedItem.timestamp);
 			}
 		}
+	}
+
+	rapidjson::Value Feed::Write(rapidjson::Document::AllocatorType& allocator) const {
+		rapidjson::Value value(rapidjson::kArrayType);
+		for (const auto& feedItem : mItems) {
+			rapidjson::Value object(rapidjson::kObjectType);
+			utils::json_add_text_to_object(object, "metadata", feedItem.metadata, allocator);
+			utils::json_add_text_to_object(object, "name",     feedItem.name,     allocator);
+			object.AddMember("time",       rapidjson::Value{}.SetUint64(feedItem.timestamp), allocator);
+			object.AddMember("account_id", rapidjson::Value{}.SetUint(feedItem.accountId),   allocator);
+			object.AddMember("id",         rapidjson::Value{}.SetUint(feedItem.id),          allocator);
+			object.AddMember("message_id", rapidjson::Value{}.SetUint(feedItem.messageId),   allocator);
+			value.PushBack(object, allocator);
+		}		
+		return object;
 	}
 
 	// User
@@ -304,6 +355,21 @@ namespace Game {
 			mFeed.Write(user);
 		}
 		return document;
+	}
+
+	rapidjson::Value User::ToJson(rapidjson::Document::AllocatorType& allocator) {
+		rapidjson::Value object(rapidjson::kObjectType);
+		
+		utils::json_add_text_to_object(object, "name",     mName,     allocator);
+		utils::json_add_text_to_object(object, "email",    mEmail,    allocator);
+		utils::json_add_text_to_object(object, "password", mPassword, allocator);
+
+		object.AddMember("account",   mAccount.Write(allocator),   allocator);
+		object.AddMember("creatures", mCreatures.Write(allocator), allocator);
+		object.AddMember("squads",    mSquads.Write(allocator),    allocator);
+		object.AddMember("feed",      mFeed.Write(allocator),      allocator);
+
+		return object;
 	}
 
 	// UserManager

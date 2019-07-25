@@ -11,9 +11,6 @@
 #include "../http/multipart.h"
 #include "../utils/functions.h"
 
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
-
 #include <boost/beast/version.hpp>
 
 #include <iostream>
@@ -186,6 +183,8 @@ namespace Game {
 				dls_game_registration(session, response);
 			} else if (method == "api.game.listUsers") {
 				dls_game_listUsers(session, response);
+			} else if (method == "api.game.getUserInfo") {
+				dls_game_getUserInfo(session, response);
 			} else {
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
@@ -321,7 +320,7 @@ namespace Game {
 				method = "api.account.auth";
 			}
 
-			if (method == "api.status.getStatus") {
+			       if (method == "api.status.getStatus") {
 				game_status_getStatus(session, response);
 			} else if (method == "api.status.getBroadcastList") {
 				game_status_getBroadcastList(session, response);
@@ -551,23 +550,43 @@ version = 1
 		// stat
 		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
 		
-		// themes
-		{
-			const auto users = Game::UserManager::GetAllUserNames();
-			const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
-
-			rapidjson::Value value(rapidjson::kArrayType);
-			for (const auto & entry : users) {
-				bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
-				
-				rapidjson::Value object(rapidjson::kObjectType);
-				object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
-				object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
-				value.PushBack(object, allocator);
-			}
+		const auto users = Game::UserManager::GetAllUserNames();
+		const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
+		rapidjson::Value value(rapidjson::kArrayType);
+		for (const auto & entry : users) {
+			bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
 			
-			document.AddMember(rapidjson::Value("users"), value, allocator);
+			rapidjson::Value object(rapidjson::kObjectType);
+			object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
+			object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
+			value.PushBack(object, allocator);
 		}
+		document.AddMember(rapidjson::Value("users"), value, allocator);
+
+		response.set(boost::beast::http::field::content_type, "application/json");
+		response.body() = utils::json_document_to_string(document);
+	}
+
+	void API::dls_game_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+		auto mail = request.uri.parameter("mail");
+
+		const auto& user = Game::UserManager::GetUserByEmail(mail);
+
+		rapidjson::Document document;
+		document.SetObject();
+
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+		// stat
+		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+		
+		rapidjson::Value object(rapidjson::kObjectType);
+
+		object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
+		object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
+
+		document.AddMember(rapidjson::Value("user"), object, allocator);
 
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json_document_to_string(document);
@@ -953,15 +972,15 @@ version = 1
 		pugi::xml_document document;
 		if (auto docResponse = document.append_child("response")) {
 			bool include_creatures = request.uri.parameter("include_creatures") == "true";
-			bool include_decks = request.uri.parameter("include_decks") == "true";
-			bool include_feed = request.uri.parameter("include_feed") == "true";
-			bool include_stats = request.uri.parameter("include_stats") == "true";
+			bool include_decks     = request.uri.parameter("include_decks")     == "true";
+			bool include_feed      = request.uri.parameter("include_feed")      == "true";
+			bool include_stats     = request.uri.parameter("include_stats")     == "true";
 			if (user) {
 				user->get_account().Write(docResponse);
 
 				if (include_creatures) { user->get_creatures().Write(docResponse); }
-				if (include_decks) { user->get_squads().Write(docResponse); }
-				if (include_feed) { user->get_feed().Write(docResponse); }
+				if (include_decks)     { user->get_squads().Write(docResponse);    }
+				if (include_feed)      { user->get_feed().Write(docResponse);      }
 				if (include_stats) {
 					auto stats = docResponse.append_child("stats");
 					auto stat = stats.append_child("stat");
@@ -972,9 +991,9 @@ version = 1
 				account.Write(docResponse);
 
 				if (include_creatures) { docResponse.append_child("creatures"); }
-				if (include_decks) { docResponse.append_child("decks"); }
-				if (include_feed) { docResponse.append_child("feed"); }
-				if (include_stats) { docResponse.append_child("stats"); }
+				if (include_decks)     { docResponse.append_child("decks"); }
+				if (include_feed)      { docResponse.append_child("feed"); }
+				if (include_stats)     { docResponse.append_child("stats"); }
 			}
 
 			add_common_keys(docResponse);

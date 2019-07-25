@@ -108,6 +108,7 @@ namespace utils {
 	}
 
 	// JSON
+	void json_add_text_to_object(const rapidjson::Value& node, const std::string& label, const std::string& value, const rapidjson::Document::AllocatorType& allocator);
 	std::string json_document_to_string(const rapidjson::Document& document);
 }
 
