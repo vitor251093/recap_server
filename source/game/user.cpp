@@ -398,7 +398,7 @@ namespace Game {
 		return users;
 	}
 
-	UserPtr UserManager::GetUserByEmail(const std::string& email) {
+	UserPtr UserManager::GetUserByEmail(const std::string& email, const bool shouldLogin) {
 		UserPtr user;
 
 		auto it = sUsersByEmail.find(email);
@@ -407,7 +407,7 @@ namespace Game {
 		} else {
 			user = std::make_shared<User>(email);
 			if (user->Load()) {
-				sUsersByEmail.emplace(email, user);
+				if (shouldLogin) sUsersByEmail.emplace(email, user);
 			}
 			else {
 				user.reset();

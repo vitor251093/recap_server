@@ -868,15 +868,15 @@ namespace Blaze {
 	void AuthComponent::Login(Client* client, Header header) {
 		auto& request = client->get_request();
 
-		std::string username = request["MAIL"].GetString();
+		std::string email    = request["MAIL"].GetString();
 		std::string password = request["PASS"].GetString();
 
-		const auto& user = Game::UserManager::GetUserByEmail(username);
+		const auto& user = Game::UserManager::GetUserByEmail(email, true);
 		if (user && user->get_password() == password) {
 			client->set_user(user);
 			SendLogin(client, std::move(header));
 		} else {
-			std::cout << "User '" << username << "' not found." << std::endl;
+			std::cout << "User '" << email << "' not found." << std::endl;
 
 			header.component = Component::Authentication;
 			header.command = 0x28;

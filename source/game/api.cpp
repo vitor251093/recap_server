@@ -571,7 +571,7 @@ version = 1
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
 
-		const auto& user = Game::UserManager::GetUserByEmail(mail);
+		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 
 		rapidjson::Document document;
 		document.SetObject();
