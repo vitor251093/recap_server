@@ -578,15 +578,15 @@ version = 1
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
-		
-		rapidjson::Value object(rapidjson::kObjectType);
-
-		object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
-		object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
-
-		document.AddMember(rapidjson::Value("user"), object, allocator);
+		if (user == NULL) {
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+		}
+		else {
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+			document.AddMember(rapidjson::Value("user"), user->ToJson(allocator), allocator);
+		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json_document_to_string(document);

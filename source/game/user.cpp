@@ -228,7 +228,7 @@ namespace Game {
 			object.AddMember("message_id", rapidjson::Value{}.SetUint(feedItem.messageId),   allocator);
 			value.PushBack(object, allocator);
 		}		
-		return object;
+		return value;
 	}
 
 	// User
