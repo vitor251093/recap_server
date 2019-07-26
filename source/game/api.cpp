@@ -422,7 +422,7 @@ version = 1
 			std::string cssLinkOpenTag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"";
 			std::string cssLinkCloseTag = "\">";
 			while ((pos = file_data.find(cssLinkOpenTag)) != std::string::npos) {
-				tag = file_data.substr(pos, file_data.find(cssLinkCloseTag) + cssLinkCloseTag.length() - pos);
+				tag = file_data.substr(pos, file_data.find(cssLinkCloseTag, pos) + cssLinkCloseTag.length() - pos);
 				tagUrl = tag.substr(cssLinkOpenTag.length(), tag.length() - cssLinkOpenTag.length() - cssLinkCloseTag.length());
 				std::string cssPath = Config::Get(CONFIG_STORAGE_PATH) + "www/" + tagUrl;
 				std::string cssContents = utils::get_file_text(cssPath);
@@ -432,7 +432,7 @@ version = 1
 			std::string jsScriptOpenTag = "<script type=\"text/javascript\" src=\"";
 			std::string jsScriptCloseTag = "\"></script>";
 			while ((pos = file_data.find(jsScriptOpenTag)) != std::string::npos) {
-				tag = file_data.substr(pos, file_data.find(jsScriptCloseTag) + jsScriptCloseTag.length() - pos);
+				tag = file_data.substr(pos, file_data.find(jsScriptCloseTag, pos) + jsScriptCloseTag.length() - pos);
 				tagUrl = tag.substr(jsScriptOpenTag.length(), tag.length() - jsScriptOpenTag.length() - jsScriptCloseTag.length());
 				std::string jQueryPath = Config::Get(CONFIG_STORAGE_PATH) + "www/" + tagUrl;
 				std::string jQueryContents = utils::get_file_text(jQueryPath);
