@@ -416,15 +416,28 @@ version = 1
 			std::string file_data = utils::get_file_text(path);
 			utils::string_replace(file_data, "</head>", client_script + "</head>");
 
-			std::string cssPath = Config::Get(CONFIG_STORAGE_PATH) + "www/register/darkspore.css";
-			std::string cssLinkTag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"register/darkspore.css\">";
-			std::string cssContents = utils::get_file_text(cssPath);
-			utils::string_replace(file_data, cssLinkTag, "<style type=\"text/css\">\n" + cssContents + "\n</style>");
+			size_t pos = 0;
+			std::string tag;
+			std::string tagUrl;
+			std::string cssLinkOpenTag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"";
+			std::string cssLinkCloseTag = "\">";
+			while ((pos = file_data.find(cssLinkOpenTag)) != std::string::npos) {
+				tag = file_data.substr(pos, file_data.find(cssLinkCloseTag) + cssLinkCloseTag.length() - pos);
+				tagUrl = tag.substr(cssLinkOpenTag.length(), tag.length() - cssLinkOpenTag.length() - cssLinkCloseTag.length());
+				std::string cssPath = Config::Get(CONFIG_STORAGE_PATH) + "www/" + tagUrl;
+				std::string cssContents = utils::get_file_text(cssPath);
+				utils::string_replace(file_data, tag, "<style type=\"text/css\">\n" + cssContents + "\n</style>");
+			}
 
-			std::string jQueryPath = Config::Get(CONFIG_STORAGE_PATH) + "www/register/jquery-1.12.4.min.js";
-			std::string jQueryLinkTag = "<script type=\"text/javascript\" src=\"register/jquery-1.12.4.min.js\"></script>";
-			std::string jQueryContents = utils::get_file_text(jQueryPath);
-			utils::string_replace(file_data, jQueryLinkTag, "<script type=\"text/javascript\">\n" + jQueryContents + "\n</script>");
+			std::string jsScriptOpenTag = "<script type=\"text/javascript\" src=\"";
+			std::string jsScriptCloseTag = "\"></script>";
+			while ((pos = file_data.find(jsScriptOpenTag)) != std::string::npos) {
+				tag = file_data.substr(pos, file_data.find(jsScriptCloseTag) + jsScriptCloseTag.length() - pos);
+				tagUrl = tag.substr(jsScriptOpenTag.length(), tag.length() - jsScriptOpenTag.length() - jsScriptCloseTag.length());
+				std::string jQueryPath = Config::Get(CONFIG_STORAGE_PATH) + "www/" + tagUrl;
+				std::string jQueryContents = utils::get_file_text(jQueryPath);
+				utils::string_replace(file_data, tag, "<script type=\"text/javascript\">\n" + jQueryContents + "\n</script>");
+			}
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
