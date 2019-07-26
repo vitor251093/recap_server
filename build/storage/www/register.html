@@ -412,7 +412,6 @@
                 height: 25px;
                 border-radius: 12px;
                 padding: 0px;
-                padding-top: 7px;
                 background-color: rgba(51,51,51,0.4);
                 -moz-box-shadow:    inset 0 0 20px rgba(151,151,151,1);
                 -webkit-box-shadow: inset 0 0 20px rgba(151,151,151,1);
@@ -425,6 +424,13 @@
                 user-select: none;
                 cursor: pointer;
                 background-color: rgba(51,51,51,1);
+            }
+
+
+
+
+            .darkspore-ui-window-view.webview-compatible .button-rounded {
+                padding-top: 7px;
             }
         </style>
     </head>
@@ -449,7 +455,7 @@
         <div class="main">
             <section class="signup">
                 <div class="container">
-                    <div class="signup-content darkspore-ui-window-view">
+                    <div class="signup-content darkspore-ui-window-view webview-compatible">
                         <form method="POST" id="signup-form" class="signup-form">
                             <h2 class="form-title title">Create account</h2>
                             <div class="form-group">
