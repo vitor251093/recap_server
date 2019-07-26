@@ -416,6 +416,16 @@ version = 1
 			std::string file_data = utils::get_file_text(path);
 			utils::string_replace(file_data, "</head>", client_script + "</head>");
 
+			std::string cssPath = Config::Get(CONFIG_STORAGE_PATH) + "www/register/darkspore.css";
+			std::string cssLinkTag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"register/darkspore.css\">";
+			std::string cssContents = utils::get_file_text(cssPath);
+			utils::string_replace(file_data, cssLinkTag, "<style type=\"text/css\">\n" + cssContents + "\n</style>");
+
+			std::string jQueryPath = Config::Get(CONFIG_STORAGE_PATH) + "www/register/jquery-1.12.4.min.js";
+			std::string jQueryLinkTag = "<script type=\"text/javascript\" src=\"register/jquery-1.12.4.min.js\"></script>";
+			std::string jQueryContents = utils::get_file_text(jQueryPath);
+			utils::string_replace(file_data, jQueryLinkTag, "<script type=\"text/javascript\">\n" + jQueryContents + "\n</script>");
+
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
 		});
