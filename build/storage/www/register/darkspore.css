@@ -156,7 +156,8 @@
 }
 .darkspore-ui-window-view .button-rounded .text {
     position: absolute;
-    top: 8px;
+    font-family: 'PirulenRg-Regular';
+    top: 13px;
     right: 0;
     left: 0;
     height: 45px;
