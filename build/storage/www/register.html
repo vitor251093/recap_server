@@ -130,11 +130,12 @@
                     "mail": document.getElementById("email").value,
                     "pass": document.getElementById("password").value
                 }, function(data) {
+                    Client.closeWindow();
+                    return;
+
                     var response = JSON.parse(data);
-                    $('#message-dialog').toggleClass('hidden', false);
                     if (response.stat === 'ok') {
-                        $('#modal-title').text('Success');
-                        document.getElementById("message").innerHTML = "Success! Your account was created!";
+                        Client.closeBRSWindow();
                     }
                     else {
                         $('#modal-title').text('Error');
