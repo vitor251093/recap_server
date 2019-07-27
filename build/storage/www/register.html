@@ -91,9 +91,6 @@
                 .form-input:-moz-placeholder {
                 font-weight: 500; }
             
-            .form-submit {
-                 }  
-
             .label-agree-term {
                 color: #c9c9c9; }
             
@@ -135,9 +132,11 @@
                     var response = JSON.parse(data);
                     $('#message-dialog').toggleClass('hidden', false);
                     if (response.stat === 'ok') {
+                        $('#modal-title').text('Success');
                         document.getElementById("message").innerHTML = "Success! Your account was created!";
                     }
                     else {
+                        $('#modal-title').text('Error');
                         document.getElementById("message").innerHTML = "Error! Your account could not be created!";
                     }
                 });
@@ -145,9 +144,9 @@
         </script>
         <div class="darkspore-ui-window">
             <div class="darkspore-ui-window-inner container">
-                <div class="darkspore-ui-window-view">
+                <div class="darkspore-ui-window-view darkspore-ui-background">
                     <form method="POST" id="signup-form">
-                        <h2 class="form-title title">Create account</h2>
+                        <h2 class="title">Create account</h2>
                         <div class="form-group">
                             <input type="text" class="form-input" name="name" id="name" placeholder="Your Name" />
                         </div>
@@ -174,7 +173,10 @@
                     </form>
                 </div>
                 <div id="message-dialog" class="darkspore-ui-modal hidden">
-                    <div id="message">x</div>
+                    <div class="darkspore-ui-modal-window darkspore-ui-background">
+                        <div class="modal-title" id="modal-title">Error</div>
+                        <div class="modal-message" id="message">x</div>
+                    </div>
                 </div>
             </div>
         </div>

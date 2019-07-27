@@ -34,13 +34,15 @@
     padding: 20px 85px;
     padding-bottom: 10px;
     height: 100%;
-    
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wcZEDslqKWfhgAAACZpVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOV5F9bAAAAEklEQVQI12Pg5ub+z8DIyPgfAAgUAiNJBFhTAAAAAElFTkSuQmCC");
-    background-size: 1px 2px;
     font-size: 14px;
 }
+.darkspore-ui-background {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wcZEDslqKWfhgAAACZpVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOV5F9bAAAAEklEQVQI12Pg5ub+z8DIyPgfAAgUAiNJBFhTAAAAAElFTkSuQmCC");
+    background-size: 1px 2px;
+}
 
-.darkspore-ui-window-view .title {
+.darkspore-ui-window-view .title,
+.darkspore-ui-window-view .modal-title {
     color: #fff;
     font-family: 'PirulenRg-Regular';
 }
@@ -195,6 +197,13 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: -30px;
     background-color: rgba(0,0,0,0.5);
+    z-index: 3;
+}
+
+.darkspore-ui-modal .darkspore-ui-modal-window {
+    margin: 100px 160px;
+    border: 1px solid #fff;
+    height: 200px;
 }
