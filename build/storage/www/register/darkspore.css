@@ -133,6 +133,11 @@
 
 
 .darkspore-ui-window-view .button-rounded {
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
     color: #fff;
     text-align: center;
     height: 25px;
