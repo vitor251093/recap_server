@@ -7,16 +7,6 @@
         <script type="text/javascript" src="register/jquery-1.12.4.min.js"></script>
         
         <style type="text/css">
-            /* @extend display-flex; */
-            display-flex, .display-flex, .display-flex-center {
-                display: flex;
-                display: -webkit-flex; }
-            
-            /* @extend list-type-ulli; */
-            list-type-ulli {
-                list-style-type: none;
-                margin: 0;
-                padding: 0; }
             
             a:focus, a:active {
                 text-decoration: none;
@@ -35,35 +25,6 @@
                 -o-appearance: unset !important;
                 -ms-appearance: unset !important; }
             
-            input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
-                appearance: none !important;
-                -moz-appearance: none !important;
-                -webkit-appearance: none !important;
-                -o-appearance: none !important;
-                -ms-appearance: none !important;
-                margin: 0; }
-            
-            input[type=checkbox] {
-                appearance: checkbox !important;
-                -moz-appearance: checkbox !important;
-                -webkit-appearance: checkbox !important;
-                -o-appearance: checkbox !important;
-                -ms-appearance: checkbox !important; }
-            
-            input[type=radio] {
-                appearance: radio !important;
-                -moz-appearance: radio !important;
-                -webkit-appearance: radio !important;
-                -o-appearance: radio !important;
-                -ms-appearance: radio !important; }
-            
-            img {
-                max-width: 100%;
-                height: auto; }
-            
-            figure {
-                margin: 0; }
-            
             p {
                 margin-bottom: 0px;
                 font-size: 15px;
@@ -81,9 +42,6 @@
                 text-align: center;
                 margin-bottom: 10px; }
             
-            .clear {
-                clear: both; }
-            
             body {
                 font-size: 14px;
                 line-height: 1.8;
@@ -93,66 +51,6 @@
                 background-color: #000;
                 margin: 0px;
                 padding: 0px; }
-            
-            .signup {
-                /* Why 30px? I have no idea; but the registration window won't
-                   look good with any other value. */
-                position: absolute;
-                top: 0;
-                bottom: 30px;
-                left: 0;
-                right: 0;
-            }
-
-            .container {
-                height: 100%;
-                position: relative;
-                margin: 0 auto; }
-            
-            .display-flex {
-                justify-content: space-between;
-                -moz-justify-content: space-between;
-                -webkit-justify-content: space-between;
-                -o-justify-content: space-between;
-                -ms-justify-content: space-between;
-                align-items: center;
-                -moz-align-items: center;
-                -webkit-align-items: center;
-                -o-align-items: center;
-                -ms-align-items: center; }
-            
-            .display-flex-center {
-                justify-content: center;
-                -moz-justify-content: center;
-                -webkit-justify-content: center;
-                -o-justify-content: center;
-                -ms-justify-content: center;
-                align-items: center;
-                -moz-align-items: center;
-                -webkit-align-items: center;
-                -o-align-items: center;
-                -ms-align-items: center; }
-            
-            .position-center {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                -moz-transform: translate(-50%, -50%);
-                -webkit-transform: translate(-50%, -50%);
-                -o-transform: translate(-50%, -50%);
-                -ms-transform: translate(-50%, -50%); }
-            
-            .signup-content {
-                background: #37384b;
-                border-radius: 10px;
-                -moz-border-radius: 10px;
-                -webkit-border-radius: 10px;
-                -o-border-radius: 10px;
-                -ms-border-radius: 10px;
-                padding: 20px 85px;
-                padding-bottom: 10px;
-                height: 100%; }
             
             .form-group {
                 overflow: hidden;
@@ -194,13 +92,6 @@
                 font-weight: 500; }
             
             .form-submit {
-                width: 100%;
-                border-radius: 5px;
-                -moz-border-radius: 5px;
-                -webkit-border-radius: 5px;
-                -o-border-radius: 5px;
-                -ms-border-radius: 5px;
-                padding: 17px 20px;
                 box-sizing: border-box;
                 font-size: 14px;
                 font-weight: 700;
@@ -249,6 +140,7 @@
                     "pass": document.getElementById("password").value
                 }, function(data) {
                     var response = JSON.parse(data);
+                    $('#message-dialog').toggleClass('hidden', false);
                     if (response.stat === 'ok') {
                         document.getElementById("message").innerHTML = "Success! Your account was created!";
                     }
@@ -258,42 +150,40 @@
                 });
             }
         </script>
-        <div class="main">
-            <section class="signup">
-                <div class="container">
-                    <div class="signup-content darkspore-ui-window-view webview-compatible">
-                        <form method="POST" id="signup-form" class="signup-form">
-                            <h2 class="form-title title">Create account</h2>
-                            <div class="form-group">
-                                <input type="text" class="form-input" name="name" id="name" placeholder="Your Name" />
+        <div class="darkspore-ui-window">
+            <div class="darkspore-ui-window-inner container">
+                <div class="darkspore-ui-window-view">
+                    <form method="POST" id="signup-form">
+                        <h2 class="form-title title">Create account</h2>
+                        <div class="form-group">
+                            <input type="text" class="form-input" name="name" id="name" placeholder="Your Name" />
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-input" name="email" id="email" placeholder="Your Email" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-input input-password" name="password" id="password" placeholder="Pass" />
+                        </div>
+                        <div class="form-group">
+                            <span class="input-checkbox-container">
+                                <label for="agree-term" class="label-agree-term">I agree all statements in <a href="#" class="term-service">Terms of service</a></label>
+                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
+                                <span class="checkmark" onMouseUp="document.getElementById('agree-term').checked = !document.getElementById('agree-term').checked;"></span>
+                            </span>
+                        </div>
+                        <div class="form-group form-group-button">
+                            <div name="submit" id="submit" class="form-submit button-rounded" onMouseUp="register();">
+                                <div class="left-side"></div>
+                                <div class="text">Sign up</div>
+                                <div class="right-side"></div>
                             </div>
-                            <div class="form-group">
-                                <input type="email" class="form-input" name="email" id="email" placeholder="Your Email" />
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-input input-password" name="password" id="password" placeholder="Pass" />
-                            </div>
-                            <div class="form-group">
-                                <span class="input-checkbox-container">
-                                    <label for="agree-term" class="label-agree-term">I agree all statements in <a href="#" class="term-service">Terms of service</a></label>
-                                    <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-                                    <span class="checkmark" onMouseUp="document.getElementById('agree-term').checked = !document.getElementById('agree-term').checked;"></span>
-                                </span>
-                            </div>
-                            <div class="form-group form-group-button">
-                                <div name="submit" id="submit" class="button-rounded" onMouseUp="register();">
-                                    <div class="left-side"></div>
-                                    <div class="text">Sign up</div>
-                                    <div class="right-side"></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- <div class="message-dialog">
-                        <div id="message">x</div>
-                    </div> -->
+                        </div>
+                    </form>
                 </div>
-            </section>
+                <div id="message-dialog" class="darkspore-ui-modal hidden">
+                    <div id="message">x</div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

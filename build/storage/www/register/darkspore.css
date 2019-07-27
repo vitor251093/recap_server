@@ -10,10 +10,31 @@
     font-weight: normal;
     font-style: normal;
 }
+.hidden {
+    display: none !important;
+}
 
 
+
+.darkspore-ui-window {
+    position: absolute;
+    top: 0;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+}
+.darkspore-ui-window-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
 
 .darkspore-ui-window-view {
+    padding: 20px 85px;
+    padding-bottom: 10px;
+    height: 100%;
+    
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wcZEDslqKWfhgAAACZpVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOV5F9bAAAAEklEQVQI12Pg5ub+z8DIyPgfAAgUAiNJBFhTAAAAAElFTkSuQmCC");
     background-size: 1px 2px;
     font-size: 14px;
@@ -158,4 +179,16 @@
     -ms-user-select: none;
     user-select: none;
     cursor: pointer;
+}
+
+
+
+
+.darkspore-ui-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
 }
