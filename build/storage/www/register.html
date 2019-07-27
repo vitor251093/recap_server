@@ -74,22 +74,22 @@
                 font-weight: 500;
                 color: #999;
                 background-color: #0d0d0d; }
-                .form-input::-webkit-input-placeholder {
-                color: #999; }
-                .form-input::-moz-placeholder {
-                color: #999; }
-                .form-input:-ms-input-placeholder {
-                color: #999; }
-                .form-input:-moz-placeholder {
-                color: #999; }
-                .form-input::-webkit-input-placeholder {
-                font-weight: 500; }
-                .form-input::-moz-placeholder {
-                font-weight: 500; }
-                .form-input:-ms-input-placeholder {
-                font-weight: 500; }
-                .form-input:-moz-placeholder {
-                font-weight: 500; }
+            .form-input::-webkit-input-placeholder {
+            color: #999; }
+            .form-input::-moz-placeholder {
+            color: #999; }
+            .form-input:-ms-input-placeholder {
+            color: #999; }
+            .form-input:-moz-placeholder {
+            color: #999; }
+            .form-input::-webkit-input-placeholder {
+            font-weight: 500; }
+            .form-input::-moz-placeholder {
+            font-weight: 500; }
+            .form-input:-ms-input-placeholder {
+            font-weight: 500; }
+            .form-input:-moz-placeholder {
+            font-weight: 500; }
             
             .label-agree-term {
                 color: #c9c9c9; }
@@ -120,6 +120,7 @@
 
         <!-- DON'T CHANGE THE LINES BELOW! THEY ARE AUTOMATICALLY REPLACED BY THE SERVER -->
         <link rel="stylesheet" type="text/css" href="register/darkspore.css">
+        <script type="text/javascript" src="register/darkspore.js"></script>
     </head>
     <body>
         <script>
@@ -139,6 +140,10 @@
                         $('#modal-title').text('Error');
                         document.getElementById("message").innerHTML = "Error! Your account could not be created!";
                     }
+                }, function(e, responseText) {
+                    $('#message-dialog').toggleClass('hidden', false);
+                    $('#modal-title').text('Error');
+                    document.getElementById("message").innerHTML = responseText || "Your account could not be created!";
                 });
             }
         </script>

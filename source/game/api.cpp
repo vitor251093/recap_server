@@ -117,15 +117,18 @@ namespace Game {
 	constexpr std::string_view dlsClientScript = R"(
 <script>
 	var DLSClient = {};
-	DLSClient.getRequest = function(url, callback) {
+	DLSClient.getRequest = function(url, callback, errorCallback) {
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onload = function() {
-			callback(xmlHttp.responseText);
+			if (callback !== undefined) callback(xmlHttp.responseText);
 		}
+		xmlHttp.onerror = function(e) {
+			if (errorCallback !== undefined) errorCallback(e);
+		};
 		xmlHttp.open("GET", url, true);
 		xmlHttp.send(null);
 	};
-	DLSClient.request = function(name, params, callback) {
+	DLSClient.request = function(name, params, callback, errorCallback) {
 		if (params !== undefined && typeof params === 'object') {
 			var str = [];
 			for (var p in params)
@@ -134,7 +137,7 @@ namespace Game {
 				}
 			params = str.join("&");
 		}
-		DLSClient.getRequest("http://{{host}}/dls/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback);
+		DLSClient.getRequest("http://{{host}}/dls/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
 	};
 </script>
 )";
@@ -409,13 +412,8 @@ version = 1
 
 		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			std::string path = Config::Get(CONFIG_STORAGE_PATH) + "www/" + Config::Get(CONFIG_DARKSPORE_REGISTER_PAGE_PATH);
-			
-			std::string client_script(dlsClientScript);
-			utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-
 			std::string file_data = utils::get_file_text(path);
-			utils::string_replace(file_data, "</head>", client_script + "</head>");
-
+			
 			size_t pos = 0;
 			std::string tag;
 			std::string tagUrl;
@@ -438,6 +436,8 @@ version = 1
 				std::string jQueryContents = utils::get_file_text(jQueryPath);
 				utils::string_replace(file_data, tag, "<script type=\"text/javascript\">\n" + jQueryContents + "\n</script>");
 			}
+
+			utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);

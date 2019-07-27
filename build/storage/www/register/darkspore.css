@@ -206,4 +206,10 @@
     margin: 100px 160px;
     border: 1px solid #fff;
     height: 200px;
+    padding: 15px 30px;
+    color: #fff;
+}
+
+.darkspore-ui-modal .darkspore-ui-modal-window .modal-message {
+    margin-top: 10px;
 }
