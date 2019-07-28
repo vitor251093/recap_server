@@ -15,6 +15,8 @@
 #include <iomanip>
 #include <iostream>
 #include <algorithm>
+#include <tuple>
+#include <array>
 
 /*
 	C2S or C2C
@@ -45,22 +47,7 @@
 		LOW_PRIORITY
 */
 
-constexpr int const_tolower(int c) {
-	return (c >= 'A' && c <= 'Z') ? c + ('a' - 'A') : c;
-}
-
-constexpr uint32_t hash_id(const char* pStr) {
-	uint32_t rez = 0x811C9DC5u;
-	while (*pStr) {
-		// To avoid compiler warnings
-		rez = static_cast<uint32_t>(rez * static_cast<unsigned long long>(0x1000193));
-		rez ^= static_cast<uint32_t>(const_tolower(*pStr));
-		++pStr;
-	}
-	return rez;
-}
-
-#define DEFINE_HASH(x) constexpr auto x = hash_id(#x)
+#define DEFINE_HASH(x) constexpr auto x = utils::hash_id(#x)
 
 namespace Hash {
 	DEFINE_HASH(cSpaceshipCameraTuning);
@@ -243,24 +230,763 @@ std::enable_if_t<std::is_floating_point_v<T>, T> bswap(T t) {
 }
 
 template<typename T>
-std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, void> Write(RakNet::BitStream& stream, T value) {
-	stream.Write<T>(bswap<T>(value));
+std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, void> Read(RakNet::BitStream& stream, T& value) {
+	if constexpr (std::is_same_v<T, bool>) {
+		stream.Read<uint8_t>(reinterpret_cast<uint8_t&>(value));
+	} else {
+		stream.Read<T>(value);
+		value = bswap<T>(value);
+	}
 }
 
-// Test classes
-struct cSPVector3 {
-	float x;
-	float y;
-	float z;
+template<typename T>
+std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, void> Write(RakNet::BitStream& stream, T value) {
+	if constexpr (std::is_same_v<T, bool>) {
+		stream.Write<uint8_t>(value);
+	} else {
+		stream.Write<T>(bswap<T>(value));
+	}
+}
 
-	void Write(RakNet::BitStream& stream) {
-		::Write(stream, x);
-		::Write(stream, y);
-		::Write(stream, z);
+template<typename T>
+std::enable_if_t<std::is_same_v<std::remove_cvref_t<T>, uint24_t>, void> Write(RakNet::BitStream& stream, T value) {
+	uint8_t* pVal = reinterpret_cast<uint8_t*>(&value.val);
+	stream.Write<uint8_t>(pVal[0]);
+	stream.Write<uint8_t>(pVal[1]);
+	stream.Write<uint8_t>(pVal[2]);
+}
+
+template<typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, T> bits_to_bytes(T bits) {
+	return (bits + 7) >> 3;
+}
+
+template<typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, T> bytes_to_bits(T bytes) {
+	return bytes << 3;
+}
+
+#pragma warning(push)
+#pragma warning(disable:4309)
+template<typename T, int Bits>
+constexpr T get_bits() {
+	return static_cast<T>((1 << Bits) - 1);
+}
+#pragma warning(pop)
+
+// TODO: add array support
+class reflection {
+	public:
+		template<size_t FieldsInClass, typename Tuple>
+		static void write(RakNet::BitStream& stream, const Tuple& tuple) {
+			constexpr auto Size = std::tuple_size<Tuple>::value;
+			if constexpr (FieldsInClass > 16) {
+				write_field_by_field<Tuple, Size>(stream, tuple);
+			} else {
+				write_fields<FieldsInClass, Tuple, Size>(stream, tuple);
+			}
+		}
+		
+		template<size_t FieldsInClass, typename T, typename... Args>
+		static void write_some(RakNet::BitStream& stream, Args&&... args) {
+			if constexpr (FieldsInClass > 16) {
+				write_some_field_by_field(stream, args...);
+			} else {
+				write_some_fields<FieldsInClass>(stream, args...);
+			}
+		}
+		
+	private:
+		template<typename T, size_t S>
+		static void write_type(RakNet::BitStream& stream, const std::array<T, S>& value) {
+			for (const T& arrValue : value) {
+				write_type(stream, arrValue);
+			}
+		}
+
+		template<typename T>
+		static void write_type(RakNet::BitStream& stream, T value) {
+			if constexpr (std::is_class_v<T>) {
+				value.WriteTo(stream);
+			} else {
+				Write<T>(stream, value);
+			}
+		}
+
+		template<typename Tuple, size_t Size, size_t Idx = 0>
+		static void write_field_by_field(RakNet::BitStream& stream, const Tuple& tuple) {
+			if constexpr (Idx >= Size) {
+				Write<uint8_t>(stream, 0xFF);
+			} else {
+				Write<uint8_t>(stream, Idx);
+				write_type(stream, std::get<Idx>(tuple));
+				write_field_by_field<Tuple, Size, Idx + 1>(stream, tuple);
+			}
+		}
+
+		template<size_t FieldsInClass, typename Tuple, size_t Size, size_t Idx = 0>
+		static void write_fields(RakNet::BitStream& stream, const Tuple& tuple) {
+			if constexpr (Idx == 0) {
+				if (FieldsInClass > 8) {
+					Write<uint16_t>(stream, get_bits<uint16_t, Size>());
+				} else {
+					Write<uint8_t>(stream, get_bits<uint8_t, Size>());
+				}
+			}
+
+			if constexpr (Idx < Size) {
+				write_type(stream, std::get<Idx>(tuple));
+				write_fields<FieldsInClass, Tuple, Size, Idx + 1>(stream, tuple);
+			}
+		}
+
+		// write_some_field_by_field
+		static void write_some_field_by_field(RakNet::BitStream& stream) {
+			Write<uint8_t>(stream, 0xFF);
+		}
+
+		template<typename T, typename... Args>
+		static void write_some_field_by_field(RakNet::BitStream& stream, uint8_t idx, const T& value, Args&&... args) {
+			Write<uint8_t>(stream, idx);
+			write_type(stream, value);
+			write_some_field_by_field(stream, args...);
+		}
+
+		// write_some_fields
+		static void internal_write_some_fields(RakNet::BitStream& stream, uint16_t& bits) {}
+
+		template<typename T, typename... Args>
+		static void internal_write_some_fields(RakNet::BitStream& stream, uint16_t& bits, uint8_t idx, const T& value, Args&& ... args) {
+			bits |= (1 << idx);
+			write_type(stream, value);
+			internal_write_some_fields(stream, bits, args...);
+		}
+
+		template<size_t FieldsInClass, typename... Args>
+		static void write_some_fields(RakNet::BitStream& stream, Args&& ... args) {
+			size_t streamPosition = stream.GetWriteOffset();
+			if constexpr (FieldsInClass > 8) {
+				Write<uint16_t>(stream, 0);
+			} else {
+				Write<uint8_t>(stream, 0);
+			}
+
+			uint16_t bits = 0;
+			internal_write_some_fields(stream, bits, args...);
+
+			size_t currentPosition = stream.GetWriteOffset();
+			stream.SetWriteOffset(streamPosition);
+			if constexpr (FieldsInClass > 8) {
+				Write<uint16_t>(stream, bits);
+			} else {
+				Write<uint8_t>(stream, bits);
+			}
+
+			stream.SetWriteOffset(currentPosition);
+		}
+};
+
+// Test classes
+namespace Hash {
+	constexpr auto Zero = utils::hash_id("0");
+	// constexpr auto Noun = utils::hash_id("Noun");
+}
+
+// Abilities
+namespace Ability {
+	enum : uint32_t {
+		Strength = 0,
+		Dexterity,
+		Mind,
+		MaxHealthIncrease,
+		MaxHealth,
+		MaxMana,
+		DamageReduction,
+		PhysicalDefense,
+		PhysicalDamageReduction,
+		EnergyDefense,
+		CriticalRating,
+		NonCombatSpeed,
+		CombatSpeed,
+		DamageBuff,
+		Silence,
+		Immobilized,
+		DefenseBoostBasicDamage,
+		PhysicalDamageIncrease,
+		PhysicalDamageIncreaseFlat,
+		AutoCrit,
+		BehindDirectDamageIncrease,
+		BehindOrSideDirectDamageIncrease,
+		CriticalDamageIncrease,
+		AttackSpeedScale,
+		CooldownScale,
+		Frozen,
+		ProjectileSpeedIncrease,
+		AoeResistance,
+		EnergyDamageBuff,
+		Intangible,
+		HealingReduction,
+		EnergyDamageIncrease,
+		EnergyDamageIncreaseFlat,
+		Immune,
+		StealthDetection,
+		LifeSteal,
+		RejectModifier,
+		AoeDamage,
+		TechnologyTypeDamage,
+		SpacetimeTypeDamage,
+		LifeTypeDamage,
+		ElementsTypeDamage,
+		SupernaturalTypeDamage,
+		TechnologyTypeResistance,
+		SpacetimeTypeResistance,
+		LifeTypeResistance,
+		ElementsTypeResistance,
+		SupernaturalTypeResistance,
+		MovementSpeedBuff,
+		ImmuneToDebuffs,
+		BuffDuration,
+		DebuffDuration,
+		ManaSteal,
+		DebuffDurationIncrease,
+		EnergyDamageReduction,
+		Incorporeal,
+		DotDamageIncrease,
+		MindControlled,
+		SwapDisabled,
+		ImmuneToRandomTeleport,
+		ImmuneToBanish,
+		ImmuneToKnockback,
+		AoeRadius,
+		PetDamage,
+		PetHealth,
+		CrystalFind,
+		DNADropped,
+		RangeIncrease,
+		OrbEffectiveness,
+		OverdriveBuildup,
+		OverdriveDuration,
+		LootFind,
+		Surefooted,
+		ImmuneToStunned,
+		ImmuneToSleep,
+		ImmuneToTerrified,
+		ImmuneToSilence,
+		ImmuneToCursed,
+		ImmuneToPoisonOrDisease,
+		ImmuneToBurning,
+		ImmuneToRooted,
+		ImmuneToSlow,
+		ImmuneToPull,
+		DotDamageDoneIncrease,
+		AggroIncrease,
+		AggroDecrease,
+		PhysicalDamageDoneIncrease,
+		PhysicalDamageDoneByAbilityIncrease,
+		EnergyDamageDoneIncrease,
+		EnergyDamageDoneByAbilityIncrease,
+		ChannelTimeDecrease,
+		CrowdControlDurationDecrease,
+		DotDurationDecrease,
+		AoeDurationIncrease,
+		HealIncrease,
+		OnLockdown,
+		HoTDoneIncrease,
+		ProjectileDamageIncrease,
+		DeployBonusInvincibilityTime,
+		PhysicalDamageDecreaseFlat,
+		EnergyDamageDecreaseFlat,
+		MinWeaponDamage,
+		MaxWeaponDamage,
+		MinWeaponDamagePercent,
+		MaxWeaponDamagePercent,
+		DirectAttackDamage,
+		DirectAttackDamagePercent,
+		GetHitAnimDisabled,
+		XPBoost,
+		InvisibleToSecurityTeleporters,
+		BodyScale,
+		Count
+	};
+}
+
+using tObjID = uint32_t;
+
+struct cSPVector3 {
+	float x = 0.f;
+	float y = 0.f;
+	float z = 0.f;
+
+	void WriteTo(RakNet::BitStream& stream) const {
+		Write(stream, x);
+		Write(stream, y);
+		Write(stream, z);
 	}
 };
 
-struct cGameObjectCreateData { // size 70h?
+struct cSPQuaternion {
+	float x = 0.f;
+	float y = 0.f;
+	float z = 0.f;
+	float w = 0.f;
+
+	void WriteTo(RakNet::BitStream& stream) const {
+		Write(stream, x);
+		Write(stream, y);
+		Write(stream, z);
+		Write(stream, w);
+	}
+};
+
+struct labsCharacter {
+	/*
+		memory layout (hex)
+			0 : unk
+			8 : assetID
+			10 : version
+			B4 : nounDef
+
+			B8 - 1DC : mAttribute (0x4A)
+			1E4 : mAttribute (0x01)
+			1EC - 244 : mAttribute (0x17)
+			24C - 27C : mAttribute (0x0D)
+
+			3B8 : mCreatureType
+
+			3C0 : mDeployCooldownMs
+			3C8 : mAbilityPoints
+			3CC : mAbilityRanks
+
+			3F0 : mHealthPoints
+			3F4 : mMaxHealthPoints
+			3F8 : mManaPoints
+			3FC : mMaxManaPoints
+			400 : mGearScore
+			404 : mGearScoreFlattened
+	*/
+
+	int32_t version = 0;
+	uint32_t nounDef = 0;
+	uint64_t assetID = 0;
+	uint32_t mCreatureType = 0;
+	uint64_t mDeployCooldownMs = 0;
+	uint32_t mAbilityPoints = 0;
+	uint32_t mAbilityRanks = 0;
+	float mHealthPoints = 50.f;
+	float mMaxHealthPoints = 100.f;
+	float mManaPoints = 75.f;
+	float mMaxManaPoints = 100.f;
+	float mGearScore = 300.f;
+	float mGearScoreFlattened = 300.f;
+
+	// make some sort of map?
+	float mAttribute[Ability::Count];
+
+	void WriteTo(RakNet::BitStream& stream) const {
+		constexpr auto size = bytes_to_bits(0x620);
+
+		auto writeOffset = stream.GetWriteOffset();
+		stream.AddBitsAndReallocate(size);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x008));
+		Write(stream, assetID);
+		Write(stream, version);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x0B4));
+		Write(stream, nounDef);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x0B8));
+		for (size_t i = 0; i < 0x4A; ++i) {
+			Write(stream, mAttribute[i]);
+		}
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1E4));
+		Write(stream, mAttribute[0x4B]);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1EC));
+		for (size_t i = 0x4C; i < 0x63; ++i) {
+			Write(stream, mAttribute[i]);
+		}
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x24C));
+		for (size_t i = 0x64; i < 0x6F; ++i) {
+			Write(stream, mAttribute[i]);
+		}
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x3B8));
+		Write(stream, mCreatureType);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x3C0));
+		Write(stream, mDeployCooldownMs);
+		Write(stream, mAbilityPoints);
+		Write(stream, mAbilityRanks);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x3F0));
+		Write(stream, mHealthPoints);
+		Write(stream, mMaxHealthPoints);
+		Write(stream, mManaPoints);
+		Write(stream, mMaxManaPoints);
+		Write(stream, mGearScore);
+		Write(stream, mGearScoreFlattened);
+
+		stream.SetWriteOffset(writeOffset + size);
+	}
+
+	void WriteReflection(RakNet::BitStream& stream) const {
+		reflection::write<124>(stream, std::make_tuple(
+			version, nounDef,
+			assetID, mCreatureType,
+			mDeployCooldownMs, mAbilityPoints,
+			mAbilityRanks, mHealthPoints,
+			mMaxHealthPoints, mManaPoints,
+			mMaxManaPoints, mGearScore,
+			mGearScoreFlattened
+		));
+	}
+};
+
+struct labsCrystal {
+	enum Type {
+		AoEDamage = 0,
+		AttackSpeed,
+		BuffDuration,
+		CCReduction,
+		Cooldown,
+		Crit,
+		Damage,
+		DamageAura,
+		DebuffDuration,
+		DebuffIncrease,
+		DefenseRating,
+		DeflectionRating,
+		Dexterity,
+		DodgeRating,
+		Health,
+		ImmunePoison,
+		ImmuneSleep,
+		ImmuneSlow,
+		ImmuneStun,
+		Knockback,
+		LifeLeech,
+		Mana,
+		ManaCostReduction,
+		ManaLeech,
+		Mind,
+		MoveSpeed,
+		OrbEffectiveness,
+		OverdriveBuildup,
+		PetDamage,
+		PetHealth,
+		ProjectileSpeed,
+		RangeIncrease,
+		Strength,
+		Surefooted,
+		Thorns
+	};
+
+	uint32_t crystalNoun;
+	uint16_t level;
+
+	labsCrystal() : crystalNoun(0), level(0) {}
+	labsCrystal(Type type, uint16_t rarity, bool prismatic) {
+		level = rarity;
+
+		std::string nounName = "crystal_";
+		if (prismatic) {
+			nounName += "wild_";
+		}
+
+		switch (type) {
+			case AoEDamage:
+				nounName += "aoedamage";
+				break;
+
+			case AttackSpeed:
+				nounName += "attackspeed";
+				break;
+
+			case BuffDuration:
+				nounName += "buffduration";
+				break;
+
+			case CCReduction:
+				nounName += "ccreduction";
+				break;
+
+			case Cooldown:
+				nounName += "cooldown";
+				break;
+
+			case Crit:
+				nounName += "crit";
+				break;
+
+			case Damage:
+				nounName += "damage";
+				break;
+
+			case DamageAura:
+				nounName += "damageaura";
+				break;
+
+			case DebuffDuration:
+				nounName += "debuffduration";
+				break;
+
+			case DebuffIncrease:
+				nounName += "debuffincrease";
+				break;
+
+			case DefenseRating:
+				nounName += "defenserating";
+				break;
+
+			case DeflectionRating:
+				nounName += "deflectionrating";
+				break;
+
+			case Dexterity:
+				nounName += "dexterity";
+				break;
+
+			case DodgeRating:
+				nounName += "dodgerating";
+				break;
+
+			case Health:
+				nounName += "health";
+				break;
+
+			case ImmunePoison:
+				nounName += "immunepoison";
+				break;
+
+			case ImmuneSleep:
+				nounName += "immunesleep";
+				break;
+
+			case ImmuneSlow:
+				nounName += "immuneslow";
+				break;
+
+			case ImmuneStun:
+				nounName += "immunestun";
+				break;
+
+			case Knockback:
+				nounName += "knockback";
+				break;
+
+			case LifeLeech:
+				nounName += "lifeleech";
+				break;
+
+			case Mana:
+				nounName += "mana";
+				break;
+
+			case ManaCostReduction:
+				nounName += "manacostreduction";
+				break;
+
+			case ManaLeech:
+				nounName += "manaleech";
+				break;
+
+			case Mind:
+				nounName += "mind";
+				break;
+
+			case MoveSpeed:
+				nounName += "movespeed";
+				break;
+
+			case OrbEffectiveness:
+				nounName += "orbeffectiveness";
+				break;
+
+			case OverdriveBuildup:
+				nounName += "overdrivebuildup";
+				break;
+
+			case PetDamage:
+				nounName += "petdamage";
+				break;
+
+			case PetHealth:
+				nounName += "pethealth";
+				break;
+
+			case ProjectileSpeed:
+				nounName += "projectilespeed";
+				break;
+
+			case RangeIncrease:
+				nounName += "rangeincrease";
+				break;
+
+			case Strength:
+				nounName += "strength";
+				break;
+
+			case Surefooted:
+				nounName += "surefooted";
+				break;
+
+			case Thorns:
+				nounName += "thorns";
+				break;
+
+		}
+
+		if (level == 1) {
+			nounName += "_rare";
+		} else if (level == 2) {
+			nounName += "_epic";
+		}
+
+		crystalNoun = utils::hash_id((nounName + ".noun").c_str());
+	}
+
+	void WriteTo(RakNet::BitStream& stream) const {
+		Write<uint32_t>(stream, crystalNoun);
+		Write<uint16_t>(stream, level);
+
+		// padding
+		Write<uint32_t>(stream, 0x00);
+		Write<uint32_t>(stream, 0x00);
+		Write<uint16_t>(stream, 0x00);
+	}
+
+	void WriteReflection(RakNet::BitStream& stream) const {
+		reflection::write<2>(stream, std::make_tuple(crystalNoun, level));
+	}
+};
+
+struct labsPlayer {
+	bool mbDataSetup = false;
+	int32_t mCurrentDeckIndex = 0;
+	int32_t mQueuedDeckIndex = 0;
+	std::array<labsCharacter, 3> mCharacters;
+	uint8_t mPlayerIndex = 0;
+	uint8_t mTeam = 0;
+	uint64_t mPlayerOnlineId = 0;
+	uint32_t mStatus = 0;
+	float mStatusProgress = 0.f;
+	tObjID mCurrentCreatureId = 0;
+	float mEnergyPoints = 0.f;
+	bool mbIsCharged = false;
+	int32_t mDNA = 0;
+
+	std::array<labsCrystal, 9> mCrystals;
+	std::array<bool, 8> mCrystalBonuses;
+
+	uint32_t mAvatarLevel = 0;
+	float mAvatarXP = 0.f;
+	uint32_t mChainProgression = 0;
+	bool mLockCamera = false;
+	bool mbLockedOverdrive = false;
+	bool mbLockedCrystals = false;
+	uint32_t mLockedAbilityMin;
+	uint32_t mLockedDeckIndexMin;
+	uint32_t mDeckScore;
+
+	void WriteTo(RakNet::BitStream& stream) const {
+		constexpr auto size = bytes_to_bits(0x14B8);
+
+		auto writeOffset = stream.GetWriteOffset();
+		stream.AddBitsAndReallocate(size);
+
+		stream.SetWriteOffset(writeOffset);
+		Write(stream, mbDataSetup);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x0004));
+		Write(stream, mStatus);
+		Write(stream, mStatusProgress);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x000C));
+		Write(stream, mCurrentDeckIndex);
+		Write(stream, mQueuedDeckIndex);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x0018));
+		for (const auto& character : mCharacters) {
+			character.WriteTo(stream);
+		}
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1278));
+		Write(stream, mPlayerIndex);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x12DC));
+		Write(stream, mTeam);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1280));
+		Write(stream, mPlayerOnlineId);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x12E0));
+		Write(stream, mCurrentCreatureId);
+		Write(stream, mEnergyPoints);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x12EC));
+		Write(stream, mbIsCharged);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x12F0));
+		Write(stream, mDNA);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x12F8));
+		Write(stream, mAvatarXP);
+		Write(stream, mAvatarLevel);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1304));
+		Write(stream, mChainProgression);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x133C));
+		for (const auto& crystal : mCrystals) {
+			crystal.WriteTo(stream);
+		}
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x13CC));
+		for (auto crystalBonus : mCrystalBonuses) {
+			Write(stream, crystalBonus);
+		}
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1408));
+		Write(stream, mLockCamera);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x140C));
+		Write(stream, mDeckScore);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1414));
+		Write(stream, mbLockedOverdrive);
+		Write(stream, mbLockedCrystals);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1418));
+		Write(stream, mLockedAbilityMin);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x1420));
+		Write(stream, mLockedDeckIndexMin);
+
+		stream.SetWriteOffset(writeOffset + size);
+	}
+
+	void WriteReflection(RakNet::BitStream& stream) const {
+		reflection::write<24>(stream, std::make_tuple(
+			mbDataSetup, mCurrentDeckIndex,
+			mQueuedDeckIndex,
+			mCharacters, mPlayerIndex, mTeam,
+			mPlayerOnlineId, mStatus,
+			mStatusProgress, mCurrentCreatureId,
+			mEnergyPoints, mbIsCharged, mDNA,
+			mCrystals, mCrystalBonuses,
+			mAvatarLevel, mAvatarXP,
+			mChainProgression, mLockCamera,
+			mbLockedOverdrive, mbLockedCrystals,
+			mLockedAbilityMin, mLockedDeckIndexMin,
+			mDeckScore
+		));
+	}
+};
+
+struct cGameObjectCreateData {
 	/* 00h */    uint32_t noun;
 	/* 04h */    cSPVector3 position;
 	/* 10h */    float rotXDegrees;
@@ -272,23 +998,374 @@ struct cGameObjectCreateData { // size 70h?
 	/* 2Dh */    bool hasCollision;
 	/* 2Eh */    bool playerControlled;
 
-	void Write(RakNet::BitStream& stream) {
-		::Write<uint32_t>(stream, noun);
-		position.Write(stream);
-		::Write<float>(stream, rotXDegrees);
-		::Write<float>(stream, rotYDegrees);
-		::Write<float>(stream, rotZDegrees);
-		::Write<uint64_t>(stream, assetId);
-		::Write<float>(stream, scale);
-		::Write<uint8_t>(stream, team);
-		::Write<uint8_t>(stream, hasCollision);
-		::Write<uint8_t>(stream, playerControlled);
+	void WriteTo(RakNet::BitStream& stream) const {
+		constexpr auto size = bytes_to_bits(0x70);
+
+		auto writeOffset = stream.GetWriteOffset();
+		stream.AddBitsAndReallocate(size);
+
+		stream.SetWriteOffset(writeOffset);
+		Write(stream, noun);
+		position.WriteTo(stream);
+		Write(stream, rotXDegrees);
+		Write(stream, rotYDegrees);
+		Write(stream, rotZDegrees);
+		Write(stream, assetId);
+		Write(stream, scale);
+		Write(stream, team);
+		Write(stream, hasCollision);
+		Write(stream, playerControlled);
+
+		stream.SetWriteOffset(writeOffset + size);
+	}
+
+	void WriteReflection(RakNet::BitStream& stream) const {
+		reflection::write<10>(stream, std::make_tuple(
+			noun, position,
+			rotXDegrees, rotYDegrees, rotZDegrees,
+			assetId, scale, team,
+			hasCollision, playerControlled
+		));
+	}
+};
+
+struct sporelabsObject {
+	uint8_t mTeam;
+	bool mbPlayerControlled;
+	uint32_t mInputSyncStamp;
+	uint8_t mPlayerIdx;
+	cSPVector3 mLinearVelocity;
+	cSPVector3 mAngularVelocity;
+	cSPVector3 mPosition;
+	cSPQuaternion mOrientation;
+	float mScale;
+	float mMarkerScale;
+	uint32_t mLastAnimationState;
+	uint64_t mLastAnimationPlayTimeMs;
+	uint32_t mOverrideMoveIdleAnimationState;
+	uint32_t mGraphicsState;
+	uint64_t mGraphicsStateStartTimeMs;
+	uint64_t mNewGraphicsStateStartTimeMs;
+	bool mVisible;
+	bool mbHasCollision;
+	tObjID mOwnerID = utils::hash_id("none");
+	uint8_t mMovementType;
+	bool mDisableRepulsion;
+	uint32_t mInteractableState;
+	uint32_t sourceMarkerKey_markerId;
+
+	sporelabsObject() {}
+	sporelabsObject(cGameObjectCreateData data) :
+		mTeam(data.team), mbPlayerControlled(data.playerControlled),
+		mInputSyncStamp(0), mPlayerIdx(0),
+		mLinearVelocity {}, mAngularVelocity {},
+		mPosition(data.position), mOrientation {},
+		mScale(data.scale), mMarkerScale(1.f),
+		mLastAnimationState(0), mLastAnimationPlayTimeMs(0),
+		mOverrideMoveIdleAnimationState(0),
+		mGraphicsState(0), mGraphicsStateStartTimeMs(0),
+		mNewGraphicsStateStartTimeMs(0),
+		mVisible(true), mbHasCollision(data.hasCollision),
+		mMovementType(0), mDisableRepulsion(false),
+		mInteractableState(0), sourceMarkerKey_markerId(0) {}
+
+	void WriteTo(RakNet::BitStream& stream) const {
+		constexpr auto size = bytes_to_bits(0x308);
+
+		auto writeOffset = stream.GetWriteOffset();
+		stream.AddBitsAndReallocate(size);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x010));
+		Write(stream, mScale);
+		Write(stream, mMarkerScale);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x018));
+		mPosition.WriteTo(stream);
+		mOrientation.WriteTo(stream);
+		mLinearVelocity.WriteTo(stream);
+		mAngularVelocity.WriteTo(stream);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x050));
+		Write(stream, mOwnerID);
+		Write(stream, mTeam);
+		Write(stream, mPlayerIdx);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x058));
+		Write(stream, mInputSyncStamp);
+		Write(stream, mbPlayerControlled);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x05F));
+		Write(stream, mVisible);
+		Write(stream, mbHasCollision);
+		Write(stream, mMovementType);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x088));
+		Write(stream, sourceMarkerKey_markerId);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x0AC));
+		Write(stream, mLastAnimationState);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x0B8));
+		Write(stream, mLastAnimationPlayTimeMs);
+		Write(stream, mOverrideMoveIdleAnimationState);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x258));
+		Write(stream, mGraphicsState);
+		Write(stream, mGraphicsStateStartTimeMs);
+		Write(stream, mNewGraphicsStateStartTimeMs);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x284));
+		Write(stream, mDisableRepulsion);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x288));
+		Write(stream, mInteractableState);
+
+		stream.SetWriteOffset(writeOffset + size);
+	}
+
+	void WriteReflection(RakNet::BitStream& stream) const {
+		reflection::write<23>(stream, std::make_tuple(
+			mTeam, mbPlayerControlled,
+			mInputSyncStamp, mPlayerIdx,
+			mLinearVelocity, mAngularVelocity,
+			mPosition, mOrientation,
+			mScale, mMarkerScale,
+			mLastAnimationState, mLastAnimationPlayTimeMs,
+			mOverrideMoveIdleAnimationState, mGraphicsState,
+			mGraphicsStateStartTimeMs, mNewGraphicsStateStartTimeMs,
+			mVisible, mbHasCollision,
+			mOwnerID, mMovementType,
+			mDisableRepulsion, mInteractableState,
+			sourceMarkerKey_markerId
+		));
+	}
+};
+
+/*
+	ServerEvent types (append .ServerEventDef)
+		character_filter_exit_bio
+		character_filter_exit_necro
+		character_filter_exit_spacetime
+		character_filter_exit_plasma_electric
+		character_filter_exit_cyber
+		character_filter_entry_bio
+		character_filter_entry_necro
+		character_filter_entry_spacetime
+		character_filter_entry_plasma_electric
+		character_filter_entry_cyber
+		character_filter_character_holo_effect_locked
+		character_filter_character_holo_effect
+		character_filter_base_ring1_effect
+		character_filter_base_ring2_effect
+		character_lobby_swap_effect
+		character_lobby_dias_glow_effect
+		dna_pickup
+		resurrect_orb_full
+		resurrect_orb_pickup
+		mana_orb_full
+		mana_orb_pickup
+		health_orb_full
+		health_orb_pickup
+		combattext_damage
+		combattext_damage_critical
+		combattext_enemy_damage
+		combattext_enemy_damage_critical
+		combattext_absorb
+		combattext_absorb_critical
+		combattext_enemy_absorb
+		combattext_enemy_absorb_critical
+		combattext_heal
+		combattext_critical_heal
+		life_healing_target_effect
+		combattext_dodge
+		combattext_deflect
+		combattext_resist
+		combattext_immune
+		combattext_resurrected
+		combattext_slowed
+		combattext_stunned
+		combattext_taunted
+		combattext_suppressed
+		combattext_rooted
+		combattext_terrified
+		combattext_banished
+		common_death_regular_melee_effect_bio
+		common_death_regular_melee_effect_cyber
+		common_death_regular_melee_effect_necro
+		common_death_regular_melee_effect_plasma
+		common_death_regular_melee_effect_spacetime
+		common_death_critical_melee_effect_bio
+		common_death_critical_melee_effect_cyber
+		common_death_critical_melee_effect_necro
+		common_death_critical_melee_effect_plasma
+		common_death_critical_melee_effect_spacetime
+		common_death_regular_melee_effect_bio_noblood
+		common_death_regular_melee_effect_cyber_noblood
+		common_death_regular_melee_effect_necro_noblood
+		common_death_regular_melee_effect_plasma_noblood
+		common_death_regular_melee_effect_spacetime_noblood
+		common_death_critical_melee_effect_bio_noblood
+		common_death_critical_melee_effect_cyber_noblood
+		common_death_critical_melee_effect_necro_noblood
+		common_death_critical_melee_effect_plasma_noblood
+		common_death_critical_melee_effect_spacetime_noblood
+		common_death_critical_cyber_effect_bio
+		common_death_critical_cyber_effect_cyber
+		common_death_critical_cyber_effect_necro
+		common_death_critical_cyber_effect_plasma
+		common_death_critical_cyber_effect_spacetime
+		common_death_critical_cyber_effect_bio_noblood
+		common_death_critical_cyber_effect_cyber_noblood
+		common_death_critical_cyber_effect_necro_noblood
+		common_death_critical_cyber_effect_plasma_noblood
+		common_death_critical_cyber_effect_spacetime_noblood
+		common_death_critical_plasma_effect_bio
+		common_death_critical_plasma_effect_cyber
+		common_death_critical_plasma_effect_necro
+		common_death_critical_plasma_effect_plasma
+		common_death_critical_plasma_effect_spacetime
+		common_death_critical_plasma_effect_bio_noblood
+		common_death_critical_plasma_effect_cyber_noblood
+		common_death_critical_plasma_effect_necro_noblood
+		common_death_critical_plasma_effect_plasma_noblood
+		common_death_critical_plasma_effect_spacetime_noblood
+		common_death_critical_bio_effect_bio
+		common_death_critical_bio_effect_cyber
+		common_death_critical_bio_effect_necro
+		common_death_critical_bio_effect_plasma
+		common_death_critical_bio_effect_spacetime
+		common_death_critical_bio_effect_bio_noblood
+		common_death_critical_bio_effect_cyber_noblood
+		common_death_critical_bio_effect_necro_noblood
+		common_death_critical_bio_effect_plasma_noblood
+		common_death_critical_bio_effect_spacetime_noblood
+		common_death_critical_necro_effect_bio
+		common_death_critical_necro_effect_cyber
+		common_death_critical_necro_effect_necro
+		common_death_critical_necro_effect_plasma
+		common_death_critical_necro_effect_spacetime
+		common_death_critical_necro_effect_bio_noblood
+		common_death_critical_necro_effect_cyber_noblood
+		common_death_critical_necro_effect_necro_noblood
+		common_death_critical_necro_effect_plasma_noblood
+		common_death_critical_necro_effect_spacetime_noblood
+		common_death_critical_spacetime_effect_bio
+		common_death_critical_spacetime_effect_cyber
+		common_death_critical_spacetime_effect_necro
+		common_death_critical_spacetime_effect_plasma
+		common_death_critical_spacetime_effect_spacetime
+		common_death_critical_spacetime_effect_bio_noblood
+		common_death_critical_spacetime_effect_cyber_noblood
+		common_death_critical_spacetime_effect_necro_noblood
+		common_death_critical_spacetime_effect_plasma_noblood
+		common_death_critical_spacetime_effect_spacetime_noblood
+*/
+struct ServerEvent {
+	uint32_t simpleSwarmEffectID;
+	uint8_t objectFxIndex;
+	bool bRemove;
+	bool bHardStop;
+	bool bForceAttach;
+	bool bCritical;
+	uint32_t asset;
+	tObjID objectId;
+	tObjID secondaryObjectId;
+	tObjID attackerId;
+	cSPVector3 position;
+	cSPVector3 facing;
+	cSPQuaternion orientation;
+	cSPVector3 targetPoint;
+	int32_t textValue;
+	uint32_t clientEventID;
+	uint8_t clientIgnoreFlags;
+	uint64_t lootReferenceId;
+	uint64_t lootInstanceId;
+	uint32_t lootRigblockId;
+	uint32_t lootSuffixAssetId;
+	uint32_t lootPrefixAssetId1;
+	uint32_t lootPrefixAssetId2;
+	int32_t lootItemLevel;
+	int32_t lootRarity;
+	uint64_t lootCreationTime;
+
+	void WriteTo(RakNet::BitStream& stream) const {
+		constexpr auto size = bytes_to_bits(0x98);
+
+		auto writeOffset = stream.GetWriteOffset();
+		stream.AddBitsAndReallocate(size);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x04));
+		Write(stream, simpleSwarmEffectID);
+		Write(stream, objectFxIndex);
+		Write(stream, bRemove);
+		Write(stream, bHardStop);
+		Write(stream, bForceAttach);
+		Write(stream, bCritical);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x10));
+		Write(stream, asset);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x18));
+		Write(stream, objectId);
+		Write(stream, secondaryObjectId);
+		Write(stream, attackerId);
+		position.WriteTo(stream);
+		facing.WriteTo(stream);
+		orientation.WriteTo(stream);
+		targetPoint.WriteTo(stream);
+		Write(stream, textValue);
+		Write(stream, clientEventID);
+		Write(stream, clientIgnoreFlags);
+
+		stream.SetWriteOffset(writeOffset + bytes_to_bits(0x68));
+		Write(stream, lootReferenceId);
+		Write(stream, lootInstanceId);
+		Write(stream, lootRigblockId);
+		Write(stream, lootSuffixAssetId);
+		Write(stream, lootPrefixAssetId1);
+		Write(stream, lootPrefixAssetId2);
+		Write(stream, lootItemLevel);
+		Write(stream, lootRarity);
+		Write(stream, lootCreationTime);
+
+		stream.SetWriteOffset(writeOffset + size);
+	}
+
+	void WriteReflection(RakNet::BitStream& stream) const {
+		reflection::write<26>(stream, std::make_tuple(
+			simpleSwarmEffectID,
+			objectFxIndex,
+			bRemove,
+			bHardStop,
+			bForceAttach,
+			bCritical,
+			asset,
+			objectId,
+			secondaryObjectId,
+			attackerId,
+			position,
+			facing,
+			orientation,
+			targetPoint,
+			textValue,
+			clientEventID,
+			clientIgnoreFlags,
+			lootReferenceId,
+			lootInstanceId,
+			lootRigblockId,
+			lootSuffixAssetId,
+			lootPrefixAssetId1,
+			lootPrefixAssetId2,
+			lootItemLevel,
+			lootRarity,
+			lootCreationTime
+		));
 	}
 };
 
 // RakNet
 namespace RakNet {
-	enum GState : uint32_t {
+	enum GState : int32_t {
 		Boot = 0,
 		Login,
 		Spaceship,
@@ -298,6 +1375,30 @@ namespace RakNet {
 		Observer,
 		Cinematic,
 		Spectator,
+		ChainVoting,
+		ChainCashOut,
+		GameOver,
+		Quit,
+		ArenaLobby,
+		ArenaRoundResults,
+		JuggernautLobby,
+		JuggernautResults,
+		KillRaceLobby,
+		KillRaceResults
+	};
+
+	enum class LuaGState : int32_t {
+		Invalid = -1,
+		Start = 0,
+		Login,
+		Spaceship,
+		Editor,
+		LevelEditor,
+		PreDungeon,
+		Dungeon,
+		Observer,
+		Cinematic,
+		Replay,
 		ChainVoting,
 		ChainCashOut,
 		GameOver,
@@ -400,6 +1501,16 @@ namespace RakNet {
 					break;
 				}
 
+				case ID_SND_RECEIPT_ACKED: {
+					// Packet was successfully accepted.
+					break;
+				}
+
+				case ID_SND_RECEIPT_LOSS: {
+					// Packet was dropped. Add code to resend?
+					break;
+				}
+
 				case ID_USER_PACKET_ENUM: {
 					OnHelloPlayer(packet);
 					break;
@@ -451,25 +1562,21 @@ namespace RakNet {
 	void Server::OnHelloPlayer(Packet* packet) {
 		SendHelloPlayer(packet);
 		// if ok
-		// SendPlayerJoined(packet);
+		SendPlayerJoined(packet);
 		// else
 		// SendPlayerDeparted(packet);
 
 		// SendTestPacket(packet, PacketID::ModifierDeleted, { 0x12, 0x34, 0x56, 0x78 });
 
-		// SendTestPacket(packet, PacketID::ChainGameMsgs, { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 });
-
-		// SendTestPacket(packet, PacketID::PlayerCharacterDeploy, { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 });
-
+		// Party is ok
 		SendPartyMergeComplete(packet);
+		
+		// Send player stuff
+		SendObjectCreate(packet, 0x0000000A, static_cast<uint32_t>(Game::CreatureID::BlitzAlpha));
+		SendLabsPlayerUpdate(packet, true);
+		
+		// Prepare to start
 		SendGamePrepareForStart(packet);
-		// SendTestPacket(packet, PacketID::DirectorState, { 0x01, 0x02 });
-
-		/*
-		SendTestPacket(packet, PacketID::GamePrepareForStart + 1, { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0xFE, 0xDC, 0xBA });
-		SendGameState(packet, Blaze::GameState::PreGame);
-		SendTestPacket(packet, PacketID::GameStart + 1, { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0xFE, 0xDC, 0xBA });
-		*/
 	}
 
 	void Server::OnPlayerStatusUpdate(Packet* packet) {
@@ -480,28 +1587,22 @@ namespace RakNet {
 
 		switch (value) {
 			case 2: {
+				SendGameState(packet, GState::PreDungeon);
 				break;
 			}
 
 			case 4: {
-				SendGameState(packet, PreDungeon);
-				SendArenaGameMessages(packet);
+				// SendArenaGameMessages(packet);
+				SendObjectivesInitForLevel(packet);
 				SendPlayerDeparted(packet);
 				break;
 			}
 
 			case 8: {
-				SendGameState(packet, Dungeon);
+				SendGameState(packet, GState::Dungeon);
 				SendGameStart(packet);
 
-				SendObjectCreate(packet, static_cast<uint32_t>(Game::CreatureID::BlitzAlpha));
-				SendPlayerCharacterDeploy(packet);
-
-				SendObjectivesInitForLevel(packet);
-				
-				// SendTestPacket(packet, PacketID::TutorialGameMsgs, { 0x00, 0x02, 0x03, 0x04 });
-				
-				// SendTestPacket(packet, PacketID::ObjectJump, { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 });
+				SendPlayerCharacterDeploy(packet, 0x0000000A);
 				break;
 			}
 		}
@@ -509,8 +1610,16 @@ namespace RakNet {
 
 	void Server::OnActionCommandMsgs(Packet* packet) {
 		std::cout << "OnActionCommandMsgs" << std::endl;
+		std::cout << std::hex;
 
-		// We have 64 bytes of stuff
+		uint32_t value;
+		for (size_t i = 0; i < 16; ++i) {
+			mInStream.Read<uint32_t>(value);
+			for (size_t j = 0; j < 4; ++j) {
+				std::cout << std::setw(2) << std::setfill('0') << static_cast<int>(reinterpret_cast<uint8_t*>(&value)[j]) << " ";
+			}
+		}
+		std::cout << std::resetiosflags(0) << std::endl;
 	}
 	
 	void Server::OnDebugPing(Packet* packet) {
@@ -548,7 +1657,7 @@ namespace RakNet {
 
 		BitStream outStream(8);
 		outStream.Write(PacketID::HelloPlayer);
-		outStream.Write<uint8_t>(0x00); // Player id?
+		outStream.Write<uint8_t>(0x01); // Player id?
 		outStream.Write<uint8_t>(mGameId);
 		outStream.WriteBits(reinterpret_cast<const uint8_t*>(&addr.binaryAddress), sizeof(addr.binaryAddress) * 8, true);
 		outStream.Write(addr.port);
@@ -607,22 +1716,53 @@ namespace RakNet {
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
 
-	void Server::SendLabsPlayerUpdate(Packet* packet) {
-		// Packet size: 0x25
+	void Server::SendLabsPlayerUpdate(Packet* packet, bool fullUpdate) {
 		BitStream outStream(8);
 		outStream.Write(PacketID::LabsPlayerUpdate);
 
-		// 0-7?
-		outStream.Write<uint32_t>(bswap<uint32_t>(0x03));
-		outStream.Write<uint32_t>(0x04);
-		outStream.Write<uint32_t>(0x03);
-		outStream.Write<uint32_t>(0x02);
-		outStream.Write<uint32_t>(0x01);
-		outStream.Write<uint32_t>(0x00);
-		outStream.Write<uint32_t>(0x07);
-		outStream.Write<uint32_t>(0x08);
-		outStream.Write<uint32_t>(0x09);
-		outStream.Write<uint8_t>(0x0A);
+		// Player ID?
+		Write<uint8_t>(outStream, 0x01);
+		Write<uint16_t>(outStream, fullUpdate ? 0x1000 : 0x0000);
+
+		labsPlayer player;
+		player.mPlayerOnlineId = 0x01;
+		player.mbDataSetup = true;
+		player.mAvatarLevel = 50;
+		player.mAvatarXP = 0.5f;
+		player.mCurrentDeckIndex = 100;
+		player.mCurrentCreatureId = 10;
+		player.mDNA = 98765;
+
+		// Characters
+		{
+			auto& character = player.mCharacters[0];
+			character.nounDef = static_cast<uint32_t>(Game::CreatureID::BlitzAlpha);
+			character.version = 2;
+		} {
+			auto& character = player.mCharacters[1];
+			character.nounDef = utils::hash_id("none");
+			character.version = 0;
+		} {
+			auto& character = player.mCharacters[2];
+			character.nounDef = utils::hash_id("none");
+			character.version = 0;
+		}
+
+		// Crystals
+		player.mCrystals[0] = labsCrystal(labsCrystal::Damage, 0, true);
+
+		// write player
+		player.WriteReflection(outStream);
+
+		// write characters
+		for (const auto& character : player.mCharacters) {
+			character.WriteReflection(outStream);
+		}
+
+		// write crystals
+		for (const auto& crystal : player.mCrystals) {
+			crystal.WriteReflection(outStream);
+		}
 
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
@@ -635,20 +1775,59 @@ namespace RakNet {
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
 
-	void Server::SendObjectCreate(Packet* packet, uint32_t objectId) {
+	void Server::SendPlayerCharacterDeploy(Packet* packet, uint32_t id) {
+		/*
+			0 : u8 (unk)
+			1 : u8 (1-16)
+			2 : u8 (unk)
+			3 : u8 (unk)
+
+			if [1] == 1 {
+				0 : u8 (arg0 -> sub_4E21D0)
+				4 : u32 (hash, default 'none', arg0 -> sub_9DFB40)
+				8 : u32 (compared to 0?, var -> sub_9DFB40)
+
+				16 : u32 (arg0 -> sub_9D7A00)
+				20 : u32 (arg1 -> sub_9D7A00)
+
+				24 : u32 (arg0 -> sub_9D7A00)
+				28 : u32 (arg1 -> sub_9D7A00)
+
+				32 : u32 (arg0 -> sub_9D7A00)
+				36 : u32 (arg1 -> sub_9D7A00)
+
+				40 : u32 (arg0 -> sub_9D7A00)
+				44 : u32 (arg1 -> sub_9D7A00)
+
+				52 : u32 (arg1 -> sub_4E21D0)
+			}
+		*/
+
+		constexpr uint32_t hash_none = utils::hash_id("none");
+
+		// Packet size: 0x09
+		BitStream outStream(8);
+		outStream.Write(PacketID::PlayerCharacterDeploy);
+
+		Write<uint32_t>(outStream, static_cast<uint32_t>(Game::CreatureID::BlitzAlpha));
+		Write<uint8_t>(outStream, 0x01);
+		Write<uint32_t>(outStream, id);
+
+		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
+	}
+
+	void Server::SendObjectCreate(Packet* packet, uint32_t id, uint32_t noun) {
 		// Packet size: 0x04
 		BitStream outStream(8);
 		outStream.Write(PacketID::ObjectCreate);
 
-		Write<uint32_t>(outStream, Hash::cGameObjectCreateData);
+		// set object id to 1?
+		Write<uint32_t>(outStream, id);
 
 		// reflection
-		uint16_t value0 = 0x01;
-		Write<uint16_t>(outStream, value0);
-		if (value0 > 0) {
-			cGameObjectCreateData data;
-			data.noun = objectId;
-			data.position = { 0.f, 0.f, 0.f };
+		cGameObjectCreateData data;
+			data.noun = noun;
+			data.position = { 100.f, 100.f, 100.f };
 			data.rotXDegrees = 0.f;
 			data.rotYDegrees = 0.f;
 			data.rotZDegrees = 0.f;
@@ -657,9 +1836,11 @@ namespace RakNet {
 			data.team = 0;
 			data.hasCollision = true;
 			data.playerControlled = true;
+		data.WriteReflection(outStream);
 
-			data.Write(outStream);
-		}
+		sporelabsObject sporeObject(data);
+			sporeObject.mPlayerIdx = 0x01;
+		sporeObject.WriteReflection(outStream);
 
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
@@ -781,6 +1962,9 @@ namespace RakNet {
 		BitStream outStream(8);
 		outStream.Write(PacketID::ServerEvent);
 
+		ServerEvent event;
+		event.WriteReflection(outStream);
+
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
 
@@ -808,47 +1992,6 @@ namespace RakNet {
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
 
-	void Server::SendPlayerCharacterDeploy(Packet* packet) {
-		/*
-			0 : u8 (unk)
-			1 : u8 (1-16)
-			2 : u8 (unk)
-			3 : u8 (unk)
-			
-			if [1] == 1 {
-				0 : u8 (arg0 -> sub_4E21D0)
-				4 : u32 (hash, default 'none', arg0 -> sub_9DFB40)
-				8 : u32 (compared to 0?, var -> sub_9DFB40)
-
-				16 : u32 (arg0 -> sub_9D7A00)
-				20 : u32 (arg1 -> sub_9D7A00)
-
-				24 : u32 (arg0 -> sub_9D7A00)
-				28 : u32 (arg1 -> sub_9D7A00)
-
-				32 : u32 (arg0 -> sub_9D7A00)
-				36 : u32 (arg1 -> sub_9D7A00)
-
-				40 : u32 (arg0 -> sub_9D7A00)
-				44 : u32 (arg1 -> sub_9D7A00)
-
-				52 : u32 (arg1 -> sub_4E21D0)
-			}
-		*/
-
-		constexpr uint32_t hash_none = hash_id("none");
-
-		// Packet size: 0x09
-		BitStream outStream(8);
-		outStream.Write(PacketID::PlayerCharacterDeploy);
-
-		Write<uint32_t>(outStream, static_cast<uint32_t>(Game::CreatureID::BlitzAlpha));
-		Write<uint8_t>(outStream, 0x01);
-		Write<uint32_t>(outStream, static_cast<uint32_t>(Game::CreatureID::BlitzAlpha));
-
-		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
-	}
-
 	void Server::SendGamePrepareForStart(Packet* packet) {
 		// C8AC4657 = zelems_1
 		// 0xEEB4D1D9 = nocturna_1?
@@ -860,12 +2003,14 @@ namespace RakNet {
 		BitStream outStream(8);
 		outStream.Write(PacketID::GamePrepareForStart);
 
-		Write<uint32_t>(outStream, hash_id("Darkspore_Tutorial_cryos_1_v2.level"));
-		Write<uint32_t>(outStream, 0x00000000);
-		Write<uint32_t>(outStream, 0x00000000);
+		Write<uint32_t>(outStream, utils::hash_id("Darkspore_Tutorial_cryos_1_v2.level"));
+		Write<uint32_t>(outStream, utils::hash_id("Darkspore_Tutorial_cryos_1_v2_default.Markerset"));
+		Write<uint32_t>(outStream, utils::hash_id("Darkspore_Tutorial_cryos_1_v2_default.Markerset"));
+
+		// marker set for tutorial: 0xe6335cf5
 
 		// level index? must be (>= 0 %% <= 72)
-		Write<uint32_t>(outStream, 0x00000000);
+		Write<uint32_t>(outStream, 0x00000001);
 
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
@@ -875,7 +2020,7 @@ namespace RakNet {
 		BitStream outStream(8);
 		outStream.Write(PacketID::GameStart);
 
-		Write<uint32_t>(outStream, 0x00000000);
+		Write<uint32_t>(outStream, 0x00000001);
 
 		mSelf->Send(&outStream, HIGH_PRIORITY, UNRELIABLE_WITH_ACK_RECEIPT, 0, packet->systemAddress, false);
 	}
@@ -904,7 +2049,7 @@ namespace RakNet {
 		Write<uint8_t>(outStream, count);
 
 		for (uint8_t i = 0; i < count; ++i) {
-			Write<uint32_t>(outStream, hash_id("DontUseHealthObelisks"));
+			Write<uint32_t>(outStream, utils::hash_id("DontUseHealthObelisks"));
 
 			Write<uint8_t>(outStream, 0x01);
 			Write<uint8_t>(outStream, 0x01);

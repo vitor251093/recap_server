@@ -100,16 +100,20 @@ namespace Blaze {
 	}
 
 	void RoomsComponent::NotifyRoomViewUpdated(Client* client, uint32_t viewId) {
+		auto user = client->get_user();
+
 		TDF::Packet packet;
 		packet.PutString(nullptr, "DISP", "");
 		{
-			auto& gmetMap = packet.CreateMap(nullptr, "GMET", TDF::Type::String, TDF::Type::Struct);
+			auto& gmetMap = packet.CreateMap(nullptr, "GMET", TDF::Type::String, TDF::Type::String);
+			packet.PutString(&gmetMap, "PlaygroupKey", "TestKey");
 		} {
-			auto& metaMap = packet.CreateMap(nullptr, "META", TDF::Type::String, TDF::Type::Struct);
+			auto& metaMap = packet.CreateMap(nullptr, "META", TDF::Type::String, TDF::Type::String);
+			packet.PutString(&metaMap, "PlaygroupKey", "TestKey");
 		}
-		packet.PutInteger(nullptr, "MXRM", viewId);
+		packet.PutInteger(nullptr, "MXRM", 0xFF);
 		packet.PutString(nullptr, "NAME", "Dalkon's Room");
-		packet.PutInteger(nullptr, "USRM", viewId);
+		packet.PutInteger(nullptr, "USRM", user->get_id());
 		packet.PutInteger(nullptr, "VWID", viewId);
 
 		DataBuffer outBuffer;
@@ -303,7 +307,10 @@ namespace Blaze {
 	}
 
 	void RoomsComponent::SelectViewUpdates(Client* client, Header header) {
+		auto user = client->get_user();
+
 		auto& request = client->get_request();
+		Log(request);
 
 		bool update = request["UPDT"].GetUint() != 0;
 		if (update) {
@@ -313,7 +320,7 @@ namespace Blaze {
 			TDF::Packet packet;
 			packet.PutInteger(nullptr, "SEID", 0);
 			packet.PutInteger(nullptr, "UPRE", 1);
-			packet.PutInteger(nullptr, "USID", 1);
+			packet.PutInteger(nullptr, "USID", user->get_id());
 			packet.PutInteger(nullptr, "VWID", viewId);
 
 			DataBuffer outBuffer;

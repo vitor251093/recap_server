@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>libs\raknet-3.902-mod\Source;libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)source;libs\raknet-3.902-mod\Source;libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
     <LibraryPath>libs\raknet-3.902-mod\build\lib;libs\pugixml-1.9\lib;libs\openssl-1.1.1b\lib;libs\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\build\</OutDir>
   </PropertyGroup>

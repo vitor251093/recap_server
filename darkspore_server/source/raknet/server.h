@@ -5,7 +5,7 @@
 #define PACKET_LOGGING
 
 // Include
-#include "../blaze/types.h"
+#include "blaze/types.h"
 
 #include <RakPeerInterface.h>
 #include <BitStream.h>
@@ -33,7 +33,7 @@ namespace RakNet {
 		constexpr MessageID PlayerStatusUpdate = 0x88;
 		constexpr MessageID GameAborted = 0x89;
 		constexpr MessageID GameState = 0x8A;
-		constexpr MessageID DirectorState = 0xBB;
+		constexpr MessageID DirectorState = 0x8B;
 		constexpr MessageID ObjectCreate = 0x8C;
 		constexpr MessageID ObjectUpdate = 0x8D;
 		constexpr MessageID ObjectDelete = 0x8E;
@@ -100,6 +100,10 @@ namespace RakNet {
 		constexpr MessageID DebugPing = 0xCC;
 	}
 
+	struct ObjectCreateData {
+
+	};
+
 	// Server
 	class Server {
 		public:
@@ -126,9 +130,9 @@ namespace RakNet {
 			void SendPlayerDeparted(Packet* packet);
 			void SendPlayerStatusUpdate(Packet* packet, Blaze::PlayerState playerState);
 			void SendGameState(Packet* packet, uint32_t gameState);
-			void SendPlayerCharacterDeploy(Packet* packet);
-			void SendLabsPlayerUpdate(Packet* packet);
-			void SendObjectCreate(Packet* packet, uint32_t objectId);
+			void SendPlayerCharacterDeploy(Packet* packet, uint32_t id);
+			void SendLabsPlayerUpdate(Packet* packet, bool fullUpdate);
+			void SendObjectCreate(Packet* packet, uint32_t id, uint32_t noun);
 			void SendObjectUpdate(Packet* packet);
 			void SendObjectDelete(Packet* packet);
 			void SendActionCommandResponse(Packet* packet);

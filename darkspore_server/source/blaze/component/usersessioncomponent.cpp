@@ -253,42 +253,9 @@ namespace Blaze {
 	}
 
 	void UserSessionComponent::UpdateUserSessionClientData(Client* client, Header header) {
+		// Fetch level, playgroup id, etc
+
 		header.error_code = 0;
 		client->reply(std::move(header));
-
-		// NotifyUserSessionExtendedDataUpdate(client, 1);
-		// Log(request);
-		/*
-		TDF::Packet packet;
-		{
-			auto& edatStruct = packet.CreateStruct(nullptr, "EDAT");
-			packet.PutInteger(&edatStruct, "AID", userId);
-			packet.PutInteger(&edatStruct, "ALOC", request["CINF"]["LOC"].GetUint64());
-			// packet.PutBlob(&edatStruct, "EXBB", nullptr, 0);
-			// packet.PutInteger(&edatStruct, "EXID", 0);
-			packet.PutInteger(&edatStruct, "ID", userId);
-			packet.PutString(&edatStruct, "NAME", userName);
-		}
-		packet.PutInteger(nullptr, "FLGS", static_cast<uint32_t>(SessionState::Authenticated));
-		{
-			auto& userStruct = packet.CreateStruct(nullptr, "USER");
-			packet.PutInteger(&userStruct, "AID", 1);
-			packet.PutInteger(&userStruct, "ALOC", request["CINF"]["LOC"].GetUint64());
-			packet.PutBlob(&userStruct, "EXBB", nullptr, 0);
-			packet.PutInteger(&userStruct, "EXID", 0);
-			packet.PutInteger(&userStruct, "ID", 1);
-			packet.PutString(&userStruct, "NAME", "Dalkon");
-		}
-
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
-
-		Header header;
-		header.component = Component::UserSessions;
-		header.command = 0x19;
-		header.error_code = 0;
-
-		client->reply(std::move(header), outBuffer);
-		*/
 	}
 }

@@ -192,8 +192,6 @@ namespace Blaze {
 		}
 		*/
 
-		auto pos = mReadBuffer.position();
-
 		mRequest = {};
 		TDF::Parse(mReadBuffer, mRequest);
 		
@@ -240,12 +238,11 @@ namespace Blaze {
 				break;
 
 			case Blaze::Component::UserSessions:
-				// Log(mRequest);
 				Blaze::UserSessionComponent::Parse(this, header);
 				break;
 
 			default:
-				std::cout << static_cast<int>(header.component) << std::endl;
+				std::cout << "Unknown component: " << static_cast<int>(header.component) << std::endl;
 				break;
 		}
 	}

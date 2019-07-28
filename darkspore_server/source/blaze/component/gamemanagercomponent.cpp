@@ -2,10 +2,11 @@
 // Include
 #include "gamemanagercomponent.h"
 #include "usersessioncomponent.h"
+#include "playgroupscomponent.h"
 
-#include "../client.h"
-#include "../../game/game.h"
-#include "../../utils/functions.h"
+#include "blaze/client.h"
+#include "game/game.h"
+#include "utils/functions.h"
 
 #include <iostream>
 
@@ -448,6 +449,8 @@ namespace Blaze {
 		std::string playgroupId = request["PGID"].GetString();
 		uint32_t tCap = request["TCAP"].GetUint();
 		std::string versionString = request["VSTR"].GetString();
+
+		std::cout << "Playgroup ID: " << playgroupId << std::endl;
 
 		TDF::Packet packet;
 		{
@@ -973,6 +976,8 @@ namespace Blaze {
 
 		UserSessionComponent::NotifyUserAdded(client, 1, "Dalkon");
 		UserSessionComponent::NotifyUserUpdated(client, 1);
+
+		PlaygroupsComponent::NotifyJoinPlaygroup(client);
 
 		NotifyPlayerJoining(client, gameId);
 	}

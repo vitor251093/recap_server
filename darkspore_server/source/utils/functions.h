@@ -34,6 +34,11 @@ namespace utils {
 		}
 	}
 
+	// Other
+	constexpr int const_tolower(int c) {
+		return (c >= 'A' && c <= 'Z') ? c + ('a' - 'A') : c;
+	}
+
 	// Time
 	uint64_t get_unix_time();
 
@@ -110,6 +115,18 @@ namespace utils {
 	// JSON
 	void json_add_text_to_object(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator);
 	std::string json_document_to_string(const rapidjson::Document& document);
+
+	// Hashes
+	constexpr uint32_t hash_id(const char* pStr) {
+		uint32_t rez = 0x811C9DC5u;
+		while (*pStr) {
+			// To avoid compiler warnings
+			rez = static_cast<uint32_t>(rez * static_cast<unsigned long long>(0x1000193));
+			rez ^= static_cast<uint32_t>(const_tolower(*pStr));
+			++pStr;
+		}
+		return rez;
+	}
 }
 
 #endif

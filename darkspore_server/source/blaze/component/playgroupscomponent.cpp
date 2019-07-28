@@ -33,7 +33,24 @@
 		0x57 = NotifyXboxSessionChange
 
 	Blaze fields
-		
+		INFO (PlaygroupInfo)
+			ATTR = 0x54
+			ENBV = 0x50
+			HNET = 0x14
+			HSID = 0x48
+			JOIN = 0x1C
+			MLIM = 0x40
+			NAME = 0x24
+			NTOP = 0x1C
+			OWNR = 0x34
+			PGID = 0x38
+			PRES = 0x1C
+			UKEY = 0x24
+			UPRS = 0x50
+			UUID = 0x24
+			VOIP = 0x1C
+			XNNC = 0x20
+			XSES = 0x20
 
 	Notify Packets
 		NotifyDestroyPlaygroup
@@ -156,13 +173,37 @@ namespace Blaze {
 	}
 
 	void PlaygroupsComponent::NotifyJoinPlaygroup(Client* client) {
+		auto user = client->get_user();
+
 		TDF::Packet packet;
 		{
 			auto& infoStruct = packet.CreateStruct(nullptr, "INFO");
+			{
+				auto& attrMap = packet.CreateMap(&infoStruct, "ATTR", TDF::Type::String, TDF::Type::String);
+			}
+			packet.PutInteger(&infoStruct, "ENVB", 1);
+			{
+				auto& hnetUnion = packet.CreateUnion(&infoStruct, "HNET", NetworkAddressMember::Unset);
+			}
+			packet.PutInteger(&infoStruct, "HSID", user->get_id()); // host session id?
+			packet.PutInteger(&infoStruct, "JOIN", PlaygroupJoinState::Open);
+			packet.PutInteger(&infoStruct, "MLIM", 1); // member limit
+			packet.PutString(&infoStruct, "NAME", "My Room"); // playgroup name?
+			packet.PutInteger(&infoStruct, "NTOP", GameNetworkTopology::ClientServerDedicated);
+			packet.PutInteger(&infoStruct, "OWNR", user->get_id());
+			packet.PutInteger(&infoStruct, "PGID", 1);
+			packet.PutInteger(&infoStruct, "PRES", PresenceMode::Standard);
+			packet.PutString(&infoStruct, "NAME", "My Room");
+			packet.PutString(&infoStruct, "UKEY", "what");
+			packet.PutInteger(&infoStruct, "UPRS", 1);
+			packet.PutString(&infoStruct, "UUID", "71bc4bdb-82ec-494d-8d75-ca5123b827ac");
+			packet.PutInteger(&infoStruct, "VOIP", VoipTopology::Disabled);
+			packet.PutBlob(&infoStruct, "XNNC", nullptr, 0);
+			packet.PutBlob(&infoStruct, "XSES", nullptr, 0);
 		} {
 			auto& mlstList = packet.CreateList(nullptr, "MLST", TDF::Type::Struct);
 		}
-		packet.PutInteger(nullptr, "USER", 0); // user id?
+		packet.PutInteger(nullptr, "USER", user->get_id());
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);

@@ -97,6 +97,65 @@ namespace Game {
 			std::vector<FeedItem> mItems;
 	};
 
+	// Part
+	class Part {
+		public:
+			Part(uint32_t rigblock);
+			Part(const pugi::xml_node& node);
+
+			bool Read(const pugi::xml_node& node);
+			void Write(pugi::xml_node& node, uint32_t index, bool api = false) const;
+
+			void SetRigblock(uint16_t rigblock);
+			void SetPrefix(uint16_t prefix, bool secondary = false);
+			void SetSuffix(uint16_t suffix);
+
+			void SetStatus(uint8_t newStatus);
+
+		private:
+			uint64_t timestamp;
+
+			uint32_t rigblock_asset_hash;
+			uint32_t prefix_asset_hash;
+			uint32_t prefix_secondary_asset_hash;
+			uint32_t suffix_asset_hash;
+			uint32_t cost;
+			uint32_t equipped_to_creature_id;
+
+			uint16_t rigblock_asset_id;
+			uint16_t prefix_asset_id;
+			uint16_t prefix_secondary_asset_id;
+			uint16_t suffix_asset_id;
+			uint16_t level;
+
+			uint8_t rarity;
+			uint8_t market_status;
+			uint8_t status;
+			uint8_t usage;
+
+			bool flair;
+
+			friend class Parts;
+	};
+
+	// Parts
+	class Parts {
+		public:
+			decltype(auto) begin() { return mItems.begin(); }
+			decltype(auto) begin() const { return mItems.begin(); }
+			decltype(auto) end() { return mItems.end(); }
+			decltype(auto) end() const { return mItems.end(); }
+
+			auto& data() { return mItems; }
+			const auto& data() const { return mItems; }
+
+			void Read(const pugi::xml_node& node);
+			void Write(pugi::xml_node& node, bool api = false) const;
+
+		private:
+			std::vector<Part> mItems;
+	};
+
 	// User
 	class User {
 		public:
@@ -116,6 +175,9 @@ namespace Game {
 
 			auto& get_feed() { return mFeed; }
 			const auto& get_feed() const { return mFeed; }
+
+			auto& get_parts() { return mParts; }
+			const auto& get_parts() const { return mParts; }
 
 			const std::string& get_auth_token() const { return mAuthToken; }
 			void set_auth_token(const std::string& authToken) { mAuthToken = authToken; }
@@ -157,6 +219,7 @@ namespace Game {
 			Creatures mCreatures;
 			Squads mSquads;
 			Feed mFeed;
+			Parts mParts;
 
 			std::string mEmail;
 			std::string mPassword;

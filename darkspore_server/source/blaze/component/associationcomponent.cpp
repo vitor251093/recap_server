@@ -1,7 +1,10 @@
 
 // Include
 #include "associationcomponent.h"
-#include "../client.h"
+#include "playgroupscomponent.h"
+
+#include "blaze/client.h"
+
 #include <iostream>
 
 /*
@@ -78,6 +81,8 @@ namespace Blaze {
 	}
 
 	void AssociationComponent::SendLists(Client* client) {
+		auto user = client->get_user();
+
 		auto& request = client->get_request();
 		// request["OFRC"].GetUint();
 
@@ -90,10 +95,12 @@ namespace Blaze {
 			}
 			*/
 		}
-		packet.PutInteger(nullptr, "GRP", 0);
-		packet.PutInteger(nullptr, "LVL", 1);
-		packet.PutInteger(nullptr, "STAT", PlayerState::Connected);
-		packet.PutInteger(nullptr, "XTRA", 0);
+
+		const auto& account = user->get_account();
+		packet.PutInteger(nullptr, "GRP", 0xFF);
+		packet.PutInteger(nullptr, "LVL", 0xCC);
+		packet.PutInteger(nullptr, "STAT", PresenceState::Online_Client);
+		packet.PutInteger(nullptr, "XTRA", 0xAA); // ?
 
 		DataBuffer outBuffer;
 		packet.Write(outBuffer);
@@ -134,6 +141,8 @@ namespace Blaze {
 
 	void AssociationComponent::GetLists(Client* client, Header header) {
 		SendLists(client);
+
+		// PlaygroupsComponent::NotifyJoinPlaygroup(client);
 		// NotifyUpdateListMembership(client);
 	}
 }

@@ -183,6 +183,22 @@ namespace Blaze {
 		DirectEntry = 7
 	};
 
+	enum class PresenceState {
+		Offline = 0,
+		Online_Web,
+		Online_Client,
+		Online_Client_Mode1,
+		Online_Client_Mode2,
+		Online_Client_Mode3,
+		Online_Client_Mode4,
+		Online_Client_Mode5
+	};
+
+	enum class PlaygroupJoinState {
+		Open = 0,
+		Closed
+	};
+
 	// Header
 	struct Header {
 		uint16_t length;

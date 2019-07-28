@@ -331,6 +331,8 @@ namespace Game {
 				game_inventory_getPartList(session, response);
 			} else if (method == "api.inventory.getPartOfferList") {
 				game_inventory_getPartOfferList(session, response);
+			} else if (method == "api.inventory.vendorParts") {
+				game_inventory_vendorParts(session, response);
 			} else if (method == "api.account.auth") {
 				game_account_auth(session, response);
 			} else if (method == "api.account.getAccount") {
@@ -747,30 +749,15 @@ version = 1
 	void API::game_inventory_getPartList(HTTP::Session& session, HTTP::Response& response) {
 		pugi::xml_document document;
 
-		auto docResponse = document.append_child("response");
-		if (auto parts = docResponse.append_child("parts")) {
-			/*
-			if (auto part = parts.append_child("part")) {
-				utils::xml_add_text_node(part, "is_flair", "0");
-				utils::xml_add_text_node(part, "cost", "1");
-				utils::xml_add_text_node(part, "creature_id", "1");
-				utils::xml_add_text_node(part, "id", "1");
-				utils::xml_add_text_node(part, "level", "1");
-				utils::xml_add_text_node(part, "market_status", "0");
-				utils::xml_add_text_node(part, "prefix_asset_id", "1");
-				utils::xml_add_text_node(part, "prefix_secondary_asset_id", "1");
-				utils::xml_add_text_node(part, "rarity", "1");
-				utils::xml_add_text_node(part, "reference_id", "1");
-				utils::xml_add_text_node(part, "rigblock_asset_id", "0");
-				utils::xml_add_text_node(part, "status", "0");
-				utils::xml_add_text_node(part, "suffix_asset_id", "0");
-				utils::xml_add_text_node(part, "usage", "0");
-				utils::xml_add_text_node(part, "creation_date", "0");
+		if (auto docResponse = document.append_child("response")) {
+			const auto& user = session.get_user();
+			if (user) {
+				user->get_parts().Write(docResponse, true);
+			} else {
+				docResponse.append_child("parts");
 			}
-			*/
+			add_common_keys(docResponse);
 		}
-
-		add_common_keys(docResponse);
 
 		xml_string_writer writer;
 		document.save(writer, "\t", 1U, pugi::encoding_latin1);
@@ -806,8 +793,103 @@ version = 1
 					utils::xml_add_text_node(part, "creation_date", timestamp);
 				}
 				*/
+				if (auto part = parts.append_child("part")) {
+					utils::xml_add_text_node(part, "is_flair", "0");
+					utils::xml_add_text_node(part, "cost", "100");
+					utils::xml_add_text_node(part, "creature_id", static_cast<uint64_t>(CreatureID::BlitzAlpha));
+					utils::xml_add_text_node(part, "id", "1");
+					utils::xml_add_text_node(part, "level", "1");
+					utils::xml_add_text_node(part, "market_status", "1");
+					utils::xml_add_text_node(part, "prefix_asset_id", utils::hash_id("_Generated/lootprefix1.lootprefix"));
+					utils::xml_add_text_node(part, "prefix_secondary_asset_id", utils::hash_id("_Generated/lootprefix2.lootprefix"));
+					utils::xml_add_text_node(part, "rarity", "1");
+					utils::xml_add_text_node(part, "reference_id", 1);
+					utils::xml_add_text_node(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock1.lootrigblock"));
+					utils::xml_add_text_node(part, "status", "1");
+					utils::xml_add_text_node(part, "suffix_asset_id", utils::hash_id("_Generated/lootsuffix1.lootsuffix"));
+					utils::xml_add_text_node(part, "usage", "1");
+					utils::xml_add_text_node(part, "creation_date", timestamp);
+				}
 			}
 			
+			add_common_keys(docResponse);
+		}
+
+		xml_string_writer writer;
+		document.save(writer, "\t", 1U, pugi::encoding_latin1);
+
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = std::move(writer.result);
+	}
+
+	void API::game_inventory_vendorParts(HTTP::Session& session, HTTP::Response& response) {
+		pugi::xml_document document;
+
+		auto& request = session.get_request();
+
+		const auto& transactionsString = request.uri.parameter("transactions");
+		if (!transactionsString.empty()) {
+			for (const auto& transaction : utils::explode_string(transactionsString, ';')) {
+				// w = weapon, check for more later
+				char type = transaction[0];
+
+				int64_t index = utils::to_number<int64_t>(&transaction[1]);
+				// Stuff
+			}
+		}
+
+		if (auto docResponse = document.append_child("response")) {
+			auto timestamp = utils::get_unix_time();
+			if (auto parts = docResponse.append_child("parts")) {
+				if (auto part = parts.append_child("part")) {
+					utils::xml_add_text_node(part, "is_flair", "0");
+					utils::xml_add_text_node(part, "cost", "100");
+					utils::xml_add_text_node(part, "creature_id", static_cast<uint64_t>(CreatureID::BlitzAlpha));
+					utils::xml_add_text_node(part, "id", "1");
+					utils::xml_add_text_node(part, "level", "1");
+					utils::xml_add_text_node(part, "market_status", "1");
+					utils::xml_add_text_node(part, "prefix_asset_id", utils::hash_id("_Generated/lootprefix1.lootprefix"));
+					utils::xml_add_text_node(part, "prefix_secondary_asset_id", utils::hash_id("_Generated/lootprefix2.lootprefix"));
+					utils::xml_add_text_node(part, "rarity", "1");
+					utils::xml_add_text_node(part, "reference_id", 1);
+					utils::xml_add_text_node(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock1.lootrigblock"));
+					utils::xml_add_text_node(part, "status", "1");
+					utils::xml_add_text_node(part, "suffix_asset_id", utils::hash_id("_Generated/lootsuffix1.lootsuffix"));
+					utils::xml_add_text_node(part, "usage", "1");
+					utils::xml_add_text_node(part, "creation_date", timestamp);
+				}
+			}
+
+			add_common_keys(docResponse);
+		}
+
+		xml_string_writer writer;
+		document.save(writer, "\t", 1U, pugi::encoding_latin1);
+
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = std::move(writer.result);
+	}
+
+	void API::game_inventory_updatePartStatus(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+
+		auto partIds = utils::explode_string(request.uri.parameter("part_id"), ',');
+		auto statuses = utils::explode_string(request.uri.parameter("status"), ',');
+
+		size_t len = std::min<size_t>(partIds.size(), statuses.size());
+		if (len > 0) {
+			const auto& user = session.get_user();
+
+			auto& parts = user->get_parts();
+			for (size_t i = 0; i < len; ++i) {
+				auto partIndex = utils::to_number<uint32_t>(partIds[i]);
+				auto status = utils::to_number<uint8_t>(statuses[i]);
+				parts.data()[partIndex].SetStatus(status);
+			}
+		}
+
+		pugi::xml_document document;
+		if (auto docResponse = document.append_child("response")) {
 			add_common_keys(docResponse);
 		}
 
