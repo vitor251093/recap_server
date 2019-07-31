@@ -330,6 +330,7 @@ build/storage/users/
 !libs/boost_1_70_0/boost/predef
 !libs/boost_1_70_0/boost/preprocessor
 !libs/boost_1_70_0/boost/spirit/home/classic/debug
-!libs/boost_1_70_0/libs/log
+!libs/boost_1_70_0/libs/log/config
+!libs/boost_1_70_0/libs/log/src
 !libs/raknet-3.902-mod
 
