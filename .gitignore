@@ -326,3 +326,10 @@ ASALocalRun/
 # Project specific
 build/storage/users/
 !libs/boost_1_70_0/boost/preprocessor/debug⁩
+!libs/boost_1_70_0/boost/log/
+!libs/boost_1_70_0/boost/predef
+!libs/boost_1_70_0/boost/preprocessor
+!libs/boost_1_70_0/boost/spirit/home/classic/debug
+!libs/boost_1_70_0/libs/log
+!libs/raknet-3.902-mod
+
