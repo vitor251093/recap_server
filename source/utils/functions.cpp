@@ -30,6 +30,36 @@ namespace utils {
 		}
 	}
 
+	// Web
+	std::string get_html_file_for_darkspore_webkit(std::string path, std::string contentsFolder) {
+		std::string file_data = utils::get_file_text(path);
+		
+		size_t pos = 0;
+		std::string tag;
+		std::string tagUrl;
+		std::string cssLinkOpenTag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"";
+		std::string cssLinkCloseTag = "\">";
+		while ((pos = file_data.find(cssLinkOpenTag)) != std::string::npos) {
+			tag = file_data.substr(pos, file_data.find(cssLinkCloseTag, pos) + cssLinkCloseTag.length() - pos);
+			tagUrl = tag.substr(cssLinkOpenTag.length(), tag.length() - cssLinkOpenTag.length() - cssLinkCloseTag.length());
+			std::string cssPath = contentsFolder + tagUrl;
+			std::string cssContents = utils::get_file_text(cssPath);
+			utils::string_replace(file_data, tag, "<style type=\"text/css\">\n" + cssContents + "\n</style>");
+		}
+
+		std::string jsScriptOpenTag = "<script type=\"text/javascript\" src=\"";
+		std::string jsScriptCloseTag = "\"></script>";
+		while ((pos = file_data.find(jsScriptOpenTag)) != std::string::npos) {
+			tag = file_data.substr(pos, file_data.find(jsScriptCloseTag, pos) + jsScriptCloseTag.length() - pos);
+			tagUrl = tag.substr(jsScriptOpenTag.length(), tag.length() - jsScriptOpenTag.length() - jsScriptCloseTag.length());
+			std::string jQueryPath = contentsFolder + tagUrl;
+			std::string jQueryContents = utils::get_file_text(jQueryPath);
+			utils::string_replace(file_data, tag, "<script type=\"text/javascript\">\n" + jQueryContents + "\n</script>");
+		}
+
+		return file_data;
+	}
+
 	// Strings
 	void string_replace(std::string& str, const std::string& old_str, const std::string& new_str) {
 		auto position = str.find(old_str);

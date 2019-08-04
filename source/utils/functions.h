@@ -45,6 +45,9 @@ namespace utils {
 	// Files
 	std::string get_file_text(const std::string& path);
 
+	// Web
+	std::string get_html_file_for_darkspore_webkit(std::string path, std::string contentsFolder);
+
 	// Strings
 	void string_replace(std::string& str, const std::string& old_str, const std::string& new_str);
 
