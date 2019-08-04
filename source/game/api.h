@@ -33,6 +33,7 @@ namespace Game {
 			void dls_game_registration(HTTP::Session& session, HTTP::Response& response);
 			void dls_game_listUsers(HTTP::Session& session, HTTP::Response& response);
 			void dls_game_getUserInfo(HTTP::Session& session, HTTP::Response& response);
+			void dls_game_setUserInfo(HTTP::Session& session, HTTP::Response& response);
 
 			// bootstrap
 			void bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response);

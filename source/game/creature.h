@@ -72,6 +72,7 @@ namespace Game {
 		void Read(const pugi::xml_node& node);
 		void Write(pugi::xml_node& node) const;
 
+		void Read(crapidjson::Value object);
 		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
@@ -89,6 +90,7 @@ namespace Game {
 			void Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
 
+			void Read(rapidjson::Value object);
 			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 
 			void Add(uint32_t templateId);

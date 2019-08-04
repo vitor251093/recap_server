@@ -35,6 +35,14 @@ namespace Game {
 		}
 	}
 
+	void Squad::Read(rapidjson::Value object) {
+		name     = object.GetObject()["name"    ].GetString();
+		category = object.GetObject()["category"].GetString();
+		id       = object.GetObject()["id"      ].GetUInt();
+		slot     = object.GetObject()["slot"    ].GetUInt();
+		locked   = object.GetObject()["locked"  ].GetBool();
+	}
+
 	rapidjson::Value Squad::Write(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
 		utils::json_add_text_to_object(object, "name",     name,     allocator);
@@ -63,6 +71,14 @@ namespace Game {
 			for (const auto& squad : mSquads) {
 				squad.Write(decks);
 			}
+		}
+	}
+
+	void Squads::Read(rapidjson::Value object) {
+		mSquads.clear();
+		for (auto& squadNode : object.GetArray())
+			decltype(auto) squad = mSquads.emplace_back();
+			squad.Read(squadNode);
 		}
 	}
 

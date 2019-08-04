@@ -188,6 +188,8 @@ namespace Game {
 				dls_game_listUsers(session, response);
 			} else if (method == "api.game.getUserInfo") {
 				dls_game_getUserInfo(session, response);
+			} else if (method == "api.game.setUserInfo") {
+				dls_game_setUserInfo(session, response);
 			} else {
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
@@ -609,6 +611,34 @@ version = 1
 			// stat
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
 			document.AddMember(rapidjson::Value("user"), user->ToJson(allocator), allocator);
+		}
+
+		response.set(boost::beast::http::field::content_type, "application/json");
+		response.body() = utils::json_document_to_string(document);
+	}
+
+	void API::dls_game_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+		auto mail = request.uri.parameter("mail");
+		auto userJsonString = request.uri.parameter("user");
+
+		Document userJson;
+		userJson.Parse(userJsonString);
+
+		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
+
+		rapidjson::Document document;
+		document.SetObject();
+
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+		if (user == NULL) {
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+		}
+		else {
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");

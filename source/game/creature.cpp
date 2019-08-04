@@ -44,6 +44,22 @@ namespace Game {
 		}
 	}
 
+	void Creature::Read(rapidjson::Value object) {
+		name         = object.GetObject()["name"          ].GetString();
+		nameLocaleId = object.GetObject()["name_locale_id"].GetString();
+		elementType  = object.GetObject()["type_a"        ].GetString();
+		classType    = object.GetObject()["class"         ].GetString();
+		pngLargeUrl  = object.GetObject()["png_large_url" ].GetString();
+		pngThumbUrl  = object.GetObject()["png_thumb_url" ].GetString();
+
+		gearScore    = object.GetObject()["gear_score"    ].GetDouble();
+		itemPoints   = object.GetObject()["item_points"   ].GetDouble();
+
+		id      = object.GetObject()["id"     ].GetUInt();
+		nounId  = object.GetObject()["noun_id"].GetUInt64();
+		version = object.GetObject()["version"].GetUInt();
+	}
+
 	rapidjson::Value Creature::Write(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
 		utils::json_add_text_to_object(object, "name",           name,         allocator);
@@ -78,6 +94,14 @@ namespace Game {
 			for (const auto& creature : mCreatures) {
 				creature.Write(creatures);
 			}
+		}
+	}
+
+	void Creatures::Read(rapidjson::Value object) {
+		mCreatures.clear();
+		for (auto& creatureNode : object.GetArray())
+			decltype(auto) creature = mCreatures.emplace_back();
+			creature.Read(creatureNode);
 		}
 	}
 
