@@ -78,7 +78,7 @@ namespace Game {
 		}
 	}
 
-	void Part::Read(rapidjson::Value object) {
+	void Part::Read(rapidjson::Value& object) {
 		flair                   = object.GetObject()["is_flair"     ].GetBool();
 		cost                    = object.GetObject()["cost"         ].GetUInt();
 		equipped_to_creature_id = object.GetObject()["creature_id"  ].GetUInt();
@@ -188,7 +188,7 @@ namespace Game {
 		}
 	}
 
-	void Parts::Read(rapidjson::Value object) {
+	void Parts::Read(rapidjson::Value& object) {
 		mItems.clear();
 		for (auto& partNode : object.GetArray())
 			decltype(auto) part = mItems.emplace_back();

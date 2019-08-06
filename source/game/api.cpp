@@ -605,7 +605,7 @@ version = 1
 		userJson.Parse(userJsonString);
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
-
+		
 		rapidjson::Document document;
 		document.SetObject();
 
@@ -616,6 +616,8 @@ version = 1
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
 		}
 		else {
+			user.FromJson(userJson);
+			
 			// stat
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
 		}

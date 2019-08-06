@@ -21,7 +21,7 @@ namespace Game {
 			bool Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node, uint32_t index, bool api = false) const;
 
-            void Read(rapidjson::Value object);
+            void Read(rapidjson::Value& object);
             rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
 
 			void SetRigblock(uint16_t rigblock);
@@ -70,7 +70,7 @@ namespace Game {
 			void Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node, bool api = false) const;
 
-            void Read(rapidjson::Value object);
+            void Read(rapidjson::Value& object);
 	        rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
 
 		private:

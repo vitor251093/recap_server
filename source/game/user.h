@@ -61,7 +61,7 @@ namespace Game {
 		void Read(const pugi::xml_node& node);
 		void Write(pugi::xml_node& node) const;
 
-		void Read(rapidjson::Value object);
+		void Read(rapidjson::Value& object);
 		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
@@ -91,7 +91,7 @@ namespace Game {
 			void Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
 
-			void Read(rapidjson::Value object);
+			void Read(rapidjson::Value& object);
 			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
 
 			void Add(FeedItem&& item);
@@ -156,7 +156,7 @@ namespace Game {
 			pugi::xml_document ToXml();
 
 			rapidjson::Value ToJson(rapidjson::Document::AllocatorType& allocator);
-			void FromJson(rapidjson::Value object);
+			void FromJson(rapidjson::Value& object);
 
 		private:
 			Account mAccount;

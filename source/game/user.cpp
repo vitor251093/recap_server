@@ -142,7 +142,7 @@ namespace Game {
 		}
 	}
 
-	void Account::Read(rapidjson::Value object) { 
+	void Account::Read(rapidjson::Value& object) { 
 		tutorialCompleted       = object.GetObject()["tutorial_completed"        ].GetBool();
 		chainProgression        = object.GetObject()["chain_progression"         ].GetUint();
 		creatureRewards         = object.GetObject()["creature_rewards"          ].GetUint();
@@ -249,7 +249,7 @@ namespace Game {
 		}
 	}
 
-	void Feed::Read(rapidjson::Value object) {
+	void Feed::Read(rapidjson::Value& object) {
 		mItems.clear();
 		for (auto& item : object.GetArray()) {
 			decltype(auto) feedItem = mItems.emplace_back();
@@ -421,7 +421,7 @@ namespace Game {
 		return object;
 	}
 
-	void User::FromJson(rapidjson::Value object) {
+	void User::FromJson(rapidjson::Value& object) {
 		mName     = object.GetObject()["name"].GetString();
 		mEmail    = object.GetObject()["email"].GetString();
 		mPassword = object.GetObject()["password"].GetString();

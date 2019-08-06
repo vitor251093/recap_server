@@ -44,7 +44,7 @@ namespace Game {
 		}
 	}
 
-	void Creature::Read(rapidjson::Value object) {
+	void Creature::Read(rapidjson::Value& object) {
 		name         = object.GetObject()["name"          ].GetString();
 		nameLocaleId = object.GetObject()["name_locale_id"].GetString();
 		elementType  = object.GetObject()["type_a"        ].GetString();
@@ -76,6 +76,8 @@ namespace Game {
 		return object;
 	}
 
+
+
 	// Creatures
 	void Creatures::Read(const pugi::xml_node& node) {
 		auto creatures = node.child("creatures");
@@ -97,7 +99,7 @@ namespace Game {
 		}
 	}
 
-	void Creatures::Read(rapidjson::Value object) {
+	void Creatures::Read(rapidjson::Value& object) {
 		mCreatures.clear();
 		for (auto& creatureNode : object.GetArray()) {
 			decltype(auto) creature = mCreatures.emplace_back();
