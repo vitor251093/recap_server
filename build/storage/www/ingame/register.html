@@ -51,8 +51,9 @@
                     "mail": document.getElementById("email").value,
                     "pass": document.getElementById("password").value
                 }, function(data) {
+                    $('#message-dialog').toggleClass('hidden', false);
                     //Client.closeWindow();
-                    return;
+                    //return;
 
                     var response = JSON.parse(data);
                     if (response.stat === 'ok') {
