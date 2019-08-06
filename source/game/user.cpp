@@ -142,7 +142,7 @@ namespace Game {
 		}
 	}
 
-	void Account::Read(rapidjson::Value object) const { 
+	void Account::Read(rapidjson::Value object) { 
 		tutorialCompleted       = object.GetObject()["tutorial_completed"        ].GetBool();
 		chainProgression        = object.GetObject()["chain_progression"         ].GetUint();
 		creatureRewards         = object.GetObject()["creature_rewards"          ].GetUint();
@@ -251,7 +251,7 @@ namespace Game {
 
 	void Feed::Read(rapidjson::Value object) {
 		mItems.clear();
-		for (auto& item : object.GetArray())
+		for (auto& item : object.GetArray()) {
 			decltype(auto) feedItem = mItems.emplace_back();
 			feedItem.accountId = item.GetObject()["account_id"].GetUint();
 			feedItem.id        = item.GetObject()["id"].GetUint();

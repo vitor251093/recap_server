@@ -55,9 +55,9 @@ namespace Game {
 		gearScore    = object.GetObject()["gear_score"    ].GetDouble();
 		itemPoints   = object.GetObject()["item_points"   ].GetDouble();
 
-		id      = object.GetObject()["id"     ].GetUInt();
-		nounId  = object.GetObject()["noun_id"].GetUInt64();
-		version = object.GetObject()["version"].GetUInt();
+		id      = object.GetObject()["id"     ].GetUint();
+		nounId  = object.GetObject()["noun_id"].GetUint64();
+		version = object.GetObject()["version"].GetUint();
 	}
 
 	rapidjson::Value Creature::Write(rapidjson::Document::AllocatorType& allocator) const { 
@@ -99,7 +99,7 @@ namespace Game {
 
 	void Creatures::Read(rapidjson::Value object) {
 		mCreatures.clear();
-		for (auto& creatureNode : object.GetArray())
+		for (auto& creatureNode : object.GetArray()) {
 			decltype(auto) creature = mCreatures.emplace_back();
 			creature.Read(creatureNode);
 		}
