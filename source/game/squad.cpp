@@ -7,7 +7,7 @@
 // Game
 namespace Game {
 	// Squad
-	void Squad::Read(const pugi::xml_node& node) {
+	void Squad::ReadXml(const pugi::xml_node& node) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "deck") {
 			return;
@@ -21,21 +21,21 @@ namespace Game {
 
 		locked = utils::xml_get_text_node<uint32_t>(node, "locked");
 
-		creatures.Read(node);
+		creatures.ReadXml(node);
 	}
 
-	void Squad::Write(pugi::xml_node& node) const {
+	void Squad::WriteXml(pugi::xml_node& node) const {
 		if (auto deck = node.append_child("deck")) {
 			utils::xml_add_text_node(deck, "name", name);
 			utils::xml_add_text_node(deck, "id", id);
 			utils::xml_add_text_node(deck, "category", category);
 			utils::xml_add_text_node(deck, "slot", slot);
 			utils::xml_add_text_node(deck, "locked", locked ? 1 : 0);
-			creatures.Write(deck);
+			creatures.WriteXml(deck);
 		}
 	}
 
-	void Squad::Read(rapidjson::Value& object) {
+	void Squad::ReadJson(rapidjson::Value& object) {
 		name     = object.GetObject()["name"    ].GetString();
 		category = object.GetObject()["category"].GetString();
 		id       = object.GetObject()["id"      ].GetUint();
@@ -43,7 +43,7 @@ namespace Game {
 		locked   = object.GetObject()["locked"  ].GetBool();
 	}
 
-	rapidjson::Value Squad::Write(rapidjson::Document::AllocatorType& allocator) const { 
+	rapidjson::Value Squad::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
 		utils::json_add_text_to_object(object, "name",     name,     allocator);
 		utils::json_add_text_to_object(object, "category", category, allocator);
@@ -54,7 +54,7 @@ namespace Game {
 	}
 
 	// Squads
-	void Squads::Read(const pugi::xml_node& node) {
+	void Squads::ReadXml(const pugi::xml_node& node) {
 		auto decks = node.child("decks");
 		if (!decks) {
 			return;
@@ -62,30 +62,30 @@ namespace Game {
 
 		for (const auto& deckNode : decks) {
 			decltype(auto) squad = mSquads.emplace_back();
-			squad.Read(deckNode);
+			squad.ReadXml(deckNode);
 		}
 	}
 
-	void Squads::Write(pugi::xml_node& node) const {
+	void Squads::WriteXml(pugi::xml_node& node) const {
 		if (auto decks = node.append_child("decks")) {
 			for (const auto& squad : mSquads) {
-				squad.Write(decks);
+				squad.WriteXml(decks);
 			}
 		}
 	}
 
-	void Squads::Read(rapidjson::Value& object) {
+	void Squads::ReadJson(rapidjson::Value& object) {
 		mSquads.clear();
 		for (auto& squadNode : object.GetArray()) {
 			decltype(auto) squad = mSquads.emplace_back();
-			squad.Read(squadNode);
+			squad.ReadJson(squadNode);
 		}
 	}
 
-	rapidjson::Value Squads::Write(rapidjson::Document::AllocatorType& allocator) const { 
+	rapidjson::Value Squads::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& squad : mSquads) {
-			value.PushBack(squad.Write(allocator), allocator);
+			value.PushBack(squad.WriteJson(allocator), allocator);
 		}
 		return value;
 	}

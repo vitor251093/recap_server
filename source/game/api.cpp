@@ -763,7 +763,7 @@ version = 1
 		if (auto docResponse = document.append_child("response")) {
 			const auto& user = session.get_user();
 			if (user) {
-				user->get_parts().Write(docResponse, true);
+				user->get_parts().WriteXml(docResponse, true);
 			} else {
 				docResponse.append_child("parts");
 			}
@@ -1007,17 +1007,17 @@ version = 1
 					account.newPlayerProgress = newPlayerProgress;
 				}
 
-				account.Write(docResponse);
+				account.WriteXml(docResponse);
 			} else {
 				Game::Account account;
-				account.Write(docResponse);
+				account.WriteXml(docResponse);
 			}
 
 			// Other
 			pugi::xml_node creatures;
 			if (request.uri.parameter("include_creatures") == "true") {
 				if (user) {
-					user->get_creatures().Write(docResponse);
+					user->get_creatures().WriteXml(docResponse);
 				} else {
 					docResponse.append_child("creatures");
 				}
@@ -1025,7 +1025,7 @@ version = 1
 
 			if (request.uri.parameter("include_decks") == "true") {
 				if (user) {
-					user->get_squads().Write(docResponse);
+					user->get_squads().WriteXml(docResponse);
 				} else {
 					docResponse.append_child("decks");
 				}
@@ -1033,7 +1033,7 @@ version = 1
 
 			if (request.uri.parameter("include_feed") == "true") {
 				if (user) {
-					user->get_feed().Write(docResponse);
+					user->get_feed().WriteXml(docResponse);
 				} else {
 					docResponse.append_child("feed");
 				}
@@ -1090,11 +1090,11 @@ version = 1
 			bool include_feed      = request.uri.parameter("include_feed")      == "true";
 			bool include_stats     = request.uri.parameter("include_stats")     == "true";
 			if (user) {
-				user->get_account().Write(docResponse);
+				user->get_account().WriteXml(docResponse);
 
-				if (include_creatures) { user->get_creatures().Write(docResponse); }
-				if (include_decks)     { user->get_squads().Write(docResponse);    }
-				if (include_feed)      { user->get_feed().Write(docResponse);      }
+				if (include_creatures) { user->get_creatures().WriteXml(docResponse); }
+				if (include_decks)     { user->get_squads().WriteXml(docResponse);    }
+				if (include_feed)      { user->get_feed().WriteXml(docResponse);      }
 				if (include_stats) {
 					auto stats = docResponse.append_child("stats");
 					auto stat = stats.append_child("stat");
@@ -1102,7 +1102,7 @@ version = 1
 				}
 			} else {
 				Game::Account account;
-				account.Write(docResponse);
+				account.WriteXml(docResponse);
 
 				if (include_creatures) { docResponse.append_child("creatures"); }
 				if (include_decks)     { docResponse.append_child("decks"); }
@@ -1207,7 +1207,7 @@ version = 1
 		if (user) {
 			Creature* creature = user->GetCreatureById(request.uri.parameteru("id"));
 			if (creature) {
-				creature->Write(docResponse);
+				creature->WriteXml(docResponse);
 			} else {
 				docResponse.append_child("creature");
 			}

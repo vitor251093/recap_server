@@ -19,11 +19,11 @@ namespace Game {
 
 		bool locked = true;
 
-		void Read(const pugi::xml_node& node);
-		void Write(pugi::xml_node& node) const;
+		void ReadXml(const pugi::xml_node& node);
+		void WriteXml(pugi::xml_node& node) const;
 
-		void Read(rapidjson::Value& object);
-		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
+		void ReadJson(rapidjson::Value& object);
+		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
 	// Squads
@@ -37,11 +37,11 @@ namespace Game {
 			auto& data() { return mSquads; }
 			const auto& data() const { return mSquads; }
 
-			void Read(const pugi::xml_node& node);
-			void Write(pugi::xml_node& node) const;
+			void ReadXml(const pugi::xml_node& node);
+			void WriteXml(pugi::xml_node& node) const;
 
-			void Read(rapidjson::Value& object);
-			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
+			void ReadJson(rapidjson::Value& object);
+			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 
 		private:
 			std::vector<Squad> mSquads;

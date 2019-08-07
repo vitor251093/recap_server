@@ -69,11 +69,11 @@ namespace Game {
 		uint64_t nounId = 0;
 		uint32_t version = 0;
 
-		void Read(const pugi::xml_node& node);
-		void Write(pugi::xml_node& node) const;
+		void ReadXml(const pugi::xml_node& node);
+		void WriteXml(pugi::xml_node& node) const;
 
-		void Read(rapidjson::Value& object);
-		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
+		void ReadJson(rapidjson::Value& object);
+		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
 	// Creatures
@@ -87,11 +87,11 @@ namespace Game {
 			auto& data() { return mCreatures; }
 			const auto& data() const { return mCreatures; }
 
-			void Read(const pugi::xml_node& node);
-			void Write(pugi::xml_node& node) const;
+			void ReadXml(const pugi::xml_node& node);
+			void WriteXml(pugi::xml_node& node) const;
 
-			void Read(rapidjson::Value& object);
-			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
+			void ReadJson(rapidjson::Value& object);
+			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 
 			void Add(uint32_t templateId);
 

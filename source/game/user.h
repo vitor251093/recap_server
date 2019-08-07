@@ -58,11 +58,11 @@ namespace Game {
 		uint32_t capLevel = 0;
 		uint32_t capProgression = 0;
 
-		void Read(const pugi::xml_node& node);
-		void Write(pugi::xml_node& node) const;
+		void ReadXml(const pugi::xml_node& node);
+		void WriteXml(pugi::xml_node& node) const;
 
-		void Read(rapidjson::Value& object);
-		rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
+		void ReadJson(rapidjson::Value& object);
+		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
 	// FeedItem
@@ -88,11 +88,11 @@ namespace Game {
 			auto& data() { return mItems; }
 			const auto& data() const { return mItems; }
 
-			void Read(const pugi::xml_node& node);
-			void Write(pugi::xml_node& node) const;
+			void ReadXml(const pugi::xml_node& node);
+			void WriteXml(pugi::xml_node& node) const;
 
-			void Read(rapidjson::Value& object);
-			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator) const;
+			void ReadJson(rapidjson::Value& object);
+			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 
 			void Add(FeedItem&& item);
 

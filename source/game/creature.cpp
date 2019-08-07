@@ -7,7 +7,7 @@
 // Game
 namespace Game {
 	// Creature
-	void Creature::Read(const pugi::xml_node& node) {
+	void Creature::ReadXml(const pugi::xml_node& node) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "creature") {
 			return;
@@ -28,7 +28,7 @@ namespace Game {
 		version = utils::xml_get_text_node<uint32_t>(node, "version");
 	}
 
-	void Creature::Write(pugi::xml_node& node) const {
+	void Creature::WriteXml(pugi::xml_node& node) const {
 		if (auto creature = node.append_child("creature")) {
 			utils::xml_add_text_node(creature, "id", id);
 			utils::xml_add_text_node(creature, "name", name);
@@ -44,7 +44,7 @@ namespace Game {
 		}
 	}
 
-	void Creature::Read(rapidjson::Value& object) {
+	void Creature::ReadJson(rapidjson::Value& object) {
 		name         = object.GetObject()["name"          ].GetString();
 		nameLocaleId = object.GetObject()["name_locale_id"].GetString();
 		elementType  = object.GetObject()["type_a"        ].GetString();
@@ -60,7 +60,7 @@ namespace Game {
 		version = object.GetObject()["version"].GetUint();
 	}
 
-	rapidjson::Value Creature::Write(rapidjson::Document::AllocatorType& allocator) const { 
+	rapidjson::Value Creature::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
 		utils::json_add_text_to_object(object, "name",           name,         allocator);
 		utils::json_add_text_to_object(object, "name_locale_id", nameLocaleId, allocator);
@@ -79,7 +79,7 @@ namespace Game {
 
 
 	// Creatures
-	void Creatures::Read(const pugi::xml_node& node) {
+	void Creatures::ReadXml(const pugi::xml_node& node) {
 		auto creatures = node.child("creatures");
 		if (!creatures) {
 			return;
@@ -87,30 +87,30 @@ namespace Game {
 
 		for (const auto& creatureNode : creatures) {
 			decltype(auto) creature = mCreatures.emplace_back();
-			creature.Read(creatureNode);
+			creature.ReadXml(creatureNode);
 		}
 	}
 
-	void Creatures::Write(pugi::xml_node& node) const {
+	void Creatures::WriteXml(pugi::xml_node& node) const {
 		if (auto creatures = node.append_child("creatures")) {
 			for (const auto& creature : mCreatures) {
-				creature.Write(creatures);
+				creature.WriteXml(creatures);
 			}
 		}
 	}
 
-	void Creatures::Read(rapidjson::Value& object) {
+	void Creatures::ReadJson(rapidjson::Value& object) {
 		mCreatures.clear();
 		for (auto& creatureNode : object.GetArray()) {
 			decltype(auto) creature = mCreatures.emplace_back();
-			creature.Read(creatureNode);
+			creature.ReadJson(creatureNode);
 		}
 	}
 
-	rapidjson::Value Creatures::Write(rapidjson::Document::AllocatorType& allocator) const { 
+	rapidjson::Value Creatures::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& creature : mCreatures) {
-			value.PushBack(creature.Write(allocator), allocator);
+			value.PushBack(creature.WriteJson(allocator), allocator);
 		}
 		return value;
 	}

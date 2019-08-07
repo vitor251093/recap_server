@@ -18,11 +18,11 @@ namespace Game {
 			Part(uint32_t rigblock);
 			Part(const pugi::xml_node& node);
 
-			bool Read(const pugi::xml_node& node);
-			void Write(pugi::xml_node& node, uint32_t index, bool api = false) const;
+			bool ReadXml(const pugi::xml_node& node);
+			void WriteXml(pugi::xml_node& node, uint32_t index, bool api = false) const;
 
-            void Read(rapidjson::Value& object);
-            rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
+            void ReadJson(rapidjson::Value& object);
+            rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
 
 			void SetRigblock(uint16_t rigblock);
 			void SetPrefix(uint16_t prefix, bool secondary = false);
@@ -67,11 +67,11 @@ namespace Game {
 			auto& data() { return mItems; }
 			const auto& data() const { return mItems; }
 
-			void Read(const pugi::xml_node& node);
-			void Write(pugi::xml_node& node, bool api = false) const;
+			void ReadXml(const pugi::xml_node& node);
+			void WriteXml(pugi::xml_node& node, bool api = false) const;
 
-            void Read(rapidjson::Value& object);
-	        rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
+            void ReadJson(rapidjson::Value& object);
+	        rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
 
 		private:
 			std::vector<Part> mItems;

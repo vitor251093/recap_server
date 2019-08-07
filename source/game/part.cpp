@@ -18,7 +18,7 @@ namespace Game {
 	}
 
 	Part::Part(const pugi::xml_node& node) {
-		if (!Read(node)) {
+		if (!ReadXml(node)) {
 			SetRigblock(1);
 			SetPrefix(0, false);
 			SetPrefix(0, true);
@@ -26,7 +26,7 @@ namespace Game {
 		}
 	}
 
-	bool Part::Read(const pugi::xml_node& node) {
+	bool Part::ReadXml(const pugi::xml_node& node) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "part") {
 			return false;
@@ -50,7 +50,7 @@ namespace Game {
 		return true;
 	}
 
-	void Part::Write(pugi::xml_node& node, uint32_t index, bool api) const {
+	void Part::WriteXml(pugi::xml_node& node, uint32_t index, bool api) const {
 		if (auto part = node.append_child("part")) {
 			utils::xml_add_text_node(part, "is_flair", flair);
 			utils::xml_add_text_node(part, "cost", cost);
@@ -78,7 +78,7 @@ namespace Game {
 		}
 	}
 
-	void Part::Read(rapidjson::Value& object) {
+	void Part::ReadJson(rapidjson::Value& object) {
 		flair                   = object.GetObject()["is_flair"     ].GetBool();
 		cost                    = object.GetObject()["cost"         ].GetUInt();
 		equipped_to_creature_id = object.GetObject()["creature_id"  ].GetUInt();
@@ -97,7 +97,7 @@ namespace Game {
 		return true;
 	}
 
-	rapidjson::Value Part::Write(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const { 
+	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
 		object.AddMember("is_flair",         rapidjson::Value{}.SetBool(gearScore),  allocator);
 		object.AddMember("cost",             rapidjson::Value{}.SetUint(itemPoints), allocator);
@@ -173,34 +173,34 @@ namespace Game {
 	}
 
 	// Parts
-	void Parts::Read(const pugi::xml_node& node) {
+	void Parts::ReadXml(const pugi::xml_node& node) {
 		for (const auto& part : node.child("parts")) {
 			mItems.emplace_back(part);
 		}
 	}
 
-	void Parts::Write(pugi::xml_node& node, bool api) const {
+	void Parts::WriteXml(pugi::xml_node& node, bool api) const {
 		if (auto parts = node.append_child("parts")) {
 			uint32_t index = 0;
 			for (const auto& part : mItems) {
-				part.Write(parts, ++index, api);
+				part.WriteXml(parts, ++index, api);
 			}
 		}
 	}
 
-	void Parts::Read(rapidjson::Value& object) {
+	void Parts::ReadJson(rapidjson::Value& object) {
 		mItems.clear();
 		for (auto& partNode : object.GetArray())
 			decltype(auto) part = mItems.emplace_back();
-			part.Read(partNode);
+			part.ReadJson(partNode);
 		}
 	}
 
-	rapidjson::Value Parts::Write(rapidjson::Document::AllocatorType& allocator, bool api) const { 
+	rapidjson::Value Parts::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const { 
 		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& part : mItems) {
             uint32_t index = 0;
-			value.PushBack(part.Write(allocator, ++index, api), allocator);
+			value.PushBack(part.WriteJson(allocator, ++index, api), allocator);
 		}
 		return value;
 	}

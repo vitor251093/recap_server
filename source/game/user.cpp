@@ -59,7 +59,7 @@
 // Game
 namespace Game {
 	// Account
-	void Account::Read(const pugi::xml_node& node) {
+	void Account::ReadXml(const pugi::xml_node& node) {
 		auto account = node.child("account");
 		if (!account) {
 			return;
@@ -106,7 +106,7 @@ namespace Game {
 		capProgression = utils::xml_get_text_node<uint32_t>(account, "cap_progression");
 	}
 
-	void Account::Write(pugi::xml_node& node) const {
+	void Account::WriteXml(pugi::xml_node& node) const {
 		if (auto account = node.append_child("account")) {
 			utils::xml_add_text_node(account, "tutorial_completed", tutorialCompleted ? "Y" : "N");
 			utils::xml_add_text_node(account, "chain_progression", chainProgression);
@@ -142,7 +142,7 @@ namespace Game {
 		}
 	}
 
-	void Account::Read(rapidjson::Value& object) { 
+	void Account::ReadJson(rapidjson::Value& object) { 
 		tutorialCompleted       = object.GetObject()["tutorial_completed"        ].GetBool();
 		chainProgression        = object.GetObject()["chain_progression"         ].GetUint();
 		creatureRewards         = object.GetObject()["creature_rewards"          ].GetUint();
@@ -175,7 +175,7 @@ namespace Game {
 		capProgression          = object.GetObject()["cap_progression"           ].GetUint();
 	}
 
-	rapidjson::Value Account::Write(rapidjson::Document::AllocatorType& allocator) const { 
+	rapidjson::Value Account::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
 		object.AddMember("tutorial_completed",        rapidjson::Value{}.SetBool(tutorialCompleted),       allocator);
 		object.AddMember("chain_progression",         rapidjson::Value{}.SetUint(chainProgression),        allocator);
@@ -212,7 +212,7 @@ namespace Game {
 	}
 
 	// Feed
-	void Feed::Read(const pugi::xml_node& node) {
+	void Feed::ReadXml(const pugi::xml_node& node) {
 		auto feed = node.child("feed");
 		if (!feed) {
 			return;
@@ -234,7 +234,7 @@ namespace Game {
 		}
 	}
 
-	void Feed::Write(pugi::xml_node& node) const {
+	void Feed::WriteXml(pugi::xml_node& node) const {
 		if (auto feed = node.append_child("feed")) {
 			auto items = feed.append_child("items");
 			for (const auto& feedItem : mItems) {
@@ -249,7 +249,7 @@ namespace Game {
 		}
 	}
 
-	void Feed::Read(rapidjson::Value& object) {
+	void Feed::ReadJson(rapidjson::Value& object) {
 		mItems.clear();
 		for (auto& item : object.GetArray()) {
 			decltype(auto) feedItem = mItems.emplace_back();
@@ -262,7 +262,7 @@ namespace Game {
 		}
 	}
 
-	rapidjson::Value Feed::Write(rapidjson::Document::AllocatorType& allocator) const {
+	rapidjson::Value Feed::WriteJson(rapidjson::Document::AllocatorType& allocator) const {
 		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& feedItem : mItems) {
 			rapidjson::Value object(rapidjson::kObjectType);
@@ -373,11 +373,11 @@ namespace Game {
 			mEmail = utils::xml_get_text_node(user, "email");
 			mPassword = utils::xml_get_text_node(user, "password"); // Hash this later?
 
-			  mAccount.Read(user);
-			mCreatures.Read(user);
-			   mSquads.Read(user);
-			     mFeed.Read(user);
-			    mParts.Read(user);
+			  mAccount.ReadXml(user);
+			mCreatures.ReadXml(user);
+			   mSquads.ReadXml(user);
+			     mFeed.ReadXml(user);
+			    mParts.ReadXml(user);
 		}
 
 		return true;
@@ -396,11 +396,11 @@ namespace Game {
 			utils::xml_add_text_node(user, "email", mEmail);
 			utils::xml_add_text_node(user, "password", mPassword);
 
-			  mAccount.Write(user);
-			mCreatures.Write(user);
-			   mSquads.Write(user);
-			     mFeed.Write(user);
-			    mParts.Write(user);
+			  mAccount.WriteXml(user);
+			mCreatures.WriteXml(user);
+			   mSquads.WriteXml(user);
+			     mFeed.WriteXml(user);
+			    mParts.WriteXml(user);
 		}
 		return document;
 	}
@@ -412,11 +412,11 @@ namespace Game {
 		utils::json_add_text_to_object(object, "email",    mEmail,    allocator);
 		utils::json_add_text_to_object(object, "password", mPassword, allocator);
 
-		object.AddMember("account",     mAccount.Write(allocator), allocator);
-		object.AddMember("creatures", mCreatures.Write(allocator), allocator);
-		object.AddMember("squads",       mSquads.Write(allocator), allocator);
-		object.AddMember("feed",           mFeed.Write(allocator), allocator);
-		object.AddMember("parts",         mParts.Write(allocator), allocator);
+		object.AddMember("account",     mAccount.WriteJson(allocator), allocator);
+		object.AddMember("creatures", mCreatures.WriteJson(allocator), allocator);
+		object.AddMember("squads",       mSquads.WriteJson(allocator), allocator);
+		object.AddMember("feed",           mFeed.WriteJson(allocator), allocator);
+		object.AddMember("parts",         mParts.WriteJson(allocator), allocator);
 
 		return object;
 	}
@@ -426,11 +426,11 @@ namespace Game {
 		mEmail    = object.GetObject()["email"].GetString();
 		mPassword = object.GetObject()["password"].GetString();
 
-		  mAccount.Read(object.GetObject()["account"]);
-		mCreatures.Read(object.GetObject()["creatures"]);
-		   mSquads.Read(object.GetObject()["squads"]);
-		     mFeed.Read(object.GetObject()["feed"]);
-		    mParts.Read(object.GetObject()["parts"]);
+		  mAccount.ReadJson(object.GetObject()["account"]);
+		mCreatures.ReadJson(object.GetObject()["creatures"]);
+		   mSquads.ReadJson(object.GetObject()["squads"]);
+		     mFeed.ReadJson(object.GetObject()["feed"]);
+		    mParts.ReadJson(object.GetObject()["parts"]);
 	}
 
 	// UserManager
