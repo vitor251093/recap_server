@@ -43,29 +43,34 @@
     </head>
     <body>
         <script>
+            function showModal(title, message, closingWindow) {
+                $('#message-dialog').toggleClass('hidden', false);
+                $('#modal-title').text(title);
+                document.getElementById("message").innerHTML = message;
+
+                $('#ok-success-button').toggleClass('hidden', !closingWindow);
+                $('#ok-error-button').toggleClass('hidden', closingWindow);
+            }
+            function closeModal(closingWindow) {
+                $('#message-dialog').toggleClass('hidden', true);
+                if (closingWindow && typeof(Client) !== "undefined") {
+                    Client.closeWindow();
+                }
+            }
             function register() {
                 DLSClient.request("api.game.registration", {
                     "name": document.getElementById("name").value,
                     "mail": document.getElementById("email").value,
                     "pass": document.getElementById("password").value
                 }, function(data) {
-                    $('#message-dialog').toggleClass('hidden', false);
-                    //Client.closeWindow();
-                    //return;
-
                     var response = JSON.parse(data);
                     if (response.stat === 'ok') {
-                        //Client.closeBRSWindow();
-                    }
-                    else {
-                        $('#modal-title').text('Error');
-                        document.getElementById("message").innerHTML = "Error! Your account could not be created!";
+                        showModal('Success', "Account created successfully!", true);
+                    } else {
+                        showModal('Error', "Error! Your account could not be created!", false);
                     }
                 }, function(e, responseText) {
-                    $('#message-dialog').toggleClass('hidden', false);
-
-                    $('#modal-title').text('Error');
-                    document.getElementById("message").innerHTML = responseText || "Your account could not be created!";
+                    showModal('Error', responseText || "Error! Your account could not be created!", false);
                 });
             }
         </script>
@@ -104,6 +109,18 @@
                 <div class="modal-window darkspore-ui-background">
                     <div class="modal-title" id="modal-title">Error</div>
                     <div class="modal-message" id="message">x</div>
+                    <div class="form-group form-group-button">
+                        <div name="submit" id="ok-success-button" class="form-submit button-rounded hidden" onMouseUp="closeModal(true);">
+                            <div class="left-side"></div>
+                            <div class="text">Ok</div>
+                            <div class="right-side"></div>
+                        </div>
+                        <div name="submit" id="ok-error-button" class="form-submit button-rounded hidden" onMouseUp="closeModal(false);">
+                            <div class="left-side"></div>
+                            <div class="text">Ok</div>
+                            <div class="right-side"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
