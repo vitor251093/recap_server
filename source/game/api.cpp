@@ -613,10 +613,10 @@ version = 1
 
 		if (user == NULL) {
 			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), allocator);
 		}
 		else {
-			user.FromJson(userJson);
+			user->FromJson(userJson);
 			
 			// stat
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
@@ -893,8 +893,8 @@ version = 1
 
 			auto& parts = user->get_parts();
 			for (size_t i = 0; i < len; ++i) {
-				auto partIndex = utils::to_number<uint32_t>(partIds[i]);
-				auto status = utils::to_number<uint8_t>(statuses[i]);
+				uint32_t partIndex = utils::to_number<uint32_t>(partIds[i]);
+				uint8_t  status    = utils::to_number<uint8_t>(statuses[i]);
 				parts.data()[partIndex].SetStatus(status);
 			}
 		}
