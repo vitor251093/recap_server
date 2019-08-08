@@ -84,9 +84,6 @@
     <Link>
       <SubSystem>Console</SubSystem>
     </Link>
-    <CustomBuildStep>
-      <Command>COPY /Y ${SolutionDir}/x64/Release/darkspore_server.exe ${SolutionDir}/build/darkspore_server.exe </Command>
-    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -94,9 +91,6 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>libs\openssl-1.1.1b\include;libs\pugixml-1.9;libs\rapidjson-1.1.0\include;libs\boost_1_70_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,13 +119,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_NETWORK_ENABLE_HTTPS;WIN32_LEAN_AND_MEAN;NOMINMAX;RAPIDJSON_HAS_STDSTRING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NOMINMAX;BOOST_NETWORK_ENABLE_HTTPS;RAPIDJSON_HAS_STDSTRING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/experimental:newLambdaProcessor- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
