@@ -1,8 +1,6 @@
 
 // Include
 #include "part.h"
-
-#include "../utils/functions.h"
 #include <algorithm>
 #include <filesystem>
 
@@ -171,7 +169,7 @@ namespace Game {
 	}
 
 
-	
+
 
 	// Parts
 	void Parts::ReadXml(const pugi::xml_node& node) {

@@ -66,43 +66,43 @@ namespace Game {
 		}
 
 		tutorialCompleted = utils::xml_get_text_node(account, "tutorial_completed") == "Y";
-		grantAllAccess = utils::xml_get_text_node<uint32_t>(account, "grant_all_access");
+		grantAllAccess    = utils::xml_get_text_node<uint32_t>(account, "grant_all_access");
 		grantOnlineAccess = utils::xml_get_text_node<uint32_t>(account, "grant_online_access");
 
-		chainProgression = utils::xml_get_text_node<uint32_t>(account, "chain_progression");
-		creatureRewards = utils::xml_get_text_node<uint32_t>(account, "creature_rewards");
+		chainProgression  = utils::xml_get_text_node<uint32_t>(account, "chain_progression");
+		creatureRewards   = utils::xml_get_text_node<uint32_t>(account, "creature_rewards");
 
-		currentGameId = utils::xml_get_text_node<uint32_t>(account, "current_game_id");
+		currentGameId      = utils::xml_get_text_node<uint32_t>(account, "current_game_id");
 		currentPlaygroupId = utils::xml_get_text_node<uint32_t>(account, "current_playgroup_id");
 
-		defaultDeckPveId = utils::xml_get_text_node<uint32_t>(account, "default_deck_pve_id");
-		defaultDeckPvpId = utils::xml_get_text_node<uint32_t>(account, "default_deck_pvp_id");
+		defaultDeckPveId  = utils::xml_get_text_node<uint32_t>(account, "default_deck_pve_id");
+		defaultDeckPvpId  = utils::xml_get_text_node<uint32_t>(account, "default_deck_pvp_id");
 
-		level = utils::xml_get_text_node<uint32_t>(account, "level");
-		xp = utils::xml_get_text_node<uint32_t>(account, "xp");
-		dna = utils::xml_get_text_node<uint32_t>(account, "dna");
+		level    = utils::xml_get_text_node<uint32_t>(account, "level");
+		xp       = utils::xml_get_text_node<uint32_t>(account, "xp");
+		dna      = utils::xml_get_text_node<uint32_t>(account, "dna");
 		avatarId = std::clamp<uint32_t>(utils::xml_get_text_node<uint32_t>(account, "avatar_id"), 0, 16);
-		id = utils::xml_get_text_node<uint32_t>(account, "id");
+		id       = utils::xml_get_text_node<uint32_t>(account, "id");
 
 		newPlayerInventory = utils::xml_get_text_node<uint32_t>(account, "new_player_inventory");
-		newPlayerProgress = utils::xml_get_text_node<uint32_t>(account, "new_player_progress");
+		newPlayerProgress  = utils::xml_get_text_node<uint32_t>(account, "new_player_progress");
 
 		cashoutBonusTime = utils::xml_get_text_node<uint32_t>(account, "cashout_bonus_time");
-		starLevel = utils::xml_get_text_node<uint32_t>(account, "star_level");
+		starLevel        = utils::xml_get_text_node<uint32_t>(account, "star_level");
 
 		unlockCatalysts = utils::xml_get_text_node<uint32_t>(account, "unlock_catalysts");
 		unlockDiagonalCatalysts = utils::xml_get_text_node<uint32_t>(account, "unlock_diagonal_catalysts");
-		unlockFuelTanks = utils::xml_get_text_node<uint32_t>(account, "unlock_fuel_tanks");
+		unlockFuelTanks         = utils::xml_get_text_node<uint32_t>(account, "unlock_fuel_tanks");
 		unlockInventoryIdentify = utils::xml_get_text_node<uint32_t>(account, "unlock_inventory");
 		unlockPveDecks = utils::xml_get_text_node<uint32_t>(account, "unlock_pve_decks");
 		unlockPvpDecks = utils::xml_get_text_node<uint32_t>(account, "unlock_pvp_decks");
-		unlockStats = utils::xml_get_text_node<uint32_t>(account, "unlock_stats");
+		unlockStats    = utils::xml_get_text_node<uint32_t>(account, "unlock_stats");
 		unlockInventoryIdentify = utils::xml_get_text_node<uint32_t>(account, "unlock_inventory_identify");
-		unlockEditorFlairSlots = utils::xml_get_text_node<uint32_t>(account, "unlock_editor_flair_slots");
+		unlockEditorFlairSlots  = utils::xml_get_text_node<uint32_t>(account, "unlock_editor_flair_slots");
 
 		upsell = utils::xml_get_text_node<uint32_t>(account, "upsell");
 
-		capLevel = utils::xml_get_text_node<uint32_t>(account, "cap_level");
+		capLevel       = utils::xml_get_text_node<uint32_t>(account, "cap_level");
 		capProgression = utils::xml_get_text_node<uint32_t>(account, "cap_progression");
 	}
 

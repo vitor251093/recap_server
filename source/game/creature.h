@@ -3,11 +3,7 @@
 #define _GAME_CREATURE_HEADER
 
 // Include
-#include <cstdint>
-#include <string>
 #include <vector>
-#include <pugixml.hpp>
-
 #include "../utils/functions.h"
 
 // Game

@@ -1,7 +1,6 @@
 
 // Include
 #include "creature.h"
-#include "../utils/functions.h"
 #include <algorithm>
 
 // Game

@@ -1,7 +1,6 @@
 
 // Include
 #include "squad.h"
-#include "../utils/functions.h"
 #include <algorithm>
 
 // Game

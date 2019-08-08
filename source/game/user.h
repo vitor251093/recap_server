@@ -7,11 +7,7 @@
 #include "squad.h"
 #include "part.h"
 
-#include <cstdint>
-#include <string>
 #include <map>
-#include <pugixml.hpp>
-
 #include "../utils/functions.h"
 
 // Game

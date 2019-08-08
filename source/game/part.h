@@ -2,11 +2,6 @@
 #ifndef _GAME_PART_HEADER
 #define _GAME_PART_HEADER
 
-#include <cstdint>
-#include <string>
-#include <map>
-#include <pugixml.hpp>
-
 #include "../utils/functions.h"
 
 // Game

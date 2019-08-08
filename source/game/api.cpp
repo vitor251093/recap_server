@@ -2,6 +2,7 @@
 // Include
 #include "api.h"
 #include "config.h"
+#include "part.h"
 
 #include "../main.h"
 
