@@ -93,8 +93,6 @@ namespace Game {
 		SetPrefix(  object.GetObject()["prefix_asset_id"          ].GetUInt(), false);
 		SetPrefix(  object.GetObject()["prefix_secondary_asset_id"].GetUInt(), true);
 		SetSuffix(  object.GetObject()["suffix_asset_id"          ].GetUInt());
-
-		return true;
 	}
 
 	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const { 
@@ -174,8 +172,14 @@ namespace Game {
 
 	// Parts
 	void Parts::ReadXml(const pugi::xml_node& node) {
-		for (const auto& part : node.child("parts")) {
-			mItems.emplace_back(part);
+		auto parts = node.child("parts");
+		if (!parts) {
+			return;
+		}
+
+		for (const auto& partNode : parts) {
+			decltype(auto) part = mItems.emplace_back();
+			part.ReadXml(partNode);
 		}
 	}
 
