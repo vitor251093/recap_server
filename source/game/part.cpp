@@ -170,6 +170,9 @@ namespace Game {
 		status = newStatus;
 	}
 
+
+	
+
 	// Parts
 	void Parts::ReadXml(const pugi::xml_node& node) {
 		auto parts = node.child("parts");
