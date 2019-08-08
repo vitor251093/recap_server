@@ -468,7 +468,7 @@ namespace Game {
 
 	void Parts::ReadJson(rapidjson::Value& object) {
 		mItems.clear();
-		for (auto& partNode : object.GetArray())
+		for (auto& partNode : object.GetArray()) {
 			decltype(auto) part = mItems.emplace_back();
 			part.ReadJson(partNode);
 		}
