@@ -352,19 +352,19 @@ namespace Game {
 
 	void Part::ReadJson(rapidjson::Value& object) {
 		flair                   = object.GetObject()["is_flair"     ].GetBool();
-		cost                    = object.GetObject()["cost"         ].GetUInt();
-		equipped_to_creature_id = object.GetObject()["creature_id"  ].GetUInt();
-		level                   = object.GetObject()["level"        ].GetUInt();
-		market_status           = object.GetObject()["market_status"].GetUInt();
-		rarity                  = object.GetObject()["rarity"       ].GetUInt();
-		status                  = object.GetObject()["status"       ].GetUInt();
-		usage                   = object.GetObject()["usage"        ].GetUInt();
+		cost                    = object.GetObject()["cost"         ].GetUint();
+		equipped_to_creature_id = object.GetObject()["creature_id"  ].GetUint();
+		level                   = object.GetObject()["level"        ].GetUint();
+		market_status           = object.GetObject()["market_status"].GetUint();
+		rarity                  = object.GetObject()["rarity"       ].GetUint();
+		status                  = object.GetObject()["status"       ].GetUint();
+		usage                   = object.GetObject()["usage"        ].GetUint();
 		timestamp               = object.GetObject()["creation_date"].GetUInt64();
 
-		SetRigblock(object.GetObject()["rigblock_asset_id"        ].GetUInt());
-		SetPrefix(  object.GetObject()["prefix_asset_id"          ].GetUInt(), false);
-		SetPrefix(  object.GetObject()["prefix_secondary_asset_id"].GetUInt(), true);
-		SetSuffix(  object.GetObject()["suffix_asset_id"          ].GetUInt());
+		SetRigblock(object.GetObject()["rigblock_asset_id"        ].GetUint());
+		SetPrefix(  object.GetObject()["prefix_asset_id"          ].GetUint(), false);
+		SetPrefix(  object.GetObject()["prefix_secondary_asset_id"].GetUint(), true);
+		SetSuffix(  object.GetObject()["suffix_asset_id"          ].GetUint());
 	}
 
 	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const { 
