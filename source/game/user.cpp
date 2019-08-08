@@ -282,6 +282,10 @@ namespace Game {
 
 
 	// Part
+	Part::Part() {
+
+	}
+	
 	Part::Part(uint32_t rigblock) {
 		SetRigblock(rigblock);
 		SetPrefix(0, false);

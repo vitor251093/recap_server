@@ -102,6 +102,7 @@ namespace Game {
 	// Part
 	class Part {
 		public:
+			Part();
 			Part(uint32_t rigblock);
 			Part(const pugi::xml_node& node);
 
