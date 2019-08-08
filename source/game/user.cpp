@@ -359,7 +359,7 @@ namespace Game {
 		rarity                  = object.GetObject()["rarity"       ].GetUint();
 		status                  = object.GetObject()["status"       ].GetUint();
 		usage                   = object.GetObject()["usage"        ].GetUint();
-		timestamp               = object.GetObject()["creation_date"].GetUInt64();
+		timestamp               = object.GetObject()["creation_date"].GetUint64();
 
 		SetRigblock(object.GetObject()["rigblock_asset_id"        ].GetUint());
 		SetPrefix(  object.GetObject()["prefix_asset_id"          ].GetUint(), false);
@@ -369,18 +369,18 @@ namespace Game {
 
 	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
-		object.AddMember("is_flair",         rapidjson::Value{}.SetBool(gearScore),  allocator);
-		object.AddMember("cost",             rapidjson::Value{}.SetUint(itemPoints), allocator);
-		object.AddMember("creature_id",      rapidjson::Value{}.SetUint(nounId),     allocator);
-		object.AddMember("level",            rapidjson::Value{}.SetUint(id),         allocator);
-		object.AddMember("market_status",    rapidjson::Value{}.SetUint(version),    allocator);
-		object.AddMember("rarity",           rapidjson::Value{}.SetUint(itemPoints), allocator);
-		object.AddMember("status",           rapidjson::Value{}.SetUint(nounId),     allocator);
-		object.AddMember("usage",            rapidjson::Value{}.SetUint(id),         allocator);
-		object.AddMember("creation_date",    rapidjson::Value{}.SetUint64(version),  allocator);
+		object.AddMember("is_flair",         rapidjson::Value{}.SetBool(flair),                   allocator);
+		object.AddMember("cost",             rapidjson::Value{}.SetUint(cost),                    allocator);
+		object.AddMember("creature_id",      rapidjson::Value{}.SetUint(equipped_to_creature_id), allocator);
+		object.AddMember("level",            rapidjson::Value{}.SetUint(level),                   allocator);
+		object.AddMember("market_status",    rapidjson::Value{}.SetUint(market_status),           allocator);
+		object.AddMember("rarity",           rapidjson::Value{}.SetUint(rarity),                  allocator);
+		object.AddMember("status",           rapidjson::Value{}.SetUint(status),                  allocator);
+		object.AddMember("usage",            rapidjson::Value{}.SetUint(usage),                   allocator);
+		object.AddMember("creation_date",    rapidjson::Value{}.SetUint64(timestamp),             allocator);
 		if (api) {
-            object.AddMember("id",           rapidjson::Value{}.SetUint(index),      allocator);
-            object.AddMember("reference_id", rapidjson::Value{}.SetUint(index),      allocator);
+            object.AddMember("id",           rapidjson::Value{}.SetUint(index),                   allocator);
+            object.AddMember("reference_id", rapidjson::Value{}.SetUint(index),                   allocator);
 
             object.AddMember("rigblock_asset_id",         rapidjson::Value{}.SetUint(rigblock_asset_hash),         allocator);
             object.AddMember("prefix_asset_id",           rapidjson::Value{}.SetUint(prefix_asset_hash),           allocator);
