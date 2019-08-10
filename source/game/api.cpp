@@ -492,7 +492,7 @@ version = 1
 		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
@@ -524,7 +524,7 @@ version = 1
 				rapidjson::Value{}.SetString(mActiveTheme.c_str(), mActiveTheme.length(), allocator), allocator);
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_registration(HTTP::Session& session, HTTP::Response& response) {
@@ -546,7 +546,7 @@ version = 1
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
 		}
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_listUsers(HTTP::Session& session, HTTP::Response& response) {
@@ -572,7 +572,7 @@ version = 1
 		document.AddMember(rapidjson::Value("users"), value, allocator);
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
@@ -597,7 +597,7 @@ version = 1
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
@@ -608,7 +608,6 @@ version = 1
 		postJson.Parse(postBody);
 
 		auto mail = postJson.GetObject()["mail"].GetString();
-		
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
 		rapidjson::Document document;
@@ -628,7 +627,7 @@ version = 1
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {

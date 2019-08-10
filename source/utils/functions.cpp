@@ -94,13 +94,13 @@ namespace utils {
 	}
 
 	// JSON
-	void json_add_text_to_object(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator) {
+	void json::SetString(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator) {
 		node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), allocator),
 					   rapidjson::Value{}.SetString(value.c_str(), value.length(), allocator), 
 					   allocator);
 	}
 
-	std::string json_document_to_string(const rapidjson::Document& document) {
+	std::string json::ToString(const rapidjson::Document& document) {
 		rapidjson::StringBuffer buffer;
 		buffer.Clear();
 
