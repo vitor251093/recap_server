@@ -633,7 +633,7 @@ namespace Game {
 		return object;
 	}
 
-	void User::FromJson(rapidjson::Document& object) {
+	void User::FromJson(rapidjson::Value& object) {
 		mName     = object.GetObject()["name"].GetString();
 		mEmail    = object.GetObject()["email"].GetString();
 		mPassword = object.GetObject()["password"].GetString();

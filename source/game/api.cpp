@@ -598,11 +598,13 @@ version = 1
 
 	void API::dls_game_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
-		auto mail = request.uri.parameter("mail");
-		auto userJsonString = request.uri.parameter("user");
+		auto postBody = request.data.body();
 
-		rapidjson::Document userJson;
-		userJson.Parse(userJsonString);
+		rapidjson::Document postJson;
+		postJson.Parse(postBody);
+
+		auto mail = postJson.GetObject()["mail"].GetString();
+		auto userData = postJson.GetObject()["user"];
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
@@ -616,7 +618,7 @@ version = 1
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), allocator);
 		}
 		else {
-			user->FromJson(userJson);
+			user->FromJson(userData);
 			
 			// stat
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);

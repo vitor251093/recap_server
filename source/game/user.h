@@ -223,7 +223,7 @@ namespace Game {
 			pugi::xml_document ToXml();
 
 			rapidjson::Value ToJson(rapidjson::Document::AllocatorType& allocator);
-			void FromJson(rapidjson::Document& object);
+			void FromJson(rapidjson::Value& object);
 
 		private:
 			Account mAccount;
