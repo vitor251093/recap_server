@@ -124,13 +124,6 @@ font-weight: 500; }
     width: 20px;
     border: 1px solid #666;
     border-radius: 3px;
-    background-image:         linear-gradient(bottom, #555 5%, #000 100%);
-    background-image:      -o-linear-gradient(bottom, #555 5%, #000 100%);
-    background-image:    -moz-linear-gradient(bottom, #555 5%, #000 100%);
-    background-image: -webkit-linear-gradient(bottom, #555 5%, #000 100%);
-    background-image:     -ms-linear-gradient(bottom, #555 5%, #000 100%);
-    background-image: -webkit-gradient(linear, left bottom, left top, 
-                                       color-stop(0.05, #555), color-stop(1, #000));
 }
 .input-checkbox-container:hover input ~ .checkmark {
     background-color: #ccc;
