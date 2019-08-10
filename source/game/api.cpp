@@ -16,6 +16,10 @@
 #include <iostream>
 #include <filesystem>
 
+#ifdef _MSC_VER
+#undef GetObject
+#endif
+
 /*
 	api.account.auth
 		response
@@ -604,8 +608,7 @@ version = 1
 		postJson.Parse(postBody);
 
 		auto mail = postJson.GetObject()["mail"].GetString();
-		auto userData = postJson.GetObject()["user"];
-
+		
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
 		rapidjson::Document document;
@@ -618,7 +621,7 @@ version = 1
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), allocator);
 		}
 		else {
-			user->FromJson(userData);
+			user->FromJson(postJson.GetObject()["user"]);
 			
 			// stat
 			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
