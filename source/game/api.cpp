@@ -184,12 +184,14 @@ namespace Game {
 				dls_launcher_listThemes(session, response);
 			} else if (method == "api.game.registration") {
 				dls_game_registration(session, response);
-			} else if (method == "api.game.listUsers") {
-				dls_game_listUsers(session, response);
-			} else if (method == "api.game.getUserInfo") {
-				dls_game_getUserInfo(session, response);
-			} else if (method == "api.game.setUserInfo") {
-				dls_game_setUserInfo(session, response);
+			} else if (method == "api.game.log") {
+				dls_game_log(session, response);
+			} else if (method == "api.panel.listUsers") {
+				dls_panel_listUsers(session, response);
+			} else if (method == "api.panel.getUserInfo") {
+				dls_panel_getUserInfo(session, response);
+			} else if (method == "api.panel.setUserInfo") {
+				dls_panel_setUserInfo(session, response);
 			} else {
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
@@ -545,7 +547,13 @@ version = 1
 		response.body() = utils::json_document_to_string(document);
 	}
 
-	void API::dls_game_listUsers(HTTP::Session& session, HTTP::Response& response) {
+	void API::dls_game_log(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+		auto postBody = request.data.body();
+		std::cout << postBody << std::endl;
+	}
+
+	void API::dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
 		rapidjson::Document document;
 		document.SetObject();
 
@@ -553,7 +561,7 @@ version = 1
 
 		// stat
 		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
-		
+
 		const auto users = Game::UserManager::GetAllUserNames();
 		const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
 		rapidjson::Value value(rapidjson::kArrayType);
@@ -571,7 +579,7 @@ version = 1
 		response.body() = utils::json_document_to_string(document);
 	}
 
-	void API::dls_game_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
+	void API::dls_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
 
@@ -596,7 +604,7 @@ version = 1
 		response.body() = utils::json_document_to_string(document);
 	}
 
-	void API::dls_game_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
+	void API::dls_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
 		auto userJsonString = request.uri.parameter("user");
