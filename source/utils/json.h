@@ -103,12 +103,13 @@ namespace utils {
             std::string GetString(const std::string& label);
             
             jsonObject NewObject(const std::string& label);
-            jsonArray NewArray(const std::string& label);
+             jsonArray NewArray( const std::string& label);
             void Set(const std::string& label, bool value);
             void Set(const std::string& label, double value);
             void Set(const std::string& label, uint32_t value);
             void Set(const std::string& label, uint64_t value);
             void Set(const std::string& label, const std::string& value);
+            
             std::string ToString();
         private:
             rapidjson::Document::AllocatorType rapidAllocator;
@@ -140,7 +141,7 @@ namespace utils {
             std::string GetString(rapidjson::SizeType index);
 
             jsonObject NewObject();
-            jsonArray NewArray();
+             jsonArray NewArray();
             void Add(bool value);
             void Add(double value);
             void Add(uint32_t value);
@@ -199,7 +200,7 @@ namespace utils {
             std::string GetString(rapidjson::SizeType index);
 
             jsonObject NewObject();
-            jsonArray NewArray();
+             jsonArray NewArray();
             void Add(bool value);
             void Add(double value);
             void Add(uint32_t value);
