@@ -100,7 +100,7 @@ namespace Game {
 		mCreatures.clear();
 		for (auto& creatureNode : object) {
 			decltype(auto) creature = mCreatures.emplace_back();
-			creature.ReadJson(creatureNode.GetObject());
+			creature.ReadJson(creatureNode.GetAsObject());
 		}
 	}
 

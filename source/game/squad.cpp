@@ -75,7 +75,7 @@ namespace Game {
 		mSquads.clear();
 		for (auto& squadNode : object) {
 			decltype(auto) squad = mSquads.emplace_back();
-			squad.ReadJson(squadNode.GetObject());
+			squad.ReadJson(squadNode.GetAsObject());
 		}
 	}
 

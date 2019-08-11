@@ -251,7 +251,8 @@ namespace Game {
 
 	void Feed::ReadJson(utils::jsonArray& array) {
 		mItems.clear();
-		for (auto& item : object.GetArray()) {
+		for (auto& object : array) {
+			auto item = object.GetAsObject();
 			decltype(auto) feedItem = mItems.emplace_back();
 			feedItem.accountId = item.GetUint("account_id");
 			feedItem.id        = item.GetUint("id");
@@ -264,7 +265,7 @@ namespace Game {
 
 	void Feed::WriteJson(utils::jsonArray& array) const {
 		for (const auto& feedItem : mItems) {
-			auto object = array.GetObject();
+			auto object = array.NewObject();
 			object.Set("metadata",   feedItem.metadata);
 			object.Set("name",       feedItem.name);
 			object.Set("time",       feedItem.timestamp);
@@ -467,9 +468,9 @@ namespace Game {
 
 	void Parts::ReadJson(utils::jsonArray& object) {
 		mItems.clear();
-		for (auto& partNode : object.GetArray()) {
+		for (auto& partNode : object) {
 			decltype(auto) part = mItems.emplace_back();
-			part.ReadJson(partNode);
+			part.ReadJson(partNode.GetAsObject());
 		}
 	}
 
