@@ -31,9 +31,9 @@ namespace Game {
 			void dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response);
 
 			void dls_game_registration(HTTP::Session& session, HTTP::Response& response);
-			void dls_game_listUsers(HTTP::Session& session, HTTP::Response& response);
-			void dls_game_getUserInfo(HTTP::Session& session, HTTP::Response& response);
-			void dls_game_setUserInfo(HTTP::Session& session, HTTP::Response& response);
+			void dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response);
+			void dls_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response);
+			void dls_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response);
 
 			// bootstrap
 			void bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response);

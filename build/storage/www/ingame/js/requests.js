@@ -1,5 +1,5 @@
 var DLSClient = {};
-DLSClient.getRequest = function(url, callback, errorCallback) {
+DLSClient.rawGetRequest = function(url, callback, errorCallback) {
     var xmlHttp = new XMLHttpRequest(); 
     xmlHttp.onload = function() {
         if (callback !== undefined) callback(xmlHttp.responseText);
@@ -10,7 +10,19 @@ DLSClient.getRequest = function(url, callback, errorCallback) {
     xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
 };
-DLSClient.request = function(name, params, callback, errorCallback) {
+DLSClient.rawPostRequest = function(url, obj, callback, errorCallback) {
+    var xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.onload = function() {
+        if (callback !== undefined) callback(xmlHttp.responseText);
+    }
+    xmlHttp.onerror = function(e) {
+        if (errorCallback !== undefined) errorCallback(e, xmlHttp.responseText);
+    };
+    xmlHttp.open("POST", url, true);
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlHttp.send(JSON.stringify(obj));
+};
+DLSClient.getRequest = function(name, params, callback, errorCallback) {
     if (params !== undefined && typeof params === 'object') {
         var str = [];
         for (var p in params)
@@ -19,5 +31,11 @@ DLSClient.request = function(name, params, callback, errorCallback) {
             }
         params = str.join("&");
     }
-    DLSClient.getRequest("http://{{host}}/dls/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
+    DLSClient.rawGetRequest("http://{{host}}/dls/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
 };
+DLSClient.postRequest = function(name, params, callback, errorCallback) {
+    DLSClient.rawPostRequest("http://{{host}}/dls/api?method=" + name, params, callback, errorCallback);
+};
+DLSClient.log = function(object) {
+    DLSClient.postRequest("api.game.log", object);
+}

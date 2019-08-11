@@ -4,6 +4,7 @@
         <title>Darkspore Registration</title>
 
         <!-- DON'T CHANGE THE LINES BELOW! THEY ARE AUTOMATICALLY REPLACED BY THE SERVER -->
+        <script type="text/javascript" src="js/modernizr-3.6.0.min.js"></script>
         <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
         <script type="text/javascript" src="js/jquery.adapter.js"></script>
         <script type="text/javascript" src="js/requests.js"></script>
@@ -58,11 +59,21 @@
                 }
             }
             function register() {
-                DLSClient.request("api.game.registration", {
+                DLSClient.getRequest("api.game.registration", {
                     "name": document.getElementById("name").value,
                     "mail": document.getElementById("email").value,
                     "pass": document.getElementById("password").value
                 }, function(data) {
+
+                    var featuresList = {};
+                    for (var feature in Modernizr) {
+                        if (typeof Modernizr[feature] === "boolean") {
+                            featuresList[feature] = Modernizr[feature];
+                        }
+                    }
+                    DLSClient.log(featuresList);
+                    
+
                     var response = JSON.parse(data);
                     if (response.stat === 'ok') {
                         showModal('Success', "Account created successfully!", true);
