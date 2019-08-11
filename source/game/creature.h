@@ -68,8 +68,8 @@ namespace Game {
 		void ReadXml(const pugi::xml_node& node);
 		void WriteXml(pugi::xml_node& node) const;
 
-		void ReadJson(rapidjson::Value& object);
-		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
+		void ReadJson(utils::jsonObject& object);
+		void WriteJson(utils::jsonObject& object) const;
 	};
 
 	// Creatures
@@ -86,8 +86,8 @@ namespace Game {
 			void ReadXml(const pugi::xml_node& node);
 			void WriteXml(pugi::xml_node& node) const;
 
-			void ReadJson(rapidjson::Value& object);
-			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
+			void ReadJson(utils::jsonArray& object);
+			void WriteJson(utils::jsonArray& object) const;
 
 			void Add(uint32_t templateId);
 

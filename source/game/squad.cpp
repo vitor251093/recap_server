@@ -34,22 +34,20 @@ namespace Game {
 		}
 	}
 
-	void Squad::ReadJson(rapidjson::Value& object) {
-		name     = object.GetObject()["name"    ].GetString();
-		category = object.GetObject()["category"].GetString();
-		id       = object.GetObject()["id"      ].GetUint();
-		slot     = object.GetObject()["slot"    ].GetUint();
-		locked   = object.GetObject()["locked"  ].GetBool();
+	void Squad::ReadJson(utils::jsonObject& object) {
+		name     = object.GetString("name");
+		category = object.GetString("category");
+		id       = object.GetUint("id");
+		slot     = object.GetUint("slot");
+		locked   = object.GetBool("locked");
 	}
 
-	rapidjson::Value Squad::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
-		rapidjson::Value object(rapidjson::kObjectType);
-		utils::json::SetString(object, "name",     name,     allocator);
-		utils::json::SetString(object, "category", category, allocator);
-		object.AddMember("id",     rapidjson::Value{}.SetUint(id),     allocator);
-		object.AddMember("slot",   rapidjson::Value{}.SetUint(slot),   allocator);
-		object.AddMember("locked", rapidjson::Value{}.SetBool(locked), allocator);
-		return object;
+	void Squad::WriteJson(utils::jsonObject& object) const { 
+		object.Set("name",     name);
+		object.Set("category", category);
+		object.Set("id",       id);
+		object.Set("slot",     slot);
+		object.Set("locked",   locked);
 	}
 
 	// Squads
@@ -73,19 +71,17 @@ namespace Game {
 		}
 	}
 
-	void Squads::ReadJson(rapidjson::Value& object) {
+	void Squads::ReadJson(utils::jsonArray& object) {
 		mSquads.clear();
-		for (auto& squadNode : object.GetArray()) {
+		for (auto& squadNode : object) {
 			decltype(auto) squad = mSquads.emplace_back();
-			squad.ReadJson(squadNode);
+			squad.ReadJson(squadNode.GetObject());
 		}
 	}
 
-	rapidjson::Value Squads::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
-		rapidjson::Value value(rapidjson::kArrayType);
+	void Squads::WriteJson(utils::jsonArray& object) const { 
 		for (const auto& squad : mSquads) {
-			value.PushBack(squad.WriteJson(allocator), allocator);
+			squad.WriteJson(object.NewObject());
 		}
-		return value;
 	}
 }

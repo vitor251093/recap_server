@@ -16,10 +16,6 @@
 #include <iostream>
 #include <filesystem>
 
-#ifdef _MSC_VER
-#undef GetObject
-#endif
-
 /*
 	api.account.auth
 		response
@@ -485,46 +481,34 @@ version = 1
 
 		mActiveTheme = themeName;
 		
-		rapidjson::Document document;
-		document.SetObject();
-
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
+		auto doc = utils::jsonDocumentObject();
+		doc.Set("stat", "ok");
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json::ToString(document);
+		response.body() = doc.ToString();
 	}
 
 	void API::dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::Document document;
-		document.SetObject();
-
-		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+		auto doc = utils::jsonDocumentObject();
+		doc.Set("stat", "ok");
 		
 		// themes
 		{
 			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) +
 					"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
-			rapidjson::Value value(rapidjson::kArrayType);
+			auto value = doc.NewArray("themes");
 			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath)) {
 				if (entry.is_directory()) {
-					value.PushBack(rapidjson::Value{}.SetString(entry.path().filename().string().c_str(), 
-														    	entry.path().filename().string().length(), allocator), allocator);
+					value.Add(entry.path().filename().string());
 				}
 			}
-
-			document.AddMember(rapidjson::Value("themes"), value, allocator);
 		}
 
 		// selectedTheme
-		document.AddMember(rapidjson::Value("selectedTheme"), 
-				rapidjson::Value{}.SetString(mActiveTheme.c_str(), mActiveTheme.length(), allocator), allocator);
-
+		doc.Set("selectedTheme", mActiveTheme);
+		
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json::ToString(document);
+		response.body() = doc.ToString();
 	}
 
 	void API::dls_game_registration(HTTP::Session& session, HTTP::Response& response) {
@@ -535,44 +519,33 @@ version = 1
 
 		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
 
-		rapidjson::Document document;
-		document.SetObject();
+		auto doc = utils::jsonDocumentObject();
 		if (user == NULL) {
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+			doc.Set("stat", "error");
 		}
 		else {
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
+			doc.Set("stat", "ok");
 		}
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json::ToString(document);
+		response.body() = doc.ToString();
 	}
 
 	void API::dls_game_listUsers(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::Document document;
-		document.SetObject();
-
-		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+		auto doc = utils::jsonDocumentObject();
+		doc.Set("stat", "ok");
 		
 		const auto users = Game::UserManager::GetAllUserNames();
 		const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
-		rapidjson::Value value(rapidjson::kArrayType);
+		auto value = doc.NewArray("users");
 		for (const auto & entry : users) {
 			bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
-			
-			rapidjson::Value object(rapidjson::kObjectType);
-			object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
-			object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
-			value.PushBack(object, allocator);
+			auto object = value.NewObject();
+			object.Set("email", entry);
+			object.Set("logged", isLogged);
 		}
-		document.AddMember(rapidjson::Value("users"), value, allocator);
-
+		
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json::ToString(document);
+		response.body() = doc.ToString();
 	}
 
 	void API::dls_game_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
@@ -581,53 +554,38 @@ version = 1
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 
-		rapidjson::Document document;
-		document.SetObject();
-
-		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
+		auto doc = utils::jsonDocumentObject();
 		if (user == NULL) {
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+			doc.Set("stat", "error");
 		}
 		else {
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
-			document.AddMember(rapidjson::Value("user"), user->ToJson(allocator), allocator);
+			doc.Set("stat", "ok");
+			user->ToJson(doc.NewObject("user"));
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json::ToString(document);
+		response.body() = doc.ToString();
 	}
 
 	void API::dls_game_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto postBody = request.data.body();
 
-		rapidjson::Document postJson;
-		postJson.Parse(postBody);
-
-		auto mail = postJson.GetObject()["mail"].GetString();
+		auto postJson = utils::jsonDocumentObject(postBody);
+		auto mail = postJson.GetString("mail");
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
-		rapidjson::Document document;
-		document.SetObject();
-
-		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
+		auto doc = utils::jsonDocumentObject();
 		if (user == NULL) {
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), allocator);
+			doc.Set("stat", "error");
 		}
 		else {
-			user->FromJson(postJson.GetObject()["user"]);
-			
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+			user->FromJson(postJson.GetObject("user"));
+			doc.Set("stat", "ok");
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json::ToString(document);
+		response.body() = doc.ToString();
 	}
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {

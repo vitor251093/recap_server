@@ -56,8 +56,8 @@ namespace Game {
 		void ReadXml(const pugi::xml_node& node);
 		void WriteXml(pugi::xml_node& node) const;
 
-		void ReadJson(rapidjson::Value& object);
-		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
+		void ReadJson(utils::jsonObject& object);
+		void WriteJson(utils::jsonObject& object) const;
 	};
 
 
@@ -88,8 +88,8 @@ namespace Game {
 			void ReadXml(const pugi::xml_node& node);
 			void WriteXml(pugi::xml_node& node) const;
 
-			void ReadJson(rapidjson::Value& object);
-			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
+			void ReadJson(utils::jsonArray& array);
+			void WriteJson(utils::jsonArray& array) const;
 
 			void Add(FeedItem&& item);
 
@@ -109,8 +109,8 @@ namespace Game {
 			bool ReadXml(const pugi::xml_node& node);
 			void WriteXml(pugi::xml_node& node, uint32_t index, bool api = false) const;
 
-            void ReadJson(rapidjson::Value& object);
-            rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
+            void ReadJson(utils::jsonObject& object);
+            void WriteJson(utils::jsonObject& object, uint32_t index, bool api = false) const;
 
 			void SetRigblock(uint16_t rigblock);
 			void SetPrefix(uint16_t prefix, bool secondary = false);
@@ -222,8 +222,8 @@ namespace Game {
 
 			pugi::xml_document ToXml();
 
-			rapidjson::Value ToJson(rapidjson::Document::AllocatorType& allocator);
-			void FromJson(rapidjson::Value& object);
+			rapidjson::Value ToJson(utils::jsonObject& object);
+			void FromJson(utils::jsonObject& object);
 
 		private:
 			Account mAccount;
