@@ -224,7 +224,7 @@ namespace Game {
 					mActiveTheme + "/index.html";
 
 				std::string client_script(dlsClientScript);
-				utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+				utils::string_replace_all(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 
 				std::string file_data = utils::get_file_text(path);
 				utils::string_replace(file_data, "</head>", client_script + "</head>");
@@ -255,11 +255,11 @@ namespace Game {
 				Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH);
 
 			std::string file_data = utils::get_file_text(path);
-			utils::string_replace(file_data, "{{dls-version}}", "0.1");
-			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
-			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
-			utils::string_replace(file_data, "{{display-latest-version}}", "none");
-			utils::string_replace(file_data, "{{latest-version}}", "yes");
+			utils::string_replace_all(file_data, "{{dls-version}}", "0.1");
+			utils::string_replace_all(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
+			utils::string_replace_all(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
+			utils::string_replace_all(file_data, "{{display-latest-version}}", "none");
+			utils::string_replace_all(file_data, "{{latest-version}}", "yes");
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
@@ -422,7 +422,7 @@ version = 1
 			
 			std::string file_data = utils::get_html_file_for_darkspore_webkit(path, contentsFolder);
 
-			utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+			utils::string_replace_all(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);

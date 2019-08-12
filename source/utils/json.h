@@ -30,13 +30,13 @@ namespace utils {
                 rapidjson::SizeType index;
                 public:
                     jsonDocumentArrayIteratorHolder(jsonDocumentArray& doc, rapidjson::SizeType index): rapidDoc(doc), index(index) {}
-                     jsonObject GetAsObject()  {return rapidDoc.GetObject(index);};
-                      jsonArray GetAsArray()   {return rapidDoc.GetArray(index);};
-                           bool GetAsBool()    {return rapidDoc.GetBool(index);};
-                         double GetAsDouble()  {return rapidDoc.GetDouble(index);};
-                       uint32_t GetAsUint()    {return rapidDoc.GetUint(index);};
-                       uint64_t GetAsUint64()  {return rapidDoc.GetUint64(index);};
-                    std::string GetAsString()  {return rapidDoc.GetString(index);};
+                    auto GetAsObject()  {return rapidDoc.GetObject(index);};
+                    auto GetAsArray()   {return rapidDoc.GetArray(index);};
+                    auto GetAsBool()    {return rapidDoc.GetBool(index);};
+                    auto GetAsDouble()  {return rapidDoc.GetDouble(index);};
+                    auto GetAsUint()    {return rapidDoc.GetUint(index);};
+                    auto GetAsUint64()  {return rapidDoc.GetUint64(index);};
+                    auto GetAsString()  {return rapidDoc.GetString(index);};
             };
         public:
             jsonDocumentArrayIterator(jsonDocumentArray& doc, rapidjson::SizeType index) : rapidDoc(doc), index(index) {}
@@ -59,13 +59,13 @@ namespace utils {
                 rapidjson::SizeType index;
                 public:
                     jsonArrayIteratorHolder(jsonArray& doc, rapidjson::SizeType index): rapidDoc(doc), index(index) {}
-                     jsonObject GetAsObject()  {return rapidDoc.GetObject(index);};
-                      jsonArray GetAsArray()   {return rapidDoc.GetArray(index);};
-                           bool GetAsBool()    {return rapidDoc.GetBool(index);};
-                         double GetAsDouble()  {return rapidDoc.GetDouble(index);};
-                       uint32_t GetAsUint()    {return rapidDoc.GetUint(index);};
-                       uint64_t GetAsUint64()  {return rapidDoc.GetUint64(index);};
-                    std::string GetAsString()  {return rapidDoc.GetString(index);};
+                    auto GetAsObject()  {return rapidDoc.GetObject(index);};
+                    auto GetAsArray()   {return rapidDoc.GetArray(index);};
+                    auto GetAsBool()    {return rapidDoc.GetBool(index);};
+                    auto GetAsDouble()  {return rapidDoc.GetDouble(index);};
+                    auto GetAsUint()    {return rapidDoc.GetUint(index);};
+                    auto GetAsUint64()  {return rapidDoc.GetUint64(index);};
+                    auto GetAsString()  {return rapidDoc.GetString(index);};
             };
         public:
             jsonArrayIterator(jsonArray& doc, rapidjson::SizeType index) : rapidDoc(doc), index(index) {}
@@ -130,7 +130,7 @@ namespace utils {
             }
             jsonDocumentArray() : jsonDocumentArray(rapidjson::Document()) {}
 
-            rapidjson::SizeType Size() {return rapidDocument.GetArray().Size();}
+            auto Size() {return rapidDocument.GetArray().Size();}
             
              jsonObject GetObject(rapidjson::SizeType index);
               jsonArray GetArray( rapidjson::SizeType index);
@@ -150,8 +150,8 @@ namespace utils {
 
             std::string ToString();
 
-            jsonDocumentArrayIteratorHolder begin() { return jsonDocumentArrayIterator(this, 0); }
-            jsonDocumentArrayIteratorHolder end()   { return jsonDocumentArrayIterator(this, Size() - 1); }
+            decltype(auto) begin() { return jsonDocumentArrayIterator(this, 0); }
+            decltype(auto) end()   { return jsonDocumentArrayIterator(this, Size() - 1); }
         private:
             rapidjson::Document::AllocatorType rapidAllocator;
             rapidjson::Document rapidDocument;
@@ -207,8 +207,8 @@ namespace utils {
             void Add(uint64_t value);
             void Add(const std::string& value);
 
-            jsonArrayIteratorHolder begin() { return jsonArrayIterator(this, 0); }
-            jsonArrayIteratorHolder end()   { return jsonArrayIterator(this, Size() - 1); }
+            decltype(auto) begin() { return jsonArrayIterator(this, 0); }
+            decltype(auto) end()   { return jsonArrayIterator(this, Size() - 1); }
         private:
             rapidjson::Document::AllocatorType rapidAllocator;
             rapidjson::Value rapidValue;

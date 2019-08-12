@@ -51,6 +51,7 @@ namespace utils {
 
 	// Strings
 	void string_replace(std::string& str, const std::string& old_str, const std::string& new_str);
+	void string_replace_all(std::string& str, const std::string& old_str, const std::string& new_str);
 
 	std::vector<std::string> explode_string(const std::string& str, char delim, int32_t limit = -1);
 	std::vector<std::string> explode_string(const std::string& str, const std::string& delim, int32_t limit = -1);
