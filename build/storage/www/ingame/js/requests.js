@@ -1,4 +1,5 @@
 var DLSClient = {};
+DLSClient.dlsApiUrl = "http://{{host}}/dls/api";
 DLSClient.rawGetRequest = function(url, callback, errorCallback) {
     var xmlHttp = new XMLHttpRequest(); 
     xmlHttp.onload = function() {
@@ -31,10 +32,10 @@ DLSClient.getRequest = function(name, params, callback, errorCallback) {
             }
         params = str.join("&");
     }
-    DLSClient.rawGetRequest("http://{{host}}/dls/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
+    DLSClient.rawGetRequest(DLSClient.dlsApiUrl + "?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
 };
 DLSClient.postRequest = function(name, params, callback, errorCallback) {
-    DLSClient.rawPostRequest("http://{{host}}/dls/api?method=" + name, params, callback, errorCallback);
+    DLSClient.rawPostRequest(DLSClient.dlsApiUrl + "?method=" + name, params, callback, errorCallback);
 };
 DLSClient.log = function(object) {
     DLSClient.postRequest("api.game.log", object);
