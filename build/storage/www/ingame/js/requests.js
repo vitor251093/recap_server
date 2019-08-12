@@ -38,5 +38,6 @@ DLSClient.postRequest = function(name, params, callback, errorCallback) {
     DLSClient.rawPostRequest(DLSClient.dlsApiUrl + "?method=" + name, params, callback, errorCallback);
 };
 DLSClient.log = function(object) {
-    DLSClient.postRequest("api.game.log", object);
-}
+    var isDev = {{isDev}};
+    if (isDev) DLSClient.postRequest("api.game.log", object);
+};
