@@ -423,6 +423,7 @@ version = 1
 			std::string file_data = utils::get_html_file_for_darkspore_webkit(path, contentsFolder);
 
 			utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+			utils::string_replace(file_data, "{{isDev}}", "true");
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
