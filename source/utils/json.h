@@ -19,58 +19,84 @@
 // utils
 namespace utils {
 
-    class jsonDocumentArrayIterator
+    class jsonArrayGeneric;
+    class jsonObjectGeneric;
+    class jsonArrayIterator;
+
+    class jsonArrayGeneric
     {
-        private:
-            jsonDocumentArray rapidDoc;
-            rapidjson::SizeType index;
-            class jsonDocumentArrayIteratorHolder
-            {
-                jsonDocumentArray rapidDoc;
-                rapidjson::SizeType index;
-                public:
-                    jsonDocumentArrayIteratorHolder(jsonDocumentArray& doc, rapidjson::SizeType index): rapidDoc(doc), index(index) {}
-                    auto GetAsObject()  {return rapidDoc.GetObject(index);};
-                    auto GetAsArray()   {return rapidDoc.GetArray(index);};
-                    auto GetAsBool()    {return rapidDoc.GetBool(index);};
-                    auto GetAsDouble()  {return rapidDoc.GetDouble(index);};
-                    auto GetAsUint()    {return rapidDoc.GetUint(index);};
-                    auto GetAsUint64()  {return rapidDoc.GetUint64(index);};
-                    auto GetAsString()  {return rapidDoc.GetString(index);};
-            };
         public:
-            jsonDocumentArrayIterator(jsonDocumentArray& doc, rapidjson::SizeType index) : rapidDoc(doc), index(index) {}
+            virtual  jsonObjectGeneric GetObject(rapidjson::SizeType index) = 0;
+            virtual   jsonArrayGeneric GetArray( rapidjson::SizeType index) = 0;
+            virtual        bool GetBool(  rapidjson::SizeType index) = 0;
+            virtual      double GetDouble(rapidjson::SizeType index) = 0;
+            virtual    uint32_t GetUint(  rapidjson::SizeType index) = 0;
+            virtual    uint64_t GetUint64(rapidjson::SizeType index) = 0;
+            virtual std::string GetString(rapidjson::SizeType index) = 0;
 
-            int operator*() const { return jsonDocumentArrayIteratorHolder(rapidDoc, index); }
-            bool operator==(const jsonDocumentArrayIterator& other) const { return index == other.index; }
-            bool operator!=(const jsonDocumentArrayIterator& other) const { return !(*this == other); }
-            jsonDocumentArrayIterator& operator++() {++index;return *this;}
-            jsonDocumentArrayIterator operator++(int) {jsonDocumentArrayIterator tmp(*this); operator++(); return tmp;}
+            virtual jsonObjectGeneric NewObject() = 0;
+            virtual  jsonArrayGeneric NewArray() = 0;
+            virtual void Add(bool value) = 0;
+            virtual void Add(double value) = 0;
+            virtual void Add(uint32_t value) = 0;
+            virtual void Add(uint64_t value) = 0;
+            virtual void Add(const std::string& value) = 0;
+
+            virtual rapidjson::SizeType Size() = 0;
+            jsonArrayIterator begin() { return jsonArrayIterator(this, 0); }
+            jsonArrayIterator end()   { return jsonArrayIterator(this, Size() - 1); }
+
+        private:
+            rapidjson::Document::AllocatorType rapidAllocator;
+    }
+    class jsonObjectGeneric
+    {
+        public:
+            virtual  jsonObjectGeneric GetObject(const std::string& label);
+            virtual   jsonArrayGeneric GetArray( const std::string& label);
+            virtual        bool GetBool(  const std::string& label);
+            virtual      double GetDouble(const std::string& label);
+            virtual    uint32_t GetUint(  const std::string& label);
+            virtual    uint64_t GetUint64(const std::string& label);
+            virtual std::string GetString(const std::string& label);
+            
+            virtual jsonObjectGeneric NewObject(const std::string& label);
+            virtual  jsonArrayGeneric NewArray( const std::string& label);
+            virtual void Set(const std::string& label, bool value);
+            virtual void Set(const std::string& label, double value);
+            virtual void Set(const std::string& label, uint32_t value);
+            virtual void Set(const std::string& label, uint64_t value);
+            virtual void Set(const std::string& label, const std::string& value);
+
+        private:
+            rapidjson::Document::AllocatorType rapidAllocator;
+    }
+
+
+
+    class jsonArrayElement
+    {
+        jsonArrayGeneric parent;
+        rapidjson::SizeType index;
+        public:
+            jsonArrayElement(jsonArrayGeneric& doc, rapidjson::SizeType index): parent(doc), index(index) {}
+            auto GetAsObject()  {return parent.GetObject(index);};
+            auto GetAsArray()   {return parent.GetArray(index);};
+            auto GetAsBool()    {return parent.GetBool(index);};
+            auto GetAsDouble()  {return parent.GetDouble(index);};
+            auto GetAsUint()    {return parent.GetUint(index);};
+            auto GetAsUint64()  {return parent.GetUint64(index);};
+            auto GetAsString()  {return parent.GetString(index);};
     };
-
     class jsonArrayIterator
     {
         private:
-            jsonArray rapidDoc;
+            jsonArrayGeneric rapidDoc;
             rapidjson::SizeType index;
-            class jsonArrayIteratorHolder
-            {
-                jsonArray rapidDoc;
-                rapidjson::SizeType index;
-                public:
-                    jsonArrayIteratorHolder(jsonArray& doc, rapidjson::SizeType index): rapidDoc(doc), index(index) {}
-                    auto GetAsObject()  {return rapidDoc.GetObject(index);};
-                    auto GetAsArray()   {return rapidDoc.GetArray(index);};
-                    auto GetAsBool()    {return rapidDoc.GetBool(index);};
-                    auto GetAsDouble()  {return rapidDoc.GetDouble(index);};
-                    auto GetAsUint()    {return rapidDoc.GetUint(index);};
-                    auto GetAsUint64()  {return rapidDoc.GetUint64(index);};
-                    auto GetAsString()  {return rapidDoc.GetString(index);};
-            };
         public:
-            jsonArrayIterator(jsonArray& doc, rapidjson::SizeType index) : rapidDoc(doc), index(index) {}
+            jsonArrayIterator(jsonArrayGeneric& doc, rapidjson::SizeType index) : rapidDoc(doc), index(index) {}
 
-            int operator*() const { return jsonArrayIteratorHolder(rapidDoc, index); }
+            int operator*() const { return jsonArrayElement(rapidDoc, index); }
             bool operator==(const jsonArrayIterator& other) const { return index == other.index; }
             bool operator!=(const jsonArrayIterator& other) const { return !(*this == other); }
             jsonArrayIterator& operator++() {++index;return *this;}
@@ -80,43 +106,30 @@ namespace utils {
 
 
 
-    class jsonDocumentObject {
+    class jsonDocumentObject : public jsonObjectGeneric {
         public:
             jsonDocumentObject(const std::string& postBody) {
                 rapidDocument = rapidjson::Document();
                 rapidDocument.Parse(postBody);
                 rapidAllocator = rapidDocument.GetAllocator();
                 rapidDocument.SetObject();
-            };
+            }
             jsonDocumentObject(rapidjson::Document& newDoc) : rapidDocument(newDoc) {
                 rapidAllocator = rapidDocument.GetAllocator();
                 rapidDocument.SetObject();
             }
-            jsonDocumentObject() : jsonDocumentObject(rapidjson::Document()) {}
+            jsonDocumentObject() {
+                rapidDocument = rapidjson::Document();
+                rapidAllocator = rapidDocument.GetAllocator();
+                rapidDocument.SetObject();
+            }
 
-             jsonObject GetObject(const std::string& label);
-              jsonArray GetArray( const std::string& label);
-                   bool GetBool(  const std::string& label);
-                 double GetDouble(const std::string& label);
-               uint32_t GetUint(  const std::string& label);
-               uint64_t GetUint64(const std::string& label);
-            std::string GetString(const std::string& label);
-            
-            jsonObject NewObject(const std::string& label);
-             jsonArray NewArray( const std::string& label);
-            void Set(const std::string& label, bool value);
-            void Set(const std::string& label, double value);
-            void Set(const std::string& label, uint32_t value);
-            void Set(const std::string& label, uint64_t value);
-            void Set(const std::string& label, const std::string& value);
-            
             std::string ToString();
         private:
-            rapidjson::Document::AllocatorType rapidAllocator;
             rapidjson::Document rapidDocument;
     }
 
-    class jsonDocumentArray {
+    class jsonDocumentArray : public jsonArrayGeneric {
         public:
             jsonDocumentArray(const std::string& postBody) {
                 rapidDocument = rapidjson::Document();
@@ -128,89 +141,36 @@ namespace utils {
                 rapidAllocator = rapidDocument.GetAllocator();
                 rapidDocument.SetArray();
             }
-            jsonDocumentArray() : jsonDocumentArray(rapidjson::Document()) {}
+            jsonDocumentArray() {
+                rapidDocument = rapidjson::Document();
+                rapidAllocator = rapidDocument.GetAllocator();
+                rapidDocument.SetArray();
+            }
 
-            auto Size() {return rapidDocument.GetArray().Size();}
+            rapidjson::SizeType Size() {return rapidDocument.GetArray().Size();}
             
-             jsonObject GetObject(rapidjson::SizeType index);
-              jsonArray GetArray( rapidjson::SizeType index);
-                   bool GetBool(  rapidjson::SizeType index);
-                 double GetDouble(rapidjson::SizeType index);
-               uint32_t GetUint(  rapidjson::SizeType index);
-               uint64_t GetUint64(rapidjson::SizeType index);
-            std::string GetString(rapidjson::SizeType index);
-
-            jsonObject NewObject();
-             jsonArray NewArray();
-            void Add(bool value);
-            void Add(double value);
-            void Add(uint32_t value);
-            void Add(uint64_t value);
-            void Add(const std::string& value);
-
             std::string ToString();
-
-            decltype(auto) begin() { return jsonDocumentArrayIterator(this, 0); }
-            decltype(auto) end()   { return jsonDocumentArrayIterator(this, Size() - 1); }
         private:
-            rapidjson::Document::AllocatorType rapidAllocator;
             rapidjson::Document rapidDocument;
     }
 
-    class jsonObject {
+    class jsonObject : public jsonObjectGeneric {
         public:
             jsonObject(rapidjson::Document::AllocatorType& allocator, rapidjson::Value& newVal) : rapidAllocator(allocator), rapidValue(newVal) {
                 rapidValue.SetObject();
             }
-            
-             jsonObject GetObject(const std::string& label);
-              jsonArray GetArray( const std::string& label);
-                   bool GetBool(  const std::string& label);
-                 double GetDouble(const std::string& label);
-               uint32_t GetUint(  const std::string& label);
-               uint64_t GetUint64(const std::string& label);
-            std::string GetString(const std::string& label);
-            
-            jsonObject NewObject(const std::string& label);
-             jsonArray NewArray( const std::string& label);
-            void Set(const std::string& label, bool value);
-            void Set(const std::string& label, double value);
-            void Set(const std::string& label, uint32_t value);
-            void Set(const std::string& label, uint64_t value);
-            void Set(const std::string& label, const std::string& value);
         private:
-            rapidjson::Document::AllocatorType rapidAllocator;
             rapidjson::Value rapidValue;
     }
     
-    class jsonArray {
+    class jsonArray : public jsonArrayGeneric {
         public:
             jsonArray(rapidjson::Document::AllocatorType& allocator, rapidjson::Value& newVal) : rapidAllocator(allocator), rapidValue(newVal) {
                 rapidValue.SetArray();
             }
 
             rapidjson::SizeType Size() {return rapidValue.GetArray().Size();}
-            
-             jsonObject GetObject(rapidjson::SizeType index);
-              jsonArray GetArray( rapidjson::SizeType index);
-                   bool GetBool(  rapidjson::SizeType index);
-                 double GetDouble(rapidjson::SizeType index);
-               uint32_t GetUint(  rapidjson::SizeType index);
-               uint64_t GetUint64(rapidjson::SizeType index);
-            std::string GetString(rapidjson::SizeType index);
-
-            jsonObject NewObject();
-             jsonArray NewArray();
-            void Add(bool value);
-            void Add(double value);
-            void Add(uint32_t value);
-            void Add(uint64_t value);
-            void Add(const std::string& value);
-
-            decltype(auto) begin() { return jsonArrayIterator(this, 0); }
-            decltype(auto) end()   { return jsonArrayIterator(this, Size() - 1); }
         private:
-            rapidjson::Document::AllocatorType rapidAllocator;
             rapidjson::Value rapidValue;
     }
 }
