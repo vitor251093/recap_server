@@ -429,6 +429,12 @@ version = 1
 			response.body() = std::move(file_data);
 		});
 
+		router->add("/web/sporelabsgame/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			// That one is launched in the system browser
+			response.set(boost::beast::http::field::content_type, "text/html");
+			response.body() = "";
+		});
+
 		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = "";
