@@ -8,7 +8,6 @@
     <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.adapter.js"></script>
     <script type="text/javascript" src="js/requests.js"></script>
-    <script type="text/javascript" src="js/modernizr-3.6.0.js"></script>
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
@@ -57,27 +56,15 @@
                 document.getElementById("ok-error-button").style.visibility   = closingWindow?"hidden":"visible";
             }
             function closeModal(closingWindow) {
-                document.getElementById("message-dialog").style.visibility = "hidden";
+                document.getElementById("message-dialog").style.visibility    = "hidden";
+                document.getElementById("ok-success-button").style.visibility = "hidden";
+                document.getElementById("ok-error-button").style.visibility   = "hidden";
+
                 if (closingWindow && typeof(Client) !== "undefined") {
                     Client.closeWindow();
                 }
             }
             function register() {
-                var featuresList = {};
-                try {
-                    for (var feature in Modernizr) {
-                        if (typeof Modernizr[feature] === "boolean") {
-                            featuresList[feature] = Modernizr[feature];
-                        }
-                    }
-                }
-                catch(e1) {
-                    DLSClient.getRequest("api.game.log", {
-                        "message": e1.message
-                    });   
-                }
-                DLSClient.log(featuresList);
-
                 DLSClient.getRequest("api.game.registration", {
                     "name": document.getElementById("name").value,
                     "mail": document.getElementById("email").value,
