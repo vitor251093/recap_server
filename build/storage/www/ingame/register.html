@@ -1,47 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Darkspore Registration</title>
+<head>
+    <title>Darkspore Registration</title>
 
-        <!-- DON'T CHANGE THE LINES BELOW! THEY ARE AUTOMATICALLY REPLACED BY THE SERVER -->
-        <script type="text/javascript" src="js/modernizr-3.6.0.min.js"></script>
-        <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-        <script type="text/javascript" src="js/jquery.adapter.js"></script>
-        <script type="text/javascript" src="js/requests.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/fonts.css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
-        
-        <style type="text/css">
-            h2 {
-                line-height: 1.66;
-                margin: 0;
-                padding: 0;
-                font-weight: 900;
-                font-size: 24px;
-                text-transform: uppercase;
-                text-align: center;
-                margin-bottom: 10px; }
-            
-            .form-group {
-                overflow: hidden;
-                margin-bottom: 20px; }
+    <!-- DON'T CHANGE THE LINES BELOW! THEY ARE AUTOMATICALLY REPLACED BY THE SERVER -->
+    <script type="text/javascript" src="js/json2.js"></script>
+    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery.adapter.js"></script>
+    <script type="text/javascript" src="js/requests.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 
-            .form-group-button {
-                padding: 0px 27px;
-            }
-            
-            .form-input {
-                width: 100%;
-            }
-            
-            .label-agree-term {
-                color: #c9c9c9; }
-            
-            .term-service {
-                color: #c9c9c9; }
-            
-        </style>
-    </head>
+    <style type="text/css">
+        h2 {
+            line-height: 1.66;
+            margin: 0;
+            padding: 0;
+            font-weight: 900;
+            font-size: 24px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .form-group-button {
+            padding: 0px 27px;
+        }
+
+        .form-input {
+            width: 100%;
+        }
+
+        .label-agree-term {
+            color: #c9c9c9;
+        }
+
+        .term-service {
+            color: #c9c9c9;
+        }
+    </style>
+</head>
     <body>
         <script>
             function showModal(title, message, closingWindow) {
@@ -53,7 +56,10 @@
                 document.getElementById("ok-error-button").style.visibility   = closingWindow?"hidden":"visible";
             }
             function closeModal(closingWindow) {
-                document.getElementById("message-dialog").style.visibility = "hidden";
+                document.getElementById("message-dialog").style.visibility    = "hidden";
+                document.getElementById("ok-success-button").style.visibility = "hidden";
+                document.getElementById("ok-error-button").style.visibility   = "hidden";
+
                 if (closingWindow && typeof(Client) !== "undefined") {
                     Client.closeWindow();
                 }
@@ -64,16 +70,6 @@
                     "mail": document.getElementById("email").value,
                     "pass": document.getElementById("password").value
                 }, function(data) {
-
-                    var featuresList = {};
-                    for (var feature in Modernizr) {
-                        if (typeof Modernizr[feature] === "boolean") {
-                            featuresList[feature] = Modernizr[feature];
-                        }
-                    }
-                    DLSClient.log(featuresList);
-                    
-
                     var response = JSON.parse(data);
                     if (response.stat === 'ok') {
                         showModal('Success', "Account created successfully!", true);
