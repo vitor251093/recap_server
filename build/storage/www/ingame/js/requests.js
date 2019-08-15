@@ -20,7 +20,7 @@ DLSClient.rawPostRequest = function(url, obj, callback, errorCallback) {
         if (errorCallback !== undefined) errorCallback(e, xmlHttp.responseText);
     };
     xmlHttp.open("POST", url, true);
-    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlHttp.send(JSON.stringify(obj));
 };
 DLSClient.getRequest = function(name, params, callback, errorCallback) {
@@ -38,6 +38,7 @@ DLSClient.postRequest = function(name, params, callback, errorCallback) {
     DLSClient.rawPostRequest(DLSClient.dlsApiUrl + "?method=" + name, params, callback, errorCallback);
 };
 DLSClient.log = function(object) {
-    var isDev = {{isDev}};
-    if (isDev) DLSClient.postRequest("api.game.log", object);
+    //var isDev = {{isDev}};
+    //if (isDev) 
+	DLSClient.postRequest("api.game.log", object);
 };
