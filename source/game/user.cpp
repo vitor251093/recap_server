@@ -268,8 +268,8 @@ namespace Game {
 		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& feedItem : mItems) {
 			rapidjson::Value object(rapidjson::kObjectType);
-			utils::json::SetString(object, "metadata", feedItem.metadata, allocator);
-			utils::json::SetString(object, "name",     feedItem.name,     allocator);
+			utils::json::Set(object, "metadata", feedItem.metadata, allocator);
+			utils::json::Set(object, "name",     feedItem.name,     allocator);
 			object.AddMember("time",       rapidjson::Value{}.SetUint64(feedItem.timestamp), allocator);
 			object.AddMember("account_id", rapidjson::Value{}.SetUint(feedItem.accountId),   allocator);
 			object.AddMember("id",         rapidjson::Value{}.SetUint(feedItem.id),          allocator);
@@ -620,9 +620,9 @@ namespace Game {
 	rapidjson::Value User::ToJson(rapidjson::Document::AllocatorType& allocator) {
 		rapidjson::Value object(rapidjson::kObjectType);
 		
-		utils::json::SetString(object, "name",     mName,     allocator);
-		utils::json::SetString(object, "email",    mEmail,    allocator);
-		utils::json::SetString(object, "password", mPassword, allocator);
+		utils::json::Set(object, "name",     mName,     allocator);
+		utils::json::Set(object, "email",    mEmail,    allocator);
+		utils::json::Set(object, "password", mPassword, allocator);
 
 		object.AddMember("account",     mAccount.WriteJson(allocator), allocator);
 		object.AddMember("creatures", mCreatures.WriteJson(allocator), allocator);
