@@ -57,4 +57,4 @@ var HTTP = {
 		xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		xmlHttp.send(JSON.stringify(obj));
 	}
-}
+};
