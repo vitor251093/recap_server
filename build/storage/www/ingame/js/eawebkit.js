@@ -2,20 +2,29 @@
 var Utils = {
 	forEach: function(array, func) {
 		for (var i = 0; i < array.length; i++) func(array[i])
+	},
+	type: function(obj) {
+		return Object.prototype.toString.call(obj);
+	},
+	isString: function(obj) {
+		return Utils.type(obj) === '[object String]';
+	},
+	isArray: function(obj) {
+		return Utils.type(obj) === '[object Array]';
 	}
 };
 
 var UI = function(domId) {
 	return {
 		dom: function() {
-			if (Object.prototype.toString.call(domId) === '[object String]') {
+			if (Utils.isString(domId)) {
 				var prefix = domId.substr(0,1);
 				var realId = domId.substr(1);
 				if (prefix === '#') return [document.getElementById(realId)];
 				if (prefix === '.') return  document.getElementsByClassName(realId);
 				return [];
 			}
-			if (Object.prototype.toString.call(domId) === '[object Array]') {
+			if (Utils.isArray(domId)) {
 				return domId;
 			}
 			return [domId];
