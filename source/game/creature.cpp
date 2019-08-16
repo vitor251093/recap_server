@@ -61,12 +61,12 @@ namespace Game {
 
 	rapidjson::Value Creature::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
-		utils::json_add_text_to_object(object, "name",           name,         allocator);
-		utils::json_add_text_to_object(object, "name_locale_id", nameLocaleId, allocator);
-		utils::json_add_text_to_object(object, "type_a",         elementType,  allocator);
-		utils::json_add_text_to_object(object, "class",          classType,    allocator);
-		utils::json_add_text_to_object(object, "png_large_url",  pngLargeUrl,  allocator);
-		utils::json_add_text_to_object(object, "png_thumb_url",  pngThumbUrl,  allocator);
+		utils::json::SetString(object, "name",           name,         allocator);
+		utils::json::SetString(object, "name_locale_id", nameLocaleId, allocator);
+		utils::json::SetString(object, "type_a",         elementType,  allocator);
+		utils::json::SetString(object, "class",          classType,    allocator);
+		utils::json::SetString(object, "png_large_url",  pngLargeUrl,  allocator);
+		utils::json::SetString(object, "png_thumb_url",  pngThumbUrl,  allocator);
 		object.AddMember("gear_score",     rapidjson::Value{}.SetDouble(gearScore),  allocator);
 		object.AddMember("item_points",    rapidjson::Value{}.SetDouble(itemPoints), allocator);
 		object.AddMember("noun_id",        rapidjson::Value{}.SetUint64(nounId),     allocator);
