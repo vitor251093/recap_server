@@ -5,8 +5,7 @@
 
     <!-- DON'T CHANGE THE LINES BELOW! THEY ARE AUTOMATICALLY REPLACED BY THE SERVER -->
     <script type="text/javascript" src="js/json2.js"></script>
-    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="js/jquery.adapter.js"></script>
+    <script type="text/javascript" src="js/eawebkit.ui.js"></script>
     <script type="text/javascript" src="js/requests.js"></script>
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -48,18 +47,18 @@
     <body>
         <script>
             function showModal(title, message, closingWindow) {
-                document.getElementById("message-dialog").style.visibility = "visible";
-                $('#modal-title').text(title);
-                document.getElementById("message").innerHTML = message;
+                UI('#message-dialog').show();
+                UI('#modal-title').text(title);
+                UI('#message').text(message);
 
-                document.getElementById("ok-success-button").style.visibility = closingWindow?"visible":"hidden";
-                document.getElementById("ok-error-button").style.visibility   = closingWindow?"hidden":"visible";
+                UI('#ok-success-button').show(closingWindow);
+                UI('#ok-error-button').hide(closingWindow);
             }
             function closeModal(closingWindow) {
-                document.getElementById("message-dialog").style.visibility    = "hidden";
-                document.getElementById("ok-success-button").style.visibility = "hidden";
-                document.getElementById("ok-error-button").style.visibility   = "hidden";
-
+                UI('#message-dialog').hide();
+                UI('#ok-success-button').hide();
+                UI('#ok-error-button').hide();
+                
                 if (closingWindow && typeof(Client) !== "undefined") {
                     Client.closeWindow();
                 }
@@ -112,17 +111,17 @@
                     </form>
                 </div>
             </div>
-            <div id="message-dialog" class="modal" style="visibility: hidden;">
+            <div id="message-dialog" class="modal">
                 <div class="modal-window darkspore-ui-background">
                     <div class="modal-title" id="modal-title">Error</div>
                     <div class="modal-message" id="message">x</div>
                     <div class="form-group form-group-button">
-                        <div name="submit" id="ok-success-button" class="form-submit button-rounded" style="visibility: hidden;" onMouseUp="closeModal(true);">
+                        <div name="submit" id="ok-success-button" class="form-submit button-rounded" onMouseUp="closeModal(true);">
                             <div class="left-side"></div>
                             <div class="text">Ok</div>
                             <div class="right-side"></div>
                         </div>
-                        <div name="submit" id="ok-error-button" class="form-submit button-rounded" style="visibility: hidden;" onMouseUp="closeModal(false);">
+                        <div name="submit" id="ok-error-button" class="form-submit button-rounded" onMouseUp="closeModal(false);">
                             <div class="left-side"></div>
                             <div class="text">Ok</div>
                             <div class="right-side"></div>
@@ -131,5 +130,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            UI('#message-dialog').hide();
+            UI('#ok-success-button').hide();
+            UI('#ok-error-button').hide();
+        </script>
     </body>
 </html>
