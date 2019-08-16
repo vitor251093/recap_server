@@ -1,25 +1,57 @@
 
+var Utils = {
+	forEach: function(array, func) {
+		for (var i = 0; i < array.length; i++) func(array[i])
+	}
+};
+
 var UI = function(domId) {
 	return {
 		dom: function() {
-			var prefix = domId.substr(0,1);
-			var realId = domId.substr(1);
-			if (prefix === '#') return [document.getElementById(domId.substr(1))];
-			if (prefix === '.') return  document.getElementsByClassName(domId.substr(1));
-			return [];
+			if (Object.prototype.toString.call(domId) === '[object String]') {
+				var prefix = domId.substr(0,1);
+				var realId = domId.substr(1);
+				if (prefix === '#') return [document.getElementById(realId)];
+				if (prefix === '.') return  document.getElementsByClassName(realId);
+				return [];
+			}
+			if (Object.prototype.toString.call(domId) === '[object Array]') {
+				return domId;
+			}
+			return [domId];
 		},
 		show: function(show) {
-			var doms = this.dom();
-			for (var i = 0; i < doms.length; i++) doms[i].style.visibility = (show === undefined || show === true) ? "visible" : "hidden";
+			this.style({visibility: ((show === undefined || show === true) ? "visible" : "hidden")});
 		},
 		hide: function(hide) {
-			var doms = this.dom();
-			for (var i = 0; i < doms.length; i++) doms[i].style.visibility = (hide === undefined || hide === true) ? "hidden" : "visible";
+			this.style({visibility: ((hide === undefined || hide === true) ? "hidden" : "visible")});
 		},
 		text: function(text) {
-			var doms = this.dom();
-			for (var i = 0; i < doms.length; i++) doms[i].innerHTML = text;
+			Utils.forEach(this.dom(),function(dom){dom.innerHTML = text});
+		},
+		style: function(obj) {
+			Utils.forEach(this.dom(),function(dom){for (var p in obj) dom.style[p] = obj[p]});
 		}
+		// animate: function(style, fromValue, toValue, time, framerate, valueParser) {
+		// 	if (framerate === undefined) framerate = 30;
+			
+		// 	var value = fromValue;
+		// 	var actionChange = (((fromValue - value)*1.0)/framerate)/(time/1000.0);
+		// 	var actionTime = 1000.0/framerate;
+
+		// 	if (value < toValue) {
+		// 		value += actionChange;
+
+		// 		var doms = this.dom();
+		// 		setTimeout(function(){
+		// 			UI(doms).animate(style, value, toValue, time - actionTime, framerate);
+		// 		}, actionTime);
+		// 	}
+			
+		// 	var styleObj = {};
+		// 	styleObj[style] = (valueParser === undefined) ? value : valueParser(value);
+		// 	this.style(styleObj);
+		// }
 	};
 };
 
