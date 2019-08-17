@@ -9,298 +9,131 @@
 // utils
 namespace utils {
 
-    jsonObject jsonDocumentObject::GetObject(const std::string& label) {
-        if (!rapidDocument.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return jsonObject(rapidAllocator, rapidDocument.GetObject()[rapidLabel]);
+    rapidjson::Document json::Parse(const std::string& contents) {
+        rapidjson::Document userJson;
+		userJson.Parse(contents);
+        return userJson;
     }
-    jsonArray jsonDocumentObject::GetArray(const std::string& label) {
-        if (!rapidDocument.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return jsonArray(rapidAllocator, rapidDocument.GetObject()[rapidLabel]);
+    rapidjson::Document json::NewDocumentObject() {
+        rapidjson::Document document;
+		document.SetObject();
+        return document;
     }
-    bool jsonDocumentObject::GetBool(const std::string& label) {
-        if (!rapidDocument.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidDocument.GetObject()[rapidLabel].GetBool();
+
+
+    rapidjson::Value json::NewObject() {
+        rapidjson::Value value(rapidjson::kObjectType);
+        return value;
     }
-    double jsonDocumentObject::GetDouble(const std::string& label) {
-        if (!rapidDocument.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidDocument.GetObject()[rapidLabel].GetDouble();
-    }
-    uint32_t jsonDocumentObject::GetUint(const std::string& label) {
-        if (!rapidDocument.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidDocument.GetObject()[rapidLabel].GetUint();
-    }
-    uint64_t jsonDocumentObject::GetUint64(const std::string& label) {
-        if (!rapidDocument.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidDocument.GetObject()[rapidLabel].GetUint64();
-    }
-    std::string jsonDocumentObject::GetString(const std::string& label) {
-        if (!rapidDocument.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidDocument.GetObject()[rapidLabel].GetString();
-    }
-    jsonObject jsonDocumentObject::NewObject(const std::string& label) {
-        rapidjson::Value object(rapidjson::kObjectType);
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        rapidDocument.AddMember(rapidLabel, object, allocator);
-        return jsonObject(rapidAllocator, object);
-    }
-    jsonArray jsonDocumentObject::NewArray(const std::string& label) {
+    rapidjson::Value json::NewArray() {
         rapidjson::Value value(rapidjson::kArrayType);
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        rapidDocument.AddMember(rapidLabel, object, allocator);
-        return jsonArray(rapidAllocator, object);
+        return value;
     }
-    void jsonDocumentObject::Set(const std::string& label, bool value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetBool(value);
-        rapidDocument.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
+
+
+
+
+    std::string json::GetString(rapidjson::Document& node, const char* label) {
+        return node.GetObject()[label].GetString();
+    }
+    bool json::GetBool(rapidjson::Document& node, const char* label) {
+        return node.GetObject()[label].GetBool();
+    }
+    double json::GetDouble(rapidjson::Document& node, const char* label) {
+        return node.GetObject()[label].GetDouble();
+    }
+    uint32_t json::GetUint(rapidjson::Document& node, const char* label) {
+        return node.GetObject()[label].GetUint();
+    }
+    uint64_t json::GetUint64(rapidjson::Document& node, const char* label) {
+        return node.GetObject()[label].GetUint64();
+    }
+
+
+    void json::Set(rapidjson::Document& node, const std::string& label, rapidjson::Value& value) {
+        node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), node.GetAllocator()), value, node.GetAllocator());
+    }
+    void json::Set(rapidjson::Document& node, const std::string& label, const std::string& value) {
+		json::Set(node, label, rapidjson::Value{}.SetString(value.c_str(), value.length(), node.GetAllocator()));
 	}
-    void jsonDocumentObject::Set(const std::string& label, double value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetDouble(value);
-        rapidDocument.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
+    void json::Set(rapidjson::Document& node, const std::string& label, bool value) {
+		json::Set(node, label, rapidjson::Value{}.SetBool(value));
 	}
-    void jsonDocumentObject::Set(const std::string& label, uint32_t value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetUint(value);
-        rapidDocument.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
-    }
-    void jsonDocumentObject::Set(const std::string& label, uint64_t value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetUint64(value);
-        rapidDocument.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
-    }
-    void jsonDocumentObject::Set(const std::string& label, const std::string& value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetString(value.c_str(), value.length(), rapidAllocator);
-        rapidDocument.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
+    void json::Set(rapidjson::Document& node, const std::string& label, double value) {
+		json::Set(node, label, rapidjson::Value{}.SetDouble(value));
 	}
-    std::string jsonDocumentObject::ToString() {
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		rapidDocument.Accept(writer);
-
-		return buffer.GetString();
+    void json::Set(rapidjson::Document& node, const std::string& label, uint32_t value) {
+		json::Set(node, label, rapidjson::Value{}.SetUint(value));
 	}
-
-
-
-
-
-    jsonObject jsonDocumentArray::GetObject(rapidjson::SizeType index) {
-        if (index >= rapidDocument.Size()) return NULL;
-        return jsonObject(rapidAllocator, rapidDocument.GetArray()[index]);
-    }
-    jsonArray jsonDocumentArray::GetArray(rapidjson::SizeType index) {
-        if (index >= rapidDocument.Size()) return NULL;
-        return jsonArray(rapidAllocator, rapidDocument.GetArray()[index]);
-    }
-    bool jsonDocumentArray::GetBool(rapidjson::SizeType index) {
-        if (index >= rapidDocument.Size()) return NULL;
-        return rapidDocument.GetArray()[index].GetBool();
-    }
-    double jsonDocumentArray::GetDouble(rapidjson::SizeType index) {
-        if (index >= rapidDocument.Size()) return NULL;
-        return rapidDocument.GetArray()[index].GetDouble();
-    }
-    uint32_t jsonDocumentArray::GetUint(rapidjson::SizeType index) {
-        if (index >= rapidDocument.Size()) return NULL;
-        return rapidDocument.GetArray()[index].GetUint();
-    }
-    uint64_t jsonDocumentArray::GetUint64(rapidjson::SizeType index) {
-        if (index >= rapidDocument.Size()) return NULL;
-        return rapidDocument.GetArray()[index].GetUint64();
-    }
-    std::string jsonDocumentArray::GetString(rapidjson::SizeType index) {
-        if (index >= rapidDocument.Size()) return NULL;
-        return rapidDocument.GetArray()[index].GetString();
-    }
-    jsonObject jsonDocumentArray::NewObject() {
-        rapidjson::Value object(rapidjson::kObjectType);
-        rapidDocument.PushBack(object, rapidAllocator);
-        return jsonObject(rapidAllocator, object);
-    }
-    jsonArray jsonDocumentArray::NewArray() {
-        rapidjson::Value object(rapidjson::kArrayType);
-        rapidDocument.PushBack(object, rapidAllocator);
-        return jsonArray(rapidAllocator, object);
-    }
-    void jsonDocumentArray::Add(bool value) {
-        auto rapidObjValue = rapidjson::Value{}.SetBool(value);
-        rapidDocument.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonDocumentArray::Add(double value) {
-        auto rapidObjValue = rapidjson::Value{}.SetDouble(value);
-        rapidDocument.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonDocumentArray::Add(uint32_t value) {
-        auto rapidObjValue = rapidjson::Value{}.SetUint(value);
-        rapidDocument.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonDocumentArray::Add(uint64_t value) {
-        auto rapidObjValue = rapidjson::Value{}.SetUint64(value);
-        rapidDocument.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonDocumentArray::Add(const std::string& value) {
-        auto rapidObjValue = rapidjson::Value{}.SetString(value.c_str(), value.length(), rapidAllocator);
-        rapidDocument.PushBack(rapidObjValue, rapidAllocator);
-    }
-    std::string jsonDocumentArray::ToString() {
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		rapidDocument.Accept(writer);
-
-		return buffer.GetString();
+    void json::Set(rapidjson::Document& node, const std::string& label, uint64_t value) {
+		json::Set(node, label, rapidjson::Value{}.SetUint64(value));
 	}
-
-
-
-
-
     
-    jsonObject jsonObject::GetObject(const std::string& label) {
-        if (!rapidValue.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return jsonObject(rapidAllocator, rapidValue.GetObject()[rapidLabel]);
+    
+    void json::Add(rapidjson::Document& node, rapidjson::Value& value) {
+        node.PushBack(value, node.GetAllocator());
     }
-    jsonArray jsonObject::GetArray(const std::string& label) {
-        if (!rapidValue.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return jsonArray(rapidAllocator, rapidValue.GetObject()[rapidLabel]);
-    }
-    bool jsonObject::GetBool(const std::string& label) {
-        if (!rapidValue.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidValue.GetObject()[rapidLabel].GetBool();
-    }
-    double jsonObject::GetDouble(const std::string& label) {
-        if (!rapidValue.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidValue.GetObject()[rapidLabel].GetDouble();
-    }
-    uint32_t jsonObject::GetUint(const std::string& label) {
-        if (!rapidValue.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidValue.GetObject()[rapidLabel].GetUint();
-    }
-    uint64_t jsonObject::GetUint64(const std::string& label) {
-        if (!rapidValue.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidValue.GetObject()[rapidLabel].GetUint64();
-    }
-    std::string jsonObject::GetString(const std::string& label) {
-        if (!rapidValue.HasMember(label)) return NULL;
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        return rapidValue.GetObject()[rapidLabel].GetString();
-    }
-    jsonObject jsonObject::NewObject(const std::string& label) {
-        rapidjson::Value object(rapidjson::kObjectType);
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        rapidValue.AddMember(rapidLabel, object, allocator);
-        return jsonObject(rapidAllocator, object);
-    }
-    jsonArray jsonObject::NewArray(const std::string& label) {
-        rapidjson::Value value(rapidjson::kArrayType);
-        auto rapidLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        rapidValue.AddMember(rapidLabel, object, allocator);
-        return jsonArray(rapidAllocator, object);
-    }
-    void jsonObject::Set(const std::string& label, bool value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetBool(value);
-        rapidValue.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
+    void json::Add(rapidjson::Document& node, const std::string& value) {
+		json::Add(node, rapidjson::Value{}.SetString(value.c_str(), value.length(), node.GetAllocator()));
 	}
-    void jsonObject::Set(const std::string& label, double value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetDouble(value);
-        rapidValue.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
+
+
+	
+    
+    std::string json::GetString(rapidjson::Value& node, const char* label) {
+        return node.GetObject()[label].GetString();
+    }
+    bool json::GetBool(rapidjson::Value& node, const char* label) {
+        return node.GetObject()[label].GetBool();
+    }
+    double json::GetDouble(rapidjson::Value& node, const char* label) {
+        return node.GetObject()[label].GetDouble();
+    }
+    uint32_t json::GetUint(rapidjson::Value& node, const char* label) {
+        return node.GetObject()[label].GetUint();
+    }
+    uint64_t json::GetUint64(rapidjson::Value& node, const char* label) {
+        return node.GetObject()[label].GetUint64();
+    }
+
+
+    void json::Set(rapidjson::Value& node, const std::string& label, rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
+        node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), allocator), value, allocator);
+    }
+    void json::Set(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator) {
+		json::Set(node, label, rapidjson::Value{}.SetString(value.c_str(), value.length(), allocator), allocator);
 	}
-    void jsonObject::Set(const std::string& label, uint32_t value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetUint(value);
-        rapidValue.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
+    void json::Set(rapidjson::Value& node, const std::string& label, bool value, rapidjson::Document::AllocatorType& allocator) {
+		json::Set(node, label, rapidjson::Value{}.SetBool(value), allocator);
+	}
+    void json::Set(rapidjson::Value& node, const std::string& label, double value, rapidjson::Document::AllocatorType& allocator) {
+		json::Set(node, label, rapidjson::Value{}.SetDouble(value), allocator);
+	}
+    void json::Set(rapidjson::Value& node, const std::string& label, uint32_t value, rapidjson::Document::AllocatorType& allocator) {
+		json::Set(node, label, rapidjson::Value{}.SetUint(value), allocator);
+	}
+    void json::Set(rapidjson::Value& node, const std::string& label, uint64_t value, rapidjson::Document::AllocatorType& allocator) {
+		json::Set(node, label, rapidjson::Value{}.SetUint64(value), allocator);
+	}
+    
+    
+    void json::Add(rapidjson::Value& node, rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
+        node.PushBack(value, allocator);
     }
-    void jsonObject::Set(const std::string& label, uint64_t value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetUint64(value);
-        rapidValue.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
-    }
-    void jsonObject::Set(const std::string& label, const std::string& value) {
-        auto rapidObjLabel = rapidjson::Value{}.SetString(label.c_str(), label.length(), rapidAllocator);
-        auto rapidObjValue = rapidjson::Value{}.SetString(value.c_str(), value.length(), rapidAllocator);
-        rapidValue.AddMember(rapidObjLabel, rapidObjValue, rapidAllocator);
+    void json::Add(rapidjson::Value& node, const std::string& value, rapidjson::Document::AllocatorType& allocator) {
+		json::Add(node, rapidjson::Value{}.SetString(value.c_str(), value.length(), allocator), allocator);
 	}
 
 
 
 
+	std::string json::ToString(const rapidjson::Document& document) {
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
 
-    jsonObject jsonArray::GetObject(rapidjson::SizeType index) {
-        if (index >= rapidValue.Size()) return NULL;
-        return jsonObject(rapidAllocator, rapidValue.GetArray()[index]);
-    }
-    jsonArray jsonArray::GetArray(rapidjson::SizeType index) {
-        if (index >= rapidValue.Size()) return NULL;
-        return jsonArray(rapidAllocator, rapidValue.GetArray()[index]);
-    }
-    bool jsonArray::GetBool(rapidjson::SizeType index) {
-        if (index >= rapidValue.Size()) return NULL;
-        return rapidValue.GetArray()[index].GetBool();
-    }
-    double jsonArray::GetDouble(rapidjson::SizeType index) {
-        if (index >= rapidValue.Size()) return NULL;
-        return rapidValue.GetArray()[index].GetDouble();
-    }
-    uint32_t jsonArray::GetUint(rapidjson::SizeType index) {
-        if (index >= rapidValue.Size()) return NULL;
-        return rapidValue.GetArray()[index].GetUint();
-    }
-    uint64_t jsonArray::GetUint64(rapidjson::SizeType index) {
-        if (index >= rapidValue.Size()) return NULL;
-        return rapidValue.GetArray()[index].GetUint64();
-    }
-    std::string jsonArray::GetString(rapidjson::SizeType index) {
-        if (index >= rapidValue.Size()) return NULL;
-        return rapidValue.GetArray()[index].GetString();
-    }
-    jsonObject jsonArray::NewObject() {
-        rapidjson::Value object(rapidjson::kObjectType);
-        rapidValue.PushBack(value, rapidAllocator);
-        return jsonObject(rapidAllocator, value);
-    }
-    jsonArray jsonArray::NewArray() {
-        rapidjson::Value object(rapidjson::kArrayType);
-        rapidValue.PushBack(value, rapidAllocator);
-        return jsonArray(rapidAllocator, value);
-    }
-    void jsonArray::Add(bool value) {
-        auto rapidObjValue = rapidjson::Value{}.SetBool(value);
-        rapidValue.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonArray::Add(double value) {
-        auto rapidObjValue = rapidjson::Value{}.SetDouble(value);
-        rapidValue.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonArray::Add(uint32_t value) {
-        auto rapidObjValue = rapidjson::Value{}.SetUint(value);
-        rapidValue.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonArray::Add(uint64_t value) {
-        auto rapidObjValue = rapidjson::Value{}.SetUint64(value);
-        rapidValue.PushBack(rapidObjValue, rapidAllocator);
-    }
-    void jsonArray::Add(const std::string& value) {
-        auto rapidObjValue = rapidjson::Value{}.SetString(value.c_str(), value.length(), rapidAllocator);
-        rapidValue.PushBack(rapidObjValue, rapidAllocator);
-    }
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		document.Accept(writer);
+
+		return buffer.GetString();
+	}
 }

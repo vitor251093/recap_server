@@ -142,71 +142,73 @@ namespace Game {
 		}
 	}
 
-	void Account::ReadJson(utils::jsonObject& object) { 
-		tutorialCompleted       = object.GetBool("tutorial_completed");
-		chainProgression        = object.GetUint("chain_progression");
-		creatureRewards         = object.GetUint("creature_rewards");
-		currentGameId           = object.GetUint("current_game_id");
-		currentPlaygroupId      = object.GetUint("current_playgroup_id");
-		defaultDeckPveId        = object.GetUint("default_deck_pve_id");
-		defaultDeckPvpId        = object.GetUint("default_deck_pvp_id");
-		level                   = object.GetUint("level");
-		avatarId                = object.GetUint("avatar_id");
-		id                      = object.GetUint("id");
-		dna                     = object.GetUint("dna");
-		newPlayerInventory      = object.GetUint("new_player_inventory");
-		newPlayerProgress       = object.GetUint("new_player_progress");
-		cashoutBonusTime        = object.GetUint("cashout_bonus_time");
-		starLevel               = object.GetUint("star_level");
-		unlockCatalysts         = object.GetUint("unlock_catalysts");
-		unlockDiagonalCatalysts = object.GetUint("unlock_diagonal_catalysts");
-		unlockFuelTanks         = object.GetUint("unlock_fuel_tanks");
-		unlockInventoryIdentify = object.GetUint("unlock_inventory");
-		unlockPveDecks          = object.GetUint("unlock_pve_decks");
-		unlockPvpDecks          = object.GetUint("unlock_pvp_decks");
-		unlockStats             = object.GetUint("unlock_stats");
-		unlockInventoryIdentify = object.GetUint("unlock_inventory_identify");
-		unlockEditorFlairSlots  = object.GetUint("unlock_editor_flair_slots");
-		upsell                  = object.GetUint("upsell");
-		xp                      = object.GetUint("xp");
-		grantAllAccess          = object.GetBool("grant_all_access");
-		grantOnlineAccess       = object.GetBool("grant_online_access");
-		capLevel                = object.GetUint("cap_level");
-		capProgression          = object.GetUint("cap_progression");
+	void Account::ReadJson(rapidjson::Value& object) { 
+		tutorialCompleted       = object.GetObject()["tutorial_completed"        ].GetBool();
+		chainProgression        = object.GetObject()["chain_progression"         ].GetUint();
+		creatureRewards         = object.GetObject()["creature_rewards"          ].GetUint();
+		currentGameId           = object.GetObject()["current_game_id"           ].GetUint();
+		currentPlaygroupId      = object.GetObject()["current_playgroup_id"      ].GetUint();
+		defaultDeckPveId        = object.GetObject()["default_deck_pve_id"       ].GetUint();
+		defaultDeckPvpId        = object.GetObject()["default_deck_pvp_id"       ].GetUint();
+		level                   = object.GetObject()["level"                     ].GetUint();
+		avatarId                = object.GetObject()["avatar_id"                 ].GetUint();
+		id                      = object.GetObject()["id"                        ].GetUint();
+		dna                     = object.GetObject()["dna"                       ].GetUint();
+		newPlayerInventory      = object.GetObject()["new_player_inventory"      ].GetUint();
+		newPlayerProgress       = object.GetObject()["new_player_progress"       ].GetUint();
+		cashoutBonusTime        = object.GetObject()["cashout_bonus_time"        ].GetUint();
+		starLevel               = object.GetObject()["star_level"                ].GetUint();
+		unlockCatalysts         = object.GetObject()["unlock_catalysts"          ].GetUint();
+		unlockDiagonalCatalysts = object.GetObject()["unlock_diagonal_catalysts" ].GetUint();
+		unlockFuelTanks         = object.GetObject()["unlock_fuel_tanks"         ].GetUint();
+		unlockInventoryIdentify = object.GetObject()["unlock_inventory"          ].GetUint();
+		unlockPveDecks          = object.GetObject()["unlock_pve_decks"          ].GetUint();
+		unlockPvpDecks          = object.GetObject()["unlock_pvp_decks"          ].GetUint();
+		unlockStats             = object.GetObject()["unlock_stats"              ].GetUint();
+		unlockInventoryIdentify = object.GetObject()["unlock_inventory_identify" ].GetUint();
+		unlockEditorFlairSlots  = object.GetObject()["unlock_editor_flair_slots" ].GetUint();
+		upsell                  = object.GetObject()["upsell"                    ].GetUint();
+		xp                      = object.GetObject()["xp"                        ].GetUint();
+		grantAllAccess          = object.GetObject()["grant_all_access"          ].GetBool();
+		grantOnlineAccess       = object.GetObject()["grant_online_access"       ].GetBool();
+		capLevel                = object.GetObject()["cap_level"                 ].GetUint();
+		capProgression          = object.GetObject()["cap_progression"           ].GetUint();
 	}
 
-	void Account::WriteJson(utils::jsonObject& object) const { 
-		object.Set("tutorial_completed",        tutorialCompleted);
-		object.Set("chain_progression",         chainProgression);
-		object.Set("creature_rewards",          creatureRewards);
-		object.Set("current_game_id",           currentGameId);
-		object.Set("current_playgroup_id",      currentPlaygroupId);
-		object.Set("default_deck_pve_id",       defaultDeckPveId);
-		object.Set("default_deck_pvp_id",       defaultDeckPvpId);
-		object.Set("level",                     level);
-		object.Set("avatar_id",                 avatarId);
-		object.Set("blaze_id",                  id);
-		object.Set("id",                        id);
-		object.Set("dna",                       dna);
-		object.Set("new_player_inventory",      newPlayerInventory);
-		object.Set("new_player_progress",       newPlayerProgress);
-		object.Set("cashout_bonus_time",        cashoutBonusTime);
-		object.Set("star_level",                starLevel);
-		object.Set("unlock_catalysts",          unlockCatalysts);
-		object.Set("unlock_diagonal_catalysts", unlockDiagonalCatalysts);
-		object.Set("unlock_fuel_tanks",         unlockFuelTanks);
-		object.Set("unlock_inventory",          unlockInventoryIdentify);
-		object.Set("unlock_pve_decks",          unlockPveDecks);
-		object.Set("unlock_pvp_decks",          unlockPvpDecks);
-		object.Set("unlock_stats",              unlockStats);
-		object.Set("unlock_inventory_identify", unlockInventoryIdentify);
-		object.Set("unlock_editor_flair_slots", unlockEditorFlairSlots);
-		object.Set("upsell",                    upsell);
-		object.Set("xp",                        xp);
-		object.Set("grant_all_access",          grantAllAccess);
-		object.Set("grant_online_access",       grantOnlineAccess);
-		object.Set("cap_level",                 capLevel);
-		object.Set("cap_progression",           capProgression);
+	rapidjson::Value Account::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value object(rapidjson::kObjectType);
+		object.AddMember("tutorial_completed",        rapidjson::Value{}.SetBool(tutorialCompleted),       allocator);
+		object.AddMember("chain_progression",         rapidjson::Value{}.SetUint(chainProgression),        allocator);
+		object.AddMember("creature_rewards",          rapidjson::Value{}.SetUint(creatureRewards),         allocator);
+		object.AddMember("current_game_id",           rapidjson::Value{}.SetUint(currentGameId),           allocator);
+		object.AddMember("current_playgroup_id",      rapidjson::Value{}.SetUint(currentPlaygroupId),      allocator);
+		object.AddMember("default_deck_pve_id",       rapidjson::Value{}.SetUint(defaultDeckPveId),        allocator);
+		object.AddMember("default_deck_pvp_id",       rapidjson::Value{}.SetUint(defaultDeckPvpId),        allocator);
+		object.AddMember("level",                     rapidjson::Value{}.SetUint(level),                   allocator);
+		object.AddMember("avatar_id",                 rapidjson::Value{}.SetUint(avatarId),                allocator);
+		object.AddMember("blaze_id",                  rapidjson::Value{}.SetUint(id),                      allocator);
+		object.AddMember("id",                        rapidjson::Value{}.SetUint(id),                      allocator);
+		object.AddMember("dna",                       rapidjson::Value{}.SetUint(dna),                     allocator);
+		object.AddMember("new_player_inventory",      rapidjson::Value{}.SetUint(newPlayerInventory),      allocator);
+		object.AddMember("new_player_progress",       rapidjson::Value{}.SetUint(newPlayerProgress),       allocator);
+		object.AddMember("cashout_bonus_time",        rapidjson::Value{}.SetUint(cashoutBonusTime),        allocator);
+		object.AddMember("star_level",                rapidjson::Value{}.SetUint(starLevel),               allocator);
+		object.AddMember("unlock_catalysts",          rapidjson::Value{}.SetUint(unlockCatalysts),         allocator);
+		object.AddMember("unlock_diagonal_catalysts", rapidjson::Value{}.SetUint(unlockDiagonalCatalysts), allocator);
+		object.AddMember("unlock_fuel_tanks",         rapidjson::Value{}.SetUint(unlockFuelTanks),         allocator);
+		object.AddMember("unlock_inventory",          rapidjson::Value{}.SetUint(unlockInventoryIdentify), allocator);
+		object.AddMember("unlock_pve_decks",          rapidjson::Value{}.SetUint(unlockPveDecks),          allocator);
+		object.AddMember("unlock_pvp_decks",          rapidjson::Value{}.SetUint(unlockPvpDecks),          allocator);
+		object.AddMember("unlock_stats",              rapidjson::Value{}.SetUint(unlockStats),             allocator);
+		object.AddMember("unlock_inventory_identify", rapidjson::Value{}.SetUint(unlockInventoryIdentify), allocator);
+		object.AddMember("unlock_editor_flair_slots", rapidjson::Value{}.SetUint(unlockEditorFlairSlots),  allocator);
+		object.AddMember("upsell",                    rapidjson::Value{}.SetUint(upsell),                  allocator);
+		object.AddMember("xp",                        rapidjson::Value{}.SetUint(xp),                      allocator);
+		object.AddMember("grant_all_access",          rapidjson::Value{}.SetBool(grantAllAccess),          allocator);
+		object.AddMember("grant_online_access",       rapidjson::Value{}.SetBool(grantOnlineAccess),       allocator);
+		object.AddMember("cap_level",                 rapidjson::Value{}.SetUint(capLevel),                allocator);
+		object.AddMember("cap_progression",           rapidjson::Value{}.SetUint(capProgression),          allocator);
+		return object;
 	}
 
 
@@ -249,29 +251,30 @@ namespace Game {
 		}
 	}
 
-	void Feed::ReadJson(utils::jsonArray& array) {
+	void Feed::ReadJson(rapidjson::Value& object) {
 		mItems.clear();
-		for (auto& object : array) {
-			auto item = object.GetAsObject();
+		for (auto& item : object.GetArray()) {
 			decltype(auto) feedItem = mItems.emplace_back();
-			feedItem.accountId = item.GetUint("account_id");
-			feedItem.id        = item.GetUint("id");
-			feedItem.messageId = item.GetUint("message_id");
-			feedItem.metadata  = item.GetString("metadata");
-			feedItem.name      = item.GetString("name"); 
-			feedItem.timestamp = item.GetUint64("time");
+			feedItem.accountId = item.GetObject()["account_id"].GetUint();
+			feedItem.id        = item.GetObject()["id"].GetUint();
+			feedItem.messageId = item.GetObject()["message_id"].GetUint();
+			feedItem.metadata  = item.GetObject()["metadata"].GetString();
+			feedItem.name      = item.GetObject()["name"].GetString(); 
+			feedItem.timestamp = item.GetObject()["time"].GetUint64();
 		}
 	}
 
-	void Feed::WriteJson(utils::jsonArray& array) const {
+	rapidjson::Value Feed::WriteJson(rapidjson::Document::AllocatorType& allocator) const {
+		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& feedItem : mItems) {
-			auto object = array.NewObject();
-			object.Set("metadata",   feedItem.metadata);
-			object.Set("name",       feedItem.name);
-			object.Set("time",       feedItem.timestamp);
-			object.Set("account_id", feedItem.accountId);
-			object.Set("id",         feedItem.id);
-			object.Set("message_id", feedItem.messageId);
+			rapidjson::Value object(rapidjson::kObjectType);
+			utils::json::Set(object, "metadata", feedItem.metadata, allocator);
+			utils::json::Set(object, "name",     feedItem.name,     allocator);
+			object.AddMember("time",       rapidjson::Value{}.SetUint64(feedItem.timestamp), allocator);
+			object.AddMember("account_id", rapidjson::Value{}.SetUint(feedItem.accountId),   allocator);
+			object.AddMember("id",         rapidjson::Value{}.SetUint(feedItem.id),          allocator);
+			object.AddMember("message_id", rapidjson::Value{}.SetUint(feedItem.messageId),   allocator);
+			value.PushBack(object, allocator);
 		}		
 		return value;
 	}
@@ -351,46 +354,47 @@ namespace Game {
 		}
 	}
 
-	void Part::ReadJson(utils::jsonObject& object) {
-		flair                   = object.GetBool("is_flair");
-		cost                    = object.GetUint("cost");
-		equipped_to_creature_id = object.GetUint("creature_id");
-		level                   = object.GetUint("level");
-		market_status           = object.GetUint("market_status");
-		rarity                  = object.GetUint("rarity");
-		status                  = object.GetUint("status");
-		usage                   = object.GetUint("usage");
-		timestamp               = object.GetUint64("creation_date");
+	void Part::ReadJson(rapidjson::Value& object) {
+		flair                   = object.GetObject()["is_flair"     ].GetBool();
+		cost                    = object.GetObject()["cost"         ].GetUint();
+		equipped_to_creature_id = object.GetObject()["creature_id"  ].GetUint();
+		level                   = object.GetObject()["level"        ].GetUint();
+		market_status           = object.GetObject()["market_status"].GetUint();
+		rarity                  = object.GetObject()["rarity"       ].GetUint();
+		status                  = object.GetObject()["status"       ].GetUint();
+		usage                   = object.GetObject()["usage"        ].GetUint();
+		timestamp               = object.GetObject()["creation_date"].GetUint64();
 
-		SetRigblock(object.GetUint("rigblock_asset_id"        ));
-		SetPrefix(  object.GetUint("prefix_asset_id"          ), false);
-		SetPrefix(  object.GetUint("prefix_secondary_asset_id"), true);
-		SetSuffix(  object.GetUint("suffix_asset_id"          ));
+		SetRigblock(object.GetObject()["rigblock_asset_id"        ].GetUint());
+		SetPrefix(  object.GetObject()["prefix_asset_id"          ].GetUint(), false);
+		SetPrefix(  object.GetObject()["prefix_secondary_asset_id"].GetUint(), true);
+		SetSuffix(  object.GetObject()["suffix_asset_id"          ].GetUint());
 	}
 
-	void Part::WriteJson(utils::jsonObject& object, uint32_t index, bool api) const { 
-		object.Set("is_flair",         flair);
-		object.Set("cost",             cost);
-		object.Set("creature_id",      equipped_to_creature_id);
-		object.Set("level",            level);
-		object.Set("market_status",    market_status);
-		object.Set("rarity",           rarity);
-		object.Set("status",           status);
-		object.Set("usage",            usage);
-		object.Set("creation_date",  timestamp);
+	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const { 
+		rapidjson::Value object(rapidjson::kObjectType);
+		object.AddMember("is_flair",         rapidjson::Value{}.SetBool(flair),                   allocator);
+		object.AddMember("cost",             rapidjson::Value{}.SetUint(cost),                    allocator);
+		object.AddMember("creature_id",      rapidjson::Value{}.SetUint(equipped_to_creature_id), allocator);
+		object.AddMember("level",            rapidjson::Value{}.SetUint(level),                   allocator);
+		object.AddMember("market_status",    rapidjson::Value{}.SetUint(market_status),           allocator);
+		object.AddMember("rarity",           rapidjson::Value{}.SetUint(rarity),                  allocator);
+		object.AddMember("status",           rapidjson::Value{}.SetUint(status),                  allocator);
+		object.AddMember("usage",            rapidjson::Value{}.SetUint(usage),                   allocator);
+		object.AddMember("creation_date",    rapidjson::Value{}.SetUint64(timestamp),             allocator);
 		if (api) {
-            object.Set("id",           index);
-            object.Set("reference_id", index);
+            object.AddMember("id",           rapidjson::Value{}.SetUint(index),                   allocator);
+            object.AddMember("reference_id", rapidjson::Value{}.SetUint(index),                   allocator);
 
-            object.Set("rigblock_asset_id",         rigblock_asset_hash);
-            object.Set("prefix_asset_id",           prefix_asset_hash);
-            object.Set("prefix_secondary_asset_id", prefix_secondary_asset_hash);
-            object.Set("suffix_asset_id",           suffix_asset_hash);
+            object.AddMember("rigblock_asset_id",         rapidjson::Value{}.SetUint(rigblock_asset_hash),         allocator);
+            object.AddMember("prefix_asset_id",           rapidjson::Value{}.SetUint(prefix_asset_hash),           allocator);
+            object.AddMember("prefix_secondary_asset_id", rapidjson::Value{}.SetUint(prefix_secondary_asset_hash), allocator);
+            object.AddMember("suffix_asset_id",           rapidjson::Value{}.SetUint(suffix_asset_hash),           allocator);
         } else {
-            object.Set("rigblock_asset_id",         rigblock_asset_id);
-            object.Set("prefix_asset_id",           prefix_asset_id);
-            object.Set("prefix_secondary_asset_id", prefix_secondary_asset_id);
-            object.Set("suffix_asset_id",           suffix_asset_id);
+            object.AddMember("rigblock_asset_id",         rapidjson::Value{}.SetUint(rigblock_asset_id),           allocator);
+            object.AddMember("prefix_asset_id",           rapidjson::Value{}.SetUint(prefix_asset_id),             allocator);
+            object.AddMember("prefix_secondary_asset_id", rapidjson::Value{}.SetUint(prefix_secondary_asset_id),   allocator);
+            object.AddMember("suffix_asset_id",           rapidjson::Value{}.SetUint(suffix_asset_id),             allocator);
         }
         return object;
 	}
@@ -466,19 +470,21 @@ namespace Game {
 		}
 	}
 
-	void Parts::ReadJson(utils::jsonArray& object) {
+	void Parts::ReadJson(rapidjson::Value& object) {
 		mItems.clear();
-		for (auto& partNode : object) {
+		for (auto& partNode : object.GetArray()) {
 			decltype(auto) part = mItems.emplace_back();
-			part.ReadJson(partNode.GetAsObject());
+			part.ReadJson(partNode);
 		}
 	}
 
-	void Parts::WriteJson(utils::jsonArray& object, bool api) const { 
+	rapidjson::Value Parts::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const { 
+		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& part : mItems) {
             uint32_t index = 0;
-			part.WriteJson(object.NewObject(), ++index, api);
+			value.PushBack(part.WriteJson(allocator, ++index, api), allocator);
 		}
+		return value;
 	}
 
 
@@ -611,12 +617,12 @@ namespace Game {
 		return document;
 	}
 
-	rapidjson::Value User::ToJson(utils::jsonObject& object) {
-		object.Set("name",     mName);
-		object.Set("email",    mEmail);
-		object.Set("password", mPassword);
+	rapidjson::Value User::ToJson(rapidjson::Document::AllocatorType& allocator) {
+		rapidjson::Value object(rapidjson::kObjectType);
 		
-		  mAccount.WriteJson(object.NewObject("account"));
+		utils::json::Set(object, "name",     mName,     allocator);
+		utils::json::Set(object, "email",    mEmail,    allocator);
+		utils::json::Set(object, "password", mPassword, allocator);
 
 		object.AddMember("account",     mAccount.WriteJson(allocator), allocator);
 		object.AddMember("creatures", mCreatures.WriteJson(allocator), allocator);
@@ -627,10 +633,10 @@ namespace Game {
 		return object;
 	}
 
-	void User::FromJson(utils::jsonObject& object) {
-		mName     = object.GetString("name");
-		mEmail    = object.GetObject("email");
-		mPassword = object.GetObject("password");
+	void User::FromJson(rapidjson::Document& object) {
+		mName     = object.GetObject()["name"].GetString();
+		mEmail    = object.GetObject()["email"].GetString();
+		mPassword = object.GetObject()["password"].GetString();
 
 		  mAccount.ReadJson(object.GetObject()["account"]);
 		mCreatures.ReadJson(object.GetObject()["creatures"]);

@@ -67,13 +67,6 @@ namespace utils {
 			str.replace(position, old_str.length(), new_str);
 		}
 	}
-	void string_replace_all(std::string& str, const std::string& old_str, const std::string& new_str) {
-		auto position = str.find(old_str);
-		while (position != std::string::npos) {
-			str.replace(position, old_str.length(), new_str);
-			position = str.find(old_str);
-		}
-	}
 
 	std::vector<std::string> explode_string(const std::string& str, char delim, int32_t limit) {
 		return detail::explode_string<const std::string&, char>(str, delim, limit);

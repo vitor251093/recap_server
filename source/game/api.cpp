@@ -224,7 +224,7 @@ namespace Game {
 					mActiveTheme + "/index.html";
 
 				std::string client_script(dlsClientScript);
-				utils::string_replace_all(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+				utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 
 				std::string file_data = utils::get_file_text(path);
 				utils::string_replace(file_data, "</head>", client_script + "</head>");
@@ -255,11 +255,11 @@ namespace Game {
 				Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH);
 
 			std::string file_data = utils::get_file_text(path);
-			utils::string_replace_all(file_data, "{{dls-version}}", "0.1");
-			utils::string_replace_all(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
-			utils::string_replace_all(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
-			utils::string_replace_all(file_data, "{{display-latest-version}}", "none");
-			utils::string_replace_all(file_data, "{{latest-version}}", "yes");
+			utils::string_replace(file_data, "{{dls-version}}", "0.1");
+			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
+			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
+			utils::string_replace(file_data, "{{display-latest-version}}", "none");
+			utils::string_replace(file_data, "{{latest-version}}", "yes");
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
@@ -430,8 +430,8 @@ version = 1
 			
 			std::string file_data = utils::get_html_file_for_darkspore_webkit(path, contentsFolder);
 
-			utils::string_replace_all(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-			utils::string_replace_all(file_data, "{{isDev}}", "true");
+			utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+			utils::string_replace(file_data, "{{isDev}}", "true");
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
@@ -498,34 +498,41 @@ version = 1
 
 		mActiveTheme = themeName;
 		
-		auto doc = utils::jsonDocumentObject();
-		doc.Set("stat", "ok");
+		rapidjson::Document document = utils::json::NewDocumentObject();
+		
+		// stat
+		utils::json::Set(document, "stat", "ok");
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = doc.ToString();
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
-		auto doc = utils::jsonDocumentObject();
-		doc.Set("stat", "ok");
+		rapidjson::Document document = utils::json::NewDocumentObject();
+
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+		// stat
+		utils::json::Set(document, "stat", "ok");
 		
 		// themes
 		{
 			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) +
 					"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
-			auto value = doc.NewArray("themes");
+			rapidjson::Value value = utils::json::NewArray();
 			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath)) {
 				if (entry.is_directory()) {
-					value.Add(entry.path().filename().string());
+					utils::json::Add(value, entry.path().filename().string(), allocator);
 				}
 			}
+			utils::json::Set(document, "themes", value);
 		}
 
 		// selectedTheme
-		doc.Set("selectedTheme", mActiveTheme);
-		
+		utils::json::Set(document, "selectedTheme", mActiveTheme);
+
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = doc.ToString();
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_registration(HTTP::Session& session, HTTP::Response& response) {
@@ -536,15 +543,14 @@ version = 1
 
 		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
 
-		auto doc = utils::jsonDocumentObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
-			doc.Set("stat", "error");
-		}
-		else {
-			doc.Set("stat", "ok");
+			utils::json::Set(document, "stat", "error");
+		} else {
+			utils::json::Set(document, "stat", "ok");
 		}
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = doc.ToString();
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_log(HTTP::Session& session, HTTP::Response& response) {
@@ -554,21 +560,28 @@ version = 1
 	}
 
 	void API::dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
-		auto doc = utils::jsonDocumentObject();
-		doc.Set("stat", "ok");
+		rapidjson::Document document = utils::json::NewDocumentObject();
+
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+		// stat
+		utils::json::Set(document, "stat", "ok");
 		
 		const auto users = Game::UserManager::GetAllUserNames();
 		const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
-		auto value = doc.NewArray("users");
+		rapidjson::Value value = utils::json::NewArray();
 		for (const auto & entry : users) {
 			bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
-			auto object = value.NewObject();
-			object.Set("email", entry);
-			object.Set("logged", isLogged);
+			
+			rapidjson::Value object = utils::json::NewObject();
+			utils::json::Set(object, "email", entry, allocator);
+			utils::json::Set(object, "logged", isLogged, allocator);
+			utils::json::Add(value, object, allocator);
 		}
+		utils::json::Set(document, "users", value);
 		
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = doc.ToString();
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
@@ -577,38 +590,51 @@ version = 1
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 
-		auto doc = utils::jsonDocumentObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
+
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
 		if (user == NULL) {
-			doc.Set("stat", "error");
+			// stat
+			utils::json::Set(document, "stat", "error");
 		}
 		else {
-			doc.Set("stat", "ok");
-			user->ToJson(doc.NewObject("user"));
+			// stat
+			rapidjson::Value users = user->ToJson(allocator);
+			utils::json::Set(document, "stat", "ok");
+			utils::json::Set(document, "user", users);
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = doc.ToString();
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
-		auto postBody = request.data.body();
+		auto mail = request.uri.parameter("mail");
+		auto userJsonString = request.uri.parameter("user");
 
-		auto postJson = utils::jsonDocumentObject(postBody);
-		auto mail = postJson.GetString("mail");
+		rapidjson::Document userJson = utils::json::Parse(userJsonString);
+
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
-		auto doc = utils::jsonDocumentObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
+
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
 		if (user == NULL) {
-			doc.Set("stat", "error");
+			// stat
+			utils::json::Set(document, "stat", "error");
 		}
 		else {
-			user->FromJson(postJson.GetObject("user"));
-			doc.Set("stat", "ok");
+			user->FromJson(userJson);
+			
+			// stat
+			utils::json::Set(document, "stat", "ok");
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = doc.ToString();
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {

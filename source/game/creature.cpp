@@ -43,34 +43,36 @@ namespace Game {
 		}
 	}
 
-	void Creature::ReadJson(utils::jsonObject& object) {
-		name         = object.GetString("name");
-		nameLocaleId = object.GetString("name_locale_id");
-		elementType  = object.GetString("type_a");
-		classType    = object.GetString("class");
-		pngLargeUrl  = object.GetString("png_large_url");
-		pngThumbUrl  = object.GetString("png_thumb_url");
+	void Creature::ReadJson(rapidjson::Value& object) {
+		name         = utils::json::GetString(object, "name");
+		nameLocaleId = utils::json::GetString(object, "name_locale_id");
+		elementType  = utils::json::GetString(object, "type_a");
+		classType    = utils::json::GetString(object, "class");
+		pngLargeUrl  = utils::json::GetString(object, "png_large_url");
+		pngThumbUrl  = utils::json::GetString(object, "png_thumb_url");
 
-		gearScore    = object.GetDouble("gear_score");
-		itemPoints   = object.GetDouble("item_points");
+		gearScore    = utils::json::GetDouble(object, "gear_score");
+		itemPoints   = utils::json::GetDouble(object, "item_points");
 
-		id      = object.GetUint("id");
-		nounId  = object.GetUint64("noun_id");
-		version = object.GetUint("version");
+		id      = utils::json::GetUint(object, "id");
+		nounId  = utils::json::GetUint64(object, "noun_id");
+		version = utils::json::GetUint(object, "version");
 	}
 
-	void Creature::WriteJson(utils::jsonObject& object) const { 
-		object.Set("name",           name        );
-		object.Set("name_locale_id", nameLocaleId);
-		object.Set("type_a",         elementType );
-		object.Set("class",          classType   );
-		object.Set("png_large_url",  pngLargeUrl );
-		object.Set("png_thumb_url",  pngThumbUrl );
-		object.Set("gear_score",     gearScore   );
-		object.Set("item_points",    itemPoints  );
-		object.Set("noun_id",        nounId      );
-		object.Set("id",             id          );
-		object.Set("version",        version     );
+	rapidjson::Value Creature::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value object(rapidjson::kObjectType);
+		utils::json::Set(object, "name",           name,         allocator);
+		utils::json::Set(object, "name_locale_id", nameLocaleId, allocator);
+		utils::json::Set(object, "type_a",         elementType,  allocator);
+		utils::json::Set(object, "class",          classType,    allocator);
+		utils::json::Set(object, "png_large_url",  pngLargeUrl,  allocator);
+		utils::json::Set(object, "png_thumb_url",  pngThumbUrl,  allocator);
+		utils::json::Set(object, "gear_score",     gearScore,    allocator);
+		utils::json::Set(object, "item_points",    itemPoints,   allocator);
+		utils::json::Set(object, "noun_id",        nounId,       allocator);
+		utils::json::Set(object, "id",             id,           allocator);
+		utils::json::Set(object, "version",        version,      allocator);
+		return object;
 	}
 
 
@@ -96,18 +98,21 @@ namespace Game {
 		}
 	}
 
-	void Creatures::ReadJson(utils::jsonArray& object) {
+	void Creatures::ReadJson(rapidjson::Value& object) {
 		mCreatures.clear();
-		for (auto& creatureNode : object) {
+		for (auto& creatureNode : object.GetArray()) {
 			decltype(auto) creature = mCreatures.emplace_back();
-			creature.ReadJson(creatureNode.GetAsObject());
+			creature.ReadJson(creatureNode);
 		}
 	}
 
-	void Creatures::WriteJson(utils::jsonArray& object) const { 
+	rapidjson::Value Creatures::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
+		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto& creature : mCreatures) {
-			creature.WriteJson(object.NewObject());
+			rapidjson::Value creatureNode = creature.WriteJson(allocator);
+			utils::json::Add(value, creatureNode, allocator);
 		}
+		return value;
 	}
 
 	void Creatures::Add(uint32_t templateId) {
