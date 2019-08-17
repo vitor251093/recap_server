@@ -37,8 +37,11 @@ namespace utils {
 
 
 
-    rapidjson::Value json::Get(rapidjson::Document& node, const char* label) {
-        if (!node.GetObject().HasMember(label)) return json::Null();
+    rapidjson::Value& json::Get(rapidjson::Document& node, const char* label) {
+        if (node.GetObject().HasMember(label)) {
+			rapidjson::Value null = json::Null();
+			return null;
+		}
         return node.GetObject()[label];
     }
     std::string json::GetString(rapidjson::Document& node, const char* label) {
@@ -107,8 +110,11 @@ namespace utils {
 
 	
     
-    rapidjson::Value json::Get(rapidjson::Value& node, const char* label) {
-        if (!node.GetObject().HasMember(label)) return json::Null();
+    rapidjson::Value& json::Get(rapidjson::Value& node, const char* label) {
+		if (!node.GetObject().HasMember(label)) {
+			rapidjson::Value null = json::Null();
+			return null;
+		}
         return node.GetObject()[label];
     }
     std::string json::GetString(rapidjson::Value& node, const char* label) {

@@ -625,11 +625,17 @@ namespace Game {
 		utils::json::Set(object, "email",    mEmail,    allocator);
 		utils::json::Set(object, "password", mPassword, allocator);
 
-		utils::json::Set(object, "account",     mAccount.WriteJson(allocator), allocator);
-		utils::json::Set(object, "creatures", mCreatures.WriteJson(allocator), allocator);
-		utils::json::Set(object, "squads",       mSquads.WriteJson(allocator), allocator);
-		utils::json::Set(object, "feed",           mFeed.WriteJson(allocator), allocator);
-		utils::json::Set(object, "parts",         mParts.WriteJson(allocator), allocator);
+		rapidjson::Value account   =   mAccount.WriteJson(allocator);
+		rapidjson::Value creatures = mCreatures.WriteJson(allocator);
+		rapidjson::Value squads    =    mSquads.WriteJson(allocator);
+		rapidjson::Value feed      =      mFeed.WriteJson(allocator);
+		rapidjson::Value parts     =     mParts.WriteJson(allocator);
+
+		utils::json::Set(object, "account",   account,   allocator);
+		utils::json::Set(object, "creatures", creatures, allocator);
+		utils::json::Set(object, "squads",    squads,    allocator);
+		utils::json::Set(object, "feed",      feed,      allocator);
+		utils::json::Set(object, "parts",     parts,     allocator);
 
 		return object;
 	}
@@ -639,11 +645,11 @@ namespace Game {
 		mEmail    = utils::json::GetString(object, "email");
 		mPassword = utils::json::GetString(object, "password");
 
-		  mAccount.ReadJson(utils::json::Get(object, "account");
-		mCreatures.ReadJson(utils::json::Get(object, "creatures");
-		   mSquads.ReadJson(utils::json::Get(object, "squads");
-		     mFeed.ReadJson(utils::json::Get(object, "feed");
-		    mParts.ReadJson(utils::json::Get(object, "parts");
+		  mAccount.ReadJson(utils::json::Get(object, "account"));
+		mCreatures.ReadJson(utils::json::Get(object, "creatures"));
+		   mSquads.ReadJson(utils::json::Get(object, "squads"));
+		     mFeed.ReadJson(utils::json::Get(object, "feed"));
+		    mParts.ReadJson(utils::json::Get(object, "parts"));
 	}
 
 	// UserManager
