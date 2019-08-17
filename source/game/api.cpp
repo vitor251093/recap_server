@@ -498,9 +498,8 @@ version = 1
 
 		mActiveTheme = themeName;
 		
-		rapidjson::Document document;
-		document.SetObject();
-
+		rapidjson::Document document = utils::json::NewDocumentObject();
+		
 		// stat
 		utils::json::Set(document, "stat", "ok");
 
@@ -509,8 +508,7 @@ version = 1
 	}
 
 	void API::dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
@@ -524,8 +522,7 @@ version = 1
 			rapidjson::Value value = utils::json::NewArray();
 			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath)) {
 				if (entry.is_directory()) {
-					value.PushBack(rapidjson::Value{}.SetString(entry.path().filename().string().c_str(), 
-														    	entry.path().filename().string().length(), allocator), allocator);
+					utils::json::Add(value, entry.path().filename().string(), allocator);
 				}
 			}
 			utils::json::Set(document, "themes", value);
@@ -546,8 +543,7 @@ version = 1
 
 		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
 
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
 			utils::json::Set(document, "stat", "error");
 		} else {
@@ -564,8 +560,7 @@ version = 1
 	}
 
 	void API::dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
@@ -578,10 +573,10 @@ version = 1
 		for (const auto & entry : users) {
 			bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
 			
-			rapidjson::Value object(rapidjson::kObjectType);
-			object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
-			object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
-			value.PushBack(object, allocator);
+			rapidjson::Value object = utils::json::NewObject();
+			utils::json::Set(object, "email", entry, allocator);
+			utils::json::Set(object, "logged", isLogged, allocator);
+			utils::json::Add(value, object, allocator);
 		}
 		utils::json::Set(document, "users", value);
 		
@@ -595,8 +590,7 @@ version = 1
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
@@ -625,8 +619,7 @@ version = 1
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
