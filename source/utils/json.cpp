@@ -53,6 +53,14 @@ namespace utils {
         if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetDouble();
     }
+    uint8_t json::GetUint8(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
+        return node.GetObject()[label].GetUint();
+    }
+    uint16_t json::GetUint16(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
+        return node.GetObject()[label].GetUint();
+    }
     uint32_t json::GetUint(rapidjson::Document& node, const char* label) {
         if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetUint();
@@ -74,6 +82,12 @@ namespace utils {
 	}
     void json::Set(rapidjson::Document& node, const std::string& label, double value) {
 		json::Set(node, label, rapidjson::Value{}.SetDouble(value));
+	}
+    void json::Set(rapidjson::Document& node, const std::string& label, uint8_t value) {
+		json::Set(node, label, rapidjson::Value{}.SetUint(value));
+	}
+    void json::Set(rapidjson::Document& node, const std::string& label, uint16_t value) {
+		json::Set(node, label, rapidjson::Value{}.SetUint(value));
 	}
     void json::Set(rapidjson::Document& node, const std::string& label, uint32_t value) {
 		json::Set(node, label, rapidjson::Value{}.SetUint(value));
@@ -109,6 +123,14 @@ namespace utils {
         if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetDouble();
     }
+    uint8_t json::GetUint8(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
+        return node.GetObject()[label].GetUint();
+    }
+    uint16_t json::GetUint16(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
+        return node.GetObject()[label].GetUint();
+    }
     uint32_t json::GetUint(rapidjson::Value& node, const char* label) {
         if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetUint();
@@ -130,6 +152,12 @@ namespace utils {
 	}
     void json::Set(rapidjson::Value& node, const std::string& label, double value, rapidjson::Document::AllocatorType& allocator) {
 		json::Set(node, label, rapidjson::Value{}.SetDouble(value), allocator);
+	}
+    void json::Set(rapidjson::Value& node, const std::string& label, uint8_t value, rapidjson::Document::AllocatorType& allocator) {
+		json::Set(node, label, rapidjson::Value{}.SetUint(value), allocator);
+	}
+    void json::Set(rapidjson::Value& node, const std::string& label, uint16_t value, rapidjson::Document::AllocatorType& allocator) {
+		json::Set(node, label, rapidjson::Value{}.SetUint(value), allocator);
 	}
     void json::Set(rapidjson::Value& node, const std::string& label, uint32_t value, rapidjson::Document::AllocatorType& allocator) {
 		json::Set(node, label, rapidjson::Value{}.SetUint(value), allocator);

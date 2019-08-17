@@ -358,17 +358,17 @@ namespace Game {
 		flair                   = utils::json::GetBool(object, "is_flair");
 		cost                    = utils::json::GetUint(object, "cost");
 		equipped_to_creature_id = utils::json::GetUint(object, "creature_id");
-		level                   = utils::json::GetUint(object, "level");
-		market_status           = utils::json::GetUint(object, "market_status");
-		rarity                  = utils::json::GetUint(object, "rarity");
-		status                  = utils::json::GetUint(object, "status");
-		usage                   = utils::json::GetUint(object, "usage");
+		level                   = utils::json::GetUint16(object, "level");
+		market_status           = utils::json::GetUint8(object, "market_status");
+		rarity                  = utils::json::GetUint8(object, "rarity");
+		status                  = utils::json::GetUint8(object, "status");
+		usage                   = utils::json::GetUint8(object, "usage");
 		timestamp               = utils::json::GetUint64(object, "creation_date");
 
-		SetRigblock(utils::json::GetUint(object, "rigblock_asset_id"));
-		SetPrefix(  utils::json::GetUint(object, "prefix_asset_id"), false);
-		SetPrefix(  utils::json::GetUint(object, "prefix_secondary_asset_id"), true);
-		SetSuffix(  utils::json::GetUint(object, "suffix_asset_id"));
+		SetRigblock(utils::json::GetUint16(object, "rigblock_asset_id"));
+		SetPrefix(  utils::json::GetUint16(object, "prefix_asset_id"), false);
+		SetPrefix(  utils::json::GetUint16(object, "prefix_secondary_asset_id"), true);
+		SetSuffix(  utils::json::GetUint16(object, "suffix_asset_id"));
 	}
 
 	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const { 
