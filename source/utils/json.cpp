@@ -21,6 +21,10 @@ namespace utils {
     }
 
 
+    rapidjson::Value json::Null() {
+        rapidjson::Value value(rapidjson::kNullType);
+        return value;
+    }
     rapidjson::Value json::NewObject() {
         rapidjson::Value value(rapidjson::kObjectType);
         return value;
@@ -33,19 +37,28 @@ namespace utils {
 
 
 
+    rapidjson::Value json::Get(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return json::Null();
+        return node.GetObject()[label];
+    }
     std::string json::GetString(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return "";
         return node.GetObject()[label].GetString();
     }
     bool json::GetBool(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return false;
         return node.GetObject()[label].GetBool();
     }
     double json::GetDouble(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetDouble();
     }
     uint32_t json::GetUint(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetUint();
     }
     uint64_t json::GetUint64(rapidjson::Document& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetUint64();
     }
 
@@ -80,19 +93,28 @@ namespace utils {
 
 	
     
+    rapidjson::Value json::Get(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return json::Null();
+        return node.GetObject()[label];
+    }
     std::string json::GetString(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return "";
         return node.GetObject()[label].GetString();
     }
     bool json::GetBool(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return false;
         return node.GetObject()[label].GetBool();
     }
     double json::GetDouble(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetDouble();
     }
     uint32_t json::GetUint(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetUint();
     }
     uint64_t json::GetUint64(rapidjson::Value& node, const char* label) {
+        if (!node.GetObject().HasMember(label)) return 0;
         return node.GetObject()[label].GetUint64();
     }
 

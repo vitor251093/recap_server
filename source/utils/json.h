@@ -16,9 +16,11 @@ namespace utils {
         rapidjson::Document Parse(const std::string& contents);
         rapidjson::Document NewDocumentObject();
         
+        rapidjson::Value Null();
         rapidjson::Value NewObject();
         rapidjson::Value NewArray();
 
+        rapidjson::Value Get(rapidjson::Document& node, const char* label);
         std::string GetString(rapidjson::Document& node, const char* label);
         bool        GetBool(  rapidjson::Document& node, const char* label);
         double      GetDouble(rapidjson::Document& node, const char* label);
@@ -35,6 +37,7 @@ namespace utils {
         void Add(rapidjson::Document& node, rapidjson::Value& value);
         void Add(rapidjson::Document& node, const std::string& value);
 
+        rapidjson::Value Get(rapidjson::Value& node, const char* label);
         std::string GetString(rapidjson::Value& node, const char* label);
         bool        GetBool(  rapidjson::Value& node, const char* label);
         double      GetDouble(rapidjson::Value& node, const char* label);

@@ -60,7 +60,7 @@ namespace Game {
 	}
 
 	rapidjson::Value Creature::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
-		rapidjson::Value object(rapidjson::kObjectType);
+		rapidjson::Value object = utils::json::NewObject();
 		utils::json::Set(object, "name",           name,         allocator);
 		utils::json::Set(object, "name_locale_id", nameLocaleId, allocator);
 		utils::json::Set(object, "type_a",         elementType,  allocator);
@@ -107,7 +107,7 @@ namespace Game {
 	}
 
 	rapidjson::Value Creatures::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
-		rapidjson::Value value(rapidjson::kArrayType);
+		rapidjson::Value value = utils::json::NewArray();
 		for (const auto& creature : mCreatures) {
 			rapidjson::Value creatureNode = creature.WriteJson(allocator);
 			utils::json::Add(value, creatureNode, allocator);
