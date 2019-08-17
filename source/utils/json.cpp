@@ -33,6 +33,23 @@ namespace utils {
 
 
 
+    std::string json::GetString(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetString();
+    }
+    bool json::GetBool(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetBool();
+    }
+    double json::GetDouble(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetDouble();
+    }
+    uint32_t json::GetUint(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetUint();
+    }
+    uint64_t json::GetUint64(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetUint64();
+    }
+
+
     void json::Set(rapidjson::Document& node, const std::string& label, rapidjson::Value& value) {
         node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), node.GetAllocator()), value, node.GetAllocator());
     }
@@ -63,6 +80,23 @@ namespace utils {
 
 	
     
+    std::string json::GetString(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetString();
+    }
+    bool json::GetBool(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetBool();
+    }
+    double json::GetDouble(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetDouble();
+    }
+    uint32_t json::GetUint(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetUint();
+    }
+    uint64_t json::GetUint64(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
+        return node.GetObject()[label].GetUint64();
+    }
+
+
     void json::Set(rapidjson::Value& node, const std::string& label, rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
         node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), allocator), value, allocator);
     }
