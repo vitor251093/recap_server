@@ -612,8 +612,9 @@ version = 1
 	void API::dls_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
-		auto userJsonString = request.uri.parameter("user");
-
+		auto userJsonString = request.data.body();
+		
+		std::cout << userJsonString << std::endl;
 		rapidjson::Document userJson = utils::json::Parse(userJsonString);
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
