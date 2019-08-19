@@ -44,6 +44,7 @@ namespace Game {
 	}
 
 	void Creature::ReadJson(rapidjson::Value& object) {
+		if (!object.IsObject()) return;
 		name         = utils::json::GetString(object, "name");
 		nameLocaleId = utils::json::GetString(object, "name_locale_id");
 		elementType  = utils::json::GetString(object, "type_a");
@@ -99,6 +100,7 @@ namespace Game {
 	}
 
 	void Creatures::ReadJson(rapidjson::Value& object) {
+		if (!object.IsArray()) return;
 		mCreatures.clear();
 		for (auto& creatureNode : object.GetArray()) {
 			decltype(auto) creature = mCreatures.emplace_back();

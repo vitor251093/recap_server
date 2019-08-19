@@ -143,6 +143,7 @@ namespace Game {
 	}
 
 	void Account::ReadJson(rapidjson::Value& object) { 
+		if (!object.IsObject()) return;
 		tutorialCompleted       = utils::json::GetBool(object, "tutorial_completed");
 		chainProgression        = utils::json::GetUint(object, "chain_progression");
 		creatureRewards         = utils::json::GetUint(object, "creature_rewards");
@@ -252,6 +253,7 @@ namespace Game {
 	}
 
 	void Feed::ReadJson(rapidjson::Value& object) {
+		if (!object.IsArray()) return;
 		mItems.clear();
 		for (auto& item : object.GetArray()) {
 			decltype(auto) feedItem = mItems.emplace_back();
@@ -355,6 +357,7 @@ namespace Game {
 	}
 
 	void Part::ReadJson(rapidjson::Value& object) {
+		if (!object.IsObject()) return;
 		flair                   = utils::json::GetBool(object, "is_flair");
 		cost                    = utils::json::GetUint(object, "cost");
 		equipped_to_creature_id = utils::json::GetUint(object, "creature_id");
@@ -471,6 +474,7 @@ namespace Game {
 	}
 
 	void Parts::ReadJson(rapidjson::Value& object) {
+		if (!object.IsArray()) return;
 		mItems.clear();
 		for (auto& partNode : object.GetArray()) {
 			decltype(auto) part = mItems.emplace_back();
@@ -641,6 +645,7 @@ namespace Game {
 	}
 
 	void User::FromJson(rapidjson::Document& object) {
+		if (!object.IsObject()) return;
 		mName     = utils::json::GetString(object, "name");
 		mEmail    = utils::json::GetString(object, "email");
 		mPassword = utils::json::GetString(object, "password");

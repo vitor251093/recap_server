@@ -35,6 +35,7 @@ namespace Game {
 	}
 
 	void Squad::ReadJson(rapidjson::Value& object) {
+		if (!object.IsObject()) return;
 		name     = utils::json::GetString(object, "name");
 		category = utils::json::GetString(object, "category");
 		id       = utils::json::GetUint(object, "id");
@@ -74,6 +75,7 @@ namespace Game {
 	}
 
 	void Squads::ReadJson(rapidjson::Value& object) {
+		if (!object.IsArray()) return;
 		mSquads.clear();
 		for (auto& squadNode : object.GetArray()) {
 			decltype(auto) squad = mSquads.emplace_back();
