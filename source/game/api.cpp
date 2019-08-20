@@ -629,6 +629,7 @@ version = 1
 		}
 		else {
 			user->FromJson(userJson);
+			user->Save();
 			
 			// stat
 			utils::json::Set(document, "stat", "ok");
