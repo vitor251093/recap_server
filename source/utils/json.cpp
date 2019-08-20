@@ -38,7 +38,7 @@ namespace utils {
 
 
     rapidjson::Value& json::Get(rapidjson::Document& node, const char* label) {
-        if (node.GetObject().HasMember(label)) {
+        if (!node.GetObject().HasMember(label)) {
 			rapidjson::Value null = json::Null();
 			return null;
 		}

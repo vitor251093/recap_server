@@ -143,7 +143,6 @@ namespace Game {
 	}
 
 	void Account::ReadJson(rapidjson::Value& object) { 
-		if (!object.IsObject()) return;
 		tutorialCompleted       = utils::json::GetBool(object, "tutorial_completed");
 		chainProgression        = utils::json::GetUint(object, "chain_progression");
 		creatureRewards         = utils::json::GetUint(object, "creature_rewards");
@@ -645,7 +644,6 @@ namespace Game {
 	}
 
 	void User::FromJson(rapidjson::Document& object) {
-		if (!object.IsObject()) return;
 		mName     = utils::json::GetString(object, "name");
 		mEmail    = utils::json::GetString(object, "email");
 		mPassword = utils::json::GetString(object, "password");
