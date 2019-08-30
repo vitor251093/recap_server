@@ -41,6 +41,7 @@ namespace Game {
 		id       = utils::json::GetUint(object, "id");
 		slot     = utils::json::GetUint(object, "slot");
 		locked   = utils::json::GetBool(object, "locked");
+		creatures.ReadJson(utils::json::Get(object, "creatures"));
 	}
 
 	rapidjson::Value Squad::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
@@ -50,6 +51,9 @@ namespace Game {
 		utils::json::Set(object, "id",       id,       allocator);
 		utils::json::Set(object, "slot",     slot,     allocator);
 		utils::json::Set(object, "locked",   locked,   allocator);
+		
+		rapidjson::Value creaturesJson = creatures.WriteJson(allocator);
+		utils::json::Set(object, "creatures", creaturesJson, allocator);
 		return object;
 	}
 
