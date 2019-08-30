@@ -483,8 +483,8 @@ namespace Game {
 
 	rapidjson::Value Parts::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const { 
 		rapidjson::Value value = utils::json::NewArray();
+		uint32_t index = 0;
 		for (const auto& part : mItems) {
-            uint32_t index = 0;
 			rapidjson::Value partNode = part.WriteJson(allocator, ++index, api);
 			utils::json::Add(value, partNode, allocator);
 		}
