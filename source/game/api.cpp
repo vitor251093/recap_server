@@ -335,6 +335,8 @@ namespace Game {
 				game_inventory_getPartList(session, response);
 			} else if (method == "api.inventory.getPartOfferList") {
 				game_inventory_getPartOfferList(session, response);
+			} else if (method == "api.inventory.updatePartStatus") {
+				game_inventory_updatePartStatus(session, response);
 			} else if (method == "api.inventory.vendorParts") {
 				game_inventory_vendorParts(session, response);
 			} else if (method == "api.account.auth") {
@@ -856,6 +858,7 @@ version = 1
 			for (const auto& transaction : utils::explode_string(transactionsString, ';')) {
 				// w = weapon, check for more later
 				char type = transaction[0];
+				std::cout << "Transaction: " << transaction << std::endl;
 
 				int64_t index = utils::to_number<int64_t>(&transaction[1]);
 				// Stuff
@@ -876,7 +879,7 @@ version = 1
 					utils::xml_add_text_node(part, "prefix_secondary_asset_id", utils::hash_id("_Generated/lootprefix2.lootprefix"));
 					utils::xml_add_text_node(part, "rarity", "1");
 					utils::xml_add_text_node(part, "reference_id", 1);
-					utils::xml_add_text_node(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock1.lootrigblock"));
+					utils::xml_add_text_node(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock10001.lootrigblock"));
 					utils::xml_add_text_node(part, "status", "1");
 					utils::xml_add_text_node(part, "suffix_asset_id", utils::hash_id("_Generated/lootsuffix1.lootsuffix"));
 					utils::xml_add_text_node(part, "usage", "1");
