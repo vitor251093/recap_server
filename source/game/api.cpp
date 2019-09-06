@@ -502,7 +502,7 @@ version = 1
 		document.SetObject();
 
 		// stat
-		utils::json::Set(document, "stat", "ok");
+		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
 
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
@@ -515,24 +515,26 @@ version = 1
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 		// stat
-		utils::json::Set(document, "stat", "ok");
+		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
 		
 		// themes
 		{
 			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) +
 					"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
-			rapidjson::Value value = utils::json::NewArray();
+			rapidjson::Value value(rapidjson::kArrayType);
 			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath)) {
 				if (entry.is_directory()) {
 					value.PushBack(rapidjson::Value{}.SetString(entry.path().filename().string().c_str(), 
 														    	entry.path().filename().string().length(), allocator), allocator);
 				}
 			}
-			utils::json::Set(document, "themes", value);
+
+			document.AddMember(rapidjson::Value("themes"), value, allocator);
 		}
 
 		// selectedTheme
-		utils::json::Set(document, "selectedTheme", mActiveTheme);
+		document.AddMember(rapidjson::Value("selectedTheme"), 
+				rapidjson::Value{}.SetString(mActiveTheme.c_str(), mActiveTheme.length(), allocator), allocator);
 
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
@@ -549,9 +551,12 @@ version = 1
 		rapidjson::Document document;
 		document.SetObject();
 		if (user == NULL) {
-			utils::json::Set(document, "stat", "error");
-		} else {
-			utils::json::Set(document, "stat", "ok");
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+		}
+		else {
+			// stat
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
 		}
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
@@ -570,11 +575,11 @@ version = 1
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 		// stat
-		utils::json::Set(document, "stat", "ok");
-		
+		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+
 		const auto users = Game::UserManager::GetAllUserNames();
 		const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
-		rapidjson::Value value = utils::json::NewArray();
+		rapidjson::Value value(rapidjson::kArrayType);
 		for (const auto & entry : users) {
 			bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
 			
@@ -583,8 +588,8 @@ version = 1
 			object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
 			value.PushBack(object, allocator);
 		}
-		utils::json::Set(document, "users", value);
-		
+		document.AddMember(rapidjson::Value("users"), value, allocator);
+
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
 	}
@@ -602,12 +607,12 @@ version = 1
 
 		if (user == NULL) {
 			// stat
-			utils::json::Set(document, "stat", "error");
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
 		}
 		else {
 			// stat
-			utils::json::Set(document, "stat", "ok");
-			utils::json::Set(document, "user", user->ToJson(allocator));
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+			document.AddMember(rapidjson::Value("user"), user->ToJson(allocator), allocator);
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
@@ -631,13 +636,13 @@ version = 1
 
 		if (user == NULL) {
 			// stat
-			utils::json::Set(document, "stat", "error");
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), allocator);
 		}
 		else {
 			user->FromJson(userJson);
 			
 			// stat
-			utils::json::Set(document, "stat", "ok");
+			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");

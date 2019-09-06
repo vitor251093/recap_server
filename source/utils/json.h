@@ -13,16 +13,8 @@
 // utils
 namespace utils {
 	namespace json {
-        void Set(rapidjson::Document& node, const std::string& label, rapidjson::Value& value);
-        void Set(rapidjson::Document& node, const std::string& label, const std::string& value);
-        
-        void Set(rapidjson::Value& node, const std::string& label, rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator);
-        void Set(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator);
-
+		void SetString(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator);
 	    std::string ToString(const rapidjson::Document& document);
-
-        rapidjson::Value NewArray();
-        rapidjson::Value NewString(const std::string& label, rapidjson::Document::AllocatorType& allocator);
 	}
 }
 
