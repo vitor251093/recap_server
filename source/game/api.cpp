@@ -335,6 +335,8 @@ namespace Game {
 				game_inventory_getPartList(session, response);
 			} else if (method == "api.inventory.getPartOfferList") {
 				game_inventory_getPartOfferList(session, response);
+			} else if (method == "api.inventory.updatePartStatus") {
+				game_inventory_updatePartStatus(session, response);
 			} else if (method == "api.inventory.vendorParts") {
 				game_inventory_vendorParts(session, response);
 			} else if (method == "api.account.auth") {
@@ -498,46 +500,41 @@ version = 1
 
 		mActiveTheme = themeName;
 		
-		rapidjson::Document document;
-		document.SetObject();
-
+		rapidjson::Document document = utils::json::NewDocumentObject();
+		
 		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
+		utils::json::Set(document, "stat", "ok");
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+		utils::json::Set(document, "stat", "ok");
 		
 		// themes
 		{
 			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) +
 					"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
-			rapidjson::Value value(rapidjson::kArrayType);
+			rapidjson::Value value = utils::json::NewArray();
 			for (const auto & entry : std::filesystem::directory_iterator(themesFolderPath)) {
 				if (entry.is_directory()) {
-					value.PushBack(rapidjson::Value{}.SetString(entry.path().filename().string().c_str(), 
-														    	entry.path().filename().string().length(), allocator), allocator);
+					utils::json::Add(value, entry.path().filename().string(), allocator);
 				}
 			}
-
-			document.AddMember(rapidjson::Value("themes"), value, allocator);
+			utils::json::Set(document, "themes", value);
 		}
 
 		// selectedTheme
-		document.AddMember(rapidjson::Value("selectedTheme"), 
-				rapidjson::Value{}.SetString(mActiveTheme.c_str(), mActiveTheme.length(), allocator), allocator);
+		utils::json::Set(document, "selectedTheme", mActiveTheme);
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_registration(HTTP::Session& session, HTTP::Response& response) {
@@ -548,18 +545,14 @@ version = 1
 
 		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
 
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
-		}
-		else {
-			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
+			utils::json::Set(document, "stat", "error");
+		} else {
+			utils::json::Set(document, "stat", "ok");
 		}
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_game_log(HTTP::Session& session, HTTP::Response& response) {
@@ -569,29 +562,28 @@ version = 1
 	}
 
 	void API::dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
-
+		utils::json::Set(document, "stat", "ok");
+		
 		const auto users = Game::UserManager::GetAllUserNames();
 		const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
-		rapidjson::Value value(rapidjson::kArrayType);
+		rapidjson::Value value = utils::json::NewArray();
 		for (const auto & entry : users) {
 			bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
 			
-			rapidjson::Value object(rapidjson::kObjectType);
-			object.AddMember("email", rapidjson::Value{}.SetString(entry.c_str(), entry.length(), allocator), allocator);
-			object.AddMember("logged", rapidjson::Value{}.SetBool(isLogged), allocator);
-			value.PushBack(object, allocator);
+			rapidjson::Value object = utils::json::NewObject();
+			utils::json::Set(object, "email", entry, allocator);
+			utils::json::Set(object, "logged", isLogged, allocator);
+			utils::json::Add(value, object, allocator);
 		}
-		document.AddMember(rapidjson::Value("users"), value, allocator);
-
+		utils::json::Set(document, "users", value);
+		
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
@@ -600,53 +592,53 @@ version = 1
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 		if (user == NULL) {
 			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), document.GetAllocator());
+			utils::json::Set(document, "stat", "error");
 		}
 		else {
 			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
-			document.AddMember(rapidjson::Value("user"), user->ToJson(allocator), allocator);
+			rapidjson::Value users = user->ToJson(allocator);
+			utils::json::Set(document, "stat", "ok");
+			utils::json::Set(document, "user", users);
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::dls_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
-		auto userJsonString = request.uri.parameter("user");
-
-		rapidjson::Document userJson;
-		userJson.Parse(userJsonString);
+		auto userJsonString = request.data.body();
+		
+		std::cout << userJsonString << std::endl;
+		rapidjson::Document userJson = utils::json::Parse(userJsonString);
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
-		rapidjson::Document document;
-		document.SetObject();
+		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 		if (user == NULL) {
 			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("error"), allocator);
+			utils::json::Set(document, "stat", "error");
 		}
 		else {
 			user->FromJson(userJson);
+			user->Save();
 			
 			// stat
-			document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
+			utils::json::Set(document, "stat", "ok");
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json_document_to_string(document);
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
@@ -866,6 +858,7 @@ version = 1
 			for (const auto& transaction : utils::explode_string(transactionsString, ';')) {
 				// w = weapon, check for more later
 				char type = transaction[0];
+				std::cout << "Transaction: " << transaction << std::endl;
 
 				int64_t index = utils::to_number<int64_t>(&transaction[1]);
 				// Stuff
@@ -886,7 +879,7 @@ version = 1
 					utils::xml_add_text_node(part, "prefix_secondary_asset_id", utils::hash_id("_Generated/lootprefix2.lootprefix"));
 					utils::xml_add_text_node(part, "rarity", "1");
 					utils::xml_add_text_node(part, "reference_id", 1);
-					utils::xml_add_text_node(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock1.lootrigblock"));
+					utils::xml_add_text_node(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock10001.lootrigblock"));
 					utils::xml_add_text_node(part, "status", "1");
 					utils::xml_add_text_node(part, "suffix_asset_id", utils::hash_id("_Generated/lootsuffix1.lootsuffix"));
 					utils::xml_add_text_node(part, "usage", "1");

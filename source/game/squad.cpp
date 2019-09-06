@@ -35,20 +35,25 @@ namespace Game {
 	}
 
 	void Squad::ReadJson(rapidjson::Value& object) {
-		name     = object.GetObject()["name"    ].GetString();
-		category = object.GetObject()["category"].GetString();
-		id       = object.GetObject()["id"      ].GetUint();
-		slot     = object.GetObject()["slot"    ].GetUint();
-		locked   = object.GetObject()["locked"  ].GetBool();
+		if (!object.IsObject()) return;
+		name     = utils::json::GetString(object, "name");
+		category = utils::json::GetString(object, "category");
+		id       = utils::json::GetUint(object, "id");
+		slot     = utils::json::GetUint(object, "slot");
+		locked   = utils::json::GetBool(object, "locked");
+		creatures.ReadJson(utils::json::Get(object, "creatures"));
 	}
 
 	rapidjson::Value Squad::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
-		rapidjson::Value object(rapidjson::kObjectType);
-		utils::json_add_text_to_object(object, "name",     name,     allocator);
-		utils::json_add_text_to_object(object, "category", category, allocator);
-		object.AddMember("id",     rapidjson::Value{}.SetUint(id),     allocator);
-		object.AddMember("slot",   rapidjson::Value{}.SetUint(slot),   allocator);
-		object.AddMember("locked", rapidjson::Value{}.SetBool(locked), allocator);
+		rapidjson::Value object = utils::json::NewObject();
+		utils::json::Set(object, "name",     name,     allocator);
+		utils::json::Set(object, "category", category, allocator);
+		utils::json::Set(object, "id",       id,       allocator);
+		utils::json::Set(object, "slot",     slot,     allocator);
+		utils::json::Set(object, "locked",   locked,   allocator);
+		
+		rapidjson::Value creaturesJson = creatures.WriteJson(allocator);
+		utils::json::Set(object, "creatures", creaturesJson, allocator);
 		return object;
 	}
 
@@ -74,6 +79,7 @@ namespace Game {
 	}
 
 	void Squads::ReadJson(rapidjson::Value& object) {
+		if (!object.IsArray()) return;
 		mSquads.clear();
 		for (auto& squadNode : object.GetArray()) {
 			decltype(auto) squad = mSquads.emplace_back();
@@ -82,9 +88,10 @@ namespace Game {
 	}
 
 	rapidjson::Value Squads::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
-		rapidjson::Value value(rapidjson::kArrayType);
+		rapidjson::Value value = utils::json::NewArray();
 		for (const auto& squad : mSquads) {
-			value.PushBack(squad.WriteJson(allocator), allocator);
+			rapidjson::Value squadNode = squad.WriteJson(allocator);
+			utils::json::Add(value, squadNode, allocator);
 		}
 		return value;
 	}
