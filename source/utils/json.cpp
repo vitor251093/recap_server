@@ -9,54 +9,21 @@
 // utils
 namespace utils {
 
-    rapidjson::Document json::NewDocumentObject() {
-        rapidjson::Document document;
-		document.SetObject();
-        return document;
-    }
-
-    
-    rapidjson::Value json::NewObject() {
-        rapidjson::Value value(rapidjson::kObjectType);
-        return value;
-    }
-    rapidjson::Value json::NewArray() {
-        rapidjson::Value value(rapidjson::kArrayType);
-        return value;
-    }
-
-
     void json::Set(rapidjson::Document& node, const std::string& label, rapidjson::Value& value) {
-        node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), node.GetAllocator()), value, node.GetAllocator());
+        node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), node.GetAllocator()),
+					   value, node.GetAllocator());
     }
     void json::Set(rapidjson::Document& node, const std::string& label, const std::string& value) {
 		json::Set(node, label, rapidjson::Value{}.SetString(value.c_str(), value.length(), node.GetAllocator()));
 	}
-    void json::Set(rapidjson::Document& node, const std::string& label, bool value) {
-		json::Set(node, label, rapidjson::Value{}.SetBool(value));
-	}
-    void json::Add(rapidjson::Document& node, rapidjson::Value& value) {
-        node.PushBack(value, node.GetAllocator());
-    }
-    void json::Add(rapidjson::Document& node, const std::string& value) {
-		json::Add(node, rapidjson::Value{}.SetString(value.c_str(), value.length(), node.GetAllocator()));
-	}
 	
     
     void json::Set(rapidjson::Value& node, const std::string& label, rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-        node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), allocator), value, allocator);
+        node.AddMember(rapidjson::Value{}.SetString(label.c_str(), label.length(), allocator),
+					   value, allocator);
     }
     void json::Set(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator) {
 		json::Set(node, label, rapidjson::Value{}.SetString(value.c_str(), value.length(), allocator), allocator);
-	}
-    void json::Set(rapidjson::Value& node, const std::string& label, bool value, rapidjson::Document::AllocatorType& allocator) {
-		json::Set(node, label, rapidjson::Value{}.SetBool(value), allocator);
-	}
-    void json::Add(rapidjson::Value& node, rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
-        node.PushBack(value, allocator);
-    }
-    void json::Add(rapidjson::Value& node, const std::string& value, rapidjson::Document::AllocatorType& allocator) {
-		json::Add(node, rapidjson::Value{}.SetString(value.c_str(), value.length(), allocator), allocator);
 	}
 
 
@@ -69,4 +36,10 @@ namespace utils {
 
 		return buffer.GetString();
 	}
+
+
+    rapidjson::Value json::NewArray() {
+        rapidjson::Value value(rapidjson::kArrayType);
+        return value;
+    }
 }
