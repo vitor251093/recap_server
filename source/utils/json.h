@@ -19,11 +19,11 @@ namespace utils {
         rapidjson::Value NewObject();
         rapidjson::Value NewArray();
 
-        std::string GetString(rapidjson::Document& node, const char* label);
-        bool        GetBool(  rapidjson::Document& node, const char* label);
-        double      GetDouble(rapidjson::Document& node, const char* label);
-        uint32_t    GetUint(  rapidjson::Document& node, const char* label);
-        uint64_t    GetUint64(rapidjson::Document& node, const char* label);
+        std::string GetString(rapidjson::Document& node, const rapidjson::ValueType::Ch& label);
+        bool        GetBool(  rapidjson::Document& node, const rapidjson::ValueType::Ch& label);
+        double      GetDouble(rapidjson::Document& node, const rapidjson::ValueType::Ch& label);
+        uint32_t    GetUint(  rapidjson::Document& node, const rapidjson::ValueType::Ch& label);
+        uint64_t    GetUint64(rapidjson::Document& node, const rapidjson::ValueType::Ch& label);
         
         void Set(rapidjson::Document& node, const std::string& label, rapidjson::Value& value);
         void Set(rapidjson::Document& node, const std::string& label, const std::string& value);
@@ -35,11 +35,11 @@ namespace utils {
         void Add(rapidjson::Document& node, rapidjson::Value& value);
         void Add(rapidjson::Document& node, const std::string& value);
 
-        std::string GetString(rapidjson::Value& node, const char* label);
-        bool        GetBool(  rapidjson::Value& node, const char* label);
-        double      GetDouble(rapidjson::Value& node, const char* label);
-        uint32_t    GetUint(  rapidjson::Value& node, const char* label);
-        uint64_t    GetUint64(rapidjson::Value& node, const char* label);
+        std::string GetString(rapidjson::Value& node, const rapidjson::ValueType::Ch& label);
+        bool        GetBool(  rapidjson::Value& node, const rapidjson::ValueType::Ch& label);
+        double      GetDouble(rapidjson::Value& node, const rapidjson::ValueType::Ch& label);
+        uint32_t    GetUint(  rapidjson::Value& node, const rapidjson::ValueType::Ch& label);
+        uint64_t    GetUint64(rapidjson::Value& node, const rapidjson::ValueType::Ch& label);
 
         void Set(rapidjson::Value& node, const std::string& label, rapidjson::Value& value,  rapidjson::Document::AllocatorType& allocator);
         void Set(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator);

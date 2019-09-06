@@ -33,19 +33,19 @@ namespace utils {
 
 
 
-    std::string json::GetString(rapidjson::Document& node, const char* label) {
+    std::string json::GetString(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetString();
     }
-    bool json::GetBool(rapidjson::Document& node, const char* label) {
+    bool json::GetBool(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetBool();
     }
-    double json::GetDouble(rapidjson::Document& node, const char* label) {
+    double json::GetDouble(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetDouble();
     }
-    uint32_t json::GetUint(rapidjson::Document& node, const char* label) {
+    uint32_t json::GetUint(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetUint();
     }
-    uint64_t json::GetUint64(rapidjson::Document& node, const char* label) {
+    uint64_t json::GetUint64(rapidjson::Document& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetUint64();
     }
 
@@ -80,19 +80,19 @@ namespace utils {
 
 	
     
-    std::string json::GetString(rapidjson::Value& node, const char* label) {
+    std::string json::GetString(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetString();
     }
-    bool json::GetBool(rapidjson::Value& node, const char* label) {
+    bool json::GetBool(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetBool();
     }
-    double json::GetDouble(rapidjson::Value& node, const char* label) {
+    double json::GetDouble(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetDouble();
     }
-    uint32_t json::GetUint(rapidjson::Value& node, const char* label) {
+    uint32_t json::GetUint(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetUint();
     }
-    uint64_t json::GetUint64(rapidjson::Value& node, const char* label) {
+    uint64_t json::GetUint64(rapidjson::Value& node, const rapidjson::ValueType::Ch& label) {
         return node.GetObject()[label].GetUint64();
     }
 
