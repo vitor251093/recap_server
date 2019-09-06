@@ -44,8 +44,8 @@ namespace Game {
 
 	rapidjson::Value Squad::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
 		rapidjson::Value object(rapidjson::kObjectType);
-		utils::json::SetString(object, "name",     name,     allocator);
-		utils::json::SetString(object, "category", category, allocator);
+		utils::json_add_text_to_object(object, "name",     name,     allocator);
+		utils::json_add_text_to_object(object, "category", category, allocator);
 		object.AddMember("id",     rapidjson::Value{}.SetUint(id),     allocator);
 		object.AddMember("slot",   rapidjson::Value{}.SetUint(slot),   allocator);
 		object.AddMember("locked", rapidjson::Value{}.SetBool(locked), allocator);

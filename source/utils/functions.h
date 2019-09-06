@@ -7,7 +7,9 @@
 #include <vector>
 #include <string>
 #include <pugixml.hpp>
-#include "json.h"
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 // utils
 namespace utils {
@@ -112,6 +114,10 @@ namespace utils {
 	std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, T> xml_get_text_node(const pugi::xml_node& node, const std::string& name) {
 		return to_number<T>(xml_get_text_node(node, name));
 	}
+
+	// JSON
+	void json_add_text_to_object(rapidjson::Value& node, const std::string& label, const std::string& value, rapidjson::Document::AllocatorType& allocator);
+	std::string json_document_to_string(const rapidjson::Document& document);
 
 	// Hashes
 	constexpr uint32_t hash_id(const char* pStr) {
