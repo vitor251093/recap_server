@@ -22,6 +22,7 @@ namespace utils {
 	    std::string ToString(const rapidjson::Document& document);
 
         rapidjson::Value NewArray();
+        rapidjson::Value NewString(const std::string& label, rapidjson::Document::AllocatorType& allocator);
 	}
 }
 

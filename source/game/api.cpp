@@ -606,9 +606,8 @@ version = 1
 		}
 		else {
 			// stat
-			rapidjson::Value users = user->ToJson(allocator);
 			utils::json::Set(document, "stat", "ok");
-			utils::json::Set(document, "user", users);
+			utils::json::Set(document, "user", user->ToJson(allocator));
 		}
 
 		response.set(boost::beast::http::field::content_type, "application/json");
