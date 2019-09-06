@@ -1,5 +1,5 @@
 That version of Darkspore LS is still not functional for playing the game;
-although, it can be used to bypass the game launcher already.
+although, it can be used to play with the hero editor already.
 
 You must add the items below to your C:\Windows\system32\Drivers\etc\hosts file:
 
@@ -22,4 +22,29 @@ You must add the items below to your C:\Windows\system32\Drivers\etc\hosts file:
 127.0.0.1 321917-prodmydb009.spore.rspc-iad.ea.com
 127.0.0.1 telemetry.maxis.com
 
-Then run darkspore_server.exe, and while running it, launch Darkspore.
+Copy the Darkspore.exe file to its same folder (don't confuse it with the 
+Darkspore.exe.exe file, that may exist; Darkspore.exe size is over 15Mb, 
+while the Darkspore.exe.exe size is around 66Kb). Open the Darkspore.exe copy 
+with a hex editor, and then replace "80 BF 2C 01 00 00 00" with "80 BF 2C 01 00 00 01". 
+If you find more than one occurence of "80 BF 2C 01 00 00 00", replace only the last one.
+
+Now launch darkspore_server.exe, and while running it, launch Darkspore, 
+and keep both of them running. 
+
+Press Play in the Darkspore launcher and wait for the login screen. 
+Using the Register button in the Darkspore login screen, create a user account 
+(it will only exist in your computer, and you won't need internet to do that). 
+After creating the user, open the following link in your browser:
+
+- http://config.darkspore.com/panel/
+
+It should show a template page (sorry, still didn't have time to clean it up). 
+Press the Users button in the top, and then you should see a list with all the 
+users in your local server (which at this point should be only the user that you 
+just created). Select your user mail, and then press "Start testing".
+
+After that, go back to Darkspore and login. You should be able to use the hero 
+editor now, which is as far as we could go until this day (05/09/2019).
+
+In case you are reading that and over 2 or 3 months have passed, check if there
+isn't any more recent version of DLS already.
