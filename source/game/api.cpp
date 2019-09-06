@@ -614,7 +614,8 @@ version = 1
 		auto mail = request.uri.parameter("mail");
 		auto userJsonString = request.uri.parameter("user");
 
-		rapidjson::Document userJson = utils::json::Parse(userJsonString);
+		rapidjson::Document userJson;
+		userJson.Parse(userJsonString);
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
 		
