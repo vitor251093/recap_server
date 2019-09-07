@@ -28,7 +28,7 @@ namespace utils {
 		return node.child(name.c_str()).text().get();
 	}
 
-    std::string xml::ToString(pugi::xml_document document)
+    std::string xml::ToString(pugi::xml_document& document)
     {
         xml_string_writer writer;
 		document.save(writer, "\t", 1U, pugi::encoding_latin1);

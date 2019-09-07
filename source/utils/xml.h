@@ -24,7 +24,7 @@ namespace utils {
             return to_number<T>(GetString(node, name));
         }
 
-        std::string ToString(pugi::xml_document document);
+        std::string ToString(pugi::xml_document& document);
     }
 }
 
