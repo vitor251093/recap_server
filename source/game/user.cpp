@@ -65,80 +65,80 @@ namespace Game {
 			return;
 		}
 
-		tutorialCompleted = utils::xml_get_text_node(account, "tutorial_completed") == "Y";
-		grantAllAccess    = utils::xml_get_text_node<uint32_t>(account, "grant_all_access");
-		grantOnlineAccess = utils::xml_get_text_node<uint32_t>(account, "grant_online_access");
+		tutorialCompleted = utils::xml::GetString(account, "tutorial_completed") == "Y";
+		grantAllAccess    = utils::xml::GetString<uint32_t>(account, "grant_all_access");
+		grantOnlineAccess = utils::xml::GetString<uint32_t>(account, "grant_online_access");
 
-		chainProgression  = utils::xml_get_text_node<uint32_t>(account, "chain_progression");
-		creatureRewards   = utils::xml_get_text_node<uint32_t>(account, "creature_rewards");
+		chainProgression  = utils::xml::GetString<uint32_t>(account, "chain_progression");
+		creatureRewards   = utils::xml::GetString<uint32_t>(account, "creature_rewards");
 
-		currentGameId      = utils::xml_get_text_node<uint32_t>(account, "current_game_id");
-		currentPlaygroupId = utils::xml_get_text_node<uint32_t>(account, "current_playgroup_id");
+		currentGameId      = utils::xml::GetString<uint32_t>(account, "current_game_id");
+		currentPlaygroupId = utils::xml::GetString<uint32_t>(account, "current_playgroup_id");
 
-		defaultDeckPveId  = utils::xml_get_text_node<uint32_t>(account, "default_deck_pve_id");
-		defaultDeckPvpId  = utils::xml_get_text_node<uint32_t>(account, "default_deck_pvp_id");
+		defaultDeckPveId  = utils::xml::GetString<uint32_t>(account, "default_deck_pve_id");
+		defaultDeckPvpId  = utils::xml::GetString<uint32_t>(account, "default_deck_pvp_id");
 
-		level    = utils::xml_get_text_node<uint32_t>(account, "level");
-		xp       = utils::xml_get_text_node<uint32_t>(account, "xp");
-		dna      = utils::xml_get_text_node<uint32_t>(account, "dna");
-		avatarId = std::clamp<uint32_t>(utils::xml_get_text_node<uint32_t>(account, "avatar_id"), 0, 16);
-		id       = utils::xml_get_text_node<uint32_t>(account, "id");
+		level    = utils::xml::GetString<uint32_t>(account, "level");
+		xp       = utils::xml::GetString<uint32_t>(account, "xp");
+		dna      = utils::xml::GetString<uint32_t>(account, "dna");
+		avatarId = std::clamp<uint32_t>(utils::xml::GetString<uint32_t>(account, "avatar_id"), 0, 16);
+		id       = utils::xml::GetString<uint32_t>(account, "id");
 
-		newPlayerInventory = utils::xml_get_text_node<uint32_t>(account, "new_player_inventory");
-		newPlayerProgress  = utils::xml_get_text_node<uint32_t>(account, "new_player_progress");
+		newPlayerInventory = utils::xml::GetString<uint32_t>(account, "new_player_inventory");
+		newPlayerProgress  = utils::xml::GetString<uint32_t>(account, "new_player_progress");
 
-		cashoutBonusTime = utils::xml_get_text_node<uint32_t>(account, "cashout_bonus_time");
-		starLevel        = utils::xml_get_text_node<uint32_t>(account, "star_level");
+		cashoutBonusTime = utils::xml::GetString<uint32_t>(account, "cashout_bonus_time");
+		starLevel        = utils::xml::GetString<uint32_t>(account, "star_level");
 
-		unlockCatalysts = utils::xml_get_text_node<uint32_t>(account, "unlock_catalysts");
-		unlockDiagonalCatalysts = utils::xml_get_text_node<uint32_t>(account, "unlock_diagonal_catalysts");
-		unlockFuelTanks         = utils::xml_get_text_node<uint32_t>(account, "unlock_fuel_tanks");
-		unlockInventoryIdentify = utils::xml_get_text_node<uint32_t>(account, "unlock_inventory");
-		unlockPveDecks = utils::xml_get_text_node<uint32_t>(account, "unlock_pve_decks");
-		unlockPvpDecks = utils::xml_get_text_node<uint32_t>(account, "unlock_pvp_decks");
-		unlockStats    = utils::xml_get_text_node<uint32_t>(account, "unlock_stats");
-		unlockInventoryIdentify = utils::xml_get_text_node<uint32_t>(account, "unlock_inventory_identify");
-		unlockEditorFlairSlots  = utils::xml_get_text_node<uint32_t>(account, "unlock_editor_flair_slots");
+		unlockCatalysts = utils::xml::GetString<uint32_t>(account, "unlock_catalysts");
+		unlockDiagonalCatalysts = utils::xml::GetString<uint32_t>(account, "unlock_diagonal_catalysts");
+		unlockFuelTanks         = utils::xml::GetString<uint32_t>(account, "unlock_fuel_tanks");
+		unlockInventoryIdentify = utils::xml::GetString<uint32_t>(account, "unlock_inventory");
+		unlockPveDecks = utils::xml::GetString<uint32_t>(account, "unlock_pve_decks");
+		unlockPvpDecks = utils::xml::GetString<uint32_t>(account, "unlock_pvp_decks");
+		unlockStats    = utils::xml::GetString<uint32_t>(account, "unlock_stats");
+		unlockInventoryIdentify = utils::xml::GetString<uint32_t>(account, "unlock_inventory_identify");
+		unlockEditorFlairSlots  = utils::xml::GetString<uint32_t>(account, "unlock_editor_flair_slots");
 
-		upsell = utils::xml_get_text_node<uint32_t>(account, "upsell");
+		upsell = utils::xml::GetString<uint32_t>(account, "upsell");
 
-		capLevel       = utils::xml_get_text_node<uint32_t>(account, "cap_level");
-		capProgression = utils::xml_get_text_node<uint32_t>(account, "cap_progression");
+		capLevel       = utils::xml::GetString<uint32_t>(account, "cap_level");
+		capProgression = utils::xml::GetString<uint32_t>(account, "cap_progression");
 	}
 
 	void Account::WriteXml(pugi::xml_node& node) const {
 		if (auto account = node.append_child("account")) {
-			utils::xml_add_text_node(account, "tutorial_completed", tutorialCompleted ? "Y" : "N");
-			utils::xml_add_text_node(account, "chain_progression", chainProgression);
-			utils::xml_add_text_node(account, "creature_rewards", creatureRewards);
-			utils::xml_add_text_node(account, "current_game_id", currentGameId);
-			utils::xml_add_text_node(account, "current_playgroup_id", currentPlaygroupId);
-			utils::xml_add_text_node(account, "default_deck_pve_id", defaultDeckPveId);
-			utils::xml_add_text_node(account, "default_deck_pvp_id", defaultDeckPvpId);
-			utils::xml_add_text_node(account, "level", level);
-			utils::xml_add_text_node(account, "avatar_id", avatarId);
-			utils::xml_add_text_node(account, "blaze_id", id);
-			utils::xml_add_text_node(account, "id", id);
-			utils::xml_add_text_node(account, "dna", dna);
-			utils::xml_add_text_node(account, "new_player_inventory", newPlayerInventory);
-			utils::xml_add_text_node(account, "new_player_progress", newPlayerProgress);
-			utils::xml_add_text_node(account, "cashout_bonus_time", cashoutBonusTime);
-			utils::xml_add_text_node(account, "star_level", starLevel);
-			utils::xml_add_text_node(account, "unlock_catalysts", unlockCatalysts);
-			utils::xml_add_text_node(account, "unlock_diagonal_catalysts", unlockDiagonalCatalysts);
-			utils::xml_add_text_node(account, "unlock_fuel_tanks", unlockFuelTanks);
-			utils::xml_add_text_node(account, "unlock_inventory", unlockInventoryIdentify);
-			utils::xml_add_text_node(account, "unlock_pve_decks", unlockPveDecks);
-			utils::xml_add_text_node(account, "unlock_pvp_decks", unlockPvpDecks);
-			utils::xml_add_text_node(account, "unlock_stats", unlockStats);
-			utils::xml_add_text_node(account, "unlock_inventory_identify", unlockInventoryIdentify);
-			utils::xml_add_text_node(account, "unlock_editor_flair_slots", unlockEditorFlairSlots);
-			utils::xml_add_text_node(account, "upsell", upsell);
-			utils::xml_add_text_node(account, "xp", xp);
-			utils::xml_add_text_node(account, "grant_all_access", grantAllAccess ? "1" : "0");
-			utils::xml_add_text_node(account, "grant_online_access", grantOnlineAccess ? "1" : "0");
-			utils::xml_add_text_node(account, "cap_level", capLevel);
-			utils::xml_add_text_node(account, "cap_progression", capProgression);
+			utils::xml::Set(account, "tutorial_completed", tutorialCompleted ? "Y" : "N");
+			utils::xml::Set(account, "chain_progression", chainProgression);
+			utils::xml::Set(account, "creature_rewards", creatureRewards);
+			utils::xml::Set(account, "current_game_id", currentGameId);
+			utils::xml::Set(account, "current_playgroup_id", currentPlaygroupId);
+			utils::xml::Set(account, "default_deck_pve_id", defaultDeckPveId);
+			utils::xml::Set(account, "default_deck_pvp_id", defaultDeckPvpId);
+			utils::xml::Set(account, "level", level);
+			utils::xml::Set(account, "avatar_id", avatarId);
+			utils::xml::Set(account, "blaze_id", id);
+			utils::xml::Set(account, "id", id);
+			utils::xml::Set(account, "dna", dna);
+			utils::xml::Set(account, "new_player_inventory", newPlayerInventory);
+			utils::xml::Set(account, "new_player_progress", newPlayerProgress);
+			utils::xml::Set(account, "cashout_bonus_time", cashoutBonusTime);
+			utils::xml::Set(account, "star_level", starLevel);
+			utils::xml::Set(account, "unlock_catalysts", unlockCatalysts);
+			utils::xml::Set(account, "unlock_diagonal_catalysts", unlockDiagonalCatalysts);
+			utils::xml::Set(account, "unlock_fuel_tanks", unlockFuelTanks);
+			utils::xml::Set(account, "unlock_inventory", unlockInventoryIdentify);
+			utils::xml::Set(account, "unlock_pve_decks", unlockPveDecks);
+			utils::xml::Set(account, "unlock_pvp_decks", unlockPvpDecks);
+			utils::xml::Set(account, "unlock_stats", unlockStats);
+			utils::xml::Set(account, "unlock_inventory_identify", unlockInventoryIdentify);
+			utils::xml::Set(account, "unlock_editor_flair_slots", unlockEditorFlairSlots);
+			utils::xml::Set(account, "upsell", upsell);
+			utils::xml::Set(account, "xp", xp);
+			utils::xml::Set(account, "grant_all_access", grantAllAccess ? "1" : "0");
+			utils::xml::Set(account, "grant_online_access", grantOnlineAccess ? "1" : "0");
+			utils::xml::Set(account, "cap_level", capLevel);
+			utils::xml::Set(account, "cap_progression", capProgression);
 		}
 	}
 
@@ -227,12 +227,12 @@ namespace Game {
 
 		for (const auto& item : items) {
 			decltype(auto) feedItem = mItems.emplace_back();
-			feedItem.accountId = utils::xml_get_text_node<uint32_t>(item, "account_id");
-			feedItem.id = utils::xml_get_text_node<uint32_t>(item, "id");
-			feedItem.messageId = utils::xml_get_text_node<uint32_t>(item, "message_id");
-			feedItem.metadata = utils::xml_get_text_node(item, "metadata");
-			feedItem.name = utils::xml_get_text_node(item, "name");
-			feedItem.timestamp = utils::xml_get_text_node<uint64_t>(item, "time");
+			feedItem.accountId = utils::xml::GetString<uint32_t>(item, "account_id");
+			feedItem.id = utils::xml::GetString<uint32_t>(item, "id");
+			feedItem.messageId = utils::xml::GetString<uint32_t>(item, "message_id");
+			feedItem.metadata = utils::xml::GetString(item, "metadata");
+			feedItem.name = utils::xml::GetString(item, "name");
+			feedItem.timestamp = utils::xml::GetString<uint64_t>(item, "time");
 		}
 	}
 
@@ -241,12 +241,12 @@ namespace Game {
 			auto items = feed.append_child("items");
 			for (const auto& feedItem : mItems) {
 				auto item = items.append_child("item");
-				utils::xml_add_text_node(item, "account_id", feedItem.accountId);
-				utils::xml_add_text_node(item, "id", feedItem.id);
-				utils::xml_add_text_node(item, "message_id", feedItem.messageId);
-				utils::xml_add_text_node(item, "metadata", feedItem.metadata);
-				utils::xml_add_text_node(item, "name", feedItem.name);
-				utils::xml_add_text_node(item, "time", feedItem.timestamp);
+				utils::xml::Set(item, "account_id", feedItem.accountId);
+				utils::xml::Set(item, "id", feedItem.id);
+				utils::xml::Set(item, "message_id", feedItem.messageId);
+				utils::xml::Set(item, "metadata", feedItem.metadata);
+				utils::xml::Set(item, "name", feedItem.name);
+				utils::xml::Set(item, "time", feedItem.timestamp);
 			}
 		}
 	}
@@ -309,48 +309,48 @@ namespace Game {
 			return false;
 		}
 
-		flair = utils::xml_get_text_node<bool>(node, "is_flair");
-		cost = utils::xml_get_text_node<uint32_t>(node, "cost");
-		equipped_to_creature_id = utils::xml_get_text_node<uint32_t>(node, "creature_id");
-		level = utils::xml_get_text_node<uint16_t>(node, "level");
-		market_status = utils::xml_get_text_node<uint8_t>(node, "market_status");
-		rarity = utils::xml_get_text_node<uint8_t>(node, "rarity");
-		status = utils::xml_get_text_node<uint8_t>(node, "status");
-		usage = utils::xml_get_text_node<uint8_t>(node, "usage");
-		timestamp = utils::xml_get_text_node<uint64_t>(node, "creation_date");
+		flair = utils::xml::GetString<bool>(node, "is_flair");
+		cost = utils::xml::GetString<uint32_t>(node, "cost");
+		equipped_to_creature_id = utils::xml::GetString<uint32_t>(node, "creature_id");
+		level = utils::xml::GetString<uint16_t>(node, "level");
+		market_status = utils::xml::GetString<uint8_t>(node, "market_status");
+		rarity = utils::xml::GetString<uint8_t>(node, "rarity");
+		status = utils::xml::GetString<uint8_t>(node, "status");
+		usage = utils::xml::GetString<uint8_t>(node, "usage");
+		timestamp = utils::xml::GetString<uint64_t>(node, "creation_date");
 
-		SetRigblock(utils::xml_get_text_node<uint32_t>(node, "rigblock_asset_id"));
-		SetPrefix(utils::xml_get_text_node<uint32_t>(node, "prefix_asset_id"), false);
-		SetPrefix(utils::xml_get_text_node<uint32_t>(node, "prefix_secondary_asset_id"), true);
-		SetSuffix(utils::xml_get_text_node<uint32_t>(node, "suffix_asset_id"));
+		SetRigblock(utils::xml::GetString<uint32_t>(node, "rigblock_asset_id"));
+		SetPrefix(utils::xml::GetString<uint32_t>(node, "prefix_asset_id"), false);
+		SetPrefix(utils::xml::GetString<uint32_t>(node, "prefix_secondary_asset_id"), true);
+		SetSuffix(utils::xml::GetString<uint32_t>(node, "suffix_asset_id"));
 
 		return true;
 	}
 
 	void Part::WriteXml(pugi::xml_node& node, uint32_t index, bool api) const {
 		if (auto part = node.append_child("part")) {
-			utils::xml_add_text_node(part, "is_flair", flair);
-			utils::xml_add_text_node(part, "cost", cost);
-			utils::xml_add_text_node(part, "creature_id", equipped_to_creature_id);
-			utils::xml_add_text_node(part, "level", level);
-			utils::xml_add_text_node(part, "market_status", market_status);
-			utils::xml_add_text_node(part, "rarity", rarity);
-			utils::xml_add_text_node(part, "status", status);
-			utils::xml_add_text_node(part, "usage", usage);
-			utils::xml_add_text_node(part, "creation_date", timestamp);
+			utils::xml::Set(part, "is_flair", flair);
+			utils::xml::Set(part, "cost", cost);
+			utils::xml::Set(part, "creature_id", equipped_to_creature_id);
+			utils::xml::Set(part, "level", level);
+			utils::xml::Set(part, "market_status", market_status);
+			utils::xml::Set(part, "rarity", rarity);
+			utils::xml::Set(part, "status", status);
+			utils::xml::Set(part, "usage", usage);
+			utils::xml::Set(part, "creation_date", timestamp);
 			if (api) {
-				utils::xml_add_text_node(part, "id", index);
-				utils::xml_add_text_node(part, "reference_id", index);
+				utils::xml::Set(part, "id", index);
+				utils::xml::Set(part, "reference_id", index);
 
-				utils::xml_add_text_node(part, "rigblock_asset_id", rigblock_asset_hash);
-				utils::xml_add_text_node(part, "prefix_asset_id", prefix_asset_hash);
-				utils::xml_add_text_node(part, "prefix_secondary_asset_id", prefix_secondary_asset_hash);
-				utils::xml_add_text_node(part, "suffix_asset_id", suffix_asset_hash);
+				utils::xml::Set(part, "rigblock_asset_id", rigblock_asset_hash);
+				utils::xml::Set(part, "prefix_asset_id", prefix_asset_hash);
+				utils::xml::Set(part, "prefix_secondary_asset_id", prefix_secondary_asset_hash);
+				utils::xml::Set(part, "suffix_asset_id", suffix_asset_hash);
 			} else {
-				utils::xml_add_text_node(part, "rigblock_asset_id", rigblock_asset_id);
-				utils::xml_add_text_node(part, "prefix_asset_id", prefix_asset_id);
-				utils::xml_add_text_node(part, "prefix_secondary_asset_id", prefix_secondary_asset_id);
-				utils::xml_add_text_node(part, "suffix_asset_id", suffix_asset_id);
+				utils::xml::Set(part, "rigblock_asset_id", rigblock_asset_id);
+				utils::xml::Set(part, "prefix_asset_id", prefix_asset_id);
+				utils::xml::Set(part, "prefix_secondary_asset_id", prefix_secondary_asset_id);
+				utils::xml::Set(part, "suffix_asset_id", suffix_asset_id);
 			}
 		}
 	}
@@ -585,9 +585,9 @@ namespace Game {
 		}
 
 		if (auto user = document.child("user")) {
-			mName = utils::xml_get_text_node(user, "name");
-			mEmail = utils::xml_get_text_node(user, "email");
-			mPassword = utils::xml_get_text_node(user, "password"); // Hash this later?
+			mName = utils::xml::GetString(user, "name");
+			mEmail = utils::xml::GetString(user, "email");
+			mPassword = utils::xml::GetString(user, "password"); // Hash this later?
 
 			  mAccount.ReadXml(user);
 			mCreatures.ReadXml(user);
@@ -608,9 +608,9 @@ namespace Game {
 	pugi::xml_document User::ToXml() {
 		pugi::xml_document document;
 		if (auto user = document.append_child("user")) {
-			utils::xml_add_text_node(user, "name", mName);
-			utils::xml_add_text_node(user, "email", mEmail);
-			utils::xml_add_text_node(user, "password", mPassword);
+			utils::xml::Set(user, "name", mName);
+			utils::xml::Set(user, "email", mEmail);
+			utils::xml::Set(user, "password", mPassword);
 
 			  mAccount.WriteXml(user);
 			mCreatures.WriteXml(user);

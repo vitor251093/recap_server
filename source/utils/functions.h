@@ -8,6 +8,7 @@
 #include <string>
 #include <pugixml.hpp>
 #include "json.h"
+#include "xml.h"
 
 // utils
 namespace utils {
@@ -97,20 +98,6 @@ namespace utils {
 			value = static_cast<T>(0);
 		}
 		return value;
-	}
-
-	// XML
-	void xml_add_text_node(pugi::xml_node& node, const std::string& name, const std::string& value);
-	std::string xml_get_text_node(const pugi::xml_node& node, const std::string& name);
-
-	template<typename T>
-	std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, void> xml_add_text_node(pugi::xml_node& node, const std::string& name, T value) {
-		xml_add_text_node(node, name, std::to_string(value));
-	}
-
-	template<typename T>
-	std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, T> xml_get_text_node(const pugi::xml_node& node, const std::string& name) {
-		return to_number<T>(xml_get_text_node(node, name));
 	}
 
 	// Hashes

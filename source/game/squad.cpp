@@ -12,24 +12,24 @@ namespace Game {
 			return;
 		}
 
-		name = utils::xml_get_text_node(node, "name");
-		category = utils::xml_get_text_node(node, "category");
+		name = utils::xml::GetString(node, "name");
+		category = utils::xml::GetString(node, "category");
 
-		id = utils::xml_get_text_node<uint32_t>(node, "id");
-		slot = utils::xml_get_text_node<uint32_t>(node, "slot");
+		id = utils::xml::GetString<uint32_t>(node, "id");
+		slot = utils::xml::GetString<uint32_t>(node, "slot");
 
-		locked = utils::xml_get_text_node<uint32_t>(node, "locked");
+		locked = utils::xml::GetString<uint32_t>(node, "locked");
 
 		creatures.ReadXml(node);
 	}
 
 	void Squad::WriteXml(pugi::xml_node& node) const {
 		if (auto deck = node.append_child("deck")) {
-			utils::xml_add_text_node(deck, "name", name);
-			utils::xml_add_text_node(deck, "id", id);
-			utils::xml_add_text_node(deck, "category", category);
-			utils::xml_add_text_node(deck, "slot", slot);
-			utils::xml_add_text_node(deck, "locked", locked ? 1 : 0);
+			utils::xml::Set(deck, "name", name);
+			utils::xml::Set(deck, "id", id);
+			utils::xml::Set(deck, "category", category);
+			utils::xml::Set(deck, "slot", slot);
+			utils::xml::Set(deck, "locked", locked ? 1 : 0);
 			creatures.WriteXml(deck);
 		}
 	}

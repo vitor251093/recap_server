@@ -12,34 +12,34 @@ namespace Game {
 			return;
 		}
 
-		name = utils::xml_get_text_node(node, "name");
-		nameLocaleId = utils::xml_get_text_node(node, "name_locale_id");
-		elementType = utils::xml_get_text_node(node, "type_a");
-		classType = utils::xml_get_text_node(node, "class");
-		pngLargeUrl = utils::xml_get_text_node(node, "png_large_url");
-		pngThumbUrl = utils::xml_get_text_node(node, "png_thumb_url");
+		name = utils::xml::GetString(node, "name");
+		nameLocaleId = utils::xml::GetString(node, "name_locale_id");
+		elementType = utils::xml::GetString(node, "type_a");
+		classType = utils::xml::GetString(node, "class");
+		pngLargeUrl = utils::xml::GetString(node, "png_large_url");
+		pngThumbUrl = utils::xml::GetString(node, "png_thumb_url");
 
-		gearScore = utils::xml_get_text_node<double>(node, "gear_score");
-		itemPoints = utils::xml_get_text_node<double>(node, "item_points");
+		gearScore = utils::xml::GetString<double>(node, "gear_score");
+		itemPoints = utils::xml::GetString<double>(node, "item_points");
 
-		id = utils::xml_get_text_node<uint32_t>(node, "id");
-		nounId = utils::xml_get_text_node<uint64_t>(node, "noun_id");
-		version = utils::xml_get_text_node<uint32_t>(node, "version");
+		id = utils::xml::GetString<uint32_t>(node, "id");
+		nounId = utils::xml::GetString<uint64_t>(node, "noun_id");
+		version = utils::xml::GetString<uint32_t>(node, "version");
 	}
 
 	void Creature::WriteXml(pugi::xml_node& node) const {
 		if (auto creature = node.append_child("creature")) {
-			utils::xml_add_text_node(creature, "id", id);
-			utils::xml_add_text_node(creature, "name", name);
-			utils::xml_add_text_node(creature, "name_locale_id", nameLocaleId);
-			utils::xml_add_text_node(creature, "type_a", elementType);
-			utils::xml_add_text_node(creature, "class", classType);
-			utils::xml_add_text_node(creature, "png_large_url", pngLargeUrl);
-			utils::xml_add_text_node(creature, "png_thumb_url", pngThumbUrl);
-			utils::xml_add_text_node(creature, "noun_id", nounId);
-			utils::xml_add_text_node(creature, "version", version);
-			utils::xml_add_text_node(creature, "gear_score", gearScore);
-			utils::xml_add_text_node(creature, "item_points", itemPoints);
+			utils::xml::Set(creature, "id", id);
+			utils::xml::Set(creature, "name", name);
+			utils::xml::Set(creature, "name_locale_id", nameLocaleId);
+			utils::xml::Set(creature, "type_a", elementType);
+			utils::xml::Set(creature, "class", classType);
+			utils::xml::Set(creature, "png_large_url", pngLargeUrl);
+			utils::xml::Set(creature, "png_thumb_url", pngThumbUrl);
+			utils::xml::Set(creature, "noun_id", nounId);
+			utils::xml::Set(creature, "version", version);
+			utils::xml::Set(creature, "gear_score", gearScore);
+			utils::xml::Set(creature, "item_points", itemPoints);
 		}
 	}
 

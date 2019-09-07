@@ -169,6 +169,7 @@
     <ClInclude Include="source\udptest.h" />
     <ClInclude Include="source\utils\functions.h" />
     <ClInclude Include="source\utils\json.h" />
+    <ClInclude Include="source\utils\xml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\blaze\client.cpp" />
@@ -203,6 +204,7 @@
     <ClCompile Include="source\udptest.cpp" />
     <ClCompile Include="source\utils\functions.cpp" />
     <ClCompile Include="source\utils\json.cpp" />
+    <ClCompile Include="source\utils\xml.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
