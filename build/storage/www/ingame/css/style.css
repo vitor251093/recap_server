@@ -88,7 +88,7 @@ font-weight: 500; }
 }
 .view .title {
     color: #fff;
-    font-family: "EA Pirulen Rg DS", 'PirulenRg-Regular';
+    font-family: 'PirulenRg-Regular';
 }
 .view label {
     font-family: "Arial";
@@ -182,7 +182,7 @@ font-weight: 500; }
 }
 .button-rounded .text {
     position: absolute;
-    font-family: "EA Pirulen Rg DS", 'PirulenRg-Regular';
+    font-family: 'PirulenRg-Regular';
     top: 13px;
     right: 0;
     left: 0;
@@ -235,7 +235,7 @@ font-weight: 500; }
 
 .view .modal-title {
     color: #fff;
-    font-family: "EA Pirulen Rg DS", 'PirulenRg-Regular';
+    font-family: 'PirulenRg-Regular';
 }
 
 
