@@ -1,3 +1,7 @@
+------------------------------------------------------------------
+  INSTALL INSTRUCTIONS
+------------------------------------------------------------------
+
 That version of Darkspore LS is still not functional for playing the game;
 although, it can be used to play with the hero editor already.
 
@@ -48,3 +52,16 @@ editor now, which is as far as we could go until this day (05/09/2019).
 
 In case you are reading that and over 2 or 3 months have passed, check if there
 isn't any more recent version of DLS already.
+
+
+
+------------------------------------------------------------------
+  UPDATE INSTRUCTIONS
+------------------------------------------------------------------
+
+If you already have an older version of DLS, you just need to replace the older
+version files with the ones from that version. 
+
+You can keep your users by preserving the original storage/users folder,
+but you will still need to repeat the panel-related steps above to keep it in 
+touch with the latest changes.
