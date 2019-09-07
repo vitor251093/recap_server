@@ -5,6 +5,17 @@
 #include <ctime>
 #include <filesystem>
 #include <fstream>
+#include <pugixml.hpp>
+
+// XML Writer
+struct xml_string_writer : pugi::xml_writer {
+	std::string result;
+
+	void write(const void* data, size_t size) override {
+		result.append(static_cast<const char*>(data), size);
+	}
+};
+
 
 // utils
 namespace utils {
