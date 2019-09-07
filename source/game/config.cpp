@@ -26,6 +26,8 @@ namespace Game {
 				mConfig[CONFIG_SKIP_LAUNCHER] = value;
 			} else if (name == "VERSION_LOCKED") {
 				mConfig[CONFIG_VERSION_LOCKED] = value;
+			} else if (name == "DARKSPORE_VERSION") {
+				mConfig[CONFIG_DARKSPORE_VERSION] = value;
 			} else if (name == "SINGLEPLAYER_ONLY") {
 				mConfig[CONFIG_SINGLEPLAYER_ONLY] = value;
 			} else if (name == "SERVER_HOST") {
@@ -47,6 +49,7 @@ namespace Game {
 
 		mConfig[CONFIG_SKIP_LAUNCHER] = "false";
 		mConfig[CONFIG_VERSION_LOCKED] = "false";
+		mConfig[CONFIG_DARKSPORE_VERSION] = "5.3.0.127";
 		mConfig[CONFIG_SINGLEPLAYER_ONLY] = "true";
 		mConfig[CONFIG_SERVER_HOST] = "127.0.0.1";
 		mConfig[CONFIG_STORAGE_PATH] = "storage/";
@@ -93,6 +96,7 @@ namespace Game {
 			switch (value) {
 				case CONFIG_SKIP_LAUNCHER: return "SKIP_LAUNCHER";
 				case CONFIG_VERSION_LOCKED: return "VERSION_LOCKED";
+				case CONFIG_DARKSPORE_VERSION: return "DARKSPORE_VERSION";
 				case CONFIG_SINGLEPLAYER_ONLY: return "SINGLEPLAYER_ONLY";
 				case CONFIG_SERVER_HOST: return "SERVER_HOST";
 				case CONFIG_STORAGE_PATH: return "STORAGE_PATH";

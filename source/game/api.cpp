@@ -671,6 +671,8 @@ version = 1
 
 		add_common_keys(docResponse);
 
+		//utils::xml::Set(node, "version", mVersion);
+
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}

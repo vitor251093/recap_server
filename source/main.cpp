@@ -44,7 +44,7 @@ bool Application::OnInit() {
 	Game::Config::Load("config.xml");
 
 	// Game
-	std::string darksporeVersion = "5.3.0.127";
+	std::string darksporeVersion = Game::Config::Get(CONFIG_DARKSPORE_VERSION);
 	mGameAPI = std::make_unique<Game::API>(darksporeVersion);
 
 	// Blaze
