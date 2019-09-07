@@ -17,7 +17,9 @@ namespace Game {
 		bool grantAllAccess = false;
 		bool grantOnlineAccess = false;
 
+		// chainProgression = ((planetLevel - 1)*4 + (planetSublevel - 1))
 		uint32_t chainProgression = 0;
+
 		uint32_t creatureRewards = 0;
 
 		uint32_t currentGameId = 1;

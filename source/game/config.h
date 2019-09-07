@@ -26,6 +26,8 @@ namespace Game {
 		public:
 			static void Load(const std::string& path);
 
+			static std::string dlsVersion();
+
 			static const std::string& Get(ConfigValue key);
 			static bool GetBool(ConfigValue key);
 			static void Set(ConfigValue key, const std::string& value);

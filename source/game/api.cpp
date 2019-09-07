@@ -257,8 +257,8 @@ namespace Game {
 				Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH);
 
 			std::string file_data = utils::get_file_text(path);
-			utils::string_replace(file_data, "{{dls-version}}", "0.1");
-			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
+			utils::string_replace(file_data, "{{dls-version}}", Config::dlsVersion());
+			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? mVersion : "no");
 			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
 			utils::string_replace(file_data, "{{display-latest-version}}", "none");
 			utils::string_replace(file_data, "{{latest-version}}", "yes");

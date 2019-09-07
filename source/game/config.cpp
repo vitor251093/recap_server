@@ -65,6 +65,10 @@ namespace Game {
 		}
 	}
 
+	std::string Config::dlsVersion() {
+		return "0.2.1";
+	}
+
 	const std::string& Config::Get(ConfigValue key) {
 		return mConfig[key];
 	}
