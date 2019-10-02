@@ -169,21 +169,14 @@ namespace Game {
 			auto& request = session.get_request();
 
 			auto method = request.uri.parameter("method");
-			if (method == "api.launcher.setTheme") {
-				dls_launcher_setTheme(session, response);
-			} else if (method == "api.launcher.listThemes") {
-				dls_launcher_listThemes(session, response);
-			} else if (method == "api.game.registration") {
-				dls_game_registration(session, response);
-			} else if (method == "api.game.log") {
-				dls_game_log(session, response);
-			} else if (method == "api.panel.listUsers") {
-				dls_panel_listUsers(session, response);
-			} else if (method == "api.panel.getUserInfo") {
-				dls_panel_getUserInfo(session, response);
-			} else if (method == "api.panel.setUserInfo") {
-				dls_panel_setUserInfo(session, response);
-			} else {
+			     if (method == "api.launcher.setTheme")   {dls_launcher_setTheme(session, response);} 
+			else if (method == "api.launcher.listThemes") {dls_launcher_listThemes(session, response);} 
+			else if (method == "api.game.registration")   {dls_game_registration(session, response);} 
+			else if (method == "api.game.log")            {dls_game_log(session, response);} 
+			else if (method == "api.panel.listUsers")     {dls_panel_listUsers(session, response);} 
+			else if (method == "api.panel.getUserInfo")   {dls_panel_getUserInfo(session, response);} 
+			else if (method == "api.panel.setUserInfo")   {dls_panel_setUserInfo(session, response);} 
+			else {
 				std::cout << "Undefined /dls/api method: " << method << std::endl;
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
@@ -194,13 +187,11 @@ namespace Game {
 			auto& request = session.get_request();
 
 			auto method = request.uri.parameter("method");
-			if (method == "api.config.getConfigs") {
-				bootstrap_config_getConfig(session, response);
-				return;
+			if (method == "api.config.getConfigs") {bootstrap_config_getConfig(session, response);}
+			else {
+				std::cout << "Undefined /bootstrap/api method: " << method << std::endl;
+				response.result() = boost::beast::http::status::internal_server_error;
 			}
-
-			std::cout << "Undefined /bootstrap/api method: " << method << std::endl;
-			response.result() = boost::beast::http::status::internal_server_error;
 		});
 
 		router->add("/bootstrap/launcher/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -312,35 +303,22 @@ namespace Game {
 				method = "api.account.auth";
 			}
 
-			       if (method == "api.status.getStatus") {
-				game_status_getStatus(session, response);
-			} else if (method == "api.status.getBroadcastList") {
-				game_status_getBroadcastList(session, response);
-			} else if (method == "api.inventory.getPartList") {
-				game_inventory_getPartList(session, response);
-			} else if (method == "api.inventory.getPartOfferList") {
-				game_inventory_getPartOfferList(session, response);
-			} else if (method == "api.inventory.updatePartStatus") {
-				game_inventory_updatePartStatus(session, response);
-			} else if (method == "api.inventory.vendorParts") {
-				game_inventory_vendorParts(session, response);
-			} else if (method == "api.account.auth") {
-				game_account_auth(session, response);
-			} else if (method == "api.account.getAccount") {
-				game_account_getAccount(session, response);
-			} else if (method == "api.account.logout") {
-				game_account_logout(session, response);
-			} else if (method == "api.account.unlock") {
-				game_account_unlock(session, response);
-			} else if (method == "api.game.getGame" || method == "api.game.getRandomGame") {
-				game_game_getGame(session, response);
-			} else if (method == "api.game.exitGame") {
-				game_game_exitGame(session, response);
-			} else if (method == "api.creature.resetCreature") {
-				game_creature_resetCreature(session, response);
-			} else if (method == "api.creature.unlockCreature") {
-				game_creature_unlockCreature(session, response);
-			} else {
+			     if (method == "api.status.getStatus")           {game_status_getStatus(session, response);} 
+			else if (method == "api.status.getBroadcastList")    {game_status_getBroadcastList(session, response);} 
+			else if (method == "api.inventory.getPartList")      {game_inventory_getPartList(session, response);} 
+			else if (method == "api.inventory.getPartOfferList") {game_inventory_getPartOfferList(session, response);} 
+			else if (method == "api.inventory.updatePartStatus") {game_inventory_updatePartStatus(session, response);} 
+			else if (method == "api.inventory.vendorParts")      {game_inventory_vendorParts(session, response);} 
+			else if (method == "api.account.auth")               {game_account_auth(session, response);} 
+			else if (method == "api.account.getAccount")         {game_account_getAccount(session, response);} 
+			else if (method == "api.account.logout")             {game_account_logout(session, response);} 
+			else if (method == "api.account.unlock")             {game_account_unlock(session, response);} 
+			else if (method == "api.game.getGame")               {game_game_getGame(session, response);} 
+			else if (method == "api.game.getRandomGame")         {game_game_getGame(session, response);} 
+			else if (method == "api.game.exitGame")              {game_game_exitGame(session, response);} 
+			else if (method == "api.creature.resetCreature")     {game_creature_resetCreature(session, response);} 
+			else if (method == "api.creature.unlockCreature")    {game_creature_unlockCreature(session, response);} 
+			else {
 				std::cout << "Undefined /game/api method: " << method << std::endl;
 				for (const auto& [name, value] : request.uri) {
 					std::cout << name << " = " << value << std::endl;
@@ -390,9 +368,8 @@ version = 1
 			auto version = request.uri.parameter("version");
 			auto method = request.uri.parameter("method");
 
-			if (method == "api.survey.getSurveyList") {
-				survey_survey_getSurveyList(session, response);
-			} else {
+			if (method == "api.survey.getSurveyList") {survey_survey_getSurveyList(session, response);} 
+			else {
 				std::cout << "Undefined /survey/api method: " << method << std::endl;
 				empty_xml_response(response);
 			}

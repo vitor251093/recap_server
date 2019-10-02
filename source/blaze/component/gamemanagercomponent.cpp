@@ -46,52 +46,55 @@
 		Juggernaut = 5
 		Quickplay = 6
 		DirectEntry = 7
+*/
 
-	Packet IDs
-		0x01 = CreateGame
-		0x02 = DestroyGame
-		0x03 = AdvanceGameState
-		0x04 = SetGameSettings
-		0x05 = SetPlayerCapacity
-		0x07 = SetGameAttributes
-		0x08 = SetPlayerAttributes
-		0x09 = JoinGame
-		0x0B = RemovePlayer
-		0x0D = StartMatchmaking
-		0x0E = CancelMatchmaking
-		0x0F = FinalizeGameCreation
-		0x11 = ListGames
-		0x12 = SetPlayerCustomData
-		0x13 = ReplayGame
-		0x14 = ReturnDedicatedServerToPool
-		0x15 = JoinGameByGroup
-		0x16 = LeaveGameByGroup
-		0x17 = MigrateGame
-		0x18 = UpdateGameHostMigrationStatus
-		0x19 = ResetDedicatedServer
-		0x1A = UpdateGameSession
-		0x1B = BanPlayer
-		0x1D = UpdateMeshConnection
-		0x1F = RemovePlayerFromBannedList
-		0x20 = ClearBannedList
-		0x21 = GetBannedList
-		0x26 = AddQueuedPlayerToGame
-		0x27 = UpdateGameName
-		0x64 = GetGameListSnapshot
-		0x65 = GetGameListSubscription
-		0x66 = DestroyGameList
-		0x67 = GetFullGameData
-		0x68 = GetMatchmakingConfig
-		0x69 = GetGameDataFromId
-		0x6A = AddAdminPlayer
-		0x6B = RemoveAdminPlayer
-		0x6C = SetPlayerTeam
-		0x6D = ChangePlayerTeam
-		0x6E = MigrateAdminPlayer
-		0x6F = GetUserSetGameListSubscription
-		0x96 = RegisterDynamicDedicatedServerCreator
-		0x97 = UnregisterDynamicDedicatedServerCreator
-
+enum class PacketIDGameCommand : uint16_t
+{
+	PacketIDGameCommandCreateGame = 0x01,
+	PacketIDGameCommandDestroyGame = 0x02,
+	PacketIDGameCommandAdvanceGameState = 0x03,
+	PacketIDGameCommandSetGameSettings = 0x04,
+	PacketIDGameCommandSetPlayerCapacity = 0x05,
+	PacketIDGameCommandSetGameAttributes = 0x07,
+	PacketIDGameCommandSetPlayerAttributes = 0x08,
+	PacketIDGameCommandJoinGame = 0x09,
+	PacketIDGameCommandRemovePlayer = 0x0B,
+	PacketIDGameCommandStartMatchmaking = 0x0D,
+	PacketIDGameCommandCancelMatchmaking = 0x0E,
+	PacketIDGameCommandFinalizeGameCreation = 0x0F,
+	PacketIDGameCommandListGames = 0x11,
+	PacketIDGameCommandSetPlayerCustomData = 0x12,
+	PacketIDGameCommandReplayGame = 0x13,
+	PacketIDGameCommandReturnDedicatedServerToPool = 0x14,
+	PacketIDGameCommandJoinGameByGroup = 0x15,
+	PacketIDGameCommandLeaveGameByGroup = 0x16,
+	PacketIDGameCommandMigrateGame = 0x17,
+	PacketIDGameCommandUpdateGameHostMigrationStatus = 0x18,
+	PacketIDGameCommandResetDedicatedServer = 0x19,
+	PacketIDGameCommandUpdateGameSession = 0x1A,
+	PacketIDGameCommandBanPlayer = 0x1B,
+	PacketIDGameCommandUpdateMeshConnection = 0x1D,
+	PacketIDGameCommandRemovePlayerFromBannedList = 0x1F,
+	PacketIDGameCommandClearBannedList = 0x20,
+	PacketIDGameCommandGetBannedList = 0x21,
+	PacketIDGameCommandAddQueuedPlayerToGame = 0x26,
+	PacketIDGameCommandUpdateGameName = 0x27,
+	PacketIDGameCommandGetGameListSnapshot = 0x64,
+	PacketIDGameCommandGetGameListSubscription = 0x65,
+	PacketIDGameCommandDestroyGameList = 0x66,
+	PacketIDGameCommandGetFullGameData = 0x67,
+	PacketIDGameCommandGetMatchmakingConfig = 0x68,
+	PacketIDGameCommandGetGameDataFromId = 0x69,
+	PacketIDGameCommandAddAdminPlayer = 0x6A,
+	PacketIDGameCommandRemoveAdminPlayer = 0x6B,
+	PacketIDGameCommandSetPlayerTeam = 0x6C,
+	PacketIDGameCommandChangePlayerTeam = 0x6D,
+	PacketIDGameCommandMigrateAdminPlayer = 0x6E,
+	PacketIDGameCommandGetUserSetGameListSubscription = 0x6F,
+	PacketIDGameCommandRegisterDynamicDedicatedServerCreator = 0x96,
+	PacketIDGameCommandUnregisterDynamicDedicatedServerCreator = 0x97
+};
+/*
 	Notification Packet IDs
 		0x0A = NotifyMatchmakingFailed
 		0x0C = NotifyMatchmakingAsyncStatus
@@ -322,38 +325,14 @@ namespace Blaze {
 	// GameManagerComponent
 	void GameManagerComponent::Parse(Client* client, const Header& header) {
 		switch (header.command) {
-			case 0x01:
-				CreateGame(client, header);
-				break;
-
-			case 0x09:
-				JoinGame(client, header);
-				break;
-			
-			case 0x0B:
-				RemovePlayer(client, header);
-				break;
-
-			case 0x0D:
-				StartMatchmaking(client, header);
-				break;
-
-			case 0x0E:
-				CancelMatchmaking(client, header);
-				break;
-
-			case 0x0F:
-				FinalizeGameCreation(client, header);
-				break;
-
-			case 0x19:
-				ResetDedicatedServer(client, header);
-				break;
-
-			case 0x1D:
-				UpdateMeshConnection(client, header);
-				break;
-
+			case PacketIDGameCommandCreateGame:           CreateGame(client, header);           break;
+			case PacketIDGameCommandJoinGame:             JoinGame(client, header);             break;
+			case PacketIDGameCommandRemovePlayer:         RemovePlayer(client, header);         break;
+			case PacketIDGameCommandStartMatchmaking:     StartMatchmaking(client, header);     break;
+			case PacketIDGameCommandCancelMatchmaking:    CancelMatchmaking(client, header);    break;
+			case PacketIDGameCommandFinalizeGameCreation: FinalizeGameCreation(client, header); break;
+			case PacketIDGameCommandResetDedicatedServer: ResetDedicatedServer(client, header); break;
+			case PacketIDGameCommandUpdateMeshConnection: UpdateMeshConnection(client, header); break;
 			default:
 				std::cout << "Unknown gamemanager command: 0x" << std::hex << header.command << std::dec << std::endl;
 				break;
@@ -369,7 +348,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = 0x01;
+		header.command = PacketIDGameCommandCreateGame;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -384,7 +363,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = 0x09;
+		header.command = PacketIDGameCommandJoinGame;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -399,7 +378,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = 0x0D;
+		header.command = PacketIDGameCommandStartMatchmaking;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -414,7 +393,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = 0x0F;
+		header.command = PacketIDGameCommandFinalizeGameCreation;
 		header.error_code = 0;
 
 		client->notify(std::move(header), outBuffer);

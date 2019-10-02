@@ -6,52 +6,52 @@
 #include "../../utils/functions.h"
 #include <iostream>
 
-enum class PacketID : uint16_t
+enum class PacketIDAuthCommand : uint16_t
 {
-	PacketIDCreateAccount            = 0x0A,
-	PacketIDUpdateAccount            = 0x14,
-	PacketIDUpdateParentalEmail      = 0x1C,
-	PacketIDListUserEntitlements2    = 0x1D,
-	PacketIDGetAccount               = 0x1E,
-	PacketIDGrantEntitlement         = 0x1F,
-	PacketIDListEntitlements         = 0x20,
-	PacketIDHasEntitlement           = 0x21,
-	PacketIDGetUseCount              = 0x22,
-	PacketIDDecrementUseCount        = 0x23,
-	PacketIDGetAuthToken             = 0x24,
-	PacketIDGetHandoffToken          = 0x25,
-	PacketIDGetPasswordRules         = 0x26,
-	PacketIDGrantEntitlement2        = 0x27,
-	PacketIDLogin                    = 0x28,
-	PacketIDAcceptTOS                = 0x29,
-	PacketIDGetTOSInfo               = 0x2A,
-	PacketIDModifyEntitlements2      = 0x2B,
-	PacketIDConsumeCode              = 0x2C,
-	PacketIDForgottenPassword        = 0x2D,
-	PacketIDGetTermsAndConditions    = 0x2E,
-	PacketIDGetPrivacyPolicy         = 0x2F,
-	PacketIDListPersonaEntitlements2 = 0x30,
-	PacketIDSilentLogin              = 0x32,
-	PacketIDCheckAgeRequirement      = 0x33,
-	PacketIDExpressLogin             = 0x3C,
-	PacketIDLogout                   = 0x46,
-	PacketIDCreatePersona            = 0x50,
-	PacketIDGetPersona               = 0x5A,
-	PacketIDListPersonas             = 0x64,
-	PacketIDLoginPersona             = 0x6E,
-	PacketIDLogoutPersona            = 0x78,
-	PacketIDDeletePersona            = 0x8C,
-	PacketIDDisablePersona           = 0x8D,
-	PacketIDListDeviceAccounts       = 0x8F,
-	PacketIDXboxCreateAccount        = 0x96,
-	PacketIDXboxAssociateAccount     = 0xA0,
-	PacketIDXboxLogin                = 0xAA,
-	PacketIDPS3CreateAccount         = 0xB4,
-	PacketIDPS3AssociateAccount      = 0xBE,
-	PacketIDPS3Login                 = 0xC8,
-	PacketIDValidateSessionKey       = 0xD2,
-	PacketIDWalUserSession           = 0xE6,
-	PacketIDDeviceLoginGuest         = 0x12C //(What?)
+	PacketIDAuthCommandCreateAccount            = 0x0A,
+	PacketIDAuthCommandUpdateAccount            = 0x14,
+	PacketIDAuthCommandUpdateParentalEmail      = 0x1C,
+	PacketIDAuthCommandListUserEntitlements2    = 0x1D,
+	PacketIDAuthCommandGetAccount               = 0x1E,
+	PacketIDAuthCommandGrantEntitlement         = 0x1F,
+	PacketIDAuthCommandListEntitlements         = 0x20,
+	PacketIDAuthCommandHasEntitlement           = 0x21,
+	PacketIDAuthCommandGetUseCount              = 0x22,
+	PacketIDAuthCommandDecrementUseCount        = 0x23,
+	PacketIDAuthCommandGetAuthToken             = 0x24,
+	PacketIDAuthCommandGetHandoffToken          = 0x25,
+	PacketIDAuthCommandGetPasswordRules         = 0x26,
+	PacketIDAuthCommandGrantEntitlement2        = 0x27,
+	PacketIDAuthCommandLogin                    = 0x28,
+	PacketIDAuthCommandAcceptTOS                = 0x29,
+	PacketIDAuthCommandGetTOSInfo               = 0x2A,
+	PacketIDAuthCommandModifyEntitlements2      = 0x2B,
+	PacketIDAuthCommandConsumeCode              = 0x2C,
+	PacketIDAuthCommandForgottenPassword        = 0x2D,
+	PacketIDAuthCommandGetTermsAndConditions    = 0x2E,
+	PacketIDAuthCommandGetPrivacyPolicy         = 0x2F,
+	PacketIDAuthCommandListPersonaEntitlements2 = 0x30,
+	PacketIDAuthCommandSilentLogin              = 0x32,
+	PacketIDAuthCommandCheckAgeRequirement      = 0x33,
+	PacketIDAuthCommandExpressLogin             = 0x3C,
+	PacketIDAuthCommandLogout                   = 0x46,
+	PacketIDAuthCommandCreatePersona            = 0x50,
+	PacketIDAuthCommandGetPersona               = 0x5A,
+	PacketIDAuthCommandListPersonas             = 0x64,
+	PacketIDAuthCommandLoginPersona             = 0x6E,
+	PacketIDAuthCommandLogoutPersona            = 0x78,
+	PacketIDAuthCommandDeletePersona            = 0x8C,
+	PacketIDAuthCommandDisablePersona           = 0x8D,
+	PacketIDAuthCommandListDeviceAccounts       = 0x8F,
+	PacketIDAuthCommandXboxCreateAccount        = 0x96,
+	PacketIDAuthCommandXboxAssociateAccount     = 0xA0,
+	PacketIDAuthCommandXboxLogin                = 0xAA,
+	PacketIDAuthCommandPS3CreateAccount         = 0xB4,
+	PacketIDAuthCommandPS3AssociateAccount      = 0xBE,
+	PacketIDAuthCommandPS3Login                 = 0xC8,
+	PacketIDAuthCommandValidateSessionKey       = 0xD2,
+	PacketIDAuthCommandWalUserSession           = 0xE6,
+	PacketIDAuthCommandDeviceLoginGuest         = 0x12C //(What?)
 };
 
 /*
@@ -307,38 +307,17 @@ enum class PacketID : uint16_t
 namespace Blaze {
 	// AuthComponent
 	void AuthComponent::Parse(Client* client, const Header& header) {
-		switch ((PacketID)header.command) {
-			case PacketIDListUserEntitlements2: ListUserEntitlements(client, header); break;
-			case PacketIDGetAuthToken:          GetAuthToken(client, header);         break;
-			case PacketIDLogin:                 Login(client, header);                break;
-			case PacketIDAcceptTOS:
-				AcceptTOS(client, header);
-				break;
-
-			case PacketIDGetTOSInfo:
-				GetTOSInfo(client, header);
-				break;
-
-			case PacketIDGetTermsAndConditions:
-				GetTermsAndConditions(client, header);
-				break;
-
-			case PacketIDGetPrivacyPolicy:
-				GetPrivacyPolicy(client, header);
-				break;
-
-			case PacketIDSilentLogin:
-				SilentLogin(client, header);
-				break;
-
-			case PacketIDLogout:
-				Logout(client, header);
-				break;
-
-			case PacketIDLoginPersona:
-				LoginPersona(client, header);
-				break;
-
+		switch ((PacketIDAuthCommand)header.command) {
+			case PacketIDAuthCommandListUserEntitlements2: ListUserEntitlements(client, header);  break;
+			case PacketIDAuthCommandGetAuthToken:          GetAuthToken(client, header);          break;
+			case PacketIDAuthCommandLogin:                 Login(client, header);                 break;
+			case PacketIDAuthCommandAcceptTOS:             AcceptTOS(client, header);             break;
+			case PacketIDAuthCommandGetTOSInfo:            GetTOSInfo(client, header);            break;
+			case PacketIDAuthCommandGetTermsAndConditions: GetTermsAndConditions(client, header); break;
+			case PacketIDAuthCommandGetPrivacyPolicy:      GetPrivacyPolicy(client, header);      break;
+			case PacketIDAuthCommandSilentLogin:           SilentLogin(client, header);           break;
+			case PacketIDAuthCommandLogout:                Logout(client, header);                break;
+			case PacketIDAuthCommandLoginPersona:          LoginPersona(client, header);          break;
 			default:
 				std::cout << "Unknown auth command: 0x" << std::hex << header.command << std::dec << std::endl;
 				break;
@@ -356,7 +335,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::Authentication;
-		header.command = 0x24;
+		header.command = PacketIDAuthCommandGetAuthToken;
 		header.error_code = 0;
 
 		client->reply(header, outBuffer);
@@ -397,7 +376,7 @@ namespace Blaze {
 		packet.Write(outBuffer);
 
 		header.component = Component::Authentication;
-		header.command = 0x28;
+		header.command = PacketIDAuthCommandLogin;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -433,7 +412,7 @@ namespace Blaze {
 		packet.Write(outBuffer);
 
 		header.component = Component::Authentication;
-		header.command = 0x6E;
+		header.command = PacketIDAuthCommandLoginPersona;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -479,7 +458,7 @@ namespace Blaze {
 		packet.Write(outBuffer);
 
 		header.component = Component::Authentication;
-		header.command = 0x3C;
+		header.command = PacketIDAuthCommandExpressLogin;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -524,7 +503,7 @@ namespace Blaze {
 		packet.Write(outBuffer);
 
 		header.component = Component::Authentication;
-		header.command = 0x28;
+		header.command = PacketIDAuthCommandLogin;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -544,7 +523,7 @@ namespace Blaze {
 		packet.Write(outBuffer);
 
 		header.component = Component::Authentication;
-		header.command = 0x2A;
+		header.command = PacketIDAuthCommandGetTOSInfo;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -564,7 +543,7 @@ namespace Blaze {
 		packet.Write(outBuffer);
 
 		header.component = Component::Authentication;
-		header.command = 0x2E;
+		header.command = PacketIDAuthCommandGetTermsAndConditions;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -584,7 +563,7 @@ namespace Blaze {
 		packet.Write(outBuffer);
 
 		header.component = Component::Authentication;
-		header.command = 0x2F;
+		header.command = PacketIDAuthCommandGetPrivacyPolicy;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -872,7 +851,7 @@ namespace Blaze {
 			std::cout << "User '" << email << "' not found." << std::endl;
 
 			header.component = Component::Authentication;
-			header.command = 0x28;
+			header.command = PacketIDAuthCommandLogin;
 			header.error_code = 0x000B;
 
 			client->reply(std::move(header));
