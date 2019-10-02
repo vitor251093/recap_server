@@ -6,53 +6,55 @@
 #include "../../utils/functions.h"
 #include <iostream>
 
-/*
-	Packet IDs
-		0x0A = CreateAccount
-		0x14 = UpdateAccount
-		0x1C = UpdateParentalEmail
-		0x1D = ListUserEntitlements2
-		0x1E = GetAccount
-		0x1F = GrantEntitlement
-		0x20 = ListEntitlements
-		0x21 = HasEntitlement
-		0x22 = GetUseCount
-		0x23 = DecrementUseCount
-		0x24 = GetAuthToken
-		0x25 = GetHandoffToken
-		0x26 = GetPasswordRules
-		0x27 = GrantEntitlement2
-		0x28 = Login
-		0x29 = AcceptTOS
-		0x2A = GetTOSInfo
-		0x2B = ModifyEntitlements2
-		0x2C = ConsumeCode
-		0x2D = ForgottenPassword
-		0x2E = GetTermsAndConditions
-		0x2F = GetPrivacyPolicy
-		0x30 = ListPersonaEntitlements2
-		0x32 = SilentLogin
-		0x33 = CheckAgeRequirement
-		0x3C = ExpressLogin
-		0x46 = Logout
-		0x50 = CreatePersona
-		0x5A = GetPersona
-		0x64 = ListPersonas
-		0x6E = LoginPersona
-		0x78 = LogoutPersona
-		0x8C = DeletePersona
-		0x8D = DisablePersona
-		0x8F = ListDeviceAccounts
-		0x96 = XboxCreateAccount
-		0xA0 = XboxAssociateAccount
-		0xAA = XboxLogin
-		0xB4 = PS3CreateAccount
-		0xBE = PS3AssociateAccount
-		0xC8 = PS3Login
-		0xD2 = ValidateSessionKey
-		0xE6 = WalUserSession
-		0x12C = DeviceLoginGuest (What?)
+enum class PacketID : uint16_t
+{
+	PacketIDCreateAccount            = 0x0A,
+	PacketIDUpdateAccount            = 0x14,
+	PacketIDUpdateParentalEmail      = 0x1C,
+	PacketIDListUserEntitlements2    = 0x1D,
+	PacketIDGetAccount               = 0x1E,
+	PacketIDGrantEntitlement         = 0x1F,
+	PacketIDListEntitlements         = 0x20,
+	PacketIDHasEntitlement           = 0x21,
+	PacketIDGetUseCount              = 0x22,
+	PacketIDDecrementUseCount        = 0x23,
+	PacketIDGetAuthToken             = 0x24,
+	PacketIDGetHandoffToken          = 0x25,
+	PacketIDGetPasswordRules         = 0x26,
+	PacketIDGrantEntitlement2        = 0x27,
+	PacketIDLogin                    = 0x28,
+	PacketIDAcceptTOS                = 0x29,
+	PacketIDGetTOSInfo               = 0x2A,
+	PacketIDModifyEntitlements2      = 0x2B,
+	PacketIDConsumeCode              = 0x2C,
+	PacketIDForgottenPassword        = 0x2D,
+	PacketIDGetTermsAndConditions    = 0x2E,
+	PacketIDGetPrivacyPolicy         = 0x2F,
+	PacketIDListPersonaEntitlements2 = 0x30,
+	PacketIDSilentLogin              = 0x32,
+	PacketIDCheckAgeRequirement      = 0x33,
+	PacketIDExpressLogin             = 0x3C,
+	PacketIDLogout                   = 0x46,
+	PacketIDCreatePersona            = 0x50,
+	PacketIDGetPersona               = 0x5A,
+	PacketIDListPersonas             = 0x64,
+	PacketIDLoginPersona             = 0x6E,
+	PacketIDLogoutPersona            = 0x78,
+	PacketIDDeletePersona            = 0x8C,
+	PacketIDDisablePersona           = 0x8D,
+	PacketIDListDeviceAccounts       = 0x8F,
+	PacketIDXboxCreateAccount        = 0x96,
+	PacketIDXboxAssociateAccount     = 0xA0,
+	PacketIDXboxLogin                = 0xAA,
+	PacketIDPS3CreateAccount         = 0xB4,
+	PacketIDPS3AssociateAccount      = 0xBE,
+	PacketIDPS3Login                 = 0xC8,
+	PacketIDValidateSessionKey       = 0xD2,
+	PacketIDWalUserSession           = 0xE6,
+	PacketIDDeviceLoginGuest         = 0x12C //(What?)
+};
 
+/*
 	Union types (0-4 means the value when creating the union)
 		ADDR
 
@@ -305,44 +307,35 @@
 namespace Blaze {
 	// AuthComponent
 	void AuthComponent::Parse(Client* client, const Header& header) {
-		switch (header.command) {
-			case 0x1D:
-				ListUserEntitlements(client, header);
-				break;
-
-			case 0x24:
-				GetAuthToken(client, header);
-				break;
-
-			case 0x28:
-				Login(client, header);
-				break;
-
-			case 0x29:
+		switch ((PacketID)header.command) {
+			case PacketIDListUserEntitlements2: ListUserEntitlements(client, header); break;
+			case PacketIDGetAuthToken:          GetAuthToken(client, header);         break;
+			case PacketIDLogin:                 Login(client, header);                break;
+			case PacketIDAcceptTOS:
 				AcceptTOS(client, header);
 				break;
 
-			case 0x2A:
+			case PacketIDGetTOSInfo:
 				GetTOSInfo(client, header);
 				break;
 
-			case 0x2E:
+			case PacketIDGetTermsAndConditions:
 				GetTermsAndConditions(client, header);
 				break;
 
-			case 0x2F:
+			case PacketIDGetPrivacyPolicy:
 				GetPrivacyPolicy(client, header);
 				break;
 
-			case 0x32:
+			case PacketIDSilentLogin:
 				SilentLogin(client, header);
 				break;
 
-			case 0x46:
+			case PacketIDLogout:
 				Logout(client, header);
 				break;
 
-			case 0x6E:
+			case PacketIDLoginPersona:
 				LoginPersona(client, header);
 				break;
 
