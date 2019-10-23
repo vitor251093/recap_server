@@ -50,49 +50,49 @@
 
 enum class PacketIDGameCommand : uint16_t
 {
-	PacketIDGameCommandCreateGame = 0x01,
-	PacketIDGameCommandDestroyGame = 0x02,
-	PacketIDGameCommandAdvanceGameState = 0x03,
-	PacketIDGameCommandSetGameSettings = 0x04,
-	PacketIDGameCommandSetPlayerCapacity = 0x05,
-	PacketIDGameCommandSetGameAttributes = 0x07,
-	PacketIDGameCommandSetPlayerAttributes = 0x08,
-	PacketIDGameCommandJoinGame = 0x09,
-	PacketIDGameCommandRemovePlayer = 0x0B,
-	PacketIDGameCommandStartMatchmaking = 0x0D,
-	PacketIDGameCommandCancelMatchmaking = 0x0E,
-	PacketIDGameCommandFinalizeGameCreation = 0x0F,
-	PacketIDGameCommandListGames = 0x11,
-	PacketIDGameCommandSetPlayerCustomData = 0x12,
-	PacketIDGameCommandReplayGame = 0x13,
-	PacketIDGameCommandReturnDedicatedServerToPool = 0x14,
-	PacketIDGameCommandJoinGameByGroup = 0x15,
-	PacketIDGameCommandLeaveGameByGroup = 0x16,
-	PacketIDGameCommandMigrateGame = 0x17,
-	PacketIDGameCommandUpdateGameHostMigrationStatus = 0x18,
-	PacketIDGameCommandResetDedicatedServer = 0x19,
-	PacketIDGameCommandUpdateGameSession = 0x1A,
-	PacketIDGameCommandBanPlayer = 0x1B,
-	PacketIDGameCommandUpdateMeshConnection = 0x1D,
-	PacketIDGameCommandRemovePlayerFromBannedList = 0x1F,
-	PacketIDGameCommandClearBannedList = 0x20,
-	PacketIDGameCommandGetBannedList = 0x21,
-	PacketIDGameCommandAddQueuedPlayerToGame = 0x26,
-	PacketIDGameCommandUpdateGameName = 0x27,
-	PacketIDGameCommandGetGameListSnapshot = 0x64,
-	PacketIDGameCommandGetGameListSubscription = 0x65,
-	PacketIDGameCommandDestroyGameList = 0x66,
-	PacketIDGameCommandGetFullGameData = 0x67,
-	PacketIDGameCommandGetMatchmakingConfig = 0x68,
-	PacketIDGameCommandGetGameDataFromId = 0x69,
-	PacketIDGameCommandAddAdminPlayer = 0x6A,
-	PacketIDGameCommandRemoveAdminPlayer = 0x6B,
-	PacketIDGameCommandSetPlayerTeam = 0x6C,
-	PacketIDGameCommandChangePlayerTeam = 0x6D,
-	PacketIDGameCommandMigrateAdminPlayer = 0x6E,
-	PacketIDGameCommandGetUserSetGameListSubscription = 0x6F,
-	PacketIDGameCommandRegisterDynamicDedicatedServerCreator = 0x96,
-	PacketIDGameCommandUnregisterDynamicDedicatedServerCreator = 0x97
+	CreateGame = 0x01,
+	DestroyGame = 0x02,
+	AdvanceGameState = 0x03,
+	SetGameSettings = 0x04,
+	SetPlayerCapacity = 0x05,
+	SetGameAttributes = 0x07,
+	SetPlayerAttributes = 0x08,
+	JoinGame = 0x09,
+	RemovePlayer = 0x0B,
+	StartMatchmaking = 0x0D,
+	CancelMatchmaking = 0x0E,
+	FinalizeGameCreation = 0x0F,
+	ListGames = 0x11,
+	SetPlayerCustomData = 0x12,
+	ReplayGame = 0x13,
+	ReturnDedicatedServerToPool = 0x14,
+	JoinGameByGroup = 0x15,
+	LeaveGameByGroup = 0x16,
+	MigrateGame = 0x17,
+	UpdateGameHostMigrationStatus = 0x18,
+	ResetDedicatedServer = 0x19,
+	UpdateGameSession = 0x1A,
+	BanPlayer = 0x1B,
+	UpdateMeshConnection = 0x1D,
+	RemovePlayerFromBannedList = 0x1F,
+	ClearBannedList = 0x20,
+	GetBannedList = 0x21,
+	AddQueuedPlayerToGame = 0x26,
+	UpdateGameName = 0x27,
+	GetGameListSnapshot = 0x64,
+	GetGameListSubscription = 0x65,
+	DestroyGameList = 0x66,
+	GetFullGameData = 0x67,
+	GetMatchmakingConfig = 0x68,
+	GetGameDataFromId = 0x69,
+	AddAdminPlayer = 0x6A,
+	RemoveAdminPlayer = 0x6B,
+	SetPlayerTeam = 0x6C,
+	ChangePlayerTeam = 0x6D,
+	MigrateAdminPlayer = 0x6E,
+	GetUserSetGameListSubscription = 0x6F,
+	RegisterDynamicDedicatedServerCreator = 0x96,
+	UnregisterDynamicDedicatedServerCreator = 0x97
 };
 /*
 	Notification Packet IDs
@@ -324,15 +324,15 @@ enum class PacketIDGameCommand : uint16_t
 namespace Blaze {
 	// GameManagerComponent
 	void GameManagerComponent::Parse(Client* client, const Header& header) {
-		switch (header.command) {
-			case PacketIDGameCommandCreateGame:           CreateGame(client, header);           break;
-			case PacketIDGameCommandJoinGame:             JoinGame(client, header);             break;
-			case PacketIDGameCommandRemovePlayer:         RemovePlayer(client, header);         break;
-			case PacketIDGameCommandStartMatchmaking:     StartMatchmaking(client, header);     break;
-			case PacketIDGameCommandCancelMatchmaking:    CancelMatchmaking(client, header);    break;
-			case PacketIDGameCommandFinalizeGameCreation: FinalizeGameCreation(client, header); break;
-			case PacketIDGameCommandResetDedicatedServer: ResetDedicatedServer(client, header); break;
-			case PacketIDGameCommandUpdateMeshConnection: UpdateMeshConnection(client, header); break;
+		switch ((PacketIDGameCommand)header.command) {
+			case PacketIDGameCommand::CreateGame:           CreateGame(client, header);           break;
+			case PacketIDGameCommand::JoinGame:             JoinGame(client, header);             break;
+			case PacketIDGameCommand::RemovePlayer:         RemovePlayer(client, header);         break;
+			case PacketIDGameCommand::StartMatchmaking:     StartMatchmaking(client, header);     break;
+			case PacketIDGameCommand::CancelMatchmaking:    CancelMatchmaking(client, header);    break;
+			case PacketIDGameCommand::FinalizeGameCreation: FinalizeGameCreation(client, header); break;
+			case PacketIDGameCommand::ResetDedicatedServer: ResetDedicatedServer(client, header); break;
+			case PacketIDGameCommand::UpdateMeshConnection: UpdateMeshConnection(client, header); break;
 			default:
 				std::cout << "Unknown gamemanager command: 0x" << std::hex << header.command << std::dec << std::endl;
 				break;
@@ -348,7 +348,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = PacketIDGameCommandCreateGame;
+		header.command = (int)PacketIDGameCommand::CreateGame;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -363,7 +363,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = PacketIDGameCommandJoinGame;
+		header.command = (int)PacketIDGameCommand::JoinGame;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -378,7 +378,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = PacketIDGameCommandStartMatchmaking;
+		header.command = (int)PacketIDGameCommand::StartMatchmaking;
 		header.error_code = 0;
 
 		client->reply(std::move(header), outBuffer);
@@ -393,7 +393,7 @@ namespace Blaze {
 
 		Header header;
 		header.component = Component::GameManager;
-		header.command = PacketIDGameCommandFinalizeGameCreation;
+		header.command = (int)PacketIDGameCommand::FinalizeGameCreation;
 		header.error_code = 0;
 
 		client->notify(std::move(header), outBuffer);
