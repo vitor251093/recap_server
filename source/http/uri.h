@@ -30,6 +30,7 @@ namespace HTTP {
 			uint16_t port() const;
 
 			std::string parameter(const std::string& name) const;
+			double parameterd(const std::string& name) const;
 			int64_t parameteri(const std::string& name) const;
 			uint64_t parameteru(const std::string& name) const;
 			bool parameterb(const std::string& name) const;

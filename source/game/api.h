@@ -58,6 +58,7 @@ namespace Game {
 			void game_game_exitGame(HTTP::Session& session, HTTP::Response& response);
 
 			void game_creature_resetCreature(HTTP::Session& session, HTTP::Response& response);
+			void game_creature_updateCreature(HTTP::Session& session, HTTP::Response& response);
 			void game_creature_unlockCreature(HTTP::Session& session, HTTP::Response& response);
 			void game_creature_getCreature(HTTP::Session& session, HTTP::Response& response);
 

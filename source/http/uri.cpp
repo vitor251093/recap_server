@@ -97,6 +97,17 @@ namespace HTTP {
 		return it != mQuery.end() ? it->second : std::string();
 	}
 
+	double URI::parameterd(const std::string& name) const {
+		double value;
+		try {
+			value = std::stod(parameter(name));
+		}
+		catch (...) {
+			value = 0;
+		}
+		return value;
+	}
+
 	int64_t URI::parameteri(const std::string& name) const {
 		int64_t value;
 		try {
