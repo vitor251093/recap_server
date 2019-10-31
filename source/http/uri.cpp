@@ -101,8 +101,7 @@ namespace HTTP {
 		double value;
 		try {
 			value = std::stod(parameter(name));
-		}
-		catch (...) {
+		} catch (...) {
 			value = 0;
 		}
 		return value;

@@ -258,7 +258,7 @@ namespace Game {
 				// Fetch boundary later from request.data[boost::beast::http::field::content_type]
 
 				HTTP::Multipart multipart(request.data.body(), "EA_HTTP_REQUEST_SIMPLE_BOUNDARY");
-				for (const auto& [name, value] : multipart) {
+				for (const auto&[name, value] : multipart) {
 					request.uri.set_parameter(name, value);
 				}
 			}
