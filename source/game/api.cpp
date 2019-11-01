@@ -163,20 +163,20 @@ namespace Game {
 		// Routing
 		router->add("/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [](HTTP::Session& session, HTTP::Response& response) {
 			logger::info("Got API route.");
-		});
+			});
 
 		// DLS
 		router->add("/dls/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
 
 			auto method = request.uri.parameter("method");
-			     if (method == "api.launcher.setTheme")   { dls_launcher_setTheme(session, response); }
+			if (method == "api.launcher.setTheme") { dls_launcher_setTheme(session, response); }
 			else if (method == "api.launcher.listThemes") { dls_launcher_listThemes(session, response); }
-			else if (method == "api.game.registration")   { dls_game_registration(session, response); }
-			else if (method == "api.game.log")            { dls_game_log(session, response); }
-			else if (method == "api.panel.listUsers")     { dls_panel_listUsers(session, response); }
-			else if (method == "api.panel.getUserInfo")   { dls_panel_getUserInfo(session, response); }
-			else if (method == "api.panel.setUserInfo")   { dls_panel_setUserInfo(session, response); }
+			else if (method == "api.game.registration") { dls_game_registration(session, response); }
+			else if (method == "api.game.log") { dls_game_log(session, response); }
+			else if (method == "api.panel.listUsers") { dls_panel_listUsers(session, response); }
+			else if (method == "api.panel.getUserInfo") { dls_panel_getUserInfo(session, response); }
+			else if (method == "api.panel.setUserInfo") { dls_panel_setUserInfo(session, response); }
 			else {
 				logger::error("Undefined /dls/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
@@ -249,7 +249,7 @@ namespace Game {
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
-			});
+		});
 
 		// Game
 		router->add("/game/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -259,7 +259,7 @@ namespace Game {
 				// Fetch boundary later from request.data[boost::beast::http::field::content_type]
 
 				HTTP::Multipart multipart(request.data.body(), "EA_HTTP_REQUEST_SIMPLE_BOUNDARY");
-				for (const auto&[name, value] : multipart) {
+				for (const auto& [name, value] : multipart) {
 					request.uri.set_parameter(name, value);
 				}
 			}
@@ -316,6 +316,7 @@ namespace Game {
 			else if (method == "api.account.getAccount")         { game_account_getAccount(session, response); }
 			else if (method == "api.account.logout")             { game_account_logout(session, response); }
 			else if (method == "api.account.unlock")             { game_account_unlock(session, response); }
+			else if (method == "api.deck.updateDecks")           { game_deck_updateDecks(session, response); }
 			else if (method == "api.game.getGame")               { game_game_getGame(session, response); }
 			else if (method == "api.game.getRandomGame")         { game_game_getGame(session, response); }
 			else if (method == "api.game.exitGame")              { game_game_exitGame(session, response); }
@@ -330,39 +331,26 @@ namespace Game {
 				logger::error("");
 				empty_xml_response(response);
 			}
-			});
-
-		/*
-Undefined /game/api method: api.deck.updateDecks
-method = api.deck.updateDecks
-pve_active_slot = 1
-pve_creatures = 10,11,3948469269,0,0,0,0,0,0
-pvp_active_slot = 28614456
-pvp_creatures = 0,0,0,0,0,0,0,0,0
-token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
-version = 1
-		*/
-
-
+		});
 
 		// Png
 		router->add("/template_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response);
-			});
+		});
 
 		router->add("/creature_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response);
-			});
+		});
 
 
 		// Browser launcher
 		router->add("/favicon.ico", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response, "/www");
-			});
+		});
 
 		router->add("/panel/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response, "/www");
-			});
+		});
 
 
 		// Survey
@@ -377,7 +365,7 @@ version = 1
 				logger::error("Undefined /survey/api method: " + method);
 				empty_xml_response(response);
 			}
-			});
+		});
 
 		// Web
 		router->add("/web/sporelabsgame/announceen", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -391,7 +379,7 @@ version = 1
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
-			});
+		});
 
 		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
@@ -404,18 +392,18 @@ version = 1
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
-			});
+		});
 
 		router->add("/web/sporelabsgame/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// That one is launched in the system browser
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = "";
-			});
+		});
 
 		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = "";
-			});
+		});
 
 		// QOS
 		router->add("/qos/qos", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -439,7 +427,7 @@ version = 1
 				response.set(boost::beast::http::field::content_type, "text/plain");
 				response.body() = "";
 			}
-			});
+		});
 	}
 
 	void API::empty_xml_response(HTTP::Response& response) {
@@ -845,6 +833,20 @@ version = 1
 		response.body() = utils::xml::ToString(document);
 	}
 
+	/*
+	
+Undefined /game/api method: api.leaderboard.getLeaderboard
+count = 15
+method = api.leaderboard.getLeaderboard
+name = xp
+start = 0
+token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+varient = friends
+version = 1
+vs = 1
+
+	*/
+
 	void API::game_inventory_updatePartStatus(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 
@@ -1098,6 +1100,59 @@ version = 1
 		}
 
 		game_account_getAccount(session, response);
+	}
+
+	/*
+Undefined / game / api method : api.account.setSettings
+method = api.account.setSettings
+settings = DisableLMBAttack, off; ShowAllyHealthAndManaBars, on; ShowAllyNames, on; ShowDamageDoneByAllies, off; ShowDamageDoneByMe, on; ShowDamageDoneToAllies, off; ShowDamageDoneToMe, on; ShowDamagedNPCHealthBars, on; ShowEnemyNames, on; ShowHealingDoneToAllies, off; ShowHealingDoneToEnemies, off; ShowHealingDoneToMe, on; ShowManaGainedOrLostByAllies, off; ShowManaGainedOrLostByMe, on; ShowMyHealthAndManaBars, on; ShowMyName, on; ShowPickupsByAllies, on; ShowPickupsByMe, on; ShowRadar, on;
+token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+version = 1
+	*/
+
+	void API::game_deck_updateDecks(HTTP::Session& session, HTTP::Response& response) {
+
+		auto& request = session.get_request();
+
+		const auto& user = session.get_user();
+		if (user) {
+			Squad* squad = user->GetSquadBySlot(request.uri.parameteru("pve_active_slot"));
+			if (squad) {
+				std::vector<Creature> squadCreatures = squad->creatures.data();
+				auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
+				squadCreatures.clear();
+				for (auto const& creatureId : creaturesIds) {
+					Creature* creature = user->GetCreatureById(std::stoi(creatureId));
+					if (creature && squadCreatures.size() < 3) {
+						squadCreatures.push_back(*creature);
+					}
+				}
+				squad->creatures.setData(squadCreatures);
+			}
+
+			squad = user->GetSquadBySlot(request.uri.parameteru("pvp_active_slot"));
+			if (squad) {
+				std::vector<Creature> squadCreatures = squad->creatures.data();
+				auto creaturesIds = utils::explode_string(request.uri.parameter("pvp_creatures"), ",");
+				squadCreatures.clear();
+				for (auto const& creatureId : creaturesIds) {
+					Creature* creature = user->GetCreatureById(std::stoi(creatureId));
+					if (creature && squadCreatures.size() < 3) {
+						squadCreatures.push_back(*creature);
+					}
+				}
+				squad->creatures.setData(squadCreatures);
+			}
+
+			user->Save();
+		}
+
+		pugi::xml_document document;
+
+		auto docResponse = document.append_child("response");
+		add_common_keys(docResponse);
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = utils::xml::ToString(document);
 	}
 
 	void API::game_game_getGame(HTTP::Session& session, HTTP::Response& response) {

@@ -83,6 +83,8 @@ namespace Game {
 			auto& data() { return mCreatures; }
 			const auto& data() const { return mCreatures; }
 
+			void setData(std::vector<Creature> creatures) { mCreatures = creatures; }
+
 			void ReadXml(const pugi::xml_node& node);
 			void WriteXml(pugi::xml_node& node) const;
 

@@ -206,6 +206,10 @@ namespace Game {
 
 			bool UpdateState(uint32_t newState);
 
+			// Squad
+			Squad* GetSquadBySlot(uint32_t slot);
+			const Squad* GetSquadBySlot(uint32_t slot) const;
+
 			// Creature
 			Creature* GetCreatureById(uint32_t id);
 			const Creature* GetCreatureById(uint32_t id) const;

@@ -514,6 +514,28 @@ namespace Game {
 		return false;
 	}
 
+	Squad* User::GetSquadBySlot(uint32_t slot) {
+		Squad* squadPtr = nullptr;
+		for (auto& squad : mSquads) {
+			if (squad.slot == slot) {
+				squadPtr = &squad;
+				break;
+			}
+		}
+		return squadPtr;
+	}
+
+	const Squad* User::GetSquadBySlot(uint32_t slot) const {
+		const Squad* squadPtr = nullptr;
+		for (const auto& squad : mSquads) {
+			if (squad.slot == slot) {
+				squadPtr = &squad;
+				break;
+			}
+		}
+		return squadPtr;
+	}
+
 	Creature* User::GetCreatureById(uint32_t id) {
 		Creature* creaturePtr = nullptr;
 		for (auto& creature : mCreatures) {
