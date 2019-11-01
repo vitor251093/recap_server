@@ -7,12 +7,9 @@
 #include "blaze/client.h"
 #include "game/game.h"
 #include "utils/functions.h"
+#include "utils/logger.h"
 
 #include <iostream>
-
-#ifdef GetObject
-#	undef GetObject
-#endif
 
 /*
 	STAT
@@ -334,7 +331,7 @@ namespace Blaze {
 			case PacketIDGameCommand::ResetDedicatedServer: ResetDedicatedServer(client, header); break;
 			case PacketIDGameCommand::UpdateMeshConnection: UpdateMeshConnection(client, header); break;
 			default:
-				std::cout << "Unknown gamemanager command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown gamemanager command: " + header.command);
 				break;
 		}
 	}
@@ -429,7 +426,7 @@ namespace Blaze {
 		uint32_t tCap = request["TCAP"].GetUint();
 		std::string versionString = request["VSTR"].GetString();
 
-		std::cout << "Playgroup ID: " << playgroupId << std::endl;
+		logger::info("Playgroup ID: " + playgroupId);
 
 		TDF::Packet packet;
 		{

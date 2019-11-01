@@ -153,6 +153,15 @@
     <ClInclude Include="source\raknet\server.h">
       <Filter>Header Files\raknet</Filter>
     </ClInclude>
+    <ClInclude Include="source\utils\json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\xml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\logger.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -247,6 +256,12 @@
     </ClCompile>
     <ClCompile Include="source\raknet\server.cpp">
       <Filter>Source Files\raknet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\xml.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

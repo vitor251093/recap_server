@@ -10,6 +10,7 @@
 #include "../http/uri.h"
 #include "../http/multipart.h"
 #include "../utils/functions.h"
+#include "../utils/logger.h"
 
 #include <boost/beast/version.hpp>
 
@@ -161,8 +162,8 @@ namespace Game {
 
 		// Routing
 		router->add("/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [](HTTP::Session& session, HTTP::Response& response) {
-			std::cout << "Got API route." << std::endl;
-			});
+			logger::info("Got API route.");
+		});
 
 		// DLS
 		router->add("/dls/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -177,7 +178,7 @@ namespace Game {
 			else if (method == "api.panel.getUserInfo")   { dls_panel_getUserInfo(session, response); }
 			else if (method == "api.panel.setUserInfo")   { dls_panel_setUserInfo(session, response); }
 			else {
-				std::cout << "Undefined /dls/api method: " << method << std::endl;
+				logger::error("Undefined /dls/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
 			});
@@ -189,7 +190,7 @@ namespace Game {
 			auto method = request.uri.parameter("method");
 			if (method == "api.config.getConfigs") { bootstrap_config_getConfig(session, response); }
 			else {
-				std::cout << "Undefined /bootstrap/api method: " << method << std::endl;
+				logger::error("Undefined /bootstrap/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
 			});
@@ -275,9 +276,9 @@ namespace Game {
 							}
 						}
 					}
-					std::cout << name << " = " << value << std::endl;
+					logger::info(name + " = " + value);
 				}
-				std::cout << std::endl;
+				logger::info("");
 			}
 
 			auto version = request.uri.parameter("version");
@@ -322,11 +323,11 @@ namespace Game {
 			else if (method == "api.creature.updateCreature")    { game_creature_updateCreature(session, response); }
 			else if (method == "api.creature.unlockCreature")    { game_creature_unlockCreature(session, response); }
 			else {
-				std::cout << "Undefined /game/api method: " << method << std::endl;
+				logger::error("Undefined /game/api method: " + method);
 				for (const auto& [name, value] : request.uri) {
-					std::cout << name << " = " << value << std::endl;
+					logger::error(name + " = " + value);
 				}
-				std::cout << std::endl;
+				logger::error("");
 				empty_xml_response(response);
 			}
 			});
@@ -373,7 +374,7 @@ version = 1
 
 			if (method == "api.survey.getSurveyList") { survey_survey_getSurveyList(session, response); }
 			else {
-				std::cout << "Undefined /survey/api method: " << method << std::endl;
+				logger::error("Undefined /survey/api method: " + method);
 				empty_xml_response(response);
 			}
 			});
@@ -520,7 +521,7 @@ version = 1
 	void API::dls_game_log(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto postBody = request.data.body();
-		std::cout << postBody << std::endl;
+		logger::log(postBody);
 	}
 
 	void API::dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
@@ -578,7 +579,7 @@ version = 1
 		auto mail = request.uri.parameter("mail");
 		auto userJsonString = request.data.body();
 
-		std::cout << userJsonString << std::endl;
+		logger::info(userJsonString);
 		rapidjson::Document userJson = utils::json::Parse(userJsonString);
 
 		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
@@ -808,7 +809,7 @@ version = 1
 			for (const auto& transaction : utils::explode_string(transactionsString, ';')) {
 				// w = weapon, check for more later
 				char type = transaction[0];
-				std::cout << "Transaction: " << transaction << std::endl;
+				logger::info("Transaction: " + transaction);
 
 				int64_t index = utils::to_number<int64_t>(&transaction[1]);
 				// Stuff

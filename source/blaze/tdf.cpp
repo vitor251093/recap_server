@@ -2,6 +2,7 @@
 // Include
 #include "tdf.h"
 #include "types.h"
+#include "utils/logger.h"
 
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
@@ -28,7 +29,7 @@ namespace Blaze {
 		document.Accept(writer);
 
 		std::string documentString = buffer.GetString();
-		std::cout << documentString << std::endl;
+		logger::log(documentString);
 	}
 
 	// TDF
@@ -206,7 +207,7 @@ namespace Blaze {
 				}
 
 				default:
-					std::cout << "Unknown type: " << static_cast<int>(header.type) << std::endl;
+					logger::error("Unknown type: " + static_cast<int>(header.type));
 					break;
 			}
 		}
@@ -618,7 +619,7 @@ namespace Blaze {
 				}
 
 				default:
-					std::cout << "Unimplemented write type: " << static_cast<int>(type) << std::endl;
+					logger::error("Unimplemented write type: " + static_cast<int>(type));
 					break;
 			}
 		}

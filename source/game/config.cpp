@@ -1,6 +1,7 @@
 
 // Include
 #include "config.h"
+#include "utils/logger.h"
 
 #include <vector>
 #include <iostream>
@@ -22,28 +23,19 @@ namespace Game {
 		const auto parse_config_value = [&](pugi::xml_node& node) {
 			std::string name = node.attribute("key").value();
 			std::string value = node.attribute("value").value();
-			if (name == "SKIP_LAUNCHER") {
-				mConfig[CONFIG_SKIP_LAUNCHER] = value;
-			} else if (name == "VERSION_LOCKED") {
-				mConfig[CONFIG_VERSION_LOCKED] = value;
-			} else if (name == "DARKSPORE_VERSION") {
-				mConfig[CONFIG_DARKSPORE_VERSION] = value;
-			} else if (name == "SINGLEPLAYER_ONLY") {
-				mConfig[CONFIG_SINGLEPLAYER_ONLY] = value;
-			} else if (name == "SERVER_HOST") {
-				mConfig[CONFIG_SERVER_HOST] = value;
-			} else if (name == "STORAGE_PATH") {
-				mConfig[CONFIG_STORAGE_PATH] = get_path_value(value);
-			} else if (name == "DARKSPORE_INDEX_PAGE_PATH") {
-				mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = value;
-			} else if (name == "DARKSPORE_LAUNCHER_NOTES_PATH") {
-				mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = value;
-			} else if (name == "DARKSPORE_REGISTER_PAGE_PATH") {
-				mConfig[CONFIG_DARKSPORE_REGISTER_PAGE_PATH] = value;
-			} else if (name == "DARKSPORE_LAUNCHER_THEMES_PATH") {
-				mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = get_path_value(value);
+
+			       if (name == "SKIP_LAUNCHER")                  { mConfig[CONFIG_SKIP_LAUNCHER] = value;
+			} else if (name == "VERSION_LOCKED")                 { mConfig[CONFIG_VERSION_LOCKED] = value;
+			} else if (name == "DARKSPORE_VERSION")              { mConfig[CONFIG_DARKSPORE_VERSION] = value;
+			} else if (name == "SINGLEPLAYER_ONLY")              { mConfig[CONFIG_SINGLEPLAYER_ONLY] = value;
+			} else if (name == "SERVER_HOST")                    { mConfig[CONFIG_SERVER_HOST] = value;
+			} else if (name == "STORAGE_PATH")                   { mConfig[CONFIG_STORAGE_PATH] = get_path_value(value);
+			} else if (name == "DARKSPORE_INDEX_PAGE_PATH")      { mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = value;
+			} else if (name == "DARKSPORE_LAUNCHER_NOTES_PATH")  { mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = value;
+			} else if (name == "DARKSPORE_REGISTER_PAGE_PATH")   { mConfig[CONFIG_DARKSPORE_REGISTER_PAGE_PATH] = value;
+			} else if (name == "DARKSPORE_LAUNCHER_THEMES_PATH") { mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = get_path_value(value);
 			} else {
-				std::cout << "Game::Config: Unknown config value '" << name << "'" << std::endl;
+				logger::error("Game::Config: Unknown config value '" + name + "'");
 			}
 		};
 
@@ -94,15 +86,15 @@ namespace Game {
 	void Config::GenerateDefault(const std::string& path) {
 		const auto value_to_string = [](ConfigValue value) {
 			switch (value) {
-				case CONFIG_SKIP_LAUNCHER: return "SKIP_LAUNCHER";
-				case CONFIG_VERSION_LOCKED: return "VERSION_LOCKED";
-				case CONFIG_DARKSPORE_VERSION: return "DARKSPORE_VERSION";
-				case CONFIG_SINGLEPLAYER_ONLY: return "SINGLEPLAYER_ONLY";
-				case CONFIG_SERVER_HOST: return "SERVER_HOST";
-				case CONFIG_STORAGE_PATH: return "STORAGE_PATH";
-				case CONFIG_DARKSPORE_INDEX_PAGE_PATH: return "DARKSPORE_INDEX_PAGE_PATH";
-				case CONFIG_DARKSPORE_REGISTER_PAGE_PATH: return "DARKSPORE_REGISTER_PAGE_PATH";
-				case CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH: return "DARKSPORE_LAUNCHER_NOTES_PATH";
+				case CONFIG_SKIP_LAUNCHER:                  return "SKIP_LAUNCHER";
+				case CONFIG_VERSION_LOCKED:                 return "VERSION_LOCKED";
+				case CONFIG_DARKSPORE_VERSION:              return "DARKSPORE_VERSION";
+				case CONFIG_SINGLEPLAYER_ONLY:              return "SINGLEPLAYER_ONLY";
+				case CONFIG_SERVER_HOST:                    return "SERVER_HOST";
+				case CONFIG_STORAGE_PATH:                   return "STORAGE_PATH";
+				case CONFIG_DARKSPORE_INDEX_PAGE_PATH:      return "DARKSPORE_INDEX_PAGE_PATH";
+				case CONFIG_DARKSPORE_REGISTER_PAGE_PATH:   return "DARKSPORE_REGISTER_PAGE_PATH";
+				case CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH:  return "DARKSPORE_LAUNCHER_NOTES_PATH";
 				case CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH: return "DARKSPORE_LAUNCHER_THEMES_PATH";
 				default: return "UNKNOWN";
 			}
@@ -118,9 +110,9 @@ namespace Game {
 		}
 
 		if (document.save_file(path.c_str(), "\t", 1U, pugi::encoding_latin1)) {
-			std::cout << "Generated a default config.xml" << std::endl;
+			logger::info("Generated a default config.xml");
 		} else {
-			std::cout << "Could not generate a default config.xml" << std::endl;
+			logger::error("Could not generate a default config.xml");
 		}
 	}
 }

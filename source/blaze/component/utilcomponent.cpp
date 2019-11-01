@@ -7,6 +7,7 @@
 
 #include "../client.h"
 #include "../../utils/functions.h"
+#include "../../utils/logger.h"
 
 #include <iostream>
 
@@ -183,40 +184,16 @@ namespace Blaze {
 	// UtilComponent
 	void UtilComponent::Parse(Client* client, const Header& header) {
 		switch (header.command) {
-			case 0x01:
-				FetchClientConfig(client, header);
-				break;
-
-			case 0x02:
-				Ping(client, header);
-				break;
-
-			case 0x05:
-				GetTelemetryServer(client, header);
-				break;
-
-			case 0x07:
-				PreAuth(client, header);
-				break;
-
-			case 0x08:
-				PostAuth(client, header);
-				break;
-
-			case 0x0B:
-				UserSettingsSave(client, header);
-				break;
-
-			case 0x0C:
-				UserSettingsLoadAll(client, header);
-				break;
-
-			case 0x16:
-				SetClientMetrics(client, header);
-				break;
-
+			case 0x01: FetchClientConfig(client, header);   break;
+			case 0x02: Ping(client, header);                break;
+			case 0x05: GetTelemetryServer(client, header);  break;
+			case 0x07: PreAuth(client, header);             break;
+			case 0x08: PostAuth(client, header);            break;
+			case 0x0B: UserSettingsSave(client, header);    break;
+			case 0x0C: UserSettingsLoadAll(client, header); break;
+			case 0x16: SetClientMetrics(client, header);    break;
 			default:
-				std::cout << "Unknown util command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown util command: " + header.command);
 				break;
 		}
 	}
@@ -299,7 +276,7 @@ namespace Blaze {
 	}
 
 	void UtilComponent::FetchClientConfig(Client* client, Header header) {
-		std::cout << "Client " << 0 << " requested client configuration" << std::endl;
+		logger::error("Client " + std::to_string(0) + " requested client configuration");
 		/*
 		TDF::Packet packet;
 
@@ -350,7 +327,7 @@ namespace Blaze {
 	}
 
 	void UtilComponent::PreAuth(Client* client, Header header) {
-		std::cout << "Client 0 pre-authenticating" << std::endl;
+		logger::info("Client 0 pre-authenticating");
 
 		auto& request = client->get_request();
 		auto& clientData = request["CDAT"];
@@ -432,7 +409,7 @@ namespace Blaze {
 	}
 
 	void UtilComponent::PostAuth(Client* client, Header header) {
-		std::cout << "Client 0 post-authenticating" << std::endl;
+		logger::info("Client 0 post-authenticating");
 		SendPostAuth(client, std::move(header));
 	}
 
@@ -481,7 +458,7 @@ namespace Blaze {
 	}
 
 	void UtilComponent::SetClientMetrics(Client* client, Header header) {
-		std::cout << "Client 0 setting metrics" << std::endl;
+		logger::error("Client 0 setting metrics");
 
 		DataBuffer outBuffer;
 		header.error_code = 0;

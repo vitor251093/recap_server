@@ -5,6 +5,7 @@
 #include "uri.h"
 
 #include "../utils/functions.h"
+#include "../utils/logger.h"
 
 #include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
@@ -47,9 +48,9 @@ namespace HTTP {
 			boost::beast::http::file_body::value_type body;
 			body.open(mBody.c_str(), boost::beast::file_mode::scan, error);
 			if (error == boost::beast::errc::no_such_file_or_directory) {
-				std::cout << "Could not find file " << mBody << std::endl;
+				logger::error("Could not find file " + mBody);
 			} else if (error) {
-				std::cout << "Something error finding file " << mBody << std::endl;
+				logger::error("Something error finding file " + mBody);
 			}
 
 			const auto size = body.size();

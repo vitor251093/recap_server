@@ -169,6 +169,7 @@
     <ClInclude Include="source\udptest.h" />
     <ClInclude Include="source\utils\functions.h" />
     <ClInclude Include="source\utils\json.h" />
+    <ClInclude Include="source\utils\logger.h" />
     <ClInclude Include="source\utils\xml.h" />
   </ItemGroup>
   <ItemGroup>

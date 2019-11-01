@@ -2,6 +2,7 @@
 // Include
 #include "server.h"
 #include "../utils/functions.h"
+#include "../utils/logger.h"
 #include "../game/creature.h"
 
 #include <MessageIdentifiers.h>
@@ -1474,48 +1475,16 @@ namespace RakNet {
 			mInStream = BitStream(packet->data, packet->bitSize * 8, false);
 
 			uint8_t packetType = GetPacketIdentifier();
-			std::cout << std::endl << "--- "  << (int)packetType << " gotten from raknet ---" << std::endl << std::endl;
+			logger::warn("--- "  + std::to_string((int)packetType) + " gotten from raknet ---");
 			switch (packetType) {
-				case ID_DISCONNECTION_NOTIFICATION: {
-					std::cout << "ID_DISCONNECTION_NOTIFICATION from " << packet->systemAddress.ToString(true) << std::endl;
-					break;
-				}
-
-				case ID_NEW_INCOMING_CONNECTION: {
-					OnNewIncomingConnection(packet);
-					break;
-				}
-
-				case ID_CONNECTION_REQUEST: {
-					std::cout << "Trying to connect to RakNet" << std::endl;
-					break;
-				}
-
-				case ID_INCOMPATIBLE_PROTOCOL_VERSION: {
-					std::cout << "ID_INCOMPATIBLE_PROTOCOL_VERSION" << std::endl;
-					break;
-				}
-
-				case ID_CONNECTION_LOST: {
-					std::cout << "ID_CONNECTION_LOST from " << packet->systemAddress.ToString(true) << std::endl;
-					break;
-				}
-
-				case ID_SND_RECEIPT_ACKED: {
-					// Packet was successfully accepted.
-					break;
-				}
-
-				case ID_SND_RECEIPT_LOSS: {
-					// Packet was dropped. Add code to resend?
-					break;
-				}
-
-				case ID_USER_PACKET_ENUM: {
-					OnHelloPlayer(packet);
-					break;
-				}
-
+				case ID_DISCONNECTION_NOTIFICATION:    logger::warn("ID_DISCONNECTION_NOTIFICATION from " + std::string(packet->systemAddress.ToString(true))); break;
+				case ID_NEW_INCOMING_CONNECTION:       OnNewIncomingConnection(packet); break;
+				case ID_CONNECTION_REQUEST:            logger::warn("Trying to connect to RakNet"); break;
+				case ID_INCOMPATIBLE_PROTOCOL_VERSION: logger::warn("ID_INCOMPATIBLE_PROTOCOL_VERSION"); break;
+				case ID_CONNECTION_LOST:               logger::warn("ID_CONNECTION_LOST from " + std::string(packet->systemAddress.ToString(true))); break;
+				case ID_SND_RECEIPT_ACKED:             break; // Packet was successfully accepted.
+				case ID_SND_RECEIPT_LOSS:              break; // Packet was dropped. Add code to resend?
+				case ID_USER_PACKET_ENUM:              OnHelloPlayer(packet); break;
 				default: {
 					ParsePacket(packet, packetType);
 					break;
@@ -1528,28 +1497,12 @@ namespace RakNet {
 
 	void Server::ParsePacket(Packet* packet, MessageID packetType) {
 		switch (packetType) {
-			case PacketID::HelloPlayer: {
-				OnHelloPlayer(packet);
-				break;
-			}
-
-			case PacketID::PlayerStatusUpdate: {
-				OnPlayerStatusUpdate(packet);
-				break;
-			}
-
-			case PacketID::ActionCommandMsgs: {
-				OnActionCommandMsgs(packet);
-				break;
-			}
-
-			case PacketID::DebugPing: {
-				OnDebugPing(packet);
-				break;
-			}
-
+			case PacketID::HelloPlayer:        OnHelloPlayer(packet); break;
+			case PacketID::PlayerStatusUpdate: OnPlayerStatusUpdate(packet); break;
+			case PacketID::ActionCommandMsgs:  OnActionCommandMsgs(packet); break;
+			case PacketID::DebugPing:          OnDebugPing(packet); break;
 			default: {
-				std::cout << "Unknown packet id: 0x" << std::hex << static_cast<int32_t>(packetType) << std::dec << std::endl;
+				logger::error("Unknown packet id: " + static_cast<int32_t>(packetType));
 				break;
 			}
 		}
@@ -1583,7 +1536,7 @@ namespace RakNet {
 		uint8_t value;
 		mInStream.Read<uint8_t>(value);
 
-		std::cout << "Player Status Update: " << (int)value << std::endl;
+		logger::info("Player Status Update: " + (int)value);
 
 		switch (value) {
 			case 2: {
@@ -1605,6 +1558,9 @@ namespace RakNet {
 				SendPlayerCharacterDeploy(packet, 0x0000000A);
 				break;
 			}
+
+			default:
+				logger::error("Player Status Update: " + (int)value);
 		}
 	}
 
@@ -1633,9 +1589,9 @@ namespace RakNet {
 		auto debugTime_c = std::chrono::system_clock::to_time_t(debugTime);
 		auto debugTime_c2 = std::ctime(&debugTime_c);
 		if (debugTime_c2) {
-			std::cout << "Debug ping: " << debugTime_c2 << std::endl;
+			logger::info("Debug ping: " + std::string(debugTime_c2));
 		} else {
-			std::cout << "Debug ping: " << time << std::endl;
+			logger::info("Debug ping: " + time);
 		}
 	}
 

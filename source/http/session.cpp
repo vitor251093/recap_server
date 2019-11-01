@@ -4,6 +4,7 @@
 #include "server.h"
 
 #include "../game/config.h"
+#include "utils/logger.h"
 
 #include <boost/beast/version.hpp>
 
@@ -79,13 +80,10 @@ namespace HTTP {
 		return result;
 	}
 
-	void handle_request(
-		Session& session,
-		Router& router
-	) {
+	void handle_request(Session& session, Router& router) {
 		auto& request = session.get_request().data;
 
-		std::cout << request.target() << std::endl;
+		logger::info(std::string(request.target()));
 
 		// Returns a bad request response
 		const auto bad_request = [&request](boost::beast::string_view why) {

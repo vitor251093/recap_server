@@ -5,6 +5,8 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
+#include "utils/logger.h"
+
 // Blaze
 namespace Blaze {
 	// Certificate & Private key
@@ -56,7 +58,7 @@ bhzYZC4FokU2LZWUUDUCQCOdlEVsk42T36t837wE4HCpfw4Zdk1+ZgumkKXJmt+c
 		SSL_CTX_set_cipher_list(nativeHandle, "RC4-MD5:RC4-SHA");
 
 		if (SSL_CTX_set_default_verify_paths(nativeHandle) != 1) {
-			std::cout << "SSL_CTX: Could not set default verify paths" << std::endl;
+			logger::error("SSL_CTX: Could not set default verify paths");
 		}
 
 		mContext.set_verify_callback(&Server::verify_callback);
@@ -64,7 +66,7 @@ bhzYZC4FokU2LZWUUDUCQCOdlEVsk42T36t837wE4HCpfw4Zdk1+ZgumkKXJmt+c
 		mContext.use_private_key(boost::asio::const_buffer(privateKey.data(), privateKey.length()), boost::asio::ssl::context::pem);
 
 		if (!SSL_CTX_check_private_key(nativeHandle)) {
-			std::cout << "SSL_CTX: Private key does not match the public certificate" << std::endl;
+			logger::error("SSL_CTX: Private key does not match the public certificate");
 			abort();
 		}
 
@@ -96,7 +98,7 @@ bhzYZC4FokU2LZWUUDUCQCOdlEVsk42T36t837wE4HCpfw4Zdk1+ZgumkKXJmt+c
 		X509_NAME_oneline(X509_get_subject_name(cert), subject_name, 256);
 
 		bool verified = boost::asio::ssl::rfc2818_verification("gosredirector.ea.com")(preverified, context);
-		std::cout << "Verifying: " << subject_name << "\nVerified: " << verified << std::endl;
+		logger::info("Verifying: " + std::string(subject_name) + "\nVerified: " + std::to_string(verified));
 
 		return verified;
 	}

@@ -4,6 +4,7 @@
 #include "gamemanagercomponent.h"
 #include "../client.h"
 #include "../../utils/functions.h"
+#include "../../utils/logger.h"
 #include <iostream>
 
 /*
@@ -86,22 +87,16 @@ namespace Blaze {
 	// UserSessionComponent
 	void UserSessionComponent::Parse(Client* client, const Header& header) {
 		switch (header.command) {
-			case 0x14:
-				UpdateNetworkInfo(client, header);
-				break;
-
-			case 0x19:
-				UpdateUserSessionClientData(client, header);
-				break;
-
+			case 0x14: UpdateNetworkInfo(client, header);           break;
+			case 0x19: UpdateUserSessionClientData(client, header); break;
 			default:
-				std::cout << "Unknown usersession command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown usersession command: " + header.command);
 				break;
 		}
 	}
 
 	void UserSessionComponent::NotifyUserSessionExtendedDataUpdate(Client* client, uint64_t userId) {
-		std::cout << "UserSession: User extended data" << std::endl;
+		logger::info("UserSession: User extended data");
 
 		TDF::Packet packet;
 		{
@@ -142,7 +137,7 @@ namespace Blaze {
 			return;
 		}
 
-		std::cout << "UserSession: Add user" << std::endl;
+		logger::info("UserSession: Add user");
 
 		auto& request = client->get_request();
 
@@ -205,7 +200,7 @@ namespace Blaze {
 	}
 
 	void UserSessionComponent::UpdateNetworkInfo(Client* client, Header header) {
-		std::cout << "Update network info" << std::endl;
+		logger::info("Update network info");
 
 		auto& request = client->get_request();
 

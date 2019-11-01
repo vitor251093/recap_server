@@ -2,6 +2,7 @@
 // Include
 #include "redirectorcomponent.h"
 #include "../client.h"
+#include "utils/logger.h"
 #include <iostream>
 
 /*
@@ -140,12 +141,9 @@ namespace Blaze {
 	// RedirectorComponent
 	void RedirectorComponent::Parse(Client* client, const Header& header) {
 		switch (header.command) {
-			case 0x01:
-				ServerInstanceInfo(client, header);
-				break;
-
+			case 0x01: ServerInstanceInfo(client, header); break;
 			default:
-				std::cout << "Unknown redirector command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown redirector command: " + header.command);
 				break;
 		}
 	}

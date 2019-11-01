@@ -1,8 +1,9 @@
 
 // Include
 #include "udptest.h"
-#include <boost/bind.hpp>
+#include "utils/logger.h"
 
+#include <boost/bind.hpp>
 #include <iostream>
 
 // UDPTest
@@ -25,7 +26,7 @@ void UDPTest::receive() {
 }
 
 void UDPTest::handle_receive(const boost::system::error_code& error, size_t bytes_transferred) {
-	std::cout << "UDP connection" << std::endl;
+	logger::info("UDP connection");
 	if (!error || error == boost::asio::error::message_size) {
 		auto file = fopen("udp.txt", "wb");
 		fwrite(mData.data(), 1, std::min<size_t>(bytes_transferred, mData.size()), file);
@@ -37,7 +38,7 @@ void UDPTest::handle_receive(const boost::system::error_code& error, size_t byte
 
 		receive();
 	} else {
-		std::cout << error.message() << std::endl;
+		logger::error(error.message());
 	}
 }
 

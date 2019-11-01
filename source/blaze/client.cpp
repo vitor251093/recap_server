@@ -12,6 +12,8 @@
 #include "component/messagingcomponent.h"
 #include "component/playgroupscomponent.h"
 
+#include "../utils/logger.h"
+
 #include <boost/bind.hpp>
 #include <iostream>
 
@@ -117,10 +119,10 @@ namespace Blaze {
 			mSocket.async_read_some(boost::asio::buffer(mReadBuffer.data(), mReadBuffer.capacity()),
 				boost::bind(&Client::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 		} else if (error == boost::asio::error::eof || error == boost::asio::error::connection_reset) {
-			std::cout << "Handshake error: Client disconnected." << std::endl;
+			logger::info("Handshake error: Client disconnected.");
 			delete this;
 		} else {
-			std::cout << "Handshake error: " << error.message() << std::endl;
+			logger::error("Handshake error: " + error.message());
 			delete this;
 		}
 	}
@@ -148,10 +150,10 @@ namespace Blaze {
 				boost::bind(&Client::handle_write, this, boost::asio::placeholders::error));
 #endif
 		} else if (error == boost::asio::error::eof || error == boost::asio::error::connection_reset) {
-			std::cout << "Error: Client disconnected." << std::endl;
+			logger::error("Error: Client disconnected.");
 			delete this;
 		} else {
-			std::cout << "Error: " << error.message() << std::endl;
+			logger::error("Error: " + error.message());
 			delete this;
 		}
 	}
@@ -162,10 +164,10 @@ namespace Blaze {
 			mSocket.async_read_some(boost::asio::buffer(mReadBuffer.data(), mReadBuffer.capacity()),
 				boost::bind(&Client::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 		} else if (error == boost::asio::error::eof || error == boost::asio::error::connection_reset) {
-			std::cout << "Error: Client disconnected." << std::endl;
+			logger::error("Error: Client disconnected.");
 			delete this;
 		} else {
-			std::cout << "Error: " << error.message() << std::endl;
+			logger::error("Error: " + error.message());
 			delete this;
 		}
 	}
@@ -196,53 +198,24 @@ namespace Blaze {
 		TDF::Parse(mReadBuffer, mRequest);
 		
 		if (header.component != Blaze::Component::UserSessions) {
-			// Log(mRequest);
-			std::cout << "Component: " << static_cast<int>(header.component) <<
-				", Command: 0x" << std::hex << header.command << std::dec <<
-				", Type: " << (message >> 28) <<
-				std::endl;
+			logger::warn("Component: " + std::to_string(static_cast<int>(header.component)) +
+						 ", Command: " + std::to_string(header.command) +
+						 ", Type: " + std::to_string(message >> 28));
 		}
 
 		mCurrentMessageId = header.message_id;
 		switch (header.component) {
-			case Blaze::Component::AssociationLists:
-				Blaze::AssociationComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Authentication:
-				Blaze::AuthComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Redirector:
-				Blaze::RedirectorComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Messaging:
-				Blaze::MessagingComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Playgroups:
-				Blaze::PlaygroupsComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Util:
-				Blaze::UtilComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::GameManager:
-				Blaze::GameManagerComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Rooms:
-				Blaze::RoomsComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::UserSessions:
-				Blaze::UserSessionComponent::Parse(this, header);
-				break;
-
+			case Blaze::Component::AssociationLists: Blaze::AssociationComponent::Parse(this, header); break;
+			case Blaze::Component::Authentication:   Blaze::AuthComponent::Parse(this, header);        break;
+			case Blaze::Component::Redirector:       Blaze::RedirectorComponent::Parse(this, header);  break;
+			case Blaze::Component::Messaging:        Blaze::MessagingComponent::Parse(this, header);   break;
+			case Blaze::Component::Playgroups:       Blaze::PlaygroupsComponent::Parse(this, header);  break;
+			case Blaze::Component::Util:             Blaze::UtilComponent::Parse(this, header);        break;
+			case Blaze::Component::GameManager:      Blaze::GameManagerComponent::Parse(this, header); break;
+			case Blaze::Component::Rooms:            Blaze::RoomsComponent::Parse(this, header);       break;
+			case Blaze::Component::UserSessions:     Blaze::UserSessionComponent::Parse(this, header); break;
 			default:
-				std::cout << "Unknown component: " << static_cast<int>(header.component) << std::endl;
+				logger::error("Unknown component: " + static_cast<int>(header.component));
 				break;
 		}
 	}

@@ -1,6 +1,7 @@
 
 // Include
 #include "server.h"
+#include "utils/logger.h"
 
 #include <boost/bind.hpp>
 #include <boost/beast/core.hpp>
@@ -43,7 +44,7 @@ namespace HTTP {
 			std::make_shared<Session>(this, std::move(socket))->start();
 			do_accept();
 		} else {
-			std::cout << error.message() << std::endl;
+			logger::error(error.message());
 		}
 	}
 }

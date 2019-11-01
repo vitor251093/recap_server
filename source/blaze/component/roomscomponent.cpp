@@ -3,6 +3,7 @@
 #include "roomscomponent.h"
 #include "../client.h"
 #include "../../utils/functions.h"
+#include "../../utils/logger.h"
 #include <iostream>
 
 /*
@@ -70,16 +71,10 @@ namespace Blaze {
 	// RoomsComponent
 	void RoomsComponent::Parse(Client* client, const Header& header) {
 		switch (header.command) {
-			case 0x0A:
-				SelectViewUpdates(client, header);
-				break;
-
-			case 0x0B:
-				SelectCategoryUpdates(client, header);
-				break;
-
+			case 0x0A: SelectViewUpdates(client, header);     break;
+			case 0x0B: SelectCategoryUpdates(client, header); break;
 			default:
-				std::cout << "Unknown rooms command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown rooms command: " + header.command);
 				break;
 		}
 	}

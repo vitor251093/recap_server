@@ -4,6 +4,7 @@
 #include "playgroupscomponent.h"
 
 #include "blaze/client.h"
+#include "utils/logger.h"
 
 #include <iostream>
 
@@ -70,12 +71,9 @@ namespace Blaze {
 	// AssociationComponent
 	void AssociationComponent::Parse(Client* client, const Header& header) {
 		switch (header.command) {
-			case 0x06:
-				GetLists(client, header);
-				break;
-
+			case 0x06: GetLists(client, header); break;
 			default:
-				std::cout << "Unknown associationlists command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown associationlists command: " + header.command);
 				break;
 		}
 	}

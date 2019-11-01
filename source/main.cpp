@@ -4,6 +4,7 @@
 
 #include "http/uri.h"
 #include "game/config.h"
+#include "utils/logger.h"
 
 #include <iostream>
 
@@ -114,12 +115,12 @@ HTTP::Server* Application::get_qos_server() const {
 int main(int argc, char* argv[]) {
 	Application& app = Application::InitApp(argc, argv);
 	if (!app.OnInit()) {
-		std::cout << "Server terminated with error" << std::endl;
+		logger::error("Server terminated with error");
 		app.OnExit();
 		return 1;
 	}
 
-	std::cout << "Server started" << std::endl;
+	logger::log("Server started");
 	app.Run();
 	return app.OnExit();
 }

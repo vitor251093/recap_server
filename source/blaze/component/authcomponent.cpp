@@ -4,6 +4,7 @@
 #include "usersessioncomponent.h"
 #include "../client.h"
 #include "../../utils/functions.h"
+#include "utils/logger.h"
 #include <iostream>
 
 enum class PacketIDAuthCommand : uint16_t
@@ -319,7 +320,7 @@ namespace Blaze {
 			case PacketIDAuthCommand::Logout:                Logout(client, header);                break;
 			case PacketIDAuthCommand::LoginPersona:          LoginPersona(client, header);          break;
 			default:
-				std::cout << "Unknown auth command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown auth command: " + header.command);
 				break;
 		}
 	}
@@ -570,7 +571,7 @@ namespace Blaze {
 	}
 
 	void AuthComponent::ListUserEntitlements(Client* client, Header header) {
-		std::cout << "List user entitlements" << std::endl;
+		logger::error("List user entitlements");
 		/*
 		Log.Info(string.Format("Client {0} requested user entitlements", request.Client.ID));
 
@@ -833,7 +834,7 @@ namespace Blaze {
 	}
 
 	void AuthComponent::GetAuthToken(Client* client, Header header) {
-		std::cout << "Send auth token" << std::endl;
+		logger::info("Send auth token");
 		SendAuthToken(client, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	}
 
@@ -848,7 +849,7 @@ namespace Blaze {
 			client->set_user(user);
 			SendLogin(client, std::move(header));
 		} else {
-			std::cout << "User '" << email << "' not found." << std::endl;
+			logger::error("User '" + email + "' not found.");
 
 			header.component = Component::Authentication;
 			header.command = (int)PacketIDAuthCommand::Login;
@@ -865,7 +866,7 @@ namespace Blaze {
 			return;
 		}
 
-		std::cout << "Silent Login" << std::endl;
+		logger::info("Silent Login");
 
 		TDF::Packet packet;
 		packet.PutInteger(nullptr, "AGUP", 0);
@@ -904,7 +905,7 @@ namespace Blaze {
 	}
 
 	void AuthComponent::LoginPersona(Client* client, Header header) {
-		std::cout << "Login persona" << std::endl;
+		logger::info("Login persona");
 
 		SendLoginPersona(client, std::move(header));
 
@@ -923,21 +924,21 @@ namespace Blaze {
 	}
 
 	void AuthComponent::AcceptTOS(Client* client, Header header) {
-		std::cout << "Accepted Terms of service" << std::endl;
+		logger::error("Accepted Terms of service");
 	}
 
 	void AuthComponent::GetTOSInfo(Client* client, Header header) {
-		std::cout << "Get Terms of service" << std::endl;
+		logger::info("Get Terms of service");
 		SendTOSInfo(client, std::move(header));
 	}
 
 	void AuthComponent::GetTermsAndConditions(Client* client, Header header) {
-		std::cout << "Get Terms and conditions" << std::endl;
+		logger::info("Get Terms and conditions");
 		SendTermsAndConditions(client, std::move(header));
 	}
 
 	void AuthComponent::GetPrivacyPolicy(Client* client, Header header) {
-		std::cout << "Get Privacy policy" << std::endl;
+		logger::info("Get Privacy policy");
 		SendPrivacyPolicy(client, std::move(header));
 	}
 }

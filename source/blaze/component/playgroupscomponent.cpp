@@ -3,6 +3,7 @@
 #include "playgroupscomponent.h"
 #include "../client.h"
 #include "../../utils/functions.h"
+#include "../../utils/logger.h"
 #include <iostream>
 
 /*
@@ -106,52 +107,19 @@ namespace Blaze {
 	// PlaygroupsComponent
 	void PlaygroupsComponent::Parse(Client* client, const Header& header) {
 		switch (header.command) {
-			case 0x01:
-				CreatePlaygroup(client, header);
-				break;
-
-			case 0x02:
-				DestroyPlaygroup(client, header);
-				break;
-
-			case 0x03:
-				JoinPlaygroup(client, header);
-				break;
-
-			case 0x04:
-				LeavePlaygroup(client, header);
-				break;
-
-			case 0x05:
-				SetPlaygroupAttributes(client, header);
-				break;
-
-			case 0x06:
-				SetMemberAttributes(client, header);
-				break;
-
-			case 0x07:
-				KickPlaygroupMember(client, header);
-				break;
-
-			case 0x08:
-				SetPlaygroupJoinControls(client, header);
-				break;
-
-			case 0x09:
-				FinalizePlaygroupCreation(client, header);
-				break;
-
-			case 0x0A:
-				LookupPlaygroupInfo(client, header);
-				break;
-
-			case 0x0B:
-				ResetPlaygroupSession(client, header);
-				break;
-
+			case 0x01: CreatePlaygroup(client, header);           break;
+			case 0x02: DestroyPlaygroup(client, header);          break;
+			case 0x03: JoinPlaygroup(client, header);             break;
+			case 0x04: LeavePlaygroup(client, header);            break;
+			case 0x05: SetPlaygroupAttributes(client, header);    break;
+			case 0x06: SetMemberAttributes(client, header);       break;
+			case 0x07: KickPlaygroupMember(client, header);       break;
+			case 0x08: SetPlaygroupJoinControls(client, header);  break;
+			case 0x09: FinalizePlaygroupCreation(client, header); break;
+			case 0x0A: LookupPlaygroupInfo(client, header);       break;
+			case 0x0B: ResetPlaygroupSession(client, header);     break;
 			default:
-				std::cout << "Unknown playgroups command: 0x" << std::hex << header.command << std::dec << std::endl;
+				logger::error("Unknown playgroups command: " + header.command);
 				break;
 		}
 	}
@@ -361,46 +329,46 @@ namespace Blaze {
 	}
 
 	void PlaygroupsComponent::CreatePlaygroup(Client* client, Header header) {
-		std::cout << "CreatePlaygroup" << std::endl;
+		logger::error("CreatePlaygroup");
 	}
 
 	void PlaygroupsComponent::DestroyPlaygroup(Client* client, Header header) {
-		std::cout << "DestroyPlaygroup" << std::endl;
+		logger::error("DestroyPlaygroup");
 	}
 
 	void PlaygroupsComponent::JoinPlaygroup(Client* client, Header header) {
-		std::cout << "JoinPlaygroup" << std::endl;
+		logger::error("JoinPlaygroup");
 	}
 
 	void PlaygroupsComponent::LeavePlaygroup(Client* client, Header header) {
-		std::cout << "LeavePlaygroup" << std::endl;
+		logger::error("LeavePlaygroup");
 	}
 
 	void PlaygroupsComponent::SetPlaygroupAttributes(Client* client, Header header) {
-		std::cout << "SetPlaygroupAttributes" << std::endl;
+		logger::error("SetPlaygroupAttributes");
 	}
 
 	void PlaygroupsComponent::SetMemberAttributes(Client* client, Header header) {
-		std::cout << "SetMemberAttributes" << std::endl;
+		logger::error("SetMemberAttributes");
 	}
 
 	void PlaygroupsComponent::KickPlaygroupMember(Client* client, Header header) {
-		std::cout << "KickPlaygroupMember" << std::endl;
+		logger::error("KickPlaygroupMember");
 	}
 
 	void PlaygroupsComponent::SetPlaygroupJoinControls(Client* client, Header header) {
-		std::cout << "SetPlaygroupJoinControls" << std::endl;
+		logger::error("SetPlaygroupJoinControls");
 	}
 
 	void PlaygroupsComponent::FinalizePlaygroupCreation(Client* client, Header header) {
-		std::cout << "FinalizePlaygroupCreation" << std::endl;
+		logger::error("FinalizePlaygroupCreation");
 	}
 
 	void PlaygroupsComponent::LookupPlaygroupInfo(Client* client, Header header) {
-		std::cout << "LookupPlaygroupInfo" << std::endl;
+		logger::error("LookupPlaygroupInfo");
 	}
 
 	void PlaygroupsComponent::ResetPlaygroupSession(Client* client, Header header) {
-		std::cout << "ResetPlaygroupSession" << std::endl;
+		logger::error("ResetPlaygroupSession");
 	}
 }
