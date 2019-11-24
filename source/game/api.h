@@ -49,10 +49,13 @@ namespace Game {
 			void game_inventory_vendorParts(HTTP::Session& session, HTTP::Response& response);
 			void game_inventory_updatePartStatus(HTTP::Session& session, HTTP::Response& response);
 
+			void game_leaderboard_getLeaderboard(HTTP::Session& session, HTTP::Response& response);
+
 			void game_account_auth(HTTP::Session& session, HTTP::Response& response);
 			void game_account_getAccount(HTTP::Session& session, HTTP::Response& response);
 			void game_account_logout(HTTP::Session& session, HTTP::Response& response);
 			void game_account_unlock(HTTP::Session& session, HTTP::Response& response);
+			void game_account_setSettings(HTTP::Session& session, HTTP::Response& response);
 
 			void game_deck_updateDecks(HTTP::Session& session, HTTP::Response& response);
 

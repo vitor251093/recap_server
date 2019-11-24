@@ -154,6 +154,7 @@
     <ClInclude Include="source\game\config.h" />
     <ClInclude Include="source\game\creature.h" />
     <ClInclude Include="source\game\game.h" />
+    <ClInclude Include="source\game\leaderboard.h" />
     <ClInclude Include="source\game\squad.h" />
     <ClInclude Include="source\game\user.h" />
     <ClInclude Include="source\http\multipart.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="source\game\config.cpp" />
     <ClCompile Include="source\game\creature.cpp" />
     <ClCompile Include="source\game\game.cpp" />
+    <ClCompile Include="source\game\leaderboard.cpp" />
     <ClCompile Include="source\game\squad.cpp" />
     <ClCompile Include="source\game\user.cpp" />
     <ClCompile Include="source\http\multipart.cpp" />

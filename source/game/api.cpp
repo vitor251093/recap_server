@@ -2,6 +2,7 @@
 // Include
 #include "api.h"
 #include "config.h"
+#include "leaderboard.h"
 
 #include "../main.h"
 
@@ -312,14 +313,17 @@ namespace Game {
 			else if (method == "api.inventory.getPartOfferList") { game_inventory_getPartOfferList(session, response); }
 			else if (method == "api.inventory.updatePartStatus") { game_inventory_updatePartStatus(session, response); }
 			else if (method == "api.inventory.vendorParts")      { game_inventory_vendorParts(session, response); }
+			else if (method == "api.leaderboard.getLeaderboard") { game_leaderboard_getLeaderboard(session, response); }
 			else if (method == "api.account.auth")               { game_account_auth(session, response); }
 			else if (method == "api.account.getAccount")         { game_account_getAccount(session, response); }
 			else if (method == "api.account.logout")             { game_account_logout(session, response); }
 			else if (method == "api.account.unlock")             { game_account_unlock(session, response); }
+			else if (method == "api.account.setSettings")        { game_account_setSettings(session, response); }
 			else if (method == "api.deck.updateDecks")           { game_deck_updateDecks(session, response); }
 			else if (method == "api.game.getGame")               { game_game_getGame(session, response); }
 			else if (method == "api.game.getRandomGame")         { game_game_getGame(session, response); }
 			else if (method == "api.game.exitGame")              { game_game_exitGame(session, response); }
+			else if (method == "api.creature.getCreature")       { game_creature_getCreature(session, response); }
 			else if (method == "api.creature.resetCreature")     { game_creature_resetCreature(session, response); }
 			else if (method == "api.creature.updateCreature")    { game_creature_updateCreature(session, response); }
 			else if (method == "api.creature.unlockCreature")    { game_creature_unlockCreature(session, response); }
@@ -833,20 +837,6 @@ namespace Game {
 		response.body() = utils::xml::ToString(document);
 	}
 
-	/*
-	
-Undefined /game/api method: api.leaderboard.getLeaderboard
-count = 15
-method = api.leaderboard.getLeaderboard
-name = xp
-start = 0
-token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
-varient = friends
-version = 1
-vs = 1
-
-	*/
-
 	void API::game_inventory_updatePartStatus(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 
@@ -867,6 +857,73 @@ vs = 1
 
 		pugi::xml_document document;
 		if (auto docResponse = document.append_child("response")) {
+			add_common_keys(docResponse);
+		}
+
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = utils::xml::ToString(document);
+	}
+
+	void API::game_leaderboard_getLeaderboard(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+
+		const auto& name    = request.uri.parameter("name");
+		const auto& start   = request.uri.parameteru("start");
+		const auto& count   = request.uri.parameteru("count");
+		//const auto& varient = request.uri.parameter("varient"); // eg.: "friends"
+		//const auto& vs      = request.uri.parameteru("vs");     // eg.: "1"
+
+		pugi::xml_document document;
+
+		auto docResponse = document.append_child("response");
+		if (auto leaderboard = docResponse.append_child("leaderboard")) {
+
+			if (0 == 0) {
+				// TODO: Get real players list
+				const auto& user = session.get_user();
+				std::vector<LeaderboardPlayerXp> playersList;
+				decltype(auto) userPlayer = playersList.emplace_back();
+				userPlayer.id = user->get_id();
+				userPlayer.name = user->get_name();
+				userPlayer.rank = 0;
+				userPlayer.xp = 0;
+				userPlayer.totalKills = 0;
+				userPlayer.deaths = 0;
+				userPlayer.killDeathRatio = 0;
+				userPlayer.damageMax = 0;
+				userPlayer.healingMax = 0;
+
+
+				utils::xml::Set(leaderboard, "count", playersList.size());
+				utils::xml::Set(leaderboard, "name", "xp");
+
+				if (auto leaderboardStats = leaderboard.append_child("stats")) {
+					utils::xml::Set(leaderboardStats, "stat", "xp");
+					utils::xml::Set(leaderboardStats, "stat", "totalKills");
+					utils::xml::Set(leaderboardStats, "stat", "deaths");
+					utils::xml::Set(leaderboardStats, "stat", "killDeathRatio");
+					utils::xml::Set(leaderboardStats, "stat", "damageMax");
+					utils::xml::Set(leaderboardStats, "stat", "healingMax");
+				}
+				if (auto players = leaderboard.append_child("players")) {
+					for (const auto& player : playersList) {
+						if (auto playerXml = players.append_child("player")) {
+							utils::xml::Set(playerXml, "id", player.id);
+							utils::xml::Set(playerXml, "name", player.name);
+							utils::xml::Set(playerXml, "rank", player.rank);
+							if (auto playerStats = playerXml.append_child("stats")) {
+								utils::xml::Set(playerStats, "xp", player.xp);
+								utils::xml::Set(playerStats, "totalKills", player.totalKills);
+								utils::xml::Set(playerStats, "deaths", player.deaths);
+								utils::xml::Set(playerStats, "killDeathRatio", player.killDeathRatio);
+								utils::xml::Set(playerStats, "damageMax", player.damageMax);
+								utils::xml::Set(playerStats, "healingMax", player.healingMax);
+							}
+						}
+					}
+				}
+			}
+
 			add_common_keys(docResponse);
 		}
 
@@ -1102,13 +1159,25 @@ vs = 1
 		game_account_getAccount(session, response);
 	}
 
-	/*
-Undefined / game / api method : api.account.setSettings
-method = api.account.setSettings
-settings = DisableLMBAttack, off; ShowAllyHealthAndManaBars, on; ShowAllyNames, on; ShowDamageDoneByAllies, off; ShowDamageDoneByMe, on; ShowDamageDoneToAllies, off; ShowDamageDoneToMe, on; ShowDamagedNPCHealthBars, on; ShowEnemyNames, on; ShowHealingDoneToAllies, off; ShowHealingDoneToEnemies, off; ShowHealingDoneToMe, on; ShowManaGainedOrLostByAllies, off; ShowManaGainedOrLostByMe, on; ShowMyHealthAndManaBars, on; ShowMyName, on; ShowPickupsByAllies, on; ShowPickupsByMe, on; ShowRadar, on;
-token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
-version = 1
-	*/
+	void API::game_account_setSettings(HTTP::Session& session, HTTP::Response& response) {
+		
+		auto& request = session.get_request();
+
+		/*
+			Undefined / game / api method : api.account.setSettings
+			method = api.account.setSettings
+			settings = DisableLMBAttack, off; ShowAllyHealthAndManaBars, on; ShowAllyNames, on; ShowDamageDoneByAllies, off; ShowDamageDoneByMe, on; ShowDamageDoneToAllies, off; ShowDamageDoneToMe, on; ShowDamagedNPCHealthBars, on; ShowEnemyNames, on; ShowHealingDoneToAllies, off; ShowHealingDoneToEnemies, off; ShowHealingDoneToMe, on; ShowManaGainedOrLostByAllies, off; ShowManaGainedOrLostByMe, on; ShowMyHealthAndManaBars, on; ShowMyName, on; ShowPickupsByAllies, on; ShowPickupsByMe, on; ShowRadar, on;
+			token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+			version = 1
+		*/
+
+		pugi::xml_document document;
+
+		auto docResponse = document.append_child("response");
+		add_common_keys(docResponse);
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = utils::xml::ToString(document);
+	}
 
 	void API::game_deck_updateDecks(HTTP::Session& session, HTTP::Response& response) {
 
@@ -1275,76 +1344,83 @@ version = 1
 		response.body() = utils::xml::ToString(document);
 	}
 
-	void API::game_creature_getCreature(HTTP::Session& session, HTTP::Response& response) {
-		/*
-			name_locale_id
-			text_locale_id
-			name
-			type_a
-
-			if not template {
-				creator_id
-			}
-
-			weapon_min_damage
-			weapon_max_damage
-			gear_score (default: 0)
-			class
-			stats_template_ability
-				example {
-					full_string = item0;item1;itemN
-					item = a!b,value
-				}
-
-			if not template {
-				stats
-				stats_template_ability_keyvalues
-				stats_ability_keyvalues
-			} else {
-				stats_template
-				stats_template_ability_keyvalues
-			}
-
-			if not template {
-				parts
-					part
-			}
-
-			creature_parts
-			ability_passive
-			ability_basic
-			ability_random
-			ability_special_1
-			ability_special_2
-			ability
-				id
-
-			if not template {
-				png_large_url
-				png_thumb_url
-			}
-		*/
-		/*
+	void API::game_creature_getCreature(HTTP::Session& session, HTTP::Response& response) { // sub_47B930
 		auto& request = session.get_request();
 
-		uint32_t templateId = request.uri.parameteru("template_id");
+		pugi::xml_document document;
+		auto docResponse = document.append_child("response");
 
 		const auto& user = session.get_user();
 		if (user) {
-			user->UnlockCreature(templateId);
+			uint32_t creatureId = request.uri.parameteru("id");
+			// 213313
+			
+		
+			if (request.uri.parameterb("include_abilities")) {
+			}
+			if (request.uri.parameterb("include_parts")) {
+			}
 		}
 
-		pugi::xml_document document;
-
-		auto docResponse = document.append_child("response");
-		utils::xml::Set(docResponse, "creature_id", templateId);
+		//utils::xml::Set(docResponse, "creature_id", templateId);
 
 		add_common_keys(docResponse);
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
-		*/
 	}
+
+	/*	
+		game_creature_getCreature
+
+
+		name_locale_id
+		text_locale_id
+		name
+		type_a
+
+		if not template {
+			creator_id
+		}
+
+		weapon_min_damage
+		weapon_max_damage
+		gear_score (default: 0)
+		class
+		stats_template_ability
+			example {
+				full_string = item0;item1;itemN
+				item = a!b,value
+			}
+
+		if not template {
+			stats
+			stats_template_ability_keyvalues
+			stats_ability_keyvalues
+		} else {
+			stats_template
+			stats_template_ability_keyvalues
+		}
+
+		if not template {
+			parts
+				part
+		}
+
+		creature_parts
+		ability_passive
+		ability_basic
+		ability_random
+		ability_special_1
+		ability_special_2
+		ability
+			id
+
+		if not template {
+			png_large_url
+			png_thumb_url
+		}
+	*/
 
 	void API::survey_survey_getSurveyList(HTTP::Session& session, HTTP::Response& response) {
 		pugi::xml_document document;

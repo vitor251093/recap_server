@@ -162,6 +162,9 @@
     <ClInclude Include="source\utils\logger.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="source\game\leaderboard.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -262,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="source\utils\xml.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\leaderboard.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
