@@ -205,14 +205,14 @@ namespace Blaze {
 
 		mCurrentMessageId = header.message_id;
 		switch (header.component) {
-			case Blaze::Component::AssociationLists: Blaze::AssociationComponent::Parse(this, header); break;
-			case Blaze::Component::Authentication:   Blaze::AuthComponent::Parse(this, header);        break;
+			case Blaze::Component::AssociationLists: Blaze::AssociationComponent::Parse(this, header); break; // 0x19
+			case Blaze::Component::Authentication:   Blaze::AuthComponent::Parse(this, header);        break; // 0x01
 			case Blaze::Component::Redirector:       Blaze::RedirectorComponent::Parse(this, header);  break;
 			case Blaze::Component::Messaging:        Blaze::MessagingComponent::Parse(this, header);   break;
 			case Blaze::Component::Playgroups:       Blaze::PlaygroupsComponent::Parse(this, header);  break;
-			case Blaze::Component::Util:             Blaze::UtilComponent::Parse(this, header);        break;
+			case Blaze::Component::Util:             Blaze::UtilComponent::Parse(this, header);        break; // 0x09
 			case Blaze::Component::GameManager:      Blaze::GameManagerComponent::Parse(this, header); break;
-			case Blaze::Component::Rooms:            Blaze::RoomsComponent::Parse(this, header);       break;
+			case Blaze::Component::Rooms:            Blaze::RoomsComponent::Parse(this, header);       break; // 0x15
 			case Blaze::Component::UserSessions:     Blaze::UserSessionComponent::Parse(this, header); break;
 			default:
 				logger::error("Unknown component: " + static_cast<int>(header.component));

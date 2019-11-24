@@ -1591,7 +1591,9 @@ namespace RakNet {
 		if (debugTime_c2) {
 			logger::info("Debug ping: " + std::string(debugTime_c2));
 		} else {
-			logger::info("Debug ping: " + time);
+			// TODO: That log sometimes causes an exception; investigate
+			//logger::info("Debug ping: " + time);
+			logger::info("Debug ping: ?");
 		}
 	}
 

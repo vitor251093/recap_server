@@ -311,7 +311,7 @@ namespace Blaze {
 		if (update) {
 			uint32_t viewId = 0;
 
-			// What do we send here?
+			// TODO: What do we send here?
 			TDF::Packet packet;
 			packet.PutInteger(nullptr, "SEID", 0);
 			packet.PutInteger(nullptr, "UPRE", 1);

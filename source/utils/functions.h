@@ -70,12 +70,15 @@ namespace utils {
 				if constexpr (sizeof(T) >= sizeof(int64_t)) {
 					value = std::stoll(str, nullptr, base);
 				} else {
-					value = static_cast<T>(std::stoi(str, nullptr, base));
+					value = static_cast<T>(std::stol(str, nullptr, base));
 				}
-			} else if constexpr (sizeof(T) >= sizeof(uint64_t)) {
-				value = std::stoull(str, nullptr, base);
-			} else {
-				value = static_cast<T>(std::stoul(str, nullptr, base));
+			}
+			else {
+				if constexpr (sizeof(T) >= sizeof(uint64_t)) {
+					value = std::stoull(str, nullptr, base);
+				} else {
+					value = static_cast<T>(std::stoul(str, nullptr, base));
+				}
 			}
 		} catch (...) {
 			value = static_cast<T>(0);

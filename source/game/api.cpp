@@ -848,10 +848,12 @@ namespace Game {
 			const auto& user = session.get_user();
 
 			auto& parts = user->get_parts();
-			for (size_t i = 0; i < len; ++i) {
-				uint32_t partIndex = utils::to_number<uint32_t>(partIds[i]);
+			for (size_t i = 0; i < len; i++) {
+				uint32_t partId = utils::to_number<uint32_t>(partIds[i]);
 				uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
-				parts.data()[partIndex].SetStatus(status);
+	
+				len = parts.data().size();
+				if (partId < len) parts.data()[partId].SetStatus(status);
 			}
 		}
 
