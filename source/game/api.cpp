@@ -324,6 +324,7 @@ namespace Game {
 			else if (method == "api.game.getRandomGame")         { game_game_getGame(session, response); }
 			else if (method == "api.game.exitGame")              { game_game_exitGame(session, response); }
 			else if (method == "api.creature.getCreature")       { game_creature_getCreature(session, response); }
+			else if (method == "api.creature.getTemplate")       { game_creature_getTemplate(session, response); }
 			else if (method == "api.creature.resetCreature")     { game_creature_resetCreature(session, response); }
 			else if (method == "api.creature.updateCreature")    { game_creature_updateCreature(session, response); }
 			else if (method == "api.creature.unlockCreature")    { game_creature_unlockCreature(session, response); }
@@ -344,6 +345,20 @@ namespace Game {
 
 		router->add("/creature_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response);
+		});
+
+		router->add("/game/service/png", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			auto& request = session.get_request();
+			//auto size = request.uri.parameter("size"); // eg.: large; sometimes there is no size
+
+			auto templateId = request.uri.parameter("template_id");
+			if (templateId != "") responseWithFileInStorageAtPath(session, response, "/template_png/" + templateId + ".png");
+
+			auto creatureId = request.uri.parameter("creature_id");
+			if (creatureId != "") responseWithFileInStorageAtPath(session, response, "/creature_png/" + creatureId + ".png");
+
+			auto accountId = request.uri.parameter("account_id");
+			if (accountId != "") responseWithFileInStorageAtPath(session, response, "/users/" + accountId + "/avatar.png");
 		});
 
 
@@ -398,8 +413,8 @@ namespace Game {
 			response.body() = std::move(file_data);
 		});
 
-		router->add("/web/sporelabsgame/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			// That one is launched in the system browser
+		router->add("/web/sporelabs/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			// TODO: That one is launched in the system browser
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = "";
 		});
@@ -848,12 +863,12 @@ namespace Game {
 			const auto& user = session.get_user();
 
 			auto& parts = user->get_parts();
+			size_t realLen = parts.data().size();
 			for (size_t i = 0; i < len; i++) {
-				uint32_t partId = utils::to_number<uint32_t>(partIds[i]);
+				uint64_t partId = utils::to_number<uint64_t>(partIds[i]);
 				uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
 	
-				len = parts.data().size();
-				if (partId < len) parts.data()[partId].SetStatus(status);
+				if (partId < realLen) parts.data()[partId].SetStatus(status);
 			}
 		}
 
@@ -1423,6 +1438,28 @@ namespace Game {
 			png_thumb_url
 		}
 	*/
+
+	void API::game_creature_getTemplate(HTTP::Session& session, HTTP::Response& response) {
+		auto& request = session.get_request();
+
+		pugi::xml_document document;
+		auto docResponse = document.append_child("response");
+
+		const auto& user = session.get_user();
+		if (user) {
+			uint32_t templateId = request.uri.parameteru("id");
+			// 213313
+
+
+			if (request.uri.parameterb("include_abilities")) {
+			}
+		}
+
+		add_common_keys(docResponse);
+
+		response.set(boost::beast::http::field::content_type, "text/xml");
+		response.body() = utils::xml::ToString(document);
+	}
 
 	void API::survey_survey_getSurveyList(HTTP::Session& session, HTTP::Response& response) {
 		pugi::xml_document document;

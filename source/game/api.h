@@ -62,11 +62,12 @@ namespace Game {
 			void game_game_getGame(HTTP::Session& session, HTTP::Response& response);
 			void game_game_exitGame(HTTP::Session& session, HTTP::Response& response);
 
+			void game_creature_getCreature(HTTP::Session& session, HTTP::Response& response);
+			void game_creature_getTemplate(HTTP::Session& session, HTTP::Response& response);
 			void game_creature_resetCreature(HTTP::Session& session, HTTP::Response& response);
 			void game_creature_updateCreature(HTTP::Session& session, HTTP::Response& response);
 			void game_creature_unlockCreature(HTTP::Session& session, HTTP::Response& response);
-			void game_creature_getCreature(HTTP::Session& session, HTTP::Response& response);
-
+			
 			// survey
 			void survey_survey_getSurveyList(HTTP::Session& session, HTTP::Response& response);
 

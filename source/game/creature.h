@@ -53,6 +53,7 @@ namespace Game {
 	struct Creature {
 		std::string name;
 		std::string nameLocaleId;
+		std::string descLocaleId;
 		std::string elementType;
 		std::string classType;
 		std::string pngLargeUrl;
@@ -60,10 +61,29 @@ namespace Game {
 
 		double gearScore = 0;
 		double itemPoints = 0;
+		double weaponMinDamage = 0;
+		double weaponMaxDamage = 0;
+
+		//stats_template_ability
+		//stats
+		//stats_template_ability_keyvalues
+		//stats_ability_keyvalues
 
 		uint32_t id = 0;
 		uint64_t nounId = 0;
 		uint32_t version = 0;
+
+		//parts[]
+		//   part
+		//creature_parts
+
+		//ability_passive
+		//ability_basic
+		//ability_random
+		//ability_special_1
+		//ability_special_2
+		//ability[]
+		//   id
 
 		void ReadXml(const pugi::xml_node& node);
 		void WriteXml(pugi::xml_node& node) const;

@@ -12,34 +12,42 @@ namespace Game {
 			return;
 		}
 
-		name = utils::xml::GetString(node, "name");
+		name         = utils::xml::GetString(node, "name");
 		nameLocaleId = utils::xml::GetString(node, "name_locale_id");
-		elementType = utils::xml::GetString(node, "type_a");
-		classType = utils::xml::GetString(node, "class");
-		pngLargeUrl = utils::xml::GetString(node, "png_large_url");
-		pngThumbUrl = utils::xml::GetString(node, "png_thumb_url");
+		descLocaleId = utils::xml::GetString(node, "text_locale_id");
+		elementType  = utils::xml::GetString(node, "type_a");
+		classType    = utils::xml::GetString(node, "class");
+		pngLargeUrl  = utils::xml::GetString(node, "png_large_url");
+		pngThumbUrl  = utils::xml::GetString(node, "png_thumb_url");
 
-		gearScore = utils::xml::GetString<double>(node, "gear_score");
-		itemPoints = utils::xml::GetString<double>(node, "item_points");
+		gearScore       = utils::xml::GetString<double>(node, "gear_score");
+		itemPoints      = utils::xml::GetString<double>(node, "item_points");
+		weaponMinDamage = utils::xml::GetString<double>(node, "weapon_min_damage");
+		weaponMaxDamage = utils::xml::GetString<double>(node, "weapon_max_damage");
 
-		id = utils::xml::GetString<uint32_t>(node, "id");
-		nounId = utils::xml::GetString<uint64_t>(node, "noun_id");
+		id      = utils::xml::GetString<uint32_t>(node, "id");
+		nounId  = utils::xml::GetString<uint64_t>(node, "noun_id");
 		version = utils::xml::GetString<uint32_t>(node, "version");
 	}
 
 	void Creature::WriteXml(pugi::xml_node& node) const {
 		if (auto creature = node.append_child("creature")) {
-			utils::xml::Set(creature, "id", id);
 			utils::xml::Set(creature, "name", name);
 			utils::xml::Set(creature, "name_locale_id", nameLocaleId);
+			utils::xml::Set(creature, "text_locale_id", descLocaleId);
 			utils::xml::Set(creature, "type_a", elementType);
 			utils::xml::Set(creature, "class", classType);
 			utils::xml::Set(creature, "png_large_url", pngLargeUrl);
 			utils::xml::Set(creature, "png_thumb_url", pngThumbUrl);
-			utils::xml::Set(creature, "noun_id", nounId);
-			utils::xml::Set(creature, "version", version);
+
 			utils::xml::Set(creature, "gear_score", gearScore);
 			utils::xml::Set(creature, "item_points", itemPoints);
+			utils::xml::Set(creature, "weapon_min_damage", weaponMinDamage);
+			utils::xml::Set(creature, "weapon_max_damage", weaponMaxDamage);
+
+			utils::xml::Set(creature, "id", id);
+			utils::xml::Set(creature, "noun_id", nounId);
+			utils::xml::Set(creature, "version", version);
 		}
 	}
 
@@ -47,13 +55,16 @@ namespace Game {
 		if (!object.IsObject()) return;
 		name         = utils::json::GetString(object, "name");
 		nameLocaleId = utils::json::GetString(object, "name_locale_id");
+		descLocaleId = utils::json::GetString(object, "text_locale_id");
 		elementType  = utils::json::GetString(object, "type_a");
 		classType    = utils::json::GetString(object, "class");
 		pngLargeUrl  = utils::json::GetString(object, "png_large_url");
 		pngThumbUrl  = utils::json::GetString(object, "png_thumb_url");
 
-		gearScore    = utils::json::GetDouble(object, "gear_score");
-		itemPoints   = utils::json::GetDouble(object, "item_points");
+		gearScore       = utils::json::GetDouble(object, "gear_score");
+		itemPoints      = utils::json::GetDouble(object, "item_points");
+		weaponMinDamage = utils::json::GetDouble(object, "weapon_min_damage");
+		weaponMaxDamage = utils::json::GetDouble(object, "weapon_max_damage");
 
 		id      = utils::json::GetUint(object, "id");
 		nounId  = utils::json::GetUint64(object, "noun_id");
@@ -64,15 +75,20 @@ namespace Game {
 		rapidjson::Value object = utils::json::NewObject();
 		utils::json::Set(object, "name",           name,         allocator);
 		utils::json::Set(object, "name_locale_id", nameLocaleId, allocator);
+		utils::json::Set(object, "text_locale_id", descLocaleId, allocator);
 		utils::json::Set(object, "type_a",         elementType,  allocator);
 		utils::json::Set(object, "class",          classType,    allocator);
 		utils::json::Set(object, "png_large_url",  pngLargeUrl,  allocator);
 		utils::json::Set(object, "png_thumb_url",  pngThumbUrl,  allocator);
-		utils::json::Set(object, "gear_score",     gearScore,    allocator);
-		utils::json::Set(object, "item_points",    itemPoints,   allocator);
-		utils::json::Set(object, "noun_id",        nounId,       allocator);
-		utils::json::Set(object, "id",             id,           allocator);
-		utils::json::Set(object, "version",        version,      allocator);
+		
+		utils::json::Set(object, "gear_score",        gearScore,       allocator);
+		utils::json::Set(object, "item_points",       itemPoints,      allocator);
+		utils::json::Set(object, "weapon_min_damage", weaponMinDamage, allocator);
+		utils::json::Set(object, "weapon_max_damage", weaponMaxDamage, allocator);
+
+		utils::json::Set(object, "id",      id,      allocator);
+		utils::json::Set(object, "noun_id", nounId,  allocator);
+		utils::json::Set(object, "version", version, allocator);
 		return object;
 	}
 
