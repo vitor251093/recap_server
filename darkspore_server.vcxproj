@@ -69,6 +69,11 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>source;libs\raknet-3.902-mod\Source;libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
+    <LibraryPath>libs\raknet-3.902-mod\build\lib;libs\pugixml-1.9\lib;libs\openssl-1.1.1b\lib;libs\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\build\</OutDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>source;libs\raknet-3.902-mod\Source;libs\pugixml-1.9\include;libs\rapidjson-1.1.0\include;libs\openssl-1.1.1b\include;libs\boost_1_70_0;$(IncludePath)</IncludePath>
     <LibraryPath>libs\raknet-3.902-mod\build\lib;libs\pugixml-1.9\lib;libs\openssl-1.1.1b\lib;libs\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
@@ -91,9 +96,15 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NOMINMAX;BOOST_NETWORK_ENABLE_HTTPS;RAPIDJSON_HAS_STDSTRING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/experimental:newLambdaProcessor- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;pugixml.lib;RakNetDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
