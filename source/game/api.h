@@ -26,16 +26,16 @@ namespace Game {
 			void empty_xml_response(HTTP::Response& response);
 			void empty_json_response(HTTP::Response& response);
 
-			// dls
-			void dls_launcher_setTheme(HTTP::Session& session, HTTP::Response& response);
-			void dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response);
+			// recap
+			void recap_launcher_setTheme(HTTP::Session& session, HTTP::Response& response);
+			void recap_launcher_listThemes(HTTP::Session& session, HTTP::Response& response);
 
-			void dls_game_registration(HTTP::Session& session, HTTP::Response& response);
-			void dls_game_log(HTTP::Session& session, HTTP::Response& response);
+			void recap_game_registration(HTTP::Session& session, HTTP::Response& response);
+			void recap_game_log(HTTP::Session& session, HTTP::Response& response);
 
-			void dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response);
-			void dls_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response);
-			void dls_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response);
+			void recap_panel_listUsers(HTTP::Session& session, HTTP::Response& response);
+			void recap_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response);
+			void recap_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response);
 
 			// bootstrap
 			void bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response);

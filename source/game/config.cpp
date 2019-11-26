@@ -60,7 +60,7 @@ namespace Game {
 		}
 	}
 
-	std::string Config::dlsVersion() {
+	std::string Config::recapVersion() {
 		return "0.2.1";
 	}
 

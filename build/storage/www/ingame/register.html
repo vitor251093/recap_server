@@ -6,7 +6,7 @@
     <!-- DON'T CHANGE THE LINES BELOW! THEY ARE AUTOMATICALLY REPLACED BY THE SERVER -->
     <script type="text/javascript" src="js/json2.js"></script>
     <script type="text/javascript" src="js/eawebkit.js"></script>
-    <script type="text/javascript" src="js/dlsclient.js"></script>
+    <script type="text/javascript" src="js/recapclient.js"></script>
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
@@ -64,7 +64,7 @@
                 }
             }
             function register() {
-                DLSClient.getRequest("api.game.registration", {
+                ReCapClient.getRequest("api.game.registration", {
                     "name": document.getElementById("name").value,
                     "mail": document.getElementById("email").value,
                     "pass": document.getElementById("password").value

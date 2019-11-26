@@ -1,5 +1,8 @@
 
 var Utils = {
+	isEAWebKit: function() {
+		return navigator.userAgent.indexOf("EAWebKit") != -1;
+	},
 	forEach: function(array, func) {
 		for (var i = 0; i < array.length; i++) func(array[i])
 	},

@@ -107,10 +107,10 @@ namespace Game {
 </html>
 )";
 
-	constexpr std::string_view dlsClientScript = R"(
+	constexpr std::string_view recapClientScript = R"(
 <script>
-	var DLSClient = {};
-	DLSClient.getRequest = function(url, callback, errorCallback) {
+	var ReCapClient = {};
+	ReCapClient.getRequest = function(url, callback, errorCallback) {
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onload = function() {
 			if (callback !== undefined) callback(xmlHttp.responseText);
@@ -121,7 +121,7 @@ namespace Game {
 		xmlHttp.open("GET", url, true);
 		xmlHttp.send(null);
 	};
-	DLSClient.request = function(name, params, callback, errorCallback) {
+	ReCapClient.request = function(name, params, callback, errorCallback) {
 		if (params !== undefined && typeof params === 'object') {
 			var str = [];
 			for (var p in params)
@@ -130,7 +130,7 @@ namespace Game {
 				}
 			params = str.join("&");
 		}
-		DLSClient.getRequest("http://{{host}}/dls/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
+		ReCapClient.getRequest("http://{{host}}/recap/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
 	};
 </script>
 )";
@@ -166,20 +166,20 @@ namespace Game {
 			logger::info("Got API route.");
 			});
 
-		// DLS
-		router->add("/dls/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+		// ReCap
+		router->add("/recap/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
 
 			auto method = request.uri.parameter("method");
-			if (method == "api.launcher.setTheme") { dls_launcher_setTheme(session, response); }
-			else if (method == "api.launcher.listThemes") { dls_launcher_listThemes(session, response); }
-			else if (method == "api.game.registration") { dls_game_registration(session, response); }
-			else if (method == "api.game.log") { dls_game_log(session, response); }
-			else if (method == "api.panel.listUsers") { dls_panel_listUsers(session, response); }
-			else if (method == "api.panel.getUserInfo") { dls_panel_getUserInfo(session, response); }
-			else if (method == "api.panel.setUserInfo") { dls_panel_setUserInfo(session, response); }
+			if (method == "api.launcher.setTheme") { recap_launcher_setTheme(session, response); }
+			else if (method == "api.launcher.listThemes") { recap_launcher_listThemes(session, response); }
+			else if (method == "api.game.registration") { recap_game_registration(session, response); }
+			else if (method == "api.game.log") { recap_game_log(session, response); }
+			else if (method == "api.panel.listUsers") { recap_panel_listUsers(session, response); }
+			else if (method == "api.panel.getUserInfo") { recap_panel_getUserInfo(session, response); }
+			else if (method == "api.panel.setUserInfo") { recap_panel_setUserInfo(session, response); }
 			else {
-				logger::error("Undefined /dls/api method: " + method);
+				logger::error("Undefined /recap/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
 			});
@@ -210,7 +210,7 @@ namespace Game {
 					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) +
 					mActiveTheme + "/index.html";
 
-				std::string client_script(dlsClientScript);
+				std::string client_script(recapClientScript);
 				utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 
 				std::string file_data = utils::get_file_text(path);
@@ -242,7 +242,7 @@ namespace Game {
 				Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH);
 
 			std::string file_data = utils::get_file_text(path);
-			utils::string_replace(file_data, "{{dls-version}}", Config::dlsVersion());
+			utils::string_replace(file_data, "{{recap-version}}", Config::recapVersion());
 			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? mVersion : "no");
 			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
 			utils::string_replace(file_data, "{{display-latest-version}}", "none");
@@ -408,7 +408,7 @@ namespace Game {
 
 			utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 			utils::string_replace(file_data, "{{isDev}}", "true");
-
+			
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
 		});
@@ -463,7 +463,7 @@ namespace Game {
 		response.set(boost::beast::http::field::content_type, "application/json");
 	}
 
-	void API::dls_launcher_setTheme(HTTP::Session& session, HTTP::Response& response) {
+	void API::recap_launcher_setTheme(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto themeName = request.uri.parameter("theme");
 
@@ -478,7 +478,7 @@ namespace Game {
 		response.body() = utils::json::ToString(document);
 	}
 
-	void API::dls_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
+	void API::recap_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
 		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
@@ -506,7 +506,7 @@ namespace Game {
 		response.body() = utils::json::ToString(document);
 	}
 
-	void API::dls_game_registration(HTTP::Session& session, HTTP::Response& response) {
+	void API::recap_game_registration(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto name = request.uri.parameter("name");
 		auto mail = request.uri.parameter("mail");
@@ -525,13 +525,13 @@ namespace Game {
 		response.body() = utils::json::ToString(document);
 	}
 
-	void API::dls_game_log(HTTP::Session& session, HTTP::Response& response) {
+	void API::recap_game_log(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto postBody = request.data.body();
 		logger::log(postBody);
 	}
 
-	void API::dls_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
+	void API::recap_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
 		rapidjson::Document document = utils::json::NewDocumentObject();
 
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
@@ -556,7 +556,7 @@ namespace Game {
 		response.body() = utils::json::ToString(document);
 	}
 
-	void API::dls_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
+	void API::recap_panel_getUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
 
@@ -581,7 +581,7 @@ namespace Game {
 		response.body() = utils::json::ToString(document);
 	}
 
-	void API::dls_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
+	void API::recap_panel_setUserInfo(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
 		auto userJsonString = request.data.body();
