@@ -1306,7 +1306,7 @@ namespace Game {
 		if (user) {
 			Creature* creature = user->GetCreatureById(request.uri.parameteru("id"));
 			if (creature) {
-				creature->WriteXml(docResponse);
+				creature->WriteXml(docResponse, 0);
 			}
 			else {
 				docResponse.append_child("creature");
@@ -1329,8 +1329,16 @@ namespace Game {
 		if (user) {
 			Creature* creature = user->GetCreatureById(request.uri.parameteru("id"));
 			if (creature) {
+				// cost
 				creature->gearScore  = request.uri.parameterd("gear");
+				// large
+				// large_crc
+				// parts (comma separated IDs)
 				creature->itemPoints = request.uri.parameterd("points");
+				// stats 
+				// stats_ability_keyvalues 
+				// thumb 
+				// thumb_crc 
 				user->Save();
 			}
 		}
@@ -1375,7 +1383,7 @@ namespace Game {
 			uint32_t creatureID = request.uri.parameteru("id");
 			Creature* creature = user->GetCreatureById(creatureID);
 			if (creature) {
-				creature->WriteXml(docResponse);
+				creature->WriteXml(docResponse, user->get_id());
 			}
 		
 			if (request.uri.parameterb("include_abilities")) {

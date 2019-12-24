@@ -24,10 +24,14 @@ namespace Game {
 		version = utils::xml::GetString<uint32_t>(node, "version");
 	}
 
-	void Creature::WriteXml(pugi::xml_node& node) const {
+	void Creature::WriteXml(pugi::xml_node& node, uint32_t creatorId) const {
 		if (auto creature = node.append_child("creature")) {
 			auto templateCreature = Repository::CreatureTemplates::getById(nounId);
 
+			if (creatorId > 0) {
+				utils::xml::Set(creature, "creator_id", creatorId);
+			}
+			
 			utils::xml::Set(creature, "name", templateCreature->name);
 			utils::xml::Set(creature, "name_locale_id", templateCreature->nameLocaleId);
 			utils::xml::Set(creature, "text_locale_id", templateCreature->descLocaleId);
@@ -44,6 +48,9 @@ namespace Game {
 			utils::xml::Set(creature, "id", id);
 			utils::xml::Set(creature, "noun_id", nounId);
 			utils::xml::Set(creature, "version", version);
+
+			utils::xml::Set(creature, "stats", stats);
+			utils::xml::Set(creature, "stats_ability_keyvalues", statsAbilityKeyvalues);
 		}
 	}
 
@@ -58,6 +65,9 @@ namespace Game {
 		id      = utils::json::GetUint(object, "id");
 		nounId  = utils::json::GetUint64(object, "noun_id");
 		version = utils::json::GetUint(object, "version");
+
+		stats                 = utils::json::GetString(object, "stats");
+		statsAbilityKeyvalues = utils::json::GetString(object, "stats_ability_keyvalues");
 	}
 
 	rapidjson::Value Creature::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
@@ -80,6 +90,9 @@ namespace Game {
 		utils::json::Set(object, "id",      id,      allocator);
 		utils::json::Set(object, "noun_id", nounId,  allocator);
 		utils::json::Set(object, "version", version, allocator);
+
+		utils::json::Set(object, "stats",                   stats,                 allocator);
+		utils::json::Set(object, "stats_ability_keyvalues", statsAbilityKeyvalues, allocator);
 		return object;
 	}
 
@@ -101,7 +114,7 @@ namespace Game {
 	void Creatures::WriteXml(pugi::xml_node& node) const {
 		if (auto creatures = node.append_child("creatures")) {
 			for (const auto& creature : mCreatures) {
-				creature.WriteXml(creatures);
+				creature.WriteXml(creatures, 0);
 			}
 		}
 	}
@@ -132,7 +145,7 @@ namespace Game {
 		}
 
 		decltype(auto) creature = mCreatures.emplace_back();
-		creature.id = 1;
+		creature.id = mCreatures.size() + 1;
 		creature.nounId = templateId;
 	}
 }

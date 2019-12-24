@@ -20,18 +20,19 @@ namespace Game {
 
 		classType = utils::xml::GetString(node, "class");
 
-		//stats_template
+		statsTemplate = utils::xml::GetString(node, "stats_template");
 		//stats_template_ability
-		//stats_template_ability_keyvalues
-		//creature_parts
+		statsTemplateAbilityKeyvalues = utils::xml::GetString(node, "stats_template_ability_keyvalues");
 
-		//ability_passive
-		//ability_basic
-		//ability_random
-		//ability_special_1
-		//ability_special_2
-		//ability[]
-		//   id
+		auto creatureParts = utils::xml::GetString(node, "creature_parts");
+		hasHands = (creatureParts == "no_feet"  || creatureParts == "all");
+		hasFeet  = (creatureParts == "no_hands" || creatureParts == "all");
+
+		abilityPassive  = utils::xml::GetString<uint64_t>(node, "ability_passive");
+		abilityBasic    = utils::xml::GetString<uint64_t>(node, "ability_basic");
+		abilityRandom   = utils::xml::GetString<uint64_t>(node, "ability_random");
+		abilitySpecial1 = utils::xml::GetString<uint64_t>(node, "ability_special_1");
+		abilitySpecial2 = utils::xml::GetString<uint64_t>(node, "ability_special_2");
 	}
 
 	void CreatureTemplate::WriteXml(pugi::xml_node& node) const {
@@ -49,17 +50,31 @@ namespace Game {
 
 			utils::xml::Set(creature, "class", classType);
 
-			//utils::xml::Set(creature, "stats_template", );
-			//utils::xml::Set(creature, "stats_template_ability", );
-			//utils::xml::Set(creature, "stats_template_ability_keyvalues", );
-			//utils::xml::Set(creature, "creature_parts", );
+			utils::xml::Set(creature, "stats_template", statsTemplate);
 
-			//utils::xml::Set(creature, "ability_passive", );
-			//utils::xml::Set(creature, "ability_basic", );
-			//utils::xml::Set(creature, "ability_random", );
-			//utils::xml::Set(creature, "ability_special_1", );
-			//utils::xml::Set(creature, "ability_special_2", );
-			//utils::xml::Set(creature, "ability", );
+			// TODO: That's not correct, but it works for testing purposes
+			utils::xml::Set(creature, "stats_template_ability", statsTemplateAbilityKeyvalues);
+			
+			utils::xml::Set(creature, "stats_template_ability_keyvalues", statsTemplateAbilityKeyvalues);
+
+			if (hasFeet && !hasHands) {
+				utils::xml::Set(creature, "creature_parts", "no_hands");
+			}
+			else if (!hasFeet && hasHands) {
+				utils::xml::Set(creature, "creature_parts", "no_feet");
+			}
+			else {
+				utils::xml::Set(creature, "creature_parts", "all");
+			}
+
+			utils::xml::Set(creature, "ability_passive",   abilityPassive);
+			utils::xml::Set(creature, "ability_basic",     abilityBasic);
+			utils::xml::Set(creature, "ability_random",    abilityRandom);
+			utils::xml::Set(creature, "ability_special_1", abilitySpecial1);
+			utils::xml::Set(creature, "ability_special_2", abilitySpecial2);
+			if (auto abilities = creature.append_child("ability")) {
+				// TODO: 
+			}
 		}
 	}
 
@@ -67,28 +82,29 @@ namespace Game {
 		if (!object.IsObject()) return;
 		id = utils::json::GetUint64(object, "id");
 
-		nameLocaleId = utils::json::GetString(object, "name_locale_id");
-		descLocaleId = utils::json::GetString(object, "text_locale_id");
+		nameLocaleId = utils::json::GetString(object, "nameLocaleId");
+		descLocaleId = utils::json::GetString(object, "textLocaleId");
 		name         = utils::json::GetString(object, "name");
-		elementType  = utils::json::GetString(object, "type_a");
+		elementType  = utils::json::GetString(object, "elementType");
 
-		weaponMinDamage = utils::json::GetDouble(object, "weapon_min_damage");
-		weaponMaxDamage = utils::json::GetDouble(object, "weapon_max_damage");
-		gearScore       = utils::json::GetDouble(object, "gear_score");
+		weaponMinDamage = utils::json::GetDouble(object, "weaponMinDamage");
+		weaponMaxDamage = utils::json::GetDouble(object, "weaponMaxDamage");
+		gearScore       = utils::json::GetDouble(object, "gearScore");
 
-		classType = utils::json::GetString(object, "class");
+		classType = utils::json::GetString(object, "classType");
 
-		//utils = utils::json::GetString(object, "stats_template");
-		//utils = utils::json::GetString(object, "stats_template_ability");
-		//utils = utils::json::GetString(object, "stats_template_ability_keyvalues");
-		//utils = utils::json::GetString(object, "creature_parts");
+		statsTemplate = utils::json::GetString(object, "statsTemplate");
+		//statsTemplateAbility = utils::json::GetString(object, "statsTemplateAbility");
+		statsTemplateAbilityKeyvalues = utils::json::GetString(object, "statsTemplateAbilityKeyvalues");
 
-		//utils = utils::json::GetString(object, "ability_passive");
-		//utils = utils::json::GetString(object, "ability_basic");
-		//utils = utils::json::GetString(object, "ability_random");
-		//utils = utils::json::GetString(object, "ability_special_1");
-		//utils = utils::json::GetString(object, "ability_special_2");
-		//utils = utils::json::GetString(object, "ability");
+		hasFeet  = utils::json::GetBool(object, "hasFeet");
+		hasHands = utils::json::GetBool(object, "hasHands");
+
+		abilityPassive  = utils::json::GetUint64(object, "abilityPassive");
+		abilityBasic    = utils::json::GetUint64(object, "abilityBasic");
+		abilityRandom   = utils::json::GetUint64(object, "abilityRandom");
+		abilitySpecial1 = utils::json::GetUint64(object, "abilitySpecial1");
+		abilitySpecial2 = utils::json::GetUint64(object, "abilitySpecial2");
 	}
 
 	rapidjson::Value CreatureTemplate::WriteJson(rapidjson::Document::AllocatorType& allocator) const {
@@ -106,17 +122,18 @@ namespace Game {
 
 		utils::json::Set(object, "class", classType, allocator);
 
-		//utils::json::Set(object, "stats_template", , allocator);
-		//utils::json::Set(object, "stats_template_ability", , allocator);
-		//utils::json::Set(object, "stats_template_ability_keyvalues", , allocator);
-		//utils::json::Set(object, "creature_parts", , allocator);
+		utils::json::Set(object, "stats_template", statsTemplate, allocator);
+		//utils::json::Set(object, "stats_template_ability", statsTemplateAbility, allocator);
+		utils::json::Set(object, "stats_template_ability_keyvalues", statsTemplateAbilityKeyvalues, allocator);
 
-		//utils::json::Set(object, "ability_passive", , allocator);
-		//utils::json::Set(object, "ability_basic", , allocator);
-		//utils::json::Set(object, "ability_random", , allocator);
-		//utils::json::Set(object, "ability_special_1", , allocator);
-		//utils::json::Set(object, "ability_special_2", , allocator);
-		//utils::json::Set(object, "ability", , allocator);
+		utils::json::Set(object, "has_feet",  hasFeet,  allocator);
+		utils::json::Set(object, "has_hands", hasHands, allocator);
+
+		utils::json::Set(object, "ability_passive",   abilityPassive,  allocator);
+		utils::json::Set(object, "ability_basic",     abilityBasic,    allocator);
+		utils::json::Set(object, "ability_random",    abilityRandom,   allocator);
+		utils::json::Set(object, "ability_special_1", abilitySpecial1, allocator);
+		utils::json::Set(object, "ability_special_2", abilitySpecial2, allocator);
 
 		return object;
 	}

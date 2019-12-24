@@ -12,15 +12,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 749013658,
@@ -35,15 +33,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3591937345,
@@ -58,15 +54,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3376462303,
@@ -81,15 +75,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 576185321,
@@ -104,15 +96,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2128242117,
@@ -127,15 +117,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3618328019,
@@ -150,15 +138,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1237326306,
@@ -173,15 +159,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 963807461,
@@ -196,15 +180,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3914325063,
@@ -219,15 +201,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3524487169,
@@ -242,15 +222,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2954534111,
@@ -265,15 +243,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1770764384,
@@ -288,15 +264,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3068979135,
@@ -311,15 +285,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3911756266,
@@ -334,15 +306,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3801146583,
@@ -357,15 +327,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1392397193,
@@ -380,15 +348,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3877795735,
@@ -403,15 +369,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1557965449,
@@ -426,15 +390,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3660811270,
@@ -449,15 +411,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 454054015,
@@ -472,15 +432,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1986637994,
@@ -495,15 +453,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4201941707,
@@ -518,15 +474,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2530835539,
@@ -541,15 +495,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3948469269,
@@ -564,15 +516,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3600769362,
@@ -587,15 +537,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4234304479,
@@ -610,15 +558,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2464059380,
@@ -633,15 +579,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 820281267,
@@ -656,15 +600,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2726720353,
@@ -679,15 +621,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3918493889,
@@ -702,15 +642,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1475341687,
@@ -725,15 +663,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 818452503,
@@ -748,15 +684,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2445894411,
@@ -771,15 +705,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3639041301,
@@ -794,15 +726,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1442915581,
@@ -817,15 +747,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1957997466,
@@ -840,15 +768,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 647027626,
@@ -863,15 +789,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 308338531,
@@ -886,15 +810,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2564618664,
@@ -909,15 +831,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 885383220,
@@ -932,15 +852,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1194511925,
@@ -955,15 +873,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4235360698,
@@ -978,15 +894,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3764918702,
@@ -1001,15 +915,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1705842957,
@@ -1024,15 +936,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1350762291,
@@ -1047,15 +957,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3384561464,
@@ -1070,15 +978,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4231592197,
@@ -1093,15 +999,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2828322511,
@@ -1116,15 +1020,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 709733043,
@@ -1139,15 +1041,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 185979955,
@@ -1162,15 +1062,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1879520589,
@@ -1185,15 +1083,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1647948899,
@@ -1208,15 +1104,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 171910024,
@@ -1231,15 +1125,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 753829266,
@@ -1254,15 +1146,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1839725446,
@@ -1277,15 +1167,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2230947705,
@@ -1300,15 +1188,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 239643518,
@@ -1323,15 +1209,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1014804343,
@@ -1346,15 +1230,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1574801125,
@@ -1369,15 +1251,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 43291678,
@@ -1392,15 +1272,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2712234379,
@@ -1415,15 +1293,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3863798170,
@@ -1438,15 +1314,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 700180862,
@@ -1461,15 +1335,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4026895060,
@@ -1484,15 +1356,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3334429394,
@@ -1507,15 +1377,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1240945542,
@@ -1530,15 +1398,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3225553966,
@@ -1553,15 +1419,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 725345831,
@@ -1576,15 +1440,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3255874076,
@@ -1599,15 +1461,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3775172336,
@@ -1622,15 +1482,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4157449352,
@@ -1645,15 +1503,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1614078369,
@@ -1668,15 +1524,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3108182650,
@@ -1691,15 +1545,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1341857832,
@@ -1714,15 +1566,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2902294899,
@@ -1737,15 +1587,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4216313792,
@@ -1760,15 +1608,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1264710567,
@@ -1783,15 +1629,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1943400314,
@@ -1806,15 +1650,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2911848321,
@@ -1829,15 +1671,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4000956288,
@@ -1852,15 +1692,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3904229032,
@@ -1875,15 +1713,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1786139715,
@@ -1898,15 +1734,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 962104613,
@@ -1921,15 +1755,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 4177427677,
@@ -1944,15 +1776,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 713294352,
@@ -1967,15 +1797,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1077715391,
@@ -1990,15 +1818,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1663327385,
@@ -2013,15 +1839,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2038499613,
@@ -2036,15 +1860,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 2691485049,
@@ -2059,15 +1881,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1850310379,
@@ -2082,15 +1902,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 117394854,
@@ -2105,15 +1923,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1476711747,
@@ -2128,15 +1944,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3380544995,
@@ -2151,15 +1965,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 758141691,
@@ -2174,15 +1986,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 1240682488,
@@ -2197,15 +2007,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 577654149,
@@ -2220,15 +2028,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3707839109,
@@ -2243,15 +2049,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 3795238812,
@@ -2266,15 +2070,13 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     },
     {
         "id": 507464763,
@@ -2289,14 +2091,12 @@
 		"statsTemplate": "",
 		"statsTemplateAbility": "",
 		"statsTemplateAbilityKeyvalues": "",
-		"creatureParts": "",
-		"abilityPassive": "",
-		"abilityBasic": "",
-		"abilityRandom": "",
-		"abilitySpecial1": "",
-		"abilitySpecial2": "",
-		"ability": [
-            {"id": 0}
-        ]
+		"hasHands": true,
+		"hasFeet": true,
+		"abilityPassive": 0,
+		"abilityBasic": 0,
+		"abilityRandom": 0,
+		"abilitySpecial1": 0,
+		"abilitySpecial2": 0
     }
 ]

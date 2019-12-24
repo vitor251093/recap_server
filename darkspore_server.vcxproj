@@ -166,6 +166,7 @@
     <ClInclude Include="source\game\creature.h" />
     <ClInclude Include="source\game\game.h" />
     <ClInclude Include="source\game\leaderboard.h" />
+    <ClInclude Include="source\game\part.h" />
     <ClInclude Include="source\game\squad.h" />
     <ClInclude Include="source\game\template.h" />
     <ClInclude Include="source\game\user.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="source\game\creature.cpp" />
     <ClCompile Include="source\game\game.cpp" />
     <ClCompile Include="source\game\leaderboard.cpp" />
+    <ClCompile Include="source\game\part.cpp" />
     <ClCompile Include="source\game\squad.cpp" />
     <ClCompile Include="source\game\template.cpp" />
     <ClCompile Include="source\game\user.cpp" />
