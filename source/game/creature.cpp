@@ -50,7 +50,32 @@ namespace Game {
 			utils::xml::Set(creature, "version", version);
 
 			utils::xml::Set(creature, "stats", stats);
+			utils::xml::Set(creature, "stats_template_ability", templateCreature->statsTemplateAbilityKeyvalues);
+			utils::xml::Set(creature, "stats_template_ability_keyvalues", templateCreature->statsTemplateAbilityKeyvalues);
 			utils::xml::Set(creature, "stats_ability_keyvalues", statsAbilityKeyvalues);
+
+			if (auto parts = creature.append_child("parts")) {
+				// TODO: 
+			}
+
+			if (templateCreature->hasFeet && !templateCreature->hasHands) {
+				utils::xml::Set(creature, "creature_parts", "no_hands");
+			}
+			else if (!templateCreature->hasFeet && templateCreature->hasHands) {
+				utils::xml::Set(creature, "creature_parts", "no_feet");
+			}
+			else {
+				utils::xml::Set(creature, "creature_parts", "all");
+			}
+
+			utils::xml::Set(creature, "ability_passive",   templateCreature->abilityPassive);
+			utils::xml::Set(creature, "ability_basic",     templateCreature->abilityBasic);
+			utils::xml::Set(creature, "ability_random",    templateCreature->abilityRandom);
+			utils::xml::Set(creature, "ability_special_1", templateCreature->abilitySpecial1);
+			utils::xml::Set(creature, "ability_special_2", templateCreature->abilitySpecial2);
+			if (auto abilities = creature.append_child("ability")) {
+				// TODO: 
+			}
 		}
 	}
 
