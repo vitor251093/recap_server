@@ -10,6 +10,9 @@
 #include "../http/router.h"
 #include "../http/uri.h"
 #include "../http/multipart.h"
+
+#include "../repository/template.h"
+
 #include "../utils/functions.h"
 #include "../utils/logger.h"
 
@@ -354,8 +357,8 @@ namespace Game {
 			auto templateId = request.uri.parameter("template_id");
 			if (templateId != "") responseWithFileInStorageAtPath(session, response, "/template_png/" + templateId + ".png");
 
-			auto creatureId = request.uri.parameter("creature_id");
-			if (creatureId != "") responseWithFileInStorageAtPath(session, response, "/creature_png/" + creatureId + ".png");
+			auto creatureID = request.uri.parameter("creature_id");
+			if (creatureID != "") responseWithFileInStorageAtPath(session, response, "/creature_png/" + creatureID + ".png");
 
 			auto accountId = request.uri.parameter("account_id");
 			if (accountId != "") responseWithFileInStorageAtPath(session, response, "/users/" + accountId + "/avatar.png");
@@ -765,7 +768,7 @@ namespace Game {
 				if (auto part = parts.append_child("part")) {
 					utils::xml::Set(part, "is_flair", "0");
 					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureID::BlitzAlpha));
+					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureTemplateID::BlitzAlpha));
 					utils::xml::Set(part, "id", "1");
 					utils::xml::Set(part, "level", "1");
 					utils::xml::Set(part, "market_status", "1");
@@ -783,7 +786,7 @@ namespace Game {
 				if (auto part = parts.append_child("part")) {
 					utils::xml::Set(part, "is_flair", "0");
 					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureID::BlitzAlpha));
+					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureTemplateID::BlitzAlpha));
 					utils::xml::Set(part, "id", "1");
 					utils::xml::Set(part, "level", "1");
 					utils::xml::Set(part, "market_status", "1");
@@ -829,7 +832,7 @@ namespace Game {
 				if (auto part = parts.append_child("part")) {
 					utils::xml::Set(part, "is_flair", "0");
 					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureID::BlitzAlpha));
+					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureTemplateID::BlitzAlpha));
 					utils::xml::Set(part, "id", "1");
 					utils::xml::Set(part, "level", "1");
 					utils::xml::Set(part, "market_status", "1");
@@ -1207,8 +1210,8 @@ namespace Game {
 				std::vector<Creature> squadCreatures = squad->creatures.data();
 				auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
 				squadCreatures.clear();
-				for (auto const& creatureId : creaturesIds) {
-					Creature* creature = user->GetCreatureById(std::stoi(creatureId));
+				for (auto const& creatureID : creaturesIds) {
+					Creature* creature = user->GetCreatureById(std::stoi(creatureID));
 					if (creature && squadCreatures.size() < 3) {
 						squadCreatures.push_back(*creature);
 					}
@@ -1221,8 +1224,8 @@ namespace Game {
 				std::vector<Creature> squadCreatures = squad->creatures.data();
 				auto creaturesIds = utils::explode_string(request.uri.parameter("pvp_creatures"), ",");
 				squadCreatures.clear();
-				for (auto const& creatureId : creaturesIds) {
-					Creature* creature = user->GetCreatureById(std::stoi(creatureId));
+				for (auto const& creatureID : creaturesIds) {
+					Creature* creature = user->GetCreatureById(std::stoi(creatureID));
 					if (creature && squadCreatures.size() < 3) {
 						squadCreatures.push_back(*creature);
 					}
@@ -1369,20 +1372,21 @@ namespace Game {
 
 		const auto& user = session.get_user();
 		if (user) {
-			uint32_t creatureId = request.uri.parameteru("id");
-			// 213313
-			
+			uint32_t creatureID = request.uri.parameteru("id");
+			Creature* creature = user->GetCreatureById(creatureID);
+			if (creature) {
+				creature->WriteXml(docResponse);
+			}
 		
 			if (request.uri.parameterb("include_abilities")) {
+				// TODO: 
 			}
 			if (request.uri.parameterb("include_parts")) {
+				// TODO: 
 			}
 		}
 
-		//utils::xml::Set(docResponse, "creature_id", templateId);
-
 		add_common_keys(docResponse);
-
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1448,15 +1452,16 @@ namespace Game {
 		const auto& user = session.get_user();
 		if (user) {
 			uint32_t templateId = request.uri.parameteru("id");
-			// 213313
+			auto templateCreature = Repository::CreatureTemplates::getById(templateId);
 
-
+			templateCreature->WriteXml(docResponse);
+			
 			if (request.uri.parameterb("include_abilities")) {
+				// TODO: 
 			}
 		}
 
 		add_common_keys(docResponse);
-
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1477,7 +1482,6 @@ namespace Game {
 
 	void API::add_broadcasts(pugi::xml_node& node) {
 		if (auto broadcasts = node.append_child("broadcasts")) {
-			/*
 			if (auto broadcast = broadcasts.append_child("broadcast")) {
 				utils::xml::Set(broadcast, "id", "0");
 				utils::xml::Set(broadcast, "start", "0");
@@ -1486,7 +1490,6 @@ namespace Game {
 				if (auto tokens = broadcast.append_child("tokens")) {
 				}
 			}
-			*/
 		}
 	}
 

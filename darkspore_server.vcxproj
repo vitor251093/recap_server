@@ -167,6 +167,7 @@
     <ClInclude Include="source\game\game.h" />
     <ClInclude Include="source\game\leaderboard.h" />
     <ClInclude Include="source\game\squad.h" />
+    <ClInclude Include="source\game\template.h" />
     <ClInclude Include="source\game\user.h" />
     <ClInclude Include="source\http\multipart.h" />
     <ClInclude Include="source\http\router.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="source\network\client.h" />
     <ClInclude Include="source\raknet\client.h" />
     <ClInclude Include="source\raknet\server.h" />
+    <ClInclude Include="source\repository\template.h" />
     <ClInclude Include="source\tcptest.h" />
     <ClInclude Include="source\udptest.h" />
     <ClInclude Include="source\utils\functions.h" />
@@ -204,6 +206,7 @@
     <ClCompile Include="source\game\game.cpp" />
     <ClCompile Include="source\game\leaderboard.cpp" />
     <ClCompile Include="source\game\squad.cpp" />
+    <ClCompile Include="source\game\template.cpp" />
     <ClCompile Include="source\game\user.cpp" />
     <ClCompile Include="source\http\multipart.cpp" />
     <ClCompile Include="source\http\router.cpp" />
@@ -214,6 +217,7 @@
     <ClCompile Include="source\network\client.cpp" />
     <ClCompile Include="source\raknet\client.cpp" />
     <ClCompile Include="source\raknet\server.cpp" />
+    <ClCompile Include="source\repository\template.cpp" />
     <ClCompile Include="source\tcptest.cpp" />
     <ClCompile Include="source\udptest.cpp" />
     <ClCompile Include="source\utils\functions.cpp" />

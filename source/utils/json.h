@@ -9,12 +9,14 @@
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
+#include <rapidjson/filereadstream.h>
 
 // utils
 namespace utils {
 	namespace json {
         rapidjson::Document Parse(const std::string& contents);
         rapidjson::Document NewDocumentObject();
+		rapidjson::Document FromFile(const std::string& fileName);
         
         rapidjson::Value Null();
         rapidjson::Value NewObject();

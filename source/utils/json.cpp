@@ -19,6 +19,14 @@ namespace utils {
 		document.SetObject();
         return document;
     }
+	rapidjson::Document json::FromFile(const std::string& fileName) {
+		FILE* pFile = fopen(fileName.c_str(), "rb");
+		char buffer[65536];
+		rapidjson::FileReadStream is(pFile, buffer, sizeof(buffer));
+		rapidjson::Document document;
+		document.ParseStream<0, rapidjson::UTF8<>, rapidjson::FileReadStream>(is);
+		return document;
+	}
 
 
     rapidjson::Value json::Null() {

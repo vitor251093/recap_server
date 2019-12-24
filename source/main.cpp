@@ -4,6 +4,7 @@
 
 #include "http/uri.h"
 #include "game/config.h"
+#include "repository/template.h"
 #include "utils/logger.h"
 
 #include <iostream>
@@ -43,6 +44,9 @@ bool Application::OnInit() {
 
 	// Config
 	Game::Config::Load("config.xml");
+
+	// Repository
+	Repository::CreatureTemplates::Load();
 
 	// Game
 	std::string darksporeVersion = Game::Config::Get(Game::CONFIG_DARKSPORE_VERSION);

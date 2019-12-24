@@ -55,6 +55,12 @@
     <Filter Include="Source Files\raknet">
       <UniqueIdentifier>{cebb3b25-878b-417c-804d-74cdd6f37307}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\repository">
+      <UniqueIdentifier>{2a08547e-96bb-4574-8f23-040e4fa2f88e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\repository">
+      <UniqueIdentifier>{3b5185e0-97aa-444f-8e85-9ac6c458649b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\udptest.h">
@@ -165,6 +171,12 @@
     <ClInclude Include="source\game\leaderboard.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
+    <ClInclude Include="source\repository\template.h">
+      <Filter>Header Files\repository</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\template.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -267,6 +279,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\game\leaderboard.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\repository\template.cpp">
+      <Filter>Source Files\repository</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\template.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>

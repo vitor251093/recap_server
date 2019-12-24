@@ -1525,7 +1525,7 @@ namespace RakNet {
 		SendPartyMergeComplete(packet);
 		
 		// Send player stuff
-		SendObjectCreate(packet, 0x0000000A, static_cast<uint32_t>(Game::CreatureID::BlitzAlpha));
+		SendObjectCreate(packet, 0x0000000A, static_cast<uint32_t>(Game::CreatureTemplateID::BlitzAlpha));
 		SendLabsPlayerUpdate(packet, true);
 		
 		// Prepare to start
@@ -1694,7 +1694,7 @@ namespace RakNet {
 		// Characters
 		{
 			auto& character = player.mCharacters[0];
-			character.nounDef = static_cast<uint32_t>(Game::CreatureID::BlitzAlpha);
+			character.nounDef = static_cast<uint32_t>(Game::CreatureTemplateID::BlitzAlpha);
 			character.version = 2;
 		} {
 			auto& character = player.mCharacters[1];
@@ -1767,7 +1767,7 @@ namespace RakNet {
 		BitStream outStream(8);
 		outStream.Write(PacketID::PlayerCharacterDeploy);
 
-		Write<uint32_t>(outStream, static_cast<uint32_t>(Game::CreatureID::BlitzAlpha));
+		Write<uint32_t>(outStream, static_cast<uint32_t>(Game::CreatureTemplateID::BlitzAlpha));
 		Write<uint8_t>(outStream, 0x01);
 		Write<uint32_t>(outStream, id);
 

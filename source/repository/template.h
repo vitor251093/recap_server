@@ -1,0 +1,27 @@
+
+#ifndef _GAME_REPO_TEMPLATE_HEADER
+#define _GAME_REPO_TEMPLATE_HEADER
+
+// Include
+#include <string>
+#include <map>
+#include "../utils/functions.h"
+#include "../game/template.h"
+
+// Game
+namespace Repository {
+
+	using CreatureTemplatePtr = std::shared_ptr<Game::CreatureTemplate>;
+
+	class CreatureTemplates {
+		public:
+			static CreatureTemplatePtr getById(uint64_t id);
+			static void Load();
+
+		private:
+			static std::map<uint64_t, CreatureTemplatePtr> mTemplates;
+			friend class Game::CreatureTemplate;
+	};
+}
+
+#endif
