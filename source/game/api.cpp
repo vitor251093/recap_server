@@ -1330,13 +1330,13 @@ namespace Game {
 			Creature* creature = user->GetCreatureById(request.uri.parameteru("id"));
 			if (creature) {
 				// cost
-				creature->gearScore  = request.uri.parameterd("gear");
+				creature->gearScore = request.uri.parameterd("gear");
 				// large
 				// large_crc
 				// parts (comma separated IDs)
 				creature->itemPoints = request.uri.parameterd("points");
-				// stats 
-				// stats_ability_keyvalues 
+				creature->stats = request.uri.parameter("stats");
+				creature->statsAbilityKeyvalues = request.uri.parameter("stats_ability_keyvalues");
 				// thumb 
 				// thumb_crc 
 				user->Save();

@@ -36,6 +36,7 @@ namespace Game {
 			utils::xml::Set(creature, "name_locale_id", templateCreature->nameLocaleId);
 			utils::xml::Set(creature, "text_locale_id", templateCreature->descLocaleId);
 			utils::xml::Set(creature, "type_a", templateCreature->elementType);
+
 			utils::xml::Set(creature, "class", templateCreature->classType);
 			utils::xml::Set(creature, "png_large_url", pngLargeUrl);
 			utils::xml::Set(creature, "png_thumb_url", pngThumbUrl);
