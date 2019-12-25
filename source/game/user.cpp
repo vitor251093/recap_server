@@ -325,6 +325,28 @@ namespace Game {
 		return squadPtr;
 	}
 
+	Creature* User::GetCreatureByTemplateId(uint32_t id) {
+		Creature* creaturePtr = nullptr;
+		for (auto& creature : mCreatures) {
+			if (creature.nounId == id) {
+				creaturePtr = &creature;
+				break;
+			}
+		}
+		return creaturePtr;
+	}
+
+	const Creature* User::GetCreatureByTemplateId(uint32_t id) const {
+		const Creature* creaturePtr = nullptr;
+		for (const auto& creature : mCreatures) {
+			if (creature.nounId == id) {
+				creaturePtr = &creature;
+				break;
+			}
+		}
+		return creaturePtr;
+	}
+
 	Creature* User::GetCreatureById(uint32_t id) {
 		Creature* creaturePtr = nullptr;
 		for (auto& creature : mCreatures) {

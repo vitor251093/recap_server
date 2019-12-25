@@ -5,6 +5,8 @@
 #include <ctime>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 
 // utils
 namespace utils {
@@ -66,6 +68,18 @@ namespace utils {
 		if (position != std::string::npos) {
 			str.replace(position, old_str.length(), new_str);
 		}
+	}
+
+	std::string unsigned_long_long_to_hex_string(uint64_t val) {
+		std::stringstream sstream;
+		sstream << std::hex << val;
+		std::string result(sstream.str());
+		return result;
+	}
+
+	uint64_t hex_string_to_unsigned_long_long(std::string str) {
+		//string_replace(str, "0x", "");
+		return std::stoull(str, 0, 16);
 	}
 
 	std::vector<std::string> explode_string(const std::string& str, char delim, int32_t limit) {

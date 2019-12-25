@@ -9,8 +9,8 @@ namespace Game {
 	void CreatureTemplate::ReadXml(const pugi::xml_node& node) {
 		id = utils::xml::GetString<uint64_t>(node, "id");
 
-		nameLocaleId = utils::xml::GetString(node, "name_locale_id");
-		descLocaleId = utils::xml::GetString(node, "text_locale_id");
+		nameLocaleId = utils::xml::GetString<uint64_t>(node, "name_locale_id");
+		descLocaleId = utils::xml::GetString<uint64_t>(node, "text_locale_id");
 		name         = utils::xml::GetString(node, "name");
 		elementType  = utils::xml::GetString(node, "type_a");
 		
@@ -82,8 +82,9 @@ namespace Game {
 		if (!object.IsObject()) return;
 		id = utils::json::GetUint64(object, "id");
 
-		nameLocaleId = utils::json::GetString(object, "nameLocaleId");
-		descLocaleId = utils::json::GetString(object, "textLocaleId");
+		nameLocaleId = utils::hex_string_to_unsigned_long_long(utils::json::GetString(object, "nameLocaleId"));
+		descLocaleId = utils::hex_string_to_unsigned_long_long(utils::json::GetString(object, "descLocaleId"));
+
 		name         = utils::json::GetString(object, "name");
 		elementType  = utils::json::GetString(object, "elementType");
 
@@ -111,29 +112,30 @@ namespace Game {
 		rapidjson::Value object = utils::json::NewObject();
 		utils::json::Set(object, "id", id, allocator);
 		
-		utils::json::Set(object, "name_locale_id", nameLocaleId, allocator);
-		utils::json::Set(object, "text_locale_id", descLocaleId, allocator);
+		utils::json::Set(object, "nameLocaleId", utils::unsigned_long_long_to_hex_string(nameLocaleId), allocator);
+		utils::json::Set(object, "descLocaleId", utils::unsigned_long_long_to_hex_string(descLocaleId), allocator);
+
 		utils::json::Set(object, "name", name, allocator);
-		utils::json::Set(object, "type_a", elementType, allocator);
+		utils::json::Set(object, "elementType", elementType, allocator);
 		
-		utils::json::Set(object, "weapon_min_damage", weaponMinDamage, allocator);
-		utils::json::Set(object, "weapon_max_damage", weaponMaxDamage, allocator);
-		utils::json::Set(object, "gear_score", gearScore, allocator);
+		utils::json::Set(object, "weaponMinDamage", weaponMinDamage, allocator);
+		utils::json::Set(object, "weaponMaxDamage", weaponMaxDamage, allocator);
+		utils::json::Set(object, "gearScore", gearScore, allocator);
 
-		utils::json::Set(object, "class", classType, allocator);
+		utils::json::Set(object, "classType", classType, allocator);
 
-		utils::json::Set(object, "stats_template", statsTemplate, allocator);
-		//utils::json::Set(object, "stats_template_ability", statsTemplateAbility, allocator);
-		utils::json::Set(object, "stats_template_ability_keyvalues", statsTemplateAbilityKeyvalues, allocator);
+		utils::json::Set(object, "statsTemplate", statsTemplate, allocator);
+		//utils::json::Set(object, "statsTemplateAbility", statsTemplateAbility, allocator);
+		utils::json::Set(object, "statsTemplateAbilityKeyvalues", statsTemplateAbilityKeyvalues, allocator);
 
-		utils::json::Set(object, "has_feet",  hasFeet,  allocator);
-		utils::json::Set(object, "has_hands", hasHands, allocator);
+		utils::json::Set(object, "hasFeet",  hasFeet,  allocator);
+		utils::json::Set(object, "hasHands", hasHands, allocator);
 
-		utils::json::Set(object, "ability_passive",   abilityPassive,  allocator);
-		utils::json::Set(object, "ability_basic",     abilityBasic,    allocator);
-		utils::json::Set(object, "ability_random",    abilityRandom,   allocator);
-		utils::json::Set(object, "ability_special_1", abilitySpecial1, allocator);
-		utils::json::Set(object, "ability_special_2", abilitySpecial2, allocator);
+		utils::json::Set(object, "abilityPassive",  abilityPassive,  allocator);
+		utils::json::Set(object, "abilityBasic",    abilityBasic,    allocator);
+		utils::json::Set(object, "abilityRandom",   abilityRandom,   allocator);
+		utils::json::Set(object, "abilitySpecial1", abilitySpecial1, allocator);
+		utils::json::Set(object, "abilitySpecial2", abilitySpecial2, allocator);
 
 		return object;
 	}

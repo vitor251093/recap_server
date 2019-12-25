@@ -54,8 +54,8 @@ namespace Game {
 		public:
 			uint64_t id = 0;
 		
-			std::string nameLocaleId;
-			std::string descLocaleId;
+			uint64_t nameLocaleId = 0;
+			uint64_t descLocaleId = 0;
 			std::string name;
 			std::string elementType;
 		

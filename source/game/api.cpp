@@ -1359,6 +1359,7 @@ namespace Game {
 		const auto& user = session.get_user();
 		if (user) {
 			user->UnlockCreature(templateId);
+			user->Save();
 		}
 
 		pugi::xml_document document;

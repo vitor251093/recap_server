@@ -144,6 +144,8 @@ namespace Game {
 			const Squad* GetSquadBySlot(uint32_t slot) const;
 
 			// Creature
+			Creature* GetCreatureByTemplateId(uint32_t id);
+			const Creature* GetCreatureByTemplateId(uint32_t id) const;
 			Creature* GetCreatureById(uint32_t id);
 			const Creature* GetCreatureById(uint32_t id) const;
 
