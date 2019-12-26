@@ -60,6 +60,7 @@ namespace Game {
 			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 
 			void Add(uint32_t templateId);
+			void Add(Creature creature);
 
 		private:
 			std::vector<Creature> mCreatures;

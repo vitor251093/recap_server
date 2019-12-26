@@ -424,7 +424,7 @@ namespace Game {
 
 			  mAccount.ReadXml(user);
 			mCreatures.ReadXml(user);
-			   mSquads.ReadXml(user);
+			   mSquads.ReadXml(user, mCreatures);
 			     mFeed.ReadXml(user);
 			    mParts.ReadXml(user);
 		}

@@ -3,6 +3,7 @@
 #include "creature.h"
 #include <algorithm>
 #include "../repository/template.h"
+#include "config.h"
 
 // Game
 namespace Game {
@@ -22,6 +23,9 @@ namespace Game {
 		id      = utils::xml::GetString<uint32_t>(node, "id");
 		nounId  = utils::xml::GetString<uint64_t>(node, "noun_id");
 		version = utils::xml::GetString<uint32_t>(node, "version");
+
+		stats = utils::xml::GetString(node, "stats");
+		statsAbilityKeyvalues = utils::xml::GetString(node, "stats_ability_keyvalues");
 	}
 
 	void Creature::WriteXml(pugi::xml_node& node, uint32_t creatorId) const {
@@ -38,8 +42,13 @@ namespace Game {
 			utils::xml::Set(creature, "type_a", templateCreature->elementType);
 
 			utils::xml::Set(creature, "class", templateCreature->classType);
-			utils::xml::Set(creature, "png_large_url", pngLargeUrl);
-			utils::xml::Set(creature, "png_thumb_url", pngThumbUrl);
+
+			// TODO: 
+			//utils::xml::Set(creature, "png_large_url", pngLargeUrl);
+			//utils::xml::Set(creature, "png_thumb_url", pngThumbUrl);
+			auto pngUrl = "http://" + Config::Get(CONFIG_SERVER_HOST) + "/game/service/png?template_id=" + std::to_string(nounId) + "&size=large";
+			utils::xml::Set(creature, "png_large_url", pngUrl);
+			utils::xml::Set(creature, "png_thumb_url", pngUrl);
 
 			utils::xml::Set(creature, "gear_score", gearScore);
 			utils::xml::Set(creature, "item_points", itemPoints);
@@ -51,10 +60,14 @@ namespace Game {
 			utils::xml::Set(creature, "version", version);
 
 			utils::xml::Set(creature, "stats", stats);
-			utils::xml::Set(creature, "stats_template_ability", templateCreature->statsTemplateAbilityKeyvalues);
-			utils::xml::Set(creature, "stats_template_ability_keyvalues", templateCreature->statsTemplateAbilityKeyvalues);
 			utils::xml::Set(creature, "stats_ability_keyvalues", statsAbilityKeyvalues);
-
+			
+			// TODO: 
+			//utils::xml::Set(creature, "stats_template_ability", templateCreature->statsTemplateAbilityKeyvalues);
+			//utils::xml::Set(creature, "stats_template_ability_keyvalues", templateCreature->statsTemplateAbilityKeyvalues);
+			utils::xml::Set(creature, "stats_template_ability", statsAbilityKeyvalues);
+			utils::xml::Set(creature, "stats_template_ability_keyvalues", statsAbilityKeyvalues);
+			
 			if (auto parts = creature.append_child("parts")) {
 				// TODO: 
 			}
@@ -173,5 +186,9 @@ namespace Game {
 		decltype(auto) creature = mCreatures.emplace_back();
 		creature.id = mCreatures.size() + 1;
 		creature.nounId = templateId;
+	}
+
+	void Creatures::Add(Creature creature) {
+		mCreatures.emplace_back(creature);
 	}
 }

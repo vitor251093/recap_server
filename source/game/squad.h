@@ -19,7 +19,7 @@ namespace Game {
 
 		bool locked = true;
 
-		void ReadXml(const pugi::xml_node& node);
+		void ReadXml(const pugi::xml_node& node, Creatures mCreatures);
 		void WriteXml(pugi::xml_node& node) const;
 
 		void ReadJson(rapidjson::Value& object);
@@ -37,7 +37,7 @@ namespace Game {
 			auto& data() { return mSquads; }
 			const auto& data() const { return mSquads; }
 
-			void ReadXml(const pugi::xml_node& node);
+			void ReadXml(const pugi::xml_node& node, Creatures mCreatures);
 			void WriteXml(pugi::xml_node& node) const;
 
 			void ReadJson(rapidjson::Value& object);

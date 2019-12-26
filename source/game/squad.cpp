@@ -6,7 +6,7 @@
 // Game
 namespace Game {
 	// Squad
-	void Squad::ReadXml(const pugi::xml_node& node) {
+	void Squad::ReadXml(const pugi::xml_node& node, Creatures mCreatures) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "deck") {
 			return;
@@ -20,7 +20,15 @@ namespace Game {
 
 		locked = utils::xml::GetString<uint32_t>(node, "locked");
 
-		creatures.ReadXml(node);
+		auto creaturesXml = node.child("creatures");
+		for (const auto& creatureXmlNode : creaturesXml) {
+			auto creatureId = utils::xml::GetString<uint32_t>(creatureXmlNode, "id");
+			for (const auto& creatureNode : mCreatures) {
+				if (creatureId == creatureNode.id) {
+					creatures.Add(creatureNode);
+				}
+			}
+		}
 	}
 
 	void Squad::WriteXml(pugi::xml_node& node) const {
@@ -58,7 +66,7 @@ namespace Game {
 	}
 
 	// Squads
-	void Squads::ReadXml(const pugi::xml_node& node) {
+	void Squads::ReadXml(const pugi::xml_node& node, Creatures mCreatures) {
 		auto decks = node.child("decks");
 		if (!decks) {
 			return;
@@ -66,7 +74,7 @@ namespace Game {
 
 		for (const auto& deckNode : decks) {
 			decltype(auto) squad = mSquads.emplace_back();
-			squad.ReadXml(deckNode);
+			squad.ReadXml(deckNode, mCreatures);
 		}
 	}
 
