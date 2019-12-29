@@ -29,6 +29,8 @@ namespace Game {
 
 			static std::string recapVersion();
 
+			static std::string darksporeAppDataFolder();
+
 			static const std::string& Get(ConfigValue key);
 			static bool GetBool(ConfigValue key);
 			static void Set(ConfigValue key, const std::string& value);

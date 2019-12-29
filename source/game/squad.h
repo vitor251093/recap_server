@@ -8,22 +8,23 @@
 // Game
 namespace Game {
 	// Squad
-	struct Squad {
-		Creatures creatures;
+	class Squad {
+		public:
+			Creatures creatures;
 
-		std::string name;
-		std::string category;
+			std::string name;
+			std::string category;
 
-		uint32_t id = 0;
-		uint32_t slot = 0;
+			uint32_t id = 0;
+			uint32_t slot = 0;
 
-		bool locked = true;
+			bool locked = true;
 
-		void ReadXml(const pugi::xml_node& node, Creatures mCreatures);
-		void WriteXml(pugi::xml_node& node) const;
+			void ReadXml(const pugi::xml_node& node, Creatures mCreatures);
+			void WriteXml(pugi::xml_node& node) const;
 
-		void ReadJson(rapidjson::Value& object);
-		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
+			void ReadJson(rapidjson::Value& object);
+			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 	};
 
 	// Squads

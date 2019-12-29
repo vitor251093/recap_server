@@ -4,7 +4,6 @@
 
 // Include
 #include "game.h"
-#include "squad.h"
 
 #include <map>
 #include "../utils/functions.h"
@@ -14,6 +13,8 @@ namespace Game {
 	// Part
 	class Part {
 	public:
+		uint16_t rigblock_asset_id;
+		
 		Part();
 		Part(uint32_t rigblock);
 		Part(const pugi::xml_node& node);
@@ -40,7 +41,6 @@ namespace Game {
 		uint32_t cost;
 		uint32_t equipped_to_creature_id;
 
-		uint16_t rigblock_asset_id;
 		uint16_t prefix_asset_id;
 		uint16_t prefix_secondary_asset_id;
 		uint16_t suffix_asset_id;
@@ -72,6 +72,8 @@ namespace Game {
 
 		void ReadJson(rapidjson::Value& object);
 		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
+
+		void Add(Part part);
 
 	private:
 		std::vector<Part> mItems;

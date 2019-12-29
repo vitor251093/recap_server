@@ -422,11 +422,11 @@ namespace Game {
 			mEmail = utils::xml::GetString(user, "email");
 			mPassword = utils::xml::GetString(user, "password"); // Hash this later?
 
+			    mParts.ReadXml(user);
 			  mAccount.ReadXml(user);
-			mCreatures.ReadXml(user);
+			mCreatures.ReadXml(user, mParts);
 			   mSquads.ReadXml(user, mCreatures);
 			     mFeed.ReadXml(user);
-			    mParts.ReadXml(user);
 		}
 
 		return true;

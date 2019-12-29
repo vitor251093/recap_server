@@ -347,6 +347,10 @@ namespace Game {
 		});
 
 		router->add("/creature_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			//auto& request = session.get_request();
+			//std::string name = request.uri.resource();
+			//utils::string_replace(name, "creature_png/", "");
+
 			responseWithFileInStorage(session, response);
 		});
 
@@ -1329,6 +1333,7 @@ namespace Game {
 		if (user) {
 			Creature* creature = user->GetCreatureById(request.uri.parameteru("id"));
 			if (creature) {
+				creature->version++;
 				// cost
 				creature->gearScore = request.uri.parameterd("gear");
 				// large
@@ -1388,10 +1393,10 @@ namespace Game {
 			}
 		
 			if (request.uri.parameterb("include_abilities")) {
-				// TODO: 
+				// TODO: Include abilities only if true
 			}
 			if (request.uri.parameterb("include_parts")) {
-				// TODO: 
+				// TODO: Include parts only if true
 			}
 		}
 
@@ -1399,58 +1404,6 @@ namespace Game {
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
-
-	/*	
-		game_creature_getCreature
-
-
-		name_locale_id
-		text_locale_id
-		name
-		type_a
-
-		if not template {
-			creator_id
-		}
-
-		weapon_min_damage
-		weapon_max_damage
-		gear_score (default: 0)
-		class
-		stats_template_ability
-			example {
-				full_string = item0;item1;itemN
-				item = a!b,value
-			}
-
-		if not template {
-			stats
-			stats_template_ability_keyvalues
-			stats_ability_keyvalues
-		} else {
-			stats_template
-			stats_template_ability_keyvalues
-		}
-
-		if not template {
-			parts
-				part
-		}
-
-		creature_parts
-		ability_passive
-		ability_basic
-		ability_random
-		ability_special_1
-		ability_special_2
-		ability
-			id
-
-		if not template {
-			png_large_url
-			png_thumb_url
-		}
-	*/
 
 	void API::game_creature_getTemplate(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
@@ -1466,7 +1419,7 @@ namespace Game {
 			templateCreature->WriteXml(docResponse);
 			
 			if (request.uri.parameterb("include_abilities")) {
-				// TODO: 
+				// TODO: Include abilities only if true
 			}
 		}
 

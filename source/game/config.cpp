@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <pugixml.hpp>
+#include <ShlObj.h>
 
 // Game
 namespace Game {
@@ -62,6 +63,18 @@ namespace Game {
 
 	std::string Config::recapVersion() {
 		return "0.2.1";
+	}
+
+	std::string Config::darksporeAppDataFolder() {
+		wchar_t* localAppData = 0;
+		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &localAppData)))
+		{
+			std::wstring localAppDataWs(localAppData);
+			std::string localAppDataStr(localAppDataWs.begin(), localAppDataWs.end());
+			localAppDataStr += "\\DarksporeData";
+			return localAppDataStr;
+		}
+		return "";
 	}
 
 	const std::string& Config::Get(ConfigValue key) {

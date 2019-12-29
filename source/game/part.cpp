@@ -221,4 +221,8 @@ namespace Game {
 		}
 		return value;
 	}
+
+	void Parts::Add(Part part) {
+		mItems.emplace_back(part);
+	}
 }

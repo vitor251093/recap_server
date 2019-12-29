@@ -8,7 +8,7 @@
 // Game
 namespace Game {
 	// Creature
-	void Creature::ReadXml(const pugi::xml_node& node) {
+	void Creature::ReadXml(const pugi::xml_node& node, Parts mParts) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "creature") {
 			return;
@@ -26,6 +26,21 @@ namespace Game {
 
 		stats = utils::xml::GetString(node, "stats");
 		statsAbilityKeyvalues = utils::xml::GetString(node, "stats_ability_keyvalues");
+
+		// TODO: Creature should have its specific parts, not all parts (?)
+		//auto partsXml = node.child("parts");
+		//for (const auto& partXmlNode : partsXml) {
+		//	auto partId = utils::xml::GetString<uint32_t>(partXmlNode, "id");
+		//	for (const auto& partNode : mParts) {
+		//		if (partId == partNode.rigblock_asset_id) {
+		//			parts.Add(partNode);
+		//		}
+		//	}
+		//}
+
+		for (const auto& partNode : mParts) {
+			parts.Add(partNode);
+		}
 	}
 
 	void Creature::WriteXml(pugi::xml_node& node, uint32_t creatorId) const {
@@ -43,7 +58,7 @@ namespace Game {
 
 			utils::xml::Set(creature, "class", templateCreature->classType);
 
-			// TODO: 
+			// TODO: image url should depend of the changes of the creature
 			//utils::xml::Set(creature, "png_large_url", pngLargeUrl);
 			//utils::xml::Set(creature, "png_thumb_url", pngThumbUrl);
 			auto pngUrl = "http://" + Config::Get(CONFIG_SERVER_HOST) + "/game/service/png?template_id=" + std::to_string(nounId) + "&size=large";
@@ -68,9 +83,7 @@ namespace Game {
 			utils::xml::Set(creature, "stats_template_ability", statsAbilityKeyvalues);
 			utils::xml::Set(creature, "stats_template_ability_keyvalues", statsAbilityKeyvalues);
 			
-			if (auto parts = creature.append_child("parts")) {
-				// TODO: 
-			}
+			parts.WriteXml(creature, false);
 
 			if (templateCreature->hasFeet && !templateCreature->hasHands) {
 				utils::xml::Set(creature, "creature_parts", "no_hands");
@@ -87,8 +100,8 @@ namespace Game {
 			utils::xml::Set(creature, "ability_random",    templateCreature->abilityRandom);
 			utils::xml::Set(creature, "ability_special_1", templateCreature->abilitySpecial1);
 			utils::xml::Set(creature, "ability_special_2", templateCreature->abilitySpecial2);
-			if (auto abilities = creature.append_child("ability")) {
-				// TODO: 
+			if (auto abilities = creature.append_child("abilities")) {
+				// TODO: Add ability to the xml
 			}
 		}
 	}
@@ -138,7 +151,7 @@ namespace Game {
 
 
 	// Creatures
-	void Creatures::ReadXml(const pugi::xml_node& node) {
+	void Creatures::ReadXml(const pugi::xml_node& node, Parts mParts) {
 		auto creatures = node.child("creatures");
 		if (!creatures) {
 			return;
@@ -146,7 +159,7 @@ namespace Game {
 
 		for (const auto& creatureNode : creatures) {
 			decltype(auto) creature = mCreatures.emplace_back();
-			creature.ReadXml(creatureNode);
+			creature.ReadXml(creatureNode, mParts);
 		}
 	}
 

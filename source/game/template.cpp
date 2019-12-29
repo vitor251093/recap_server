@@ -25,8 +25,8 @@ namespace Game {
 		statsTemplateAbilityKeyvalues = utils::xml::GetString(node, "stats_template_ability_keyvalues");
 
 		auto creatureParts = utils::xml::GetString(node, "creature_parts");
-		hasHands = (creatureParts == "no_feet"  || creatureParts == "all");
-		hasFeet  = (creatureParts == "no_hands" || creatureParts == "all");
+		hasHands = (creatureParts != "no_hands");
+		hasFeet  = (creatureParts != "no_feet" );
 
 		abilityPassive  = utils::xml::GetString<uint64_t>(node, "ability_passive");
 		abilityBasic    = utils::xml::GetString<uint64_t>(node, "ability_basic");
@@ -72,8 +72,8 @@ namespace Game {
 			utils::xml::Set(creature, "ability_random",    abilityRandom);
 			utils::xml::Set(creature, "ability_special_1", abilitySpecial1);
 			utils::xml::Set(creature, "ability_special_2", abilitySpecial2);
-			if (auto abilities = creature.append_child("ability")) {
-				// TODO: 
+			if (auto abilities = creature.append_child("abilities")) {
+				// TODO: Add ability to the xml
 			}
 		}
 	}
