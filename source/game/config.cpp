@@ -62,7 +62,7 @@ namespace Game {
 	}
 
 	std::string Config::recapVersion() {
-		return "0.2.1";
+		return "0.2.2";
 	}
 
 	std::string Config::darksporeAppDataFolder() {

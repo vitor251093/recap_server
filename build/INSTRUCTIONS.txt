@@ -2,7 +2,7 @@
   INSTALL INSTRUCTIONS
 ------------------------------------------------------------------
 
-That version of Darkspore LS is still not functional for playing the game;
+That version of Ressurection Capsule is still not functional for playing the game;
 although, it can be used to play with the hero editor already.
 
 You must add the items below to your C:\Windows\system32\Drivers\etc\hosts file:
@@ -43,20 +43,11 @@ and keep both of them running.
 Press Play in the Darkspore launcher and wait for the login screen. 
 Using the Register button in the Darkspore login screen, create a user account 
 (it will only exist in your computer, and you won't need internet to do that). 
-After creating the user, open the following link in your browser:
-
-- http://config.darkspore.com/panel/
-
-It should show a template page (sorry, still didn't have time to clean it up). 
-Press the Users button in the top, and then you should see a list with all the 
-users in your local server (which at this point should be only the user that you 
-just created). Select your user mail, and then press "Start testing".
-
-After that, go back to Darkspore and login. You should be able to use the hero 
-editor now, which is as far as we could go until this day (05/09/2019).
+After creating the user, login with it. You should be able to use the hero 
+editor, which is as far as we could go until this day (19/01/2020).
 
 In case you are reading that and over 2 or 3 months have passed, check if there
-isn't any more recent version of DLS already.
+isn't any more recent version of ReCap already.
 
 
 
@@ -64,7 +55,7 @@ isn't any more recent version of DLS already.
   UPDATE INSTRUCTIONS
 ------------------------------------------------------------------
 
-If you already have an older version of DLS, you just need to replace the older
+If you already have an older version of ReCap, you just need to replace the older
 version files with the ones from that version. 
 
 You can keep your users by preserving the original storage/users folder,
