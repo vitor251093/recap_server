@@ -41,6 +41,14 @@ var UI = function(domId) {
 		text: function(text) {
 			Utils.forEach(this.dom(),function(dom){dom.innerHTML = text});
 		},
+		toggle: function(value) {
+			Utils.forEach(this.dom(),function(dom){
+				if (dom.tagName.toUpperCase() === "INPUT" && dom.type.toUpperCase() === "CHECKBOX") {
+					dom.checked = (value === true || value === false) ? value : !dom.checked;
+					return;
+				}
+			});
+		},
 		style: function(obj) {
 			Utils.forEach(this.dom(),function(dom){for (var p in obj) dom.style[p] = obj[p]});
 		}

@@ -70,13 +70,13 @@
                     "pass": document.getElementById("password").value
                 }, function(data) {
                     var response = JSON.parse(data);
-                    if (response.stat === 'ok') {
+                    if (response.stat === true || response.stat === 'ok') {
                         showModal('Success', "Account created successfully!", true);
                     } else {
-                        showModal('Error', "Error! Your account could not be created!", false);
+                        showModal('Error', "Your account could not be created!", false);
                     }
                 }, function(e, responseText) {
-                    showModal('Error', responseText || "Error! Your account could not be created!", false);
+                    showModal('Error', responseText || " Your account could not be created!", false);
                 });
             }
         </script>
@@ -96,9 +96,9 @@
                         </div>
                         <div class="form-group">
                             <span class="input-checkbox-container">
-                                <label class="label-agree-term">I agree all statements in <a href="#" class="term-service" onMouseUp="Client.openExternalBrowser('http://{{host}}/terms')">Terms of service</a></label>
+                                <label class="label-agree-term">I agree all statements in <a href="#" class="term-service" onMouseUp="Client.openExternalBrowser('http://{{host}}/recap/terms')">Terms of service</a></label>
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-                                <span class="checkmark" onMouseUp="document.getElementById('agree-term').checked = !document.getElementById('agree-term').checked;"></span>
+                                <span class="checkmark" onMouseUp="UI('#agree-term').toggle();"></span>
                             </span>
                         </div>
                         <div class="form-group form-group-button">

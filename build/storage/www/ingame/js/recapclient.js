@@ -8,6 +8,11 @@ ReCapClient.postRequest = function(name, params, callback, errorCallback) {
     HTTP.post(ReCapClient.recapApiUrl + "?method=" + name, params, callback, errorCallback);
 };
 ReCapClient.log = function(object) {
-    var isDev = Utils.isEAWebKit() && ("{{isDev}}" === "true");    
-	if (isDev) ReCapClient.postRequest("api.game.log", object);
+    if (Utils.isEAWebKit()) {
+        var isDev = ("{{isDev}}" === "true");    
+        if (isDev) ReCapClient.postRequest("api.game.log", object);
+    }
+    else {
+        console.log(object);
+    }
 };
