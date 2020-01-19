@@ -520,7 +520,6 @@ namespace Game {
 		auto pass = request.uri.parameter("pass");
 
 		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
-
 		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
 			utils::json::Set(document, "stat", "error");
@@ -528,6 +527,92 @@ namespace Game {
 		else {
 			utils::json::Set(document, "stat", "ok");
 		}
+
+		// TODO: Unlocking all creatures from start to test; remove that in the future
+		std::vector<Repository::CreatureTemplatePtr> templates = Repository::CreatureTemplates::ListAll();
+		user->get_account().creatureRewards = templates.size();
+		for (auto &templateCreature: templates) {
+			user->UnlockCreature(templateCreature->id);
+			user->GetCreatureByTemplateId(templateCreature->id)->gearScore = 100;
+		}
+
+		// TODO: Unlocking all parts from start to test; remove that in the future
+		for (int i = 1; i <= 1573; i++) {
+			Part part(i);
+			part.cost = 1;
+			part.level = 5;
+			part.market_status = 1;
+			part.rarity = 1;
+			part.status = 1;
+			part.usage = 1;
+			user->get_parts().Add(part);
+		}
+		for (int i = 10001; i <= 10835; i++) {
+			Part part(i);
+			part.cost = 1;
+			part.level = 5;
+			part.market_status = 1;
+			part.rarity = 1;
+			part.status = 1;
+			part.usage = 1;
+			user->get_parts().Add(part);
+		}
+
+		// TODO: Unlocking everything from start to test; remove that in the future
+		user->get_account().tutorialCompleted = false;
+		user->get_account().chainProgression = 24;
+		user->get_account().creatureRewards = 100;
+		user->get_account().currentGameId = 1;
+		user->get_account().currentPlaygroupId = 1;
+		user->get_account().defaultDeckPveId = 1;
+		user->get_account().defaultDeckPvpId = 1;
+		user->get_account().level = 100;
+		user->get_account().avatarId = 11;
+		user->get_account().dna = 10000000;
+		user->get_account().newPlayerInventory = 1;
+		user->get_account().newPlayerProgress = 9500;
+		user->get_account().cashoutBonusTime = 1;
+		user->get_account().starLevel = 10;
+		user->get_account().unlockCatalysts = 1;
+		user->get_account().unlockDiagonalCatalysts = 1;
+		user->get_account().unlockFuelTanks = 1;
+		user->get_account().unlockInventory = 1;
+		user->get_account().unlockPveDecks = 2;
+		user->get_account().unlockPvpDecks = 1;
+		user->get_account().unlockStats = 1,
+		user->get_account().unlockInventoryIdentify = 2500;
+		user->get_account().unlockEditorFlairSlots = 1;
+		user->get_account().upsell = 1;
+		user->get_account().xp = 10000;
+		user->get_account().grantAllAccess = true;
+		user->get_account().grantOnlineAccess = true;
+
+		Squad squad1;
+		squad1.id = 1;
+		squad1.slot = 1;
+		squad1.locked = false;
+		squad1.creatures.Add(templates[0]->id);
+		squad1.creatures.data()[0].gearScore = 100;
+		user->get_squads().data().push_back(squad1);
+
+		Squad squad2;
+		squad2.id = 2;
+		squad2.slot = 1;
+		squad1.locked = false;
+		squad2.creatures.Add(templates[1]->id);
+		squad2.creatures.data()[0].gearScore = 100;
+		user->get_squads().data().push_back(squad2);
+
+		Squad squad3;
+		squad3.id = 3;
+		squad3.slot = 1;
+		squad1.locked = false;
+		squad3.creatures.Add(templates[2]->id);
+		squad3.creatures.data()[0].gearScore = 100;
+		user->get_squads().data().push_back(squad3);
+
+		user->Save();
+
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
 	}

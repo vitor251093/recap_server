@@ -15,23 +15,6 @@ namespace Game {
 	public:
 		uint16_t rigblock_asset_id;
 		
-		Part();
-		Part(uint32_t rigblock);
-		Part(const pugi::xml_node& node);
-
-		bool ReadXml(const pugi::xml_node& node);
-		void WriteXml(pugi::xml_node& node, uint32_t index, bool api = false) const;
-
-		void ReadJson(rapidjson::Value& object);
-		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
-
-		void SetRigblock(uint16_t rigblock);
-		void SetPrefix(uint16_t prefix, bool secondary = false);
-		void SetSuffix(uint16_t suffix);
-
-		void SetStatus(uint8_t newStatus);
-
-	private:
 		uint64_t timestamp;
 
 		uint32_t rigblock_asset_hash;
@@ -53,6 +36,23 @@ namespace Game {
 
 		bool flair;
 
+		Part();
+		Part(uint32_t rigblock);
+		Part(const pugi::xml_node& node);
+
+		bool ReadXml(const pugi::xml_node& node);
+		void WriteXml(pugi::xml_node& node, uint32_t index, bool api = false) const;
+
+		void ReadJson(rapidjson::Value& object);
+		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
+
+		void SetRigblock(uint16_t rigblock);
+		void SetPrefix(uint16_t prefix, bool secondary = false);
+		void SetSuffix(uint16_t suffix);
+
+		void SetStatus(uint8_t newStatus);
+
+	private:
 		friend class Parts;
 	};
 

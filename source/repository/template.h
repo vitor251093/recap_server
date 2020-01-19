@@ -5,6 +5,7 @@
 // Include
 #include <string>
 #include <map>
+#include <vector>
 #include "../utils/functions.h"
 #include "../game/template.h"
 
@@ -17,6 +18,7 @@ namespace Repository {
 		public:
 			static CreatureTemplatePtr getById(uint64_t id);
 			static void Load();
+			static std::vector<CreatureTemplatePtr> ListAll();
 
 		private:
 			static std::map<uint64_t, CreatureTemplatePtr> mTemplates;
