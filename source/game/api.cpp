@@ -528,17 +528,10 @@ namespace Game {
 			utils::json::Set(document, "stat", "ok");
 		}
 
-		// TODO: Unlocking all creatures from start to test; remove that in the future
-		std::vector<Repository::CreatureTemplatePtr> templates = Repository::CreatureTemplates::ListAll();
-		user->get_account().creatureRewards = templates.size();
-		for (auto &templateCreature: templates) {
-			user->UnlockCreature(templateCreature->id);
-			user->GetCreatureByTemplateId(templateCreature->id)->gearScore = 100;
-		}
-
 		// TODO: Unlocking all parts from start to test; remove that in the future
 		for (int i = 1; i <= 1573; i++) {
 			Part part(i);
+			part.flair = false;
 			part.cost = 1;
 			part.level = 5;
 			part.market_status = 1;
@@ -549,6 +542,7 @@ namespace Game {
 		}
 		for (int i = 10001; i <= 10835; i++) {
 			Part part(i);
+			part.flair = false;
 			part.cost = 1;
 			part.level = 5;
 			part.market_status = 1;
@@ -556,6 +550,15 @@ namespace Game {
 			part.status = 1;
 			part.usage = 1;
 			user->get_parts().Add(part);
+		}
+
+		// TODO: Unlocking all creatures from start to test; remove that in the future
+		std::vector<Repository::CreatureTemplatePtr> templates = Repository::CreatureTemplates::ListAll();
+		user->get_account().creatureRewards = templates.size();
+		for (auto &templateCreature: templates) {
+			user->UnlockCreature(templateCreature->id);
+			user->GetCreatureByTemplateId(templateCreature->id)->gearScore = 100;
+			user->GetCreatureByTemplateId(templateCreature->id)->parts = user->get_parts();
 		}
 
 		// TODO: Unlocking everything from start to test; remove that in the future
@@ -1300,9 +1303,14 @@ namespace Game {
 				auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
 				squadCreatures.clear();
 				for (auto const& creatureID : creaturesIds) {
-					Creature* creature = user->GetCreatureById(std::stoi(creatureID));
-					if (creature && squadCreatures.size() < 3) {
-						squadCreatures.push_back(*creature);
+					try {
+						Creature* creature = user->GetCreatureById(std::stoi(creatureID));
+						if (creature && squadCreatures.size() < 3) {
+							squadCreatures.push_back(*creature);
+						}
+					}
+					catch (const std::out_of_range & oor) {
+						logger::error(creatureID + " is not a valid int, so it can't be a creature ID");
 					}
 				}
 				squad->creatures.setData(squadCreatures);
