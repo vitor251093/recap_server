@@ -185,7 +185,13 @@ namespace Game {
 				logger::error("Undefined /recap/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
-			});
+		});
+
+		router->add("/recap/terms", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			std::string file_data = "I declare that I own a legitimate copy of Darkspore, either in a physical disc or in my Origin account.";
+			response.set(boost::beast::http::field::content_type, "text/html");
+			response.body() = std::move(file_data);
+		});
 
 		// Launcher
 		router->add("/bootstrap/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -197,7 +203,7 @@ namespace Game {
 				logger::error("Undefined /bootstrap/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
-			});
+		});
 
 		router->add("/bootstrap/launcher/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
@@ -222,7 +228,7 @@ namespace Game {
 				response.set(boost::beast::http::field::content_type, "text/html");
 				response.body() = std::move(file_data);
 			}
-			});
+		});
 
 		router->add("/bootstrap/launcher/images/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
