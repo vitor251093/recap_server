@@ -265,7 +265,7 @@ namespace Game {
 
 			std::string file_data = utils::get_file_text(path);
 			utils::string_replace(file_data, "{{recap-version}}", Config::recapVersion());
-			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? Config::darksporeVersion("") : "no");
+			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? session.get_darkspore_version() : "no");
 			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
 			utils::string_replace(file_data, "{{display-latest-version}}", "none");
 			utils::string_replace(file_data, "{{latest-version}}", "yes");
@@ -306,6 +306,7 @@ namespace Game {
 
 			auto version = request.uri.parameter("version");
 			auto build = request.uri.parameter("build");
+			session.set_darkspore_version(build);
 
 			auto method = request.uri.parameter("method");
 			if (method.empty()) {
@@ -356,7 +357,7 @@ namespace Game {
 					logger::error(name + " = " + value);
 				}
 				logger::error("");
-				empty_xml_response(response);
+				empty_xml_response(session, response);
 			}
 		});
 
@@ -408,7 +409,7 @@ namespace Game {
 			if (method == "api.survey.getSurveyList") { survey_survey_getSurveyList(session, response); }
 			else {
 				logger::error("Undefined /survey/api method: " + method);
-				empty_xml_response(response);
+				empty_xml_response(session, response);
 			}
 		});
 
@@ -458,7 +459,7 @@ namespace Game {
 
 				auto docResponse = document.append_child("response");
 				utils::xml::Set(docResponse, "result", "1,0,1");
-				add_common_keys(docResponse);
+				add_common_keys(docResponse, session.get_darkspore_version());
 
 				response.set(boost::beast::http::field::content_type, "text/xml");
 				response.body() = utils::xml::ToString(document);
@@ -470,11 +471,11 @@ namespace Game {
 		});
 	}
 
-	void API::empty_xml_response(HTTP::Response& response) {
+	void API::empty_xml_response(HTTP::Session& session, HTTP::Response& response) {
 		pugi::xml_document document;
 
 		auto docResponse = document.append_child("response");
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -722,7 +723,9 @@ namespace Game {
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
+		
 		auto build = request.uri.parameter("build");
+		session.set_darkspore_version(build);
 		
 		pugi::xml_document document;
 
@@ -745,7 +748,7 @@ namespace Game {
 				utils::xml::Set(config, "liferay_host", host);
 				utils::xml::Set(config, "liferay_port", "80");
 				utils::xml::Set(config, "launcher_action", "2");
-				utils::xml::Set(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + Config::darksporeVersion(build)); 
+				utils::xml::Set(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + session.get_darkspore_version());
 			}
 		}
 
@@ -769,7 +772,7 @@ namespace Game {
 			*/
 		}
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -825,7 +828,7 @@ namespace Game {
 			add_broadcasts(docResponse);
 		}
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -836,7 +839,7 @@ namespace Game {
 
 		auto docResponse = document.append_child("response");
 		add_broadcasts(docResponse);
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -853,7 +856,7 @@ namespace Game {
 			else {
 				docResponse.append_child("parts");
 			}
-			add_common_keys(docResponse);
+			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
@@ -906,7 +909,7 @@ namespace Game {
 				}
 			}
 
-			add_common_keys(docResponse);
+			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
@@ -952,7 +955,7 @@ namespace Game {
 				}
 			}
 
-			add_common_keys(docResponse);
+			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
@@ -981,7 +984,7 @@ namespace Game {
 
 		pugi::xml_document document;
 		if (auto docResponse = document.append_child("response")) {
-			add_common_keys(docResponse);
+			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
@@ -1048,7 +1051,7 @@ namespace Game {
 				}
 			}
 
-			add_common_keys(docResponse);
+			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
@@ -1217,7 +1220,7 @@ namespace Game {
 				response.set(boost::beast::http::field::set_cookie, "token=" + cookie);
 			}
 
-			add_common_keys(docResponse);
+			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
@@ -1257,7 +1260,7 @@ namespace Game {
 				if (include_stats) { docResponse.append_child("stats"); }
 			}
 
-			add_common_keys(docResponse);
+			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
@@ -1298,7 +1301,7 @@ namespace Game {
 		pugi::xml_document document;
 
 		auto docResponse = document.append_child("response");
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1348,7 +1351,7 @@ namespace Game {
 		pugi::xml_document document;
 
 		auto docResponse = document.append_child("response");
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1388,7 +1391,7 @@ namespace Game {
 			}
 		}
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -1398,7 +1401,7 @@ namespace Game {
 		pugi::xml_document document;
 
 		auto docResponse = document.append_child("response");
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -1425,7 +1428,7 @@ namespace Game {
 			docResponse.append_child("creature");
 		}
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -1456,7 +1459,7 @@ namespace Game {
 		pugi::xml_document document;
 
 		auto docResponse = document.append_child("response");
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1477,7 +1480,7 @@ namespace Game {
 		auto docResponse = document.append_child("response");
 		utils::xml::Set(docResponse, "creature_id", templateId);
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -1505,7 +1508,7 @@ namespace Game {
 			}
 		}
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1528,7 +1531,7 @@ namespace Game {
 			}
 		}
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1541,7 +1544,7 @@ namespace Game {
 			// Empty
 		}
 
-		add_common_keys(docResponse);
+		add_common_keys(docResponse, session.get_darkspore_version());
 
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
@@ -1560,9 +1563,9 @@ namespace Game {
 		}
 	}
 
-	void API::add_common_keys(pugi::xml_node& node) {
+	void API::add_common_keys(pugi::xml_node& node, const std::string& darksporeVersion) {
 		utils::xml::Set(node, "stat", "ok");
-		utils::xml::Set(node, "version", Config::darksporeVersion(""));
+		utils::xml::Set(node, "version", darksporeVersion);
 		utils::xml::Set(node, "timestamp", std::to_string(utils::get_unix_time()));
 		utils::xml::Set(node, "exectime", std::to_string(++mPacketId));
 	}

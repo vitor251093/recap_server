@@ -23,7 +23,7 @@ namespace Game {
 			void setup();
 
 			// default
-			void empty_xml_response(HTTP::Response& response);
+			void empty_xml_response(HTTP::Session& session, HTTP::Response& response);
 			void empty_json_response(HTTP::Response& response);
 
 			// recap
@@ -79,7 +79,7 @@ namespace Game {
 
 			void add_broadcasts(pugi::xml_node& node);
 
-			void add_common_keys(pugi::xml_node& node);
+			void add_common_keys(pugi::xml_node& node, const std::string& darksporeVersion);
 			void add_common_keys(rapidjson::Document& document);
 		
 		private:

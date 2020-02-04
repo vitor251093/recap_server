@@ -12,8 +12,7 @@
 namespace Game {
 	// Config
 	std::array<std::string, CONFIG_END> Config::mConfig;
-	std::string Config::mDarksporeVersion;
-
+	
 	void Config::Load(const std::string& path) {
 		const auto get_path_value = [](std::string& value) -> std::string& {
 			if (value.back() != '/') {
@@ -26,8 +25,7 @@ namespace Game {
 			std::string name = node.attribute("key").value();
 			std::string value = node.attribute("value").value();
 
-			       if (name == "DARKSPORE_VERSION")              { mDarksporeVersion = value;
-			} else if (name == "SKIP_LAUNCHER")                  { mConfig[CONFIG_SKIP_LAUNCHER] = value;
+			       if (name == "SKIP_LAUNCHER")                  { mConfig[CONFIG_SKIP_LAUNCHER] = value;
 			} else if (name == "VERSION_LOCKED")                 { mConfig[CONFIG_VERSION_LOCKED] = value;
 			} else if (name == "SINGLEPLAYER_ONLY")              { mConfig[CONFIG_SINGLEPLAYER_ONLY] = value;
 			} else if (name == "SERVER_HOST")                    { mConfig[CONFIG_SERVER_HOST] = value;
@@ -59,11 +57,6 @@ namespace Game {
 		} else {
 			GenerateDefault(path);
 		}
-	}
-
-	std::string Config::darksporeVersion(const std::string& version) {
-		if (mDarksporeVersion.empty()) mDarksporeVersion = version;
-		return mDarksporeVersion;
 	}
 
 	std::string Config::recapVersion() {
@@ -106,7 +99,6 @@ namespace Game {
 			switch (value) {
 				case CONFIG_SKIP_LAUNCHER:                  return "SKIP_LAUNCHER";
 				case CONFIG_VERSION_LOCKED:                 return "VERSION_LOCKED";
-				case CONFIG_DARKSPORE_VERSION:              return "DARKSPORE_VERSION";
 				case CONFIG_SINGLEPLAYER_ONLY:              return "SINGLEPLAYER_ONLY";
 				case CONFIG_SERVER_HOST:                    return "SERVER_HOST";
 				case CONFIG_STORAGE_PATH:                   return "STORAGE_PATH";

@@ -35,6 +35,9 @@ namespace HTTP {
 			const auto& get_user() const { return mUser; }
 			void set_user(const Game::UserPtr& user) { mUser = user; }
 
+			const auto& get_darkspore_version() const { return mDarksporeVersion; }
+			void set_darkspore_version(const std::string& version) { mDarksporeVersion = version; }
+
 			template<class Message>
 			void send(Message&& message) {
 				auto sp = std::make_shared<Message>(std::move(message));
@@ -62,6 +65,8 @@ namespace HTTP {
 			std::shared_ptr<void> mResponse;
 
 			Game::UserPtr mUser;
+
+			std::string mDarksporeVersion;
 	};
 }
 
