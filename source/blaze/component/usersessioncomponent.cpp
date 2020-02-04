@@ -204,23 +204,23 @@ namespace Blaze {
 
 		auto& request = client->get_request();
 
-		const auto& addrData = request["ADDR"]["VALU"];
+		const auto& valu = request["ADDR"]["VALU"];
 		/*
 		"ADDR": {
 			"_Type": 6,
-				"_AddressMember" : 2,
-				"VALU" : {
+			"_AddressMember" : 2,
+			"VALU" : {
 				"_Type": 3,
-					"EXIP" : {
+				"EXIP" : {
 					"_Type": 3,
-						"IP" : 0,
-						"PORT" : 0
+					"IP" : 0,
+					"PORT" : 0
 				},
-					"INIP" : {
-						"_Type": 3,
-							"IP" : 3232235954,
-							"PORT" : 3659
-					}
+				"INIP" : {
+					"_Type": 3,
+					"IP" : 3232235954,
+					"PORT" : 3659
+				}
 			}
 		},
 		*/
@@ -228,14 +228,9 @@ namespace Blaze {
 		client->reply(std::move(header));
 
 		/*
-		Log.Info(string.Format("Client {0} updating network info", request.Client.ID));
-
-        var addr = (TdfUnion)request.Data["ADDR"];
-        var valu = (TdfStruct)addr.Data.Find(tdf => tdf.Label == "VALU");
-
-        var inip = (TdfStruct)valu.Data.Find(tdf => tdf.Label == "INIP");
-        var ip = (TdfInteger)inip.Data.Find(tdf => tdf.Label == "IP");
-        var port = (TdfInteger)inip.Data.Find(tdf => tdf.Label == "PORT");
+        const auto& inip = valu["INIP"];
+        const auto& ip   = inip["IP"];
+        const auto& port = inip["PORT"];
 
         request.Client.InternalIP = ip.Value;
         request.Client.InternalPort = (ushort)port.Value;
