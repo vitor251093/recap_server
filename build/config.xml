@@ -2,7 +2,6 @@
 <configs>
 	<config key="SKIP_LAUNCHER" value="false" />
 	<config key="VERSION_LOCKED" value="false" />
-	<config key="DARKSPORE_VERSION" value="5.3.0.127" />
 	<config key="SINGLEPLAYER_ONLY" value="true" />
 	<config key="SERVER_HOST" value="127.0.0.1" />
 	<config key="STORAGE_PATH" value="storage/" />

@@ -27,6 +27,7 @@ namespace Game {
 		public:
 			static void Load(const std::string& path);
 
+			static std::string darksporeVersion(const std::string& version);
 			static std::string recapVersion();
 
 			static std::string darksporeAppDataFolder();
@@ -40,6 +41,7 @@ namespace Game {
 		
 		private:
 			static std::array<std::string, CONFIG_END> mConfig;
+			static std::string mDarksporeVersion;
 	};
 }
 

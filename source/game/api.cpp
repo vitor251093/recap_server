@@ -139,7 +139,7 @@ namespace Game {
 )";
 
 	// API
-	API::API(const std::string& version) : mVersion(version) {
+	API::API() {
 		// Empty
 	}
 
@@ -252,7 +252,7 @@ namespace Game {
 
 			std::string file_data = utils::get_file_text(path);
 			utils::string_replace(file_data, "{{recap-version}}", Config::recapVersion());
-			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? mVersion : "no");
+			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? Config::darksporeVersion("") : "no");
 			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
 			utils::string_replace(file_data, "{{display-latest-version}}", "none");
 			utils::string_replace(file_data, "{{latest-version}}", "yes");
@@ -714,7 +714,8 @@ namespace Game {
 
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
-
+		auto build = request.uri.parameter("build");
+		
 		pugi::xml_document document;
 
 		const auto& host = Config::Get(CONFIG_SERVER_HOST);
@@ -736,7 +737,7 @@ namespace Game {
 				utils::xml::Set(config, "liferay_host", host);
 				utils::xml::Set(config, "liferay_port", "80");
 				utils::xml::Set(config, "launcher_action", "2");
-				utils::xml::Set(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + mVersion);
+				utils::xml::Set(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + Config::darksporeVersion(build)); 
 			}
 		}
 
@@ -761,9 +762,6 @@ namespace Game {
 		}
 
 		add_common_keys(docResponse);
-
-		//utils::xml::Set(node, "version", mVersion);
-
 		response.set(boost::beast::http::field::content_type, "text/xml");
 		response.body() = utils::xml::ToString(document);
 	}
@@ -1556,7 +1554,7 @@ namespace Game {
 
 	void API::add_common_keys(pugi::xml_node& node) {
 		utils::xml::Set(node, "stat", "ok");
-		utils::xml::Set(node, "version", mVersion);
+		utils::xml::Set(node, "version", Config::darksporeVersion(""));
 		utils::xml::Set(node, "timestamp", std::to_string(utils::get_unix_time()));
 		utils::xml::Set(node, "exectime", std::to_string(++mPacketId));
 	}

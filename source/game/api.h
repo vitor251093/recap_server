@@ -18,7 +18,7 @@ namespace Game {
 	// API
 	class API {
 		public:
-			API(const std::string& version);
+			API();
 
 			void setup();
 
@@ -82,7 +82,6 @@ namespace Game {
 			void add_common_keys(rapidjson::Document& document);
 		
 		private:
-			std::string mVersion;
 			std::string mActiveTheme = "default";
 
 			uint32_t mPacketId = 0;

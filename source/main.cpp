@@ -49,8 +49,7 @@ bool Application::OnInit() {
 	Repository::CreatureTemplates::Load();
 
 	// Game
-	std::string darksporeVersion = Game::Config::Get(Game::CONFIG_DARKSPORE_VERSION);
-	mGameAPI = std::make_unique<Game::API>(darksporeVersion);
+	mGameAPI = std::make_unique<Game::API>();
 
 	// Blaze
 	mRedirectorServer = std::make_unique<Blaze::Server>(mIoService, 42127);
