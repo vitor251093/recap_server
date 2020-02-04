@@ -161,6 +161,19 @@ namespace Game {
 		response.body() = std::move(wholePath);
 	}
 
+	void API::alertsResponse(HTTP::Session& session, HTTP::Response& response) {
+		std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
+		std::string path = contentsFolder + "announce.html";
+
+		std::string file_data = utils::get_html_file_for_darkspore_webkit(path, contentsFolder);
+
+		utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+		utils::string_replace(file_data, "{{isDev}}", "true");
+
+		response.set(boost::beast::http::field::content_type, "text/html");
+		response.body() = std::move(file_data);
+	}
+
 	void API::setup() {
 		const auto& router = Application::GetApp().get_http_server()->get_router();
 
@@ -174,13 +187,13 @@ namespace Game {
 			auto& request = session.get_request();
 
 			auto method = request.uri.parameter("method");
-			if (method == "api.launcher.setTheme") { recap_launcher_setTheme(session, response); }
+			     if (method == "api.launcher.setTheme")   { recap_launcher_setTheme(session, response); }
 			else if (method == "api.launcher.listThemes") { recap_launcher_listThemes(session, response); }
-			else if (method == "api.game.registration") { recap_game_registration(session, response); }
-			else if (method == "api.game.log") { recap_game_log(session, response); }
-			else if (method == "api.panel.listUsers") { recap_panel_listUsers(session, response); }
-			else if (method == "api.panel.getUserInfo") { recap_panel_getUserInfo(session, response); }
-			else if (method == "api.panel.setUserInfo") { recap_panel_setUserInfo(session, response); }
+			else if (method == "api.game.registration")   { recap_game_registration(session, response); }
+			else if (method == "api.game.log")            { recap_game_log(session, response); }
+			else if (method == "api.panel.listUsers")     { recap_panel_listUsers(session, response); }
+			else if (method == "api.panel.getUserInfo")   { recap_panel_getUserInfo(session, response); }
+			else if (method == "api.panel.setUserInfo")   { recap_panel_setUserInfo(session, response); }
 			else {
 				logger::error("Undefined /recap/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
@@ -400,17 +413,12 @@ namespace Game {
 		});
 
 		// Web
+		router->add("/web/sporelabs/alerts", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			alertsResponse(session, response);
+		});
+
 		router->add("/web/sporelabsgame/announceen", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
-			std::string path = contentsFolder + "announce.html";
-
-			std::string file_data = utils::get_html_file_for_darkspore_webkit(path, contentsFolder);
-
-			utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-			utils::string_replace(file_data, "{{isDev}}", "true");
-
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = std::move(file_data);
+			alertsResponse(session, response);
 		});
 
 		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {

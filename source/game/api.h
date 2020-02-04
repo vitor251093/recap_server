@@ -75,6 +75,7 @@ namespace Game {
 			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response);
 			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path);
 			void responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path);
+			void alertsResponse(HTTP::Session& session, HTTP::Response& response);
 
 			void add_broadcasts(pugi::xml_node& node);
 
