@@ -65,27 +65,49 @@ var $ = function(domId) {
 		el.length = el._dom.length;
 		return el;
 	};
-	obj.addClass = function(className) {
+	obj._mapClasses = function(func) {
 		Utils.forEach(this._dom,function(dom){ 
 			var classes = _arrayOfClassesWithClassesString(dom.className);
-			classes = classes.concat(_arrayOfClassesWithClassesString(className));
-			classes = Utils.filter(classes, function(item, pos) {
-				return classes.indexOf(item) == pos;
-			})
+			classes = func(classes);
 			dom.className = classes.join(" "); 
 		});
 		return this;
 	};
-	obj.removeClass = function(className) {
-		Utils.forEach(this._dom,function(dom){ 
-			var classes = _arrayOfClassesWithClassesString(dom.className);
-			var classesToRemove = _arrayOfClassesWithClassesString(className);
-			classes = Utils.filter(classes, function(item) {
-				return classesToRemove.indexOf(item) == -1;
-			})
-			dom.className = classes.join(" "); 
+	obj.addClass = function(className) {
+		return this._mapClasses(function(classesList){
+			classesList.push(className);
+			var classes = Utils.filter(classesList, function(item, pos) {
+				return classes.indexOf(item) == pos;
+			});
+			return classes;
 		});
-		return this;
+	};
+	obj.removeClass = function(className) {
+		return this._mapClasses(function(classesList){
+			var classes = Utils.filter(classesList, function(item) {
+				return className !== item;
+			});
+			return classes;
+		});
+	};
+	obj.toggleClass = function(className, state) {
+		if (state === true)  return this.addClass(className);
+		if (state === false) return this.removeClass(className);
+		return this._mapClasses(function(classesList){
+			if (classesList.includes(className)) {
+				var classes = Utils.filter(classesList, function(item) {
+					return className !== item;
+				});
+				return classes;
+			}
+			else {
+				classesList.push(className);
+				var classes = Utils.filter(classesList, function(item, pos) {
+					return classes.indexOf(item) == pos;
+				});
+				return classes;
+			}
+		});
 	};
 	obj.attr = function(attrName, attrValue) {
 		if (attrValue === undefined) {
