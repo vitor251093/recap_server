@@ -47,17 +47,17 @@
     <body>
         <script>
             function showModal(title, message, closingWindow) {
-                UI('#message-dialog').show();
-                UI('#modal-title').text(title);
-                UI('#message').text(message);
+                $('#message-dialog').show();
+                $('#modal-title').html(title);
+                $('#message').html(message);
 
-                UI('#ok-success-button').show(closingWindow);
-                UI('#ok-error-button').hide(closingWindow);
+                $('#ok-success-button').show(closingWindow);
+                $('#ok-error-button').hide(closingWindow);
             }
             function closeModal(closingWindow) {
-                UI('#message-dialog').hide();
-                UI('#ok-success-button').hide();
-                UI('#ok-error-button').hide();
+                $('#message-dialog').hide();
+                $('#ok-success-button').hide();
+                $('#ok-error-button').hide();
                 
                 if (closingWindow && typeof(Client) !== "undefined") {
                     Client.closeWindow();
@@ -65,9 +65,9 @@
             }
             function register() {
                 ReCapClient.getRequest("api.game.registration", {
-                    "name": document.getElementById("name").value,
-                    "mail": document.getElementById("email").value,
-                    "pass": document.getElementById("password").value
+                    "name": $("#name").val(),
+                    "mail": $("#email").val(),
+                    "pass": $("#password").val()
                 }, function(data) {
                     var response = JSON.parse(data);
 
@@ -99,7 +99,7 @@
                             <span class="input-checkbox-container">
                                 <label class="label-agree-term">I agree all statements in <a href="#" class="term-service" onMouseUp="Client.openExternalBrowser('http://{{host}}/recap/terms')">Terms of service</a></label>
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-                                <span class="checkmark" onMouseUp="UI('#agree-term').toggle();"></span>
+                                <span class="checkmark" onMouseUp="$('#agree-term').toggleChecked();"></span>
                             </span>
                         </div>
                         <div class="form-group form-group-button">
@@ -132,9 +132,9 @@
             </div>
         </div>
         <script>
-            UI('#message-dialog').hide();
-            UI('#ok-success-button').hide();
-            UI('#ok-error-button').hide();
+            $('#message-dialog').hide();
+            $('#ok-success-button').hide();
+            $('#ok-error-button').hide();
         </script>
     </body>
 </html>
