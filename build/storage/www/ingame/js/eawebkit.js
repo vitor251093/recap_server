@@ -1,8 +1,18 @@
 
-var Utils = {
-	isEAWebKit: function() {
+var EAWebKit = {
+	isUserAgent: function() {
 		return navigator.userAgent.indexOf("EAWebKit") != -1;
 	},
+	openExternalBrowser: function(url) {
+		if (EAWebKit.isUserAgent()) {
+			Client.openExternalBrowser(url);
+		} else {
+			window.open(url);
+		}
+	}
+};
+
+var Utils = {
 	filter: function(array, func) {
 		var newArray = [];
 		for (var i = 0; i < array.length; i++) if (func(array[i], i)) newArray.push(array[i]);
@@ -48,7 +58,7 @@ var _arrayOfClassesWithClassesString = function(classesString) {
 	var classes = classesString.split(" ");
 	while(classes.indexOf('') != -1) classes.splice(classes.indexOf(''), 1);
 	return classes;
-}
+};
 
 var $ = function(domId) {
 	var obj = {};
@@ -175,6 +185,7 @@ var $ = function(domId) {
 		Utils.forEach(this._dom,function(dom){ dom.value = value; });
 		return this;
 	};
+
 	return obj;
 };
 
@@ -193,7 +204,7 @@ var HTTP = {
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onload = function() {
 			if (callback !== undefined) callback(xmlHttp.responseText);
-		}
+		};
 		xmlHttp.onerror = function(e) {
 			if (errorCallback !== undefined) errorCallback(e, xmlHttp.responseText);
 		};
@@ -204,7 +215,7 @@ var HTTP = {
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onload = function() {
 			if (callback !== undefined) callback(xmlHttp.responseText);
-		}
+		};
 		xmlHttp.onerror = function(e) {
 			if (errorCallback !== undefined) errorCallback(e, xmlHttp.responseText);
 		};
