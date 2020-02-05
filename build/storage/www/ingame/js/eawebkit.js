@@ -189,8 +189,14 @@ var $ = function(domId) {
 	return obj;
 };
 
+
+// Originally, we used .onload, but Darkspore 5.3.0.15 never
+// calls .onload, and the readyState here never changes to 4,
+// so it's done that way for backwards compatibility. We also
+// can't add .onerror, because 5.3.0.15 will always call it
+
 var HTTP = {
-	get: function(url, obj, callback, errorCallback) {
+	get: function(url, obj, callback) {
 		var params = obj;
 		if (params !== undefined && typeof params === 'object') {
 			var str = [];
@@ -202,22 +208,16 @@ var HTTP = {
 		}
 
 		var xmlHttp = new XMLHttpRequest(); 
-		xmlHttp.onload = function() {
-			if (callback !== undefined) callback(xmlHttp.responseText);
-		};
-		xmlHttp.onerror = function(e) {
-			if (errorCallback !== undefined) errorCallback(e, xmlHttp.responseText);
+		xmlHttp.onreadystatechange = function () {
+			if (xmlHttp.status === 200 && callback !== undefined) callback(xmlHttp.responseText);
 		};
 		xmlHttp.open("GET", url + (params === undefined ? "" : ("?" + params)), true);
 		xmlHttp.send(null);
 	},
-	post: function(url, obj, callback, errorCallback) {
+	post: function(url, obj, callback) {
 		var xmlHttp = new XMLHttpRequest(); 
-		xmlHttp.onload = function() {
-			if (callback !== undefined) callback(xmlHttp.responseText);
-		};
-		xmlHttp.onerror = function(e) {
-			if (errorCallback !== undefined) errorCallback(e, xmlHttp.responseText);
+		xmlHttp.onreadystatechange = function () {
+			if (xmlHttp.status === 200 && callback !== undefined) callback(xmlHttp.responseText);
 		};
 		xmlHttp.open("POST", url, true);
 		xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
