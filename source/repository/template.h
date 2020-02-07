@@ -16,12 +16,12 @@ namespace Repository {
 
 	class CreatureTemplates {
 		public:
-			static CreatureTemplatePtr getById(uint64_t id);
+			static CreatureTemplatePtr getById(uint32_t id);
 			static void Load();
 			static std::vector<CreatureTemplatePtr> ListAll();
 
 		private:
-			static std::map<uint64_t, CreatureTemplatePtr> mTemplates;
+			static std::map<uint32_t, CreatureTemplatePtr> mTemplates;
 			friend class Game::CreatureTemplate;
 	};
 }

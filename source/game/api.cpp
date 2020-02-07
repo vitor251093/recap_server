@@ -878,7 +878,7 @@ namespace Game {
 				if (auto part = parts.append_child("part")) {
 					utils::xml::Set(part, "is_flair", "0");
 					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureTemplateID::BlitzAlpha));
+					utils::xml::Set(part, "creature_id", static_cast<uint32_t>(CreatureTemplateID::BlitzAlpha));
 					utils::xml::Set(part, "id", "1");
 					utils::xml::Set(part, "level", "1");
 					utils::xml::Set(part, "market_status", "1");
@@ -896,7 +896,7 @@ namespace Game {
 				if (auto part = parts.append_child("part")) {
 					utils::xml::Set(part, "is_flair", "0");
 					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureTemplateID::BlitzAlpha));
+					utils::xml::Set(part, "creature_id", static_cast<uint32_t>(CreatureTemplateID::BlitzAlpha));
 					utils::xml::Set(part, "id", "1");
 					utils::xml::Set(part, "level", "1");
 					utils::xml::Set(part, "market_status", "1");
@@ -942,7 +942,7 @@ namespace Game {
 				if (auto part = parts.append_child("part")) {
 					utils::xml::Set(part, "is_flair", "0");
 					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint64_t>(CreatureTemplateID::BlitzAlpha));
+					utils::xml::Set(part, "creature_id", static_cast<uint32_t>(CreatureTemplateID::BlitzAlpha));
 					utils::xml::Set(part, "id", "1");
 					utils::xml::Set(part, "level", "1");
 					utils::xml::Set(part, "market_status", "1");
@@ -1321,14 +1321,9 @@ namespace Game {
 				auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
 				squadCreatures.clear();
 				for (auto const& creatureID : creaturesIds) {
-					try {
-						Creature* creature = user->GetCreatureById(std::stoi(creatureID));
-						if (creature && squadCreatures.size() < 3) {
-							squadCreatures.push_back(*creature);
-						}
-					}
-					catch (const std::out_of_range & oor) {
-						logger::error(creatureID + " is not a valid int, so it can't be a creature ID");
+					Creature* creature = user->GetCreatureById(std::stoull(creatureID));
+					if (creature && squadCreatures.size() < 3) {
+						squadCreatures.push_back(*creature);
 					}
 				}
 				squad->creatures.setData(squadCreatures);
@@ -1340,7 +1335,7 @@ namespace Game {
 				auto creaturesIds = utils::explode_string(request.uri.parameter("pvp_creatures"), ",");
 				squadCreatures.clear();
 				for (auto const& creatureID : creaturesIds) {
-					Creature* creature = user->GetCreatureById(std::stoi(creatureID));
+					Creature* creature = user->GetCreatureById(std::stoull(creatureID));
 					if (creature && squadCreatures.size() < 3) {
 						squadCreatures.push_back(*creature);
 					}
@@ -1470,18 +1465,21 @@ namespace Game {
 	void API::game_creature_unlockCreature(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 
+		uint32_t creatureId = -1;
 		uint32_t templateId = request.uri.parameteru("template_id");
 
 		const auto& user = session.get_user();
 		if (user) {
 			user->UnlockCreature(templateId);
 			user->Save();
+
+			creatureId = user->GetCreatureByTemplateId(templateId)->id;
 		}
 
 		pugi::xml_document document;
 
 		auto docResponse = document.append_child("response");
-		utils::xml::Set(docResponse, "creature_id", templateId);
+		utils::xml::Set(docResponse, "creature_id", creatureId);
 
 		add_common_keys(docResponse, session.get_darkspore_version());
 

@@ -7,7 +7,7 @@
 // Repository
 namespace Repository {
 	
-	CreatureTemplatePtr CreatureTemplates::getById(uint64_t id) {
+	CreatureTemplatePtr CreatureTemplates::getById(uint32_t id) {
 		Load();
 		
 		CreatureTemplatePtr creatureTemplate;
@@ -33,7 +33,7 @@ namespace Repository {
 		}
 	}
 
-	std::map<uint64_t, CreatureTemplatePtr> CreatureTemplates::mTemplates;
+	std::map<uint32_t, CreatureTemplatePtr> CreatureTemplates::mTemplates;
 
 	std::vector<CreatureTemplatePtr> CreatureTemplates::ListAll() {
 		std::vector<CreatureTemplatePtr> l;

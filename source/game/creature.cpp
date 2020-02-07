@@ -21,7 +21,7 @@ namespace Game {
 		gearScore  = utils::xml::GetString<double>(node, "gear_score");
 		
 		id      = utils::xml::GetString<uint32_t>(node, "id");
-		nounId  = utils::xml::GetString<uint64_t>(node, "noun_id");
+		nounId  = utils::xml::GetString<uint32_t>(node, "noun_id");
 		version = utils::xml::GetString<uint32_t>(node, "version");
 
 		stats = utils::xml::GetString(node, "stats");
@@ -115,7 +115,7 @@ namespace Game {
 		gearScore  = utils::json::GetDouble(object, "gear_score");
 
 		id      = utils::json::GetUint(object, "id");
-		nounId  = utils::json::GetUint64(object, "noun_id");
+		nounId  = utils::json::GetUint(object, "noun_id");
 		version = utils::json::GetUint(object, "version");
 
 		stats                 = utils::json::GetString(object, "stats");

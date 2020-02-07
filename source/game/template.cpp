@@ -7,7 +7,7 @@
 namespace Game {
 	// Template
 	void CreatureTemplate::ReadXml(const pugi::xml_node& node) {
-		id = utils::xml::GetString<uint64_t>(node, "id");
+		id = utils::xml::GetString<uint32_t>(node, "id");
 
 		nameLocaleId = utils::xml::GetString<uint64_t>(node, "name_locale_id");
 		descLocaleId = utils::xml::GetString<uint64_t>(node, "text_locale_id");
@@ -80,7 +80,7 @@ namespace Game {
 
 	void CreatureTemplate::ReadJson(rapidjson::Value& object) {
 		if (!object.IsObject()) return;
-		id = utils::json::GetUint64(object, "id");
+		id = utils::json::GetUint(object, "id");
 
 		nameLocaleId = utils::hex_string_to_unsigned_long_long(utils::json::GetString(object, "nameLocaleId"));
 		descLocaleId = utils::hex_string_to_unsigned_long_long(utils::json::GetString(object, "descLocaleId"));

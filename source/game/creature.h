@@ -15,7 +15,7 @@ namespace Game {
 	struct Creature {
 
 		uint32_t id = 0;
-		uint64_t nounId = 0;
+		uint32_t nounId = 0;
 
 		std::string stats;
 		//    example (with no spaces): STR, 14, 0; DEX, 13, 0; MIND, 23, 0; HLTH, 100, 70; MANA, 125, 23; PDEF, 50, 88; EDEF, 150, 138; CRTR, 50, 66; MOV, 0, 1                  
