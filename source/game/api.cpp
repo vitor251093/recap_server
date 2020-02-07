@@ -608,6 +608,7 @@ namespace Game {
 		Squad squad1;
 		squad1.id = 1;
 		squad1.slot = 1;
+		squad1.name = "Slot 1";
 		squad1.locked = false;
 		squad1.creatures.Add(templates[0]->id);
 		squad1.creatures.data()[0].gearScore = 100;
@@ -615,16 +616,18 @@ namespace Game {
 
 		Squad squad2;
 		squad2.id = 2;
-		squad2.slot = 1;
-		squad1.locked = false;
+		squad2.slot = 2;
+		squad2.name = "Slot 2";
+		squad2.locked = false;
 		squad2.creatures.Add(templates[1]->id);
 		squad2.creatures.data()[0].gearScore = 100;
 		user->get_squads().data().push_back(squad2);
 
 		Squad squad3;
 		squad3.id = 3;
-		squad3.slot = 1;
-		squad1.locked = false;
+		squad3.slot = 3;
+		squad3.name = "Slot 3";
+		squad3.locked = false;
 		squad3.creatures.Add(templates[2]->id);
 		squad3.creatures.data()[0].gearScore = 100;
 		user->get_squads().data().push_back(squad3);
