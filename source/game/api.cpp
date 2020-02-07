@@ -572,8 +572,10 @@ namespace Game {
 		user->get_account().creatureRewards = templates.size();
 		for (auto &templateCreature: templates) {
 			user->UnlockCreature(templateCreature->id);
-			user->GetCreatureByTemplateId(templateCreature->id)->gearScore = 100;
-			user->GetCreatureByTemplateId(templateCreature->id)->parts = user->get_parts();
+
+			auto creature = user->GetCreatureByTemplateId(templateCreature->id);
+			creature->gearScore = 100;
+			creature->parts = user->get_parts();
 		}
 
 		// TODO: Unlocking everything from start to test; remove that in the future
