@@ -196,15 +196,15 @@ namespace Game {
 			auto version = request.uri.parameter("version");
 			if (Config::GetBool(CONFIG_SKIP_LAUNCHER)) {
 				responseWithHtmlContents(response, skipLauncherScript);
+				return;
 			}
-			else {
-				std::string folder = Config::Get(CONFIG_STORAGE_PATH) + "www/" +
-					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + "/";
-				
-				std::string file_data = utils::EAWebKit::loadHtml(folder, "index.html", utils::EAWebKitConfig(true));
 
-				responseWithHtmlContents(response, file_data);
-			}
+			std::string folder = Config::Get(CONFIG_STORAGE_PATH) + "www/" +
+				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + "/";
+				
+			std::string file_data = utils::EAWebKit::loadHtml(folder, "index.html", utils::EAWebKitConfig(true));
+
+			responseWithHtmlContents(response, file_data);
 		});
 
 		router->add("/bootstrap/launcher/images/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {

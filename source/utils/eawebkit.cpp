@@ -22,7 +22,8 @@ namespace utils {
 			while ((pos = file_data.find(cssLinkOpenTag)) != std::string::npos) {
 				tag = file_data.substr(pos, file_data.find(cssLinkCloseTag, pos) + cssLinkCloseTag.length() - pos);
 				tagUrl = tag.substr(cssLinkOpenTag.length(), tag.length() - cssLinkOpenTag.length() - cssLinkCloseTag.length());
-				std::string cssPath = contentsFolder + tagUrl;
+				std::string folder = (tagUrl.starts_with("/") ? (Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "www") : contentsFolder);
+				std::string cssPath = folder + tagUrl;
 				std::string cssContents = utils::get_file_text(cssPath);
 				utils::string_replace(file_data, tag, "<style type=\"text/css\">\n" + cssContents + "\n</style>");
 			}
@@ -34,7 +35,8 @@ namespace utils {
 			while ((pos = file_data.find(jsScriptOpenTag)) != std::string::npos) {
 				tag = file_data.substr(pos, file_data.find(jsScriptCloseTag, pos) + jsScriptCloseTag.length() - pos);
 				tagUrl = tag.substr(jsScriptOpenTag.length(), tag.length() - jsScriptOpenTag.length() - jsScriptCloseTag.length());
-				std::string jQueryPath = contentsFolder + tagUrl;
+				std::string folder = (tagUrl.starts_with("/") ? (Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "www") : contentsFolder);
+				std::string jQueryPath = folder + tagUrl;
 				std::string jQueryContents = utils::get_file_text(jQueryPath);
 				utils::string_replace(file_data, tag, "<script type=\"text/javascript\">\n" + jQueryContents + "\n</script>");
 			}
@@ -47,7 +49,8 @@ namespace utils {
 				tag = file_data.substr(pos, file_data.find(imgCloseTag, pos) + imgCloseTag.length() - pos);
 				tagUrl = tag.substr(imgOpenTag.length(), tag.length() - imgOpenTag.length() - imgCloseTag.length());
 				std::string extension = tagUrl.substr(tagUrl.find_last_of(".") + 1);
-				std::string imgPath = contentsFolder + tagUrl;
+				std::string folder = (tagUrl.starts_with("/") ? (Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "www") : contentsFolder);
+				std::string imgPath = folder + tagUrl;
 				std::string imgBase64Contents = base64_encode(utils::get_file_text(imgPath));
 				utils::string_replace(file_data, tag, "<img src=\"data:image/" + extension + ";base," + imgBase64Contents + "\"");
 			}
