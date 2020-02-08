@@ -2,10 +2,10 @@
 /* 
     The default font name is "EA Pirulen Rg DS",
     only use "PirulenRg-Regular" if the former 
-    does not work in your specific webview 
+    does not work in your specific webview. 
 
     WARNING: "EA Pirulen Rg DS" isn't compatible
-    with the font-weight CSS or the H2 tag.
+    with the font-weight CSS or the <H2> tag
 */
 
 @font-face {

@@ -2,7 +2,6 @@ body {
     font-size: 14px;
     line-height: 1.8;
     color: #222;
-    font-weight: 400;
     font-family: Arial;
     background-color: #000;
     margin: 0px;
@@ -33,7 +32,6 @@ input[type="email"] {
     border: 0px;
     padding: 12px 20px;
     box-sizing: border-box;
-    font-weight: 500;
     color: #999;
     background-color: #0d0d0d;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -51,14 +49,6 @@ input:-ms-input-placeholder {
 color: #999; }
 input:-moz-placeholder {
 color: #999; }
-input::-webkit-input-placeholder {
-font-weight: 500; }
-input::-moz-placeholder {
-font-weight: 500; }
-input:-ms-input-placeholder {
-font-weight: 500; }
-input:-moz-placeholder {
-font-weight: 500; }
 
 
 .hidden {
@@ -156,7 +146,6 @@ font-weight: 500; }
 .button-rounded {
     box-sizing: border-box;
     font-size: 14px;
-    font-weight: 700;
     text-transform: uppercase;
     border: none;
     color: #fff;

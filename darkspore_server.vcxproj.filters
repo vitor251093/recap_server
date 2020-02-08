@@ -180,6 +180,12 @@
     <ClInclude Include="source\utils\xml.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="source\utils\base64.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\eawebkit.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -291,6 +297,12 @@
       <Filter>Source Files\utils</Filter>
     </ClCompile>
     <ClCompile Include="source\utils\xml.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\base64.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\eawebkit.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>

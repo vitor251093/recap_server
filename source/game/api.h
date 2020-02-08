@@ -75,12 +75,12 @@ namespace Game {
 			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response);
 			void responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path);
 			void responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path);
+			void responseWithHtmlContents(HTTP::Response& response, std::string_view file_data);
 			void alertsResponse(HTTP::Session& session, HTTP::Response& response);
 
 			void add_broadcasts(pugi::xml_node& node);
 
 			void add_common_keys(pugi::xml_node& node, const std::string& darksporeVersion);
-			void add_common_keys(rapidjson::Document& document);
 		
 		private:
 			std::string mActiveTheme = "default";

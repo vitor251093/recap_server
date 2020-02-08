@@ -182,6 +182,8 @@
     <ClInclude Include="source\repository\template.h" />
     <ClInclude Include="source\tcptest.h" />
     <ClInclude Include="source\udptest.h" />
+    <ClInclude Include="source\utils\base64.h" />
+    <ClInclude Include="source\utils\eawebkit.h" />
     <ClInclude Include="source\utils\functions.h" />
     <ClInclude Include="source\utils\json.h" />
     <ClInclude Include="source\utils\logger.h" />
@@ -222,6 +224,8 @@
     <ClCompile Include="source\repository\template.cpp" />
     <ClCompile Include="source\tcptest.cpp" />
     <ClCompile Include="source\udptest.cpp" />
+    <ClCompile Include="source\utils\base64.cpp" />
+    <ClCompile Include="source\utils\eawebkit.cpp" />
     <ClCompile Include="source\utils\functions.cpp" />
     <ClCompile Include="source\utils\json.cpp" />
     <ClCompile Include="source\utils\xml.cpp" />

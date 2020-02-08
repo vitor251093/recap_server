@@ -26,26 +26,22 @@ namespace Game {
 			std::string value = node.attribute("value").value();
 
 			       if (name == "SKIP_LAUNCHER")                  { mConfig[CONFIG_SKIP_LAUNCHER] = value;
-			} else if (name == "VERSION_LOCKED")                 { mConfig[CONFIG_VERSION_LOCKED] = value;
 			} else if (name == "SINGLEPLAYER_ONLY")              { mConfig[CONFIG_SINGLEPLAYER_ONLY] = value;
 			} else if (name == "SERVER_HOST")                    { mConfig[CONFIG_SERVER_HOST] = value;
 			} else if (name == "STORAGE_PATH")                   { mConfig[CONFIG_STORAGE_PATH] = get_path_value(value);
 			} else if (name == "DARKSPORE_INDEX_PAGE_PATH")      { mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = value;
 			} else if (name == "DARKSPORE_LAUNCHER_NOTES_PATH")  { mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = value;
-			} else if (name == "DARKSPORE_REGISTER_PAGE_PATH")   { mConfig[CONFIG_DARKSPORE_REGISTER_PAGE_PATH] = value;
 			} else if (name == "DARKSPORE_LAUNCHER_THEMES_PATH") { mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = get_path_value(value);
 			} else {
-				logger::error("Game::Config: Unknown config value '" + name + "'");
+				logger::warn("Game::Config: Unknown config value '" + name + "'");
 			}
 		};
 
 		mConfig[CONFIG_SKIP_LAUNCHER] = "false";
-		mConfig[CONFIG_VERSION_LOCKED] = "false";
 		mConfig[CONFIG_SINGLEPLAYER_ONLY] = "true";
 		mConfig[CONFIG_SERVER_HOST] = "127.0.0.1";
 		mConfig[CONFIG_STORAGE_PATH] = "storage/";
 		mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = "index.html";
-		mConfig[CONFIG_DARKSPORE_REGISTER_PAGE_PATH] = "register.html";
 		mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = "bootstrap/launcher/notes.html";
 		mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = "bootstrap/launcher/";
 
@@ -98,12 +94,10 @@ namespace Game {
 		const auto value_to_string = [](ConfigValue value) {
 			switch (value) {
 				case CONFIG_SKIP_LAUNCHER:                  return "SKIP_LAUNCHER";
-				case CONFIG_VERSION_LOCKED:                 return "VERSION_LOCKED";
 				case CONFIG_SINGLEPLAYER_ONLY:              return "SINGLEPLAYER_ONLY";
 				case CONFIG_SERVER_HOST:                    return "SERVER_HOST";
 				case CONFIG_STORAGE_PATH:                   return "STORAGE_PATH";
 				case CONFIG_DARKSPORE_INDEX_PAGE_PATH:      return "DARKSPORE_INDEX_PAGE_PATH";
-				case CONFIG_DARKSPORE_REGISTER_PAGE_PATH:   return "DARKSPORE_REGISTER_PAGE_PATH";
 				case CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH:  return "DARKSPORE_LAUNCHER_NOTES_PATH";
 				case CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH: return "DARKSPORE_LAUNCHER_THEMES_PATH";
 				default: return "UNKNOWN";

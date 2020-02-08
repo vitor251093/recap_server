@@ -15,6 +15,7 @@
 
 #include "../utils/functions.h"
 #include "../utils/logger.h"
+#include "../utils/eawebkit.h"
 
 #include <boost/beast/version.hpp>
 
@@ -110,33 +111,6 @@ namespace Game {
 </html>
 )";
 
-	constexpr std::string_view recapClientScript = R"(
-<script>
-	var ReCapClient = {};
-	ReCapClient.getRequest = function(url, callback, errorCallback) {
-		var xmlHttp = new XMLHttpRequest(); 
-		xmlHttp.onload = function() {
-			if (callback !== undefined) callback(xmlHttp.responseText);
-		}
-		xmlHttp.onerror = function(e) {
-			if (errorCallback !== undefined) errorCallback(e);
-		};
-		xmlHttp.open("GET", url, true);
-		xmlHttp.send(null);
-	};
-	ReCapClient.request = function(name, params, callback, errorCallback) {
-		if (params !== undefined && typeof params === 'object') {
-			var str = [];
-			for (var p in params)
-				if (params.hasOwnProperty(p)) {
-					str.push(encodeURIComponent(p) + "=" + encodeURIComponent(params[p]));
-				}
-			params = str.join("&");
-		}
-		ReCapClient.getRequest("http://{{host}}/recap/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
-	};
-</script>
-)";
 
 	// API
 	API::API() {
@@ -161,17 +135,17 @@ namespace Game {
 		response.body() = std::move(wholePath);
 	}
 
-	void API::alertsResponse(HTTP::Session& session, HTTP::Response& response) {
-		std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
-		std::string path = contentsFolder + "announce.html";
-
-		std::string file_data = utils::get_html_file_for_darkspore_webkit(path, contentsFolder);
-
-		utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-		utils::string_replace(file_data, "{{isDev}}", "true");
-
+	void API::responseWithHtmlContents(HTTP::Response& response, std::string_view file_data) {
 		response.set(boost::beast::http::field::content_type, "text/html");
 		response.body() = std::move(file_data);
+	}
+
+	void API::alertsResponse(HTTP::Session& session, HTTP::Response& response) {
+		std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
+		
+		std::string file_data = utils::EAWebKit::loadHtml(contentsFolder, "announce.html", utils::EAWebKitConfig());
+
+		responseWithHtmlContents(response, file_data);
 	}
 
 	void API::setup() {
@@ -180,7 +154,7 @@ namespace Game {
 		// Routing
 		router->add("/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [](HTTP::Session& session, HTTP::Response& response) {
 			logger::info("Got API route.");
-			});
+		});
 
 		// ReCap
 		router->add("/recap/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -201,9 +175,7 @@ namespace Game {
 		});
 
 		router->add("/recap/terms", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string file_data = "I declare that I own a legitimate copy of Darkspore, either in a physical disc or in my Origin account.";
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = std::move(file_data);
+			responseWithHtmlContents(response, "I declare that I own a legitimate copy of Darkspore, either in a physical disc or in my Origin account.");
 		});
 
 		// Launcher
@@ -223,23 +195,15 @@ namespace Game {
 
 			auto version = request.uri.parameter("version");
 			if (Config::GetBool(CONFIG_SKIP_LAUNCHER)) {
-				response.set(boost::beast::http::field::content_type, "text/html");
-				response.body() = skipLauncherScript;
+				responseWithHtmlContents(response, skipLauncherScript);
 			}
 			else {
-				std::string path = Config::Get(CONFIG_STORAGE_PATH) +
-					"www/" +
-					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) +
-					mActiveTheme + "/index.html";
+				std::string folder = Config::Get(CONFIG_STORAGE_PATH) + "www/" +
+					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + "/";
+				
+				std::string file_data = utils::EAWebKit::loadHtml(folder, "index.html", utils::EAWebKitConfig(true));
 
-				std::string client_script(recapClientScript);
-				utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-
-				std::string file_data = utils::get_file_text(path);
-				utils::string_replace(file_data, "</head>", client_script + "</head>");
-
-				response.set(boost::beast::http::field::content_type, "text/html");
-				response.body() = std::move(file_data);
+				responseWithHtmlContents(response, file_data);
 			}
 		});
 
@@ -248,30 +212,20 @@ namespace Game {
 
 			const std::string& resource = request.uri.resource();
 
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) +
-				"www/" +
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) +
-				mActiveTheme + "/images/" +
+			std::string path = Config::Get(CONFIG_STORAGE_PATH) + "www/" +
+				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + "/images/" +
 				resource.substr(resource.rfind('/') + 1);
 
 			response.version() |= 0x1000'0000;
 			response.body() = std::move(path);
-			});
+		});
 
 		router->add("/bootstrap/launcher/notes", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) +
-				"www/" +
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH);
+			std::string folder = Config::Get(CONFIG_STORAGE_PATH) + "www/";
 
-			std::string file_data = utils::get_file_text(path);
-			utils::string_replace(file_data, "{{recap-version}}", Config::recapVersion());
-			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? session.get_darkspore_version() : "no");
-			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
-			utils::string_replace(file_data, "{{display-latest-version}}", "none");
-			utils::string_replace(file_data, "{{latest-version}}", "yes");
-
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = std::move(file_data);
+			std::string file_data = utils::EAWebKit::loadHtml(folder, Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH), utils::EAWebKitConfig(true));
+			
+			responseWithHtmlContents(response, file_data);
 		});
 
 		// Game
@@ -424,26 +378,19 @@ namespace Game {
 
 		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
-			std::string path = contentsFolder + Config::Get(CONFIG_DARKSPORE_REGISTER_PAGE_PATH);
-
-			std::string file_data = utils::get_html_file_for_darkspore_webkit(path, contentsFolder);
-
-			utils::string_replace(file_data, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-			utils::string_replace(file_data, "{{isDev}}", "true");
 			
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = std::move(file_data);
+			std::string file_data = utils::EAWebKit::loadHtml(contentsFolder, "register.html", utils::EAWebKitConfig());
+
+			responseWithHtmlContents(response, file_data);
 		});
 
 		router->add("/web/sporelabs/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// TODO: That one is launched in the system browser
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = "";
+			responseWithHtmlContents(response, "");
 		});
 
 		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = "";
+			responseWithHtmlContents(response, "");
 		});
 
 		// QOS
@@ -1571,14 +1518,5 @@ namespace Game {
 		utils::xml::Set(node, "version", darksporeVersion);
 		utils::xml::Set(node, "timestamp", std::to_string(utils::get_unix_time()));
 		utils::xml::Set(node, "exectime", std::to_string(++mPacketId));
-	}
-
-	void API::add_common_keys(rapidjson::Document& document) {
-		/*
-		obj["stat"] = 'ok'
-		obj["version"] = self.server.gameVersion
-		obj["timestamp"] = self.timestamp()
-		obj["exectime"] = self.exectime()
-		*/
 	}
 }
