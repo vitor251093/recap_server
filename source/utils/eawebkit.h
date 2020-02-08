@@ -12,17 +12,20 @@ namespace utils {
 		bool supportsLinkHref = false;
 		bool supportsScriptSrc = false;
 		bool supportsImgSrc = false;
+		bool supportImageUrlInCss = false;
 
 		EAWebKitConfig() {}
 		EAWebKitConfig(bool val){
 			supportsLinkHref = val;
 			supportsScriptSrc = val;
 			supportsImgSrc = val;
+			supportImageUrlInCss = val;
 		}
-		EAWebKitConfig(bool _supportsLinkHref, bool _supportsScriptSrc, bool _supportsImgSrc) {
+		EAWebKitConfig(bool _supportsLinkHref, bool _supportsScriptSrc, bool _supportsImgSrc, bool _supportImageUrlInCss) {
 			supportsLinkHref = _supportsLinkHref;
 			supportsScriptSrc = _supportsScriptSrc;
 			supportsImgSrc = _supportsImgSrc;
+			supportImageUrlInCss = _supportImageUrlInCss;
 		}
 	};
 
