@@ -153,12 +153,12 @@ color: #999; }
     height: 25px;
     padding: 17px;
     position: relative;
-    background-image: url("images/registrationButton-center.png") repeat-x;
+    background: url("images/registrationButton-center.png") repeat-x;
     background-size: 1px 48px;
     z-index: 1;
 }
 .button-rounded:hover:not(:active) {
-    background-image: url("images/registrationButton-hover-center.png") repeat-x;
+    background: url("images/registrationButton-hover-center.png") repeat-x;
 	color: #fff;
 }
 .button-rounded .left-side {
@@ -168,12 +168,12 @@ color: #999; }
     height: 48px;
     width: 26px;
     display: block;
-    background-image: url("images/registrationButton-left.png") no-repeat;
+    background: url("images/registrationButton-left.png") no-repeat;
     background-size: 26px 48px;
     z-index: 2;
 }
 .button-rounded:hover:not(:active) .left-side {
-    background-image: url("images/registrationButton-hover-left.png") no-repeat;
+    background: url("images/registrationButton-hover-left.png") no-repeat;
 }
 .button-rounded .text {
     position: absolute;
@@ -192,12 +192,12 @@ color: #999; }
     height: 48px;
     width: 26px;
     display: block;
-    background-image: url("images/registrationButton-right.png") no-repeat;
+    background: url("images/registrationButton-right.png") no-repeat;
     background-size: 26px 48px;
     z-index: 2;
 }
 .button-rounded:hover:not(:active) .right-side {
-    background-image: url("images/registrationButton-hover-right.png") no-repeat;
+    background: url("images/registrationButton-hover-right.png") no-repeat;
 }
 .button-rounded:hover:not(:active) {
     -moz-user-select: none;
