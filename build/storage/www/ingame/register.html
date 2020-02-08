@@ -55,8 +55,8 @@
             }
             function register() {
                 $('#signup-form').css('display', 'none');
-                $('#creatingAccountText').css('display', 'initial');
-                
+                $('#creatingAccountView').css('display', 'initial');
+
                 ReCapClient.getRequest("api.game.registration", {
                     "name": $("#name").val(),
                     "mail": $("#email").val(),
@@ -72,8 +72,11 @@
             }
         </script>
         <div class="body">
+            <img src="images/register_bg.png" class="fullscreen-window"/>
+        </div>
+        <div class="body">
             <div class="fullscreen-window">
-                <div class="view darkspore-ui-background">
+                <div class="view">
                     <form method="POST" id="signup-form">
 						<div class="form-group form-group-title">
 							<div class="title">Register</div>
@@ -105,24 +108,24 @@
                             </div>
                         </div>
                     </form>
-					<center style="margin-top: 30%; margin-bottom: -30%;"><p id="creatingAccountText">Creating account...</p></center>
+					<div class="creating-account-view" id="creatingAccountView"><p>Creating account...</p></div>
                 </div>
             </div>
-            <div id="message-dialog" class="modal">
-                <div class="modal-window darkspore-ui-background">
-                    <div class="modal-title" id="modal-title">Error</div>
-                    <div class="modal-message" id="message">x</div>
-                    <div class="form-group form-group-button">
-                        <div name="submit" id="ok-success-button" class="form-submit button-rounded" onMouseUp="closeModal(true);">
-                            <div class="left-side"></div>
-                            <div class="text">Ok</div>
-                            <div class="right-side"></div>
-                        </div>
-                        <div name="submit" id="ok-error-button" class="form-submit button-rounded" onMouseUp="closeModal(false);">
-                            <div class="left-side"></div>
-                            <div class="text">Ok</div>
-                            <div class="right-side"></div>
-                        </div>
+        </div>
+        <div id="message-dialog" class="body modal">
+            <div class="modal-window">
+                <div class="modal-title" id="modal-title">Error</div>
+                <div class="modal-message" id="message">x</div>
+                <div class="form-group form-group-button">
+                    <div name="submit" id="ok-success-button" class="form-submit button-rounded" onMouseUp="closeModal(true);">
+                        <div class="left-side"></div>
+                        <div class="text">Ok</div>
+                        <div class="right-side"></div>
+                    </div>
+                    <div name="submit" id="ok-error-button" class="form-submit button-rounded" onMouseUp="closeModal(false);">
+                        <div class="left-side"></div>
+                        <div class="text">Ok</div>
+                        <div class="right-side"></div>
                     </div>
                 </div>
             </div>

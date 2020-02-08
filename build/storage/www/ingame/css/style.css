@@ -70,23 +70,23 @@ color: #999; }
 
 
 .body {
-    z-index: 1;
     position: absolute;
     top: 0;
     bottom: 30px;
     left: 0;
     right: 0;
+    z-index: 1;
 }
+
 .fullscreen-window {
     position: relative;
     width: 100%;
     height: 100%;
     margin: 0 auto;
+    z-index: 1;
 }
 
 .view {
-    padding: 20px 85px;
-    padding-bottom: 10px;
     height: 100%;
     font-size: 14px;
 }
@@ -209,13 +209,14 @@ color: #999; }
 
 form {
 	margin-left: 50%;
-	margin-top: 35px;
+	padding-top: 55px;
 }
 
 form > .form-group {
-	margin-left: -144px;
-	margin-right: 50%;
-	margin-top: -15px;
+    margin-left: -144px;
+    margin-right: 50%;
+    margin-top: -15px;
+    width: 288px;
 }
 
 form > .form-group-title {
@@ -229,7 +230,8 @@ form > .form-group-tos {
 	margin-bottom: 25px;
 }
 form > .form-group-button {
-	height: 48px;
+    height: 48px;
+    margin-left: -170px;
 }
 
 .form-group > p {
@@ -244,31 +246,33 @@ form > .form-group-button {
 	text-align: left;
 }
 
-#creatingAccountText {
+.creating-account-view {
+    text-align: center;
+    margin-top: 30%; 
+    margin-bottom: -30%;
+    display: none;
+}
+
+.creating-account-view p {
 	font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
 	color: #b4b7b9;
-	display: none;
 	text-align: center;
 	width: 100%;
 }
 
 
 .modal {
-    position: absolute;
-    top: 0;
-    bottom: 30px;
-    left: 0;
-    right: 0;
     background-color: rgba(0,0,0,0.5);
     z-index: 3;
 }
 
 .modal .modal-window {
-    margin: 100px 160px;
     border: 1px solid #fff;
     height: 200px;
-    padding: 15px 30px;
     color: #fff;
+    width: 72%;
+    margin-left: 14%;
+    margin-top: 120px;
 }
 
 .modal .modal-window .modal-message {
@@ -278,11 +282,4 @@ form > .form-group-button {
 .view .modal-title {
     color: #fff;
     font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
-}
-
-.darkspore-ui-background {
-    z-index: 0;
-	background-image: url("images/register_bg.png");
-    background-size: cover;
-    background-repeat: no-repeat;
 }
