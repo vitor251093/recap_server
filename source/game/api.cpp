@@ -348,6 +348,10 @@ namespace Game {
 			responseWithFileInStorage(session, response, "/www");
 		});
 
+		router->add("/ingame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "/www");
+		});
+
 		router->add("/panel/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithFileInStorage(session, response, "/www");
 		});
