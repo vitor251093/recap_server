@@ -12,6 +12,15 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <style type="text/css">
+        .title {
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
         .form-group {
             overflow: hidden;
             margin-bottom: 20px;
@@ -49,14 +58,11 @@
                 $('#ok-success-button').hide();
                 $('#ok-error-button').hide();
                 
-                if (closingWindow) {
-                    EAWebKit.closeWindow();
+                if (closingWindow && typeof(Client) !== "undefined") {
+                    Client.closeWindow();
                 }
             }
             function register() {
-                $('#signup-form').css('display', 'none');
-                $('#creatingAccountText').css('display', 'initial');
-                
                 ReCapClient.getRequest("api.game.registration", {
                     "name": $("#name").val(),
                     "mail": $("#email").val(),
@@ -75,26 +81,21 @@
             <div class="fullscreen-window">
                 <div class="view darkspore-ui-background">
                     <form method="POST" id="signup-form">
-						<div class="form-group form-group-title">
-							<div class="title">Register</div>
-						</div>
+                        <div class="title">Create account</div>
                         <div class="form-group">
-							<p>Enter Username</p>
-                            <div class="form-input-bg"><input type="text" class="form-input" name="name" id="name"/></div>
+                            <input type="text" class="form-input" name="name" id="name" placeholder="Your Name" />
                         </div>
                         <div class="form-group">
-							<p>Enter Email</p>
-                            <div class="form-input-bg"><input type="email" class="form-input" name="email" id="email"/></div>
+                            <input type="email" class="form-input" name="email" id="email" placeholder="Your Email" />
                         </div>
                         <div class="form-group">
-							<p>Enter Password</p>
-                            <div class="form-input-bg"><input type="text" class="form-input password" name="password" id="password"/></div>
+                            <input type="text" class="form-input password" name="password" id="password" placeholder="Pass" />
                         </div>
-                        <div class="form-group-tos">
+                        <div class="form-group">
                             <span class="input-checkbox-container">
+                                <label class="label-agree-term">I agree all statements in <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a></label>
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
                                 <span class="checkmark" onMouseUp="$('#agree-term').toggleChecked();"></span>
-								<label class="label-agree-term">I understand & accept the <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a></label>
                             </span>
                         </div>
                         <div class="form-group form-group-button">
@@ -105,7 +106,6 @@
                             </div>
                         </div>
                     </form>
-					<center style="margin-top: 30%; margin-bottom: -30%;"><p id="creatingAccountText">Creating account...</p></center>
                 </div>
             </div>
             <div id="message-dialog" class="modal">
