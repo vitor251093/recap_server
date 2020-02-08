@@ -5,8 +5,17 @@
     does not work in your specific webview. 
 
     WARNING: "EA Pirulen Rg DS" isn't compatible
-    with the font-weight CSS or the <H2> tag
+              with the font-weight CSS.
 */
+
+* {
+    /*
+       "EA Pirulen Rg DS" requires font-weight: normal, and some tags, 
+        like the H1-H6 ones, have font-weight: bold by default. With that 
+        change, "EA Pirulen Rg DS" works in any tag by default
+     */
+    font-weight: normal;
+}
 
 @font-face {
     font-family: 'PirulenRg-Regular';
