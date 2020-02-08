@@ -1418,28 +1418,44 @@
         </style>
 
         <script>
-            var ReCapClient = {};
-            ReCapClient.getRequest = function(url, callback, errorCallback) {
-                var xmlHttp = new XMLHttpRequest(); 
-                xmlHttp.onload = function() {
-                    if (callback !== undefined) callback(xmlHttp.responseText);
+            var HTTP = {
+                get: function(url, obj, callback) {
+                    var params = obj;
+                    if (params !== undefined && typeof params === 'object') {
+                        var str = [];
+                        for (var p in params)
+                            if (params.hasOwnProperty(p)) {
+                                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(params[p]));
+                            }
+                        params = str.join("&");
+                    }
+
+                    var xmlHttp = new XMLHttpRequest(); 
+                    xmlHttp.onreadystatechange = function () {
+                        if (xmlHttp.status === 200 && callback !== undefined) callback(xmlHttp.responseText);
+                    };
+                    xmlHttp.open("GET", url + (params === undefined ? "" : ("?" + params)), true);
+                    xmlHttp.send(null);
+                },
+                post: function(url, obj, callback) {
+                    var xmlHttp = new XMLHttpRequest(); 
+                    xmlHttp.onreadystatechange = function () {
+                        if (xmlHttp.status === 200 && callback !== undefined) callback(xmlHttp.responseText);
+                    };
+                    xmlHttp.open("POST", url, true);
+                    xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    xmlHttp.send(JSON.stringify(obj));
                 }
-                xmlHttp.onerror = function(e) {
-                    if (errorCallback !== undefined) errorCallback(e);
-                };
-                xmlHttp.open("GET", url, true);
-                xmlHttp.send(null);
             };
-            ReCapClient.request = function(name, params, callback, errorCallback) {
-                if (params !== undefined && typeof params === 'object') {
-                    var str = [];
-                    for (var p in params)
-                        if (params.hasOwnProperty(p)) {
-                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(params[p]));
-                        }
-                    params = str.join("&");
-                }
-                ReCapClient.getRequest("http://{{host}}/recap/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback, errorCallback);
+
+            var ReCapClient = {};
+            ReCapClient.recapApiUrl = "http://{{host}}/recap/api";
+            ReCapClient.getRequest = function(name, params, callback) {
+                params["method"] = name;
+                HTTP.get(ReCapClient.recapApiUrl, params, callback);
+            };
+            ReCapClient.postRequest = function(name, params, callback) {
+                HTTP.post(ReCapClient.recapApiUrl + "?method=" + name, params, callback);
             };
         </script>
     </head>
