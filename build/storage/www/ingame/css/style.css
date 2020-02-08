@@ -75,7 +75,6 @@ color: #999; }
     bottom: 30px;
     left: 0;
     right: 0;
-    z-index: 1;
 }
 
 .fullscreen-window {
@@ -89,6 +88,7 @@ color: #999; }
 .view {
     height: 100%;
     font-size: 14px;
+    z-index: 2;
 }
 .title {
     color: #b4b7b9;
@@ -248,7 +248,7 @@ form > .form-group-button {
 
 .creating-account-view {
     text-align: center;
-    margin-top: 30%; 
+    margin-top: 200px;
     margin-bottom: -30%;
     display: none;
 }
@@ -267,6 +267,7 @@ form > .form-group-button {
 }
 
 .modal .modal-window {
+    position: relative;
     border: 1px solid #fff;
     height: 200px;
     color: #fff;
@@ -275,11 +276,29 @@ form > .form-group-button {
     margin-top: 120px;
 }
 
+.modal .modal-window .modal-title {
+    margin-top: 15px;
+}
 .modal .modal-window .modal-message {
     margin-top: 10px;
+}
+
+.modal .modal-window .modal-title,
+.modal .modal-window .modal-message,
+.modal .modal-window .form-group-button {
+    margin-left: 25px;
+    margin-right: 25px;
 }
 
 .view .modal-title {
     color: #fff;
     font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
+}
+
+.fullscreen-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    z-index: -1 !important;
 }
