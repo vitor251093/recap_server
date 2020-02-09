@@ -9,7 +9,36 @@
 // utils
 namespace utils {
 
-	// Web
+	void EAWebKit::replaceUrlPathWithBase64(std::string& file_data, const std::string& extension, const std::string& base64Prefix, 
+											const std::string& contentsFolder) {
+		size_t pos = 0;
+		size_t closePos = 0;
+		size_t skipLinePos = 0;
+		size_t ignorablePos = 0;
+
+		std::string tag;
+		std::string tagUrl;
+		
+		std::string imgOpenTag = "url(\"";
+		std::string imgCloseTag = "." + extension + "\")";
+		while ((pos = file_data.find(imgOpenTag, ignorablePos)) != std::string::npos) {
+			closePos = file_data.find(imgCloseTag, pos + imgOpenTag.length());
+			skipLinePos = file_data.find("\n", pos + imgOpenTag.length());
+			if (skipLinePos != std::string::npos && skipLinePos < closePos) {
+				ignorablePos = skipLinePos;
+				continue;
+			}
+
+			tag = file_data.substr(pos, closePos + imgCloseTag.length() - pos);
+			tagUrl = tag.substr(imgOpenTag.length(), tag.length() - imgOpenTag.length() - imgCloseTag.length());
+			tagUrl = tagUrl + "." + extension;
+			std::string folder = (tagUrl.starts_with("/") ? (Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "www") : contentsFolder);
+			std::string imgPath = folder + tagUrl;
+			std::string imgBase64Contents = base64_encode(utils::get_file_text(imgPath));
+			utils::string_replace(file_data, tag, "url(" + base64Prefix + ";base64," + imgBase64Contents + ")");
+		}
+	}
+
 	std::string EAWebKit::loadHtml(std::string contentsFolder, std::string file, EAWebKitConfig config) {
 		std::string file_data = utils::get_file_text(contentsFolder + file);
 
@@ -59,17 +88,16 @@ namespace utils {
 		}
 
 		if (!config.supportImageUrlInCss) {
-			std::string imgOpenTag = "url(\"";
-			std::string imgCloseTag = "\")";
-			while ((pos = file_data.find(imgOpenTag)) != std::string::npos) {
-				tag = file_data.substr(pos, file_data.find(imgCloseTag, pos + imgOpenTag.length()) + imgCloseTag.length() - pos);
-				tagUrl = tag.substr(imgOpenTag.length(), tag.length() - imgOpenTag.length() - imgCloseTag.length());
-				size_t extensionPoint = tagUrl.find_last_of(".");
-				std::string extension = tagUrl.substr(extensionPoint + 1, tagUrl.size() - extensionPoint - 1);
-				std::string folder = (tagUrl.starts_with("/") ? (Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "www") : contentsFolder);
-				std::string imgPath = folder + tagUrl;
-				std::string imgBase64Contents = base64_encode(utils::get_file_text(imgPath));
-				utils::string_replace(file_data, tag, "url('data:image/" + extension + ";base64," + imgBase64Contents + "')");
+			std::vector<std::string> compatibleImageExtensions = { "png", "jpg", "bmp" };
+			for (const std::string& extension : compatibleImageExtensions) {
+				replaceUrlPathWithBase64(file_data, extension, "data:image/" + extension, contentsFolder);
+			}
+		}
+
+		if (!config.supportFontUrlInCss) {
+			std::vector<std::string> compatibleFontExtensions = { "ttf" };
+			for (const std::string& extension : compatibleFontExtensions) {
+				replaceUrlPathWithBase64(file_data, extension, "data:font/truetype;charset=utf-8", contentsFolder);
 			}
 		}
 
