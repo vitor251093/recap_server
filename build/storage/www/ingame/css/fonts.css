@@ -16,13 +16,13 @@
 
 @font-face {
     font-family: 'PirulenRg-Regular';
-    src: url("fonts/PirulenRg-Regular.ttf") format('truetype');
+    src: url("../fonts/PirulenRg-Regular.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'dotsfont-regular';
-    src: url("fonts/dotsfont-regular.ttf") format('truetype');
+    src: url("../fonts/dotsfont-regular.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }

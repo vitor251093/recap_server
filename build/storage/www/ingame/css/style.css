@@ -47,11 +47,11 @@ input[type="email"] {
 
 .form-input-bg {
     width: 288px;
-    background-image: url("images/TextField.png");
+    background-image: url("../images/TextField.png");
 }
 
 .form-input-bg:hover:not(:active) {
-    background-image: url("images/TextField-hover.png");
+    background-image: url("../images/TextField-hover.png");
 }
 
 input::-webkit-input-placeholder {
@@ -128,13 +128,13 @@ color: #999; }
     border: none;
 }
 .input-checkbox-container:hover input ~ .checkmark {
-    background-image: url("images/checkbox-hover.png");
+    background-image: url("../images/checkbox-hover.png");
 }
 .input-checkbox-container:hover input:checked ~ .checkmark {
-    background-image: url("images/checkbox-hover-checked.png");
+    background-image: url("../images/checkbox-hover-checked.png");
 }
 .input-checkbox-container input:checked ~ .checkmark {
-    background-image: url("images/checkbox-idle-checked.png");
+    background-image: url("../images/checkbox-idle-checked.png");
 }
 .input-checkbox-container .checkmark {
     content: "";
@@ -142,7 +142,7 @@ color: #999; }
     width: 16px;
     height: 16px;
     border: none !important;
-    background-image: url("images/checkbox-idle.png");
+    background-image: url("../images/checkbox-idle.png");
 }
 
 .button-rounded {
@@ -153,12 +153,12 @@ color: #999; }
     height: 25px;
     padding: 17px;
     position: relative;
-    background: url("images/registrationButton-center.png") repeat-x;
+    background: url("../images/registrationButton-center.png") repeat-x;
     background-size: 1px 48px;
     z-index: 1;
 }
 .button-rounded:hover:not(:active) {
-    background: url("images/registrationButton-hover-center.png") repeat-x;
+    background: url("../images/registrationButton-hover-center.png") repeat-x;
 	color: #fff;
 }
 .button-rounded .left-side {
@@ -168,12 +168,12 @@ color: #999; }
     height: 48px;
     width: 26px;
     display: block;
-    background: url("images/registrationButton-left.png") no-repeat;
+    background: url("../images/registrationButton-left.png") no-repeat;
     background-size: 26px 48px;
     z-index: 2;
 }
 .button-rounded:hover:not(:active) .left-side {
-    background: url("images/registrationButton-hover-left.png") no-repeat;
+    background: url("../images/registrationButton-hover-left.png") no-repeat;
 }
 .button-rounded .text {
     position: absolute;
@@ -192,12 +192,12 @@ color: #999; }
     height: 48px;
     width: 26px;
     display: block;
-    background: url("images/registrationButton-right.png") no-repeat;
+    background: url("../images/registrationButton-right.png") no-repeat;
     background-size: 26px 48px;
     z-index: 2;
 }
 .button-rounded:hover:not(:active) .right-side {
-    background: url("images/registrationButton-hover-right.png") no-repeat;
+    background: url("../images/registrationButton-hover-right.png") no-repeat;
 }
 .button-rounded:hover:not(:active) {
     -moz-user-select: none;

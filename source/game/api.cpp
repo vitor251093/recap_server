@@ -141,10 +141,7 @@ namespace Game {
 	}
 
 	void API::alertsResponse(HTTP::Session& session, HTTP::Response& response) {
-		std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
-		
-		std::string file_data = utils::EAWebKit::loadHtml(contentsFolder, "announce.html", utils::EAWebKitConfig());
-
+		std::string file_data = utils::EAWebKit::loadFile("www/ingame/announce.html");
 		responseWithHtmlContents(response, file_data);
 	}
 
@@ -199,34 +196,26 @@ namespace Game {
 				return;
 			}
 
-			std::string folder = Config::Get(CONFIG_STORAGE_PATH) + "www/" +
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + "/";
-				
-			std::string file_data = utils::EAWebKit::loadHtml(folder, "index.html", utils::EAWebKitConfig(true));
+			std::string folder = "www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + "/";
+			std::string file_data = utils::EAWebKit::loadFile(folder + "index.html");
 
 			responseWithHtmlContents(response, file_data);
-		});
-
-		router->add("/bootstrap/launcher/images/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			auto& request = session.get_request();
-
-			const std::string& resource = request.uri.resource();
-
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) + "www/" +
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + "/images/" +
-				resource.substr(resource.rfind('/') + 1);
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
 		});
 
 		router->add("/bootstrap/launcher/notes", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string folder = Config::Get(CONFIG_STORAGE_PATH) + "www/";
-
-			std::string file_data = utils::EAWebKit::loadHtml(folder, Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH), utils::EAWebKitConfig(true));
-			
+			std::string file_data = utils::EAWebKit::loadFile("www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH));			
 			responseWithHtmlContents(response, file_data);
 		});
+
+		router->add("/bootstrap/launcher/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			std::string removablePrefix = "/bootstrap/launcher";
+			auto& request = session.get_request();
+			std::string name = request.uri.resource().substr(removablePrefix.size());
+
+			std::string path = "www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH) + mActiveTheme + name;
+			response.body() = utils::EAWebKit::loadFile(path);
+		});
+
 
 		// Game
 		router->add("/game/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -381,19 +370,24 @@ namespace Game {
 		});
 
 		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string contentsFolder = Config::Get(CONFIG_STORAGE_PATH) + "www/ingame/";
-			
-			std::string file_data = utils::EAWebKit::loadHtml(contentsFolder, "register.html", utils::EAWebKitConfig());
-
+			std::string file_data = utils::EAWebKit::loadFile("www/ingame/register.html");
 			responseWithHtmlContents(response, file_data);
+		});
+
+		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithHtmlContents(response, "");
+		});
+
+		router->add("/web/sporelabsgame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			std::string removablePrefix = "/web/sporelabsgame";
+			auto& request = session.get_request();
+			std::string name = request.uri.resource().substr(removablePrefix.size());
+
+			response.body() = utils::EAWebKit::loadFile("www/ingame" + name);
 		});
 
 		router->add("/web/sporelabs/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// TODO: That one is launched in the system browser
-			responseWithHtmlContents(response, "");
-		});
-
-		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			responseWithHtmlContents(response, "");
 		});
 
