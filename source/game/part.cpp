@@ -37,6 +37,7 @@ namespace Game {
 			return false;
 		}
 
+		id = utils::xml::GetString<uint64_t>(node, "_id");
 		flair = utils::xml::GetString<bool>(node, "is_flair");
 		cost = utils::xml::GetString<uint32_t>(node, "cost");
 		equipped_to_creature_id = utils::xml::GetString<uint32_t>(node, "creature_id");
@@ -57,6 +58,7 @@ namespace Game {
 
 	void Part::WriteXml(pugi::xml_node& node, uint32_t index, bool api) const {
 		if (auto part = node.append_child("part")) {
+			utils::xml::Set(part, "_id", id);
 			utils::xml::Set(part, "is_flair", flair);
 			utils::xml::Set(part, "cost", cost);
 			utils::xml::Set(part, "creature_id", equipped_to_creature_id);
@@ -86,6 +88,7 @@ namespace Game {
 
 	void Part::ReadJson(rapidjson::Value& object) {
 		if (!object.IsObject()) return;
+		id = utils::json::GetUint64(object, "_id");
 		flair = utils::json::GetBool(object, "is_flair");
 		cost = utils::json::GetUint(object, "cost");
 		equipped_to_creature_id = utils::json::GetUint(object, "creature_id");
@@ -104,6 +107,7 @@ namespace Game {
 
 	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const {
 		rapidjson::Value object = utils::json::NewObject();
+		utils::json::Set(object, "_id", id, allocator);
 		utils::json::Set(object, "is_flair", flair, allocator);
 		utils::json::Set(object, "cost", cost, allocator);
 		utils::json::Set(object, "creature_id", equipped_to_creature_id, allocator);
@@ -182,6 +186,17 @@ namespace Game {
 
 
 	// Parts
+	Part* Parts::GetPartById(uint32_t id) {
+		Part* partPtr = nullptr;
+		for (auto& part : mItems) {
+			if (part.id == id) {
+				partPtr = &part;
+				break;
+			}
+		}
+		return partPtr;
+	}
+
 	void Parts::ReadXml(const pugi::xml_node& node) {
 		auto parts = node.child("parts");
 		if (!parts) {

@@ -13,6 +13,7 @@ namespace Game {
 	// Part
 	class Part {
 	public:
+		uint64_t id;
 		uint16_t rigblock_asset_id;
 		
 		uint64_t timestamp;
@@ -66,6 +67,8 @@ namespace Game {
 
 		auto& data() { return mItems; }
 		const auto& data() const { return mItems; }
+
+		Part* GetPartById(uint32_t id);
 
 		void ReadXml(const pugi::xml_node& node);
 		void WriteXml(pugi::xml_node& node, bool api = false) const;

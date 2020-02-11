@@ -197,7 +197,7 @@ namespace Game {
 		}
 
 		decltype(auto) creature = mCreatures.emplace_back();
-		creature.id = mCreatures.size() + 1;
+		creature.id = mCreatures.size();
 		creature.nounId = templateId;
 	}
 

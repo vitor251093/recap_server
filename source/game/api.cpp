@@ -140,11 +140,6 @@ namespace Game {
 		response.body() = std::move(file_data);
 	}
 
-	void API::alertsResponse(HTTP::Session& session, HTTP::Response& response) {
-		std::string file_data = utils::EAWebKit::loadFile("www/ingame/announce.html");
-		responseWithHtmlContents(response, file_data);
-	}
-
 	void API::setup() {
 		const auto& router = Application::GetApp().get_http_server()->get_router();
 
@@ -169,10 +164,6 @@ namespace Game {
 				logger::error("Undefined /recap/api method: " + method);
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
-		});
-
-		router->add("/recap/terms", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithHtmlContents(response, "I declare that I own a legitimate copy of Darkspore, either in a physical disc or in my Origin account.");
 		});
 
 		// Launcher
@@ -360,35 +351,32 @@ namespace Game {
 			}
 		});
 
-		// Web
 		router->add("/web/sporelabs/alerts", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			alertsResponse(session, response);
+			response.body() = utils::EAWebKit::loadFile("www/ingame/announce.html");
 		});
 
 		router->add("/web/sporelabsgame/announceen", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			alertsResponse(session, response);
+			response.body() = utils::EAWebKit::loadFile("www/ingame/announce.html");
 		});
 
 		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string file_data = utils::EAWebKit::loadFile("www/ingame/register.html");
-			responseWithHtmlContents(response, file_data);
+			response.body() = utils::EAWebKit::loadFile("www/ingame/register.html");
 		});
 
 		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithHtmlContents(response, "");
-		});
-
-		router->add("/web/sporelabsgame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string removablePrefix = "/web/sporelabsgame";
-			auto& request = session.get_request();
-			std::string name = request.uri.resource().substr(removablePrefix.size());
-
-			response.body() = utils::EAWebKit::loadFile("www/ingame" + name);
+			response.body() = utils::EAWebKit::loadFile("www/ingame/persona.html");
 		});
 
 		router->add("/web/sporelabs/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			// TODO: That one is launched in the system browser
-			responseWithHtmlContents(response, "");
+			response.body() = utils::EAWebKit::loadFile("www/ingame/resetpassword.html");
+		});
+
+		router->add("/web/sporelabsgame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			response.body() = utils::EAWebKit::loadFile("www/ingame" + session.get_request().uri.resource().substr(18));
+		});
+
+		router->add("/web/sporelabs/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			response.body() = utils::EAWebKit::loadFile("www/ingame" + session.get_request().uri.resource().substr(14));
 		});
 
 		// QOS
@@ -491,6 +479,7 @@ namespace Game {
 		// TODO: Unlocking all parts from start to test; remove that in the future
 		for (int i = 1; i <= 1573; i++) {
 			Part part(i);
+			part.id = i;
 			part.flair = false;
 			part.cost = 1;
 			part.level = 5;
@@ -502,6 +491,7 @@ namespace Game {
 		}
 		for (int i = 10001; i <= 10835; i++) {
 			Part part(i);
+			part.id = i;
 			part.flair = false;
 			part.cost = 1;
 			part.level = 5;
@@ -928,7 +918,12 @@ namespace Game {
 				uint64_t partId = utils::to_number<uint64_t>(partIds[i]);
 				uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
 	
-				if (partId < realLen) parts.data()[partId].SetStatus(status);
+				if (partId < realLen) {
+					auto part = parts.GetPartById(partId);
+					if (part != nullptr) {
+						part->SetStatus(status);
+					}
+				}
 			}
 		}
 
@@ -1262,32 +1257,21 @@ namespace Game {
 
 		const auto& user = session.get_user();
 		if (user) {
-			Squad* squad = user->GetSquadBySlot(request.uri.parameteru("pve_active_slot"));
-			if (squad) {
-				std::vector<Creature> squadCreatures = squad->creatures.data();
-				auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
-				squadCreatures.clear();
-				for (auto const& creatureID : creaturesIds) {
-					Creature* creature = user->GetCreatureById(std::stoull(creatureID));
-					if (creature && squadCreatures.size() < 3) {
-						squadCreatures.push_back(*creature);
-					}
-				}
-				squad->creatures.setData(squadCreatures);
-			}
+			auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
+			int creaturesPerSquad = 3;
 
-			squad = user->GetSquadBySlot(request.uri.parameteru("pvp_active_slot"));
-			if (squad) {
-				std::vector<Creature> squadCreatures = squad->creatures.data();
-				auto creaturesIds = utils::explode_string(request.uri.parameter("pvp_creatures"), ",");
+			int squadIndex = 0;
+			Squads squads = user->get_squads();
+			for (Squad squad : squads) {
+				std::vector<Creature> squadCreatures = squad.creatures.data();
 				squadCreatures.clear();
-				for (auto const& creatureID : creaturesIds) {
-					Creature* creature = user->GetCreatureById(std::stoull(creatureID));
-					if (creature && squadCreatures.size() < 3) {
+				for (int i = squadIndex*creaturesPerSquad; i < (squadIndex+1)*creaturesPerSquad; i++) {
+					Creature* creature = user->GetCreatureById(std::stoull(creaturesIds[i]));
+					if (creature) {
 						squadCreatures.push_back(*creature);
 					}
 				}
-				squad->creatures.setData(squadCreatures);
+				squadIndex++;
 			}
 
 			user->Save();
