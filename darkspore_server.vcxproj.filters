@@ -186,6 +186,9 @@
     <ClInclude Include="source\utils\eawebkit.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="source\repository\user.h">
+      <Filter>Header Files\repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -304,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="source\utils\eawebkit.cpp">
       <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\repository\user.cpp">
+      <Filter>Source Files\repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

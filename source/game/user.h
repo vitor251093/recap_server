@@ -134,8 +134,13 @@ namespace Game {
 			auto get_id() const { return mAccount.id; }
 
 			const auto& get_email() const { return mEmail; }
+			void set_email(const std::string& email){ mEmail = email; }
+
 			const auto& get_password() const { return mPassword; }
+			void set_password(const std::string& password) { mPassword = password; }
+			
 			const auto& get_name() const { return mName; }
+			void set_name(const std::string& name) { mName = name; }
 
 			bool UpdateState(uint32_t newState);
 
@@ -154,11 +159,7 @@ namespace Game {
 			// Upgrades
 			void UnlockUpgrade(uint32_t unlockId);
 
-			// Auth
-			void Logout();
-
 			// Storage
-			bool Load();
 			bool Save();
 
 			pugi::xml_document ToXml();
@@ -185,25 +186,7 @@ namespace Game {
 			uint32_t mState = 0;
 	};
 
-	using UserPtr = std::shared_ptr<User>;
-
-	// UserManager
-	class UserManager {
-		public:
-			static std::vector<std::string> GetAllUserNames();
-			static std::vector<std::string> GetLoggedUserNames();
-			static UserPtr GetUserByEmail(const std::string& email, const bool shouldLogin);
-			static UserPtr CreateUserWithNameMailAndPassword(const std::string& name, const std::string& email, const std::string& password);
-			static UserPtr GetUserByAuthToken(const std::string& authToken);
-
-		private:
-			static void RemoveUser(const std::string& email);
-
-		private:
-			static std::map<std::string, UserPtr> sUsersByEmail;
-
-			friend class User;
-	};
+	using UserPtr = std::shared_ptr<Game::User>;
 }
 
 #endif

@@ -404,40 +404,6 @@ namespace Game {
 		}
 	}
 
-	void User::Logout() {
-		UserManager::RemoveUser(mEmail);
-		Save();
-	}
-
-	bool User::Load() {
-		std::string filepath = Config::Get(CONFIG_STORAGE_PATH) + "users/" + mEmail + ".xml";
-
-		pugi::xml_document document;
-		if (!document.load_file(filepath.c_str())) {
-			return false;
-		}
-
-		if (auto user = document.child("user")) {
-			mName = utils::xml::GetString(user, "name");
-			mEmail = utils::xml::GetString(user, "email");
-			mPassword = utils::xml::GetString(user, "password"); // Hash this later?
-
-			    mParts.ReadXml(user);
-			  mAccount.ReadXml(user);
-			mCreatures.ReadXml(user, mParts);
-			   mSquads.ReadXml(user, mCreatures);
-			     mFeed.ReadXml(user);
-		}
-
-		return true;
-	}
-
-	bool User::Save() {
-		pugi::xml_document document = ToXml();
-		std::string filepath = Config::Get(CONFIG_STORAGE_PATH) + "users/" + mEmail + ".xml";
-		return document.save_file(filepath.c_str(), "\t", 1U, pugi::encoding_latin1);
-	}
-
 	pugi::xml_document User::ToXml() {
 		pugi::xml_document document;
 		if (auto user = document.append_child("user")) {
@@ -486,85 +452,5 @@ namespace Game {
 		   mSquads.ReadJson(utils::json::Get(object, "squads"));
 		     mFeed.ReadJson(utils::json::Get(object, "feed"));
 		    mParts.ReadJson(utils::json::Get(object, "parts"));
-	}
-
-	// UserManager
-	std::map<std::string, UserPtr> UserManager::sUsersByEmail;
-
-	std::vector<std::string> UserManager::GetAllUserNames() {
-		std::vector<std::string> users;
-		
-		std::string folderPath = Config::Get(CONFIG_STORAGE_PATH) + "users/";
-		for (const auto & entry : std::filesystem::directory_iterator(folderPath)) {
-			if (entry.path().extension() == ".xml") {
-				users.push_back(entry.path().stem().string());
-			}
-		}
-
-		return users;
-	}
-
-	std::vector<std::string> UserManager::GetLoggedUserNames() {
-		std::vector<std::string> users;
-		
-		for (const auto & pair : sUsersByEmail) {
-			users.push_back(pair.first);
-		}
-
-		return users;
-	}
-
-	UserPtr UserManager::GetUserByEmail(const std::string& email, const bool shouldLogin) {
-		UserPtr user;
-
-		auto it = sUsersByEmail.find(email);
-		if (it != sUsersByEmail.end()) {
-			user = it->second;
-		} else {
-			user = std::make_shared<User>(email);
-			if (user->Load()) {
-				if (shouldLogin) sUsersByEmail.emplace(email, user);
-			}
-			else {
-				user.reset();
-			}
-		}
-
-		return user;
-	}
-
-	UserPtr UserManager::CreateUserWithNameMailAndPassword(const std::string& name, const std::string& email, const std::string& password) {
-		UserPtr user;
-
-		auto it = sUsersByEmail.find(email);
-		if (it != sUsersByEmail.end()) {
-			return NULL;
-		} else {
-			user = std::make_shared<User>(name, email, password);
-			if (user->Save()) {
-				sUsersByEmail.emplace(email, user);
-			}
-			else {
-				user.reset();
-			}
-		}
-
-		return user;
-	}
-
-	UserPtr UserManager::GetUserByAuthToken(const std::string& authToken) {
-		for (const auto& [_, user] : sUsersByEmail) {
-			if (user->get_auth_token() == authToken) {
-				return user;
-			}
-		}
-		return nullptr;
-	}
-
-	void UserManager::RemoveUser(const std::string& email) {
-		auto it = sUsersByEmail.find(email);
-		if (it != sUsersByEmail.end()) {
-			sUsersByEmail.erase(it);
-		}
 	}
 }

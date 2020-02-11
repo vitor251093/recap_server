@@ -180,6 +180,7 @@
     <ClInclude Include="source\raknet\client.h" />
     <ClInclude Include="source\raknet\server.h" />
     <ClInclude Include="source\repository\template.h" />
+    <ClInclude Include="source\repository\user.h" />
     <ClInclude Include="source\tcptest.h" />
     <ClInclude Include="source\udptest.h" />
     <ClInclude Include="source\utils\base64.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="source\raknet\client.cpp" />
     <ClCompile Include="source\raknet\server.cpp" />
     <ClCompile Include="source\repository\template.cpp" />
+    <ClCompile Include="source\repository\user.cpp" />
     <ClCompile Include="source\tcptest.cpp" />
     <ClCompile Include="source\udptest.cpp" />
     <ClCompile Include="source\utils\base64.cpp" />

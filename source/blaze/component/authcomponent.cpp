@@ -4,6 +4,7 @@
 #include "usersessioncomponent.h"
 #include "../client.h"
 #include "../../utils/functions.h"
+#include "../../repository/user.h"
 #include "utils/logger.h"
 #include <iostream>
 
@@ -844,7 +845,7 @@ namespace Blaze {
 		std::string email    = request["MAIL"].GetString();
 		std::string password = request["PASS"].GetString();
 
-		const auto& user = Game::UserManager::GetUserByEmail(email, true);
+		const auto& user = Repository::Users::GetUserByEmail(email, true);
 		if (user && user->get_password() == password) {
 			client->set_user(user);
 			SendLogin(client, std::move(header));
@@ -919,7 +920,7 @@ namespace Blaze {
 	void AuthComponent::Logout(Client* client, Header header) {
 		const auto& user = client->get_user();
 		if (user) {
-			user->Logout();
+			Repository::Users::LogoutUser(user);
 		}
 	}
 

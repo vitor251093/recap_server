@@ -12,6 +12,7 @@
 #include "../http/multipart.h"
 
 #include "../repository/template.h"
+#include "../repository/user.h"
 
 #include "../utils/functions.h"
 #include "../utils/logger.h"
@@ -254,7 +255,7 @@ namespace Game {
 
 			auto token = request.uri.parameter("token");
 			if (!token.empty()) {
-				const auto& user = Game::UserManager::GetUserByAuthToken(token);
+				const auto& user = Repository::Users::GetUserByAuthToken(token);
 				if (user) {
 					session.set_user(user);
 				}
@@ -467,7 +468,7 @@ namespace Game {
 		auto mail = request.uri.parameter("mail");
 		auto pass = request.uri.parameter("pass");
 
-		const auto& user = Game::UserManager::CreateUserWithNameMailAndPassword(name, mail, pass);
+		const auto& user = Repository::Users::CreateUserWithNameMailAndPassword(name, mail, pass);
 		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
 			utils::json::Set(document, "stat", "error");
@@ -569,7 +570,7 @@ namespace Game {
 		squad3.creatures.data()[0].gearScore = 100;
 		user->get_squads().data().push_back(squad3);
 
-		user->Save();
+		Repository::Users::SaveUser(user);
 
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
@@ -589,8 +590,8 @@ namespace Game {
 		// stat
 		utils::json::Set(document, "stat", "ok");
 
-		const auto users = Game::UserManager::GetAllUserNames();
-		const auto loggedUsers = Game::UserManager::GetLoggedUserNames();
+		const auto users = Repository::Users::GetAllUserNames();
+		const auto loggedUsers = Repository::Users::GetLoggedUserNames();
 		rapidjson::Value value = utils::json::NewArray();
 		for (const auto& entry : users) {
 			bool isLogged = std::find(loggedUsers.begin(), loggedUsers.end(), entry) != loggedUsers.end();
@@ -610,7 +611,7 @@ namespace Game {
 		auto& request = session.get_request();
 		auto mail = request.uri.parameter("mail");
 
-		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
+		const auto& user = Repository::Users::GetUserByEmail(mail, false);
 
 		rapidjson::Document document = utils::json::NewDocumentObject();
 
@@ -639,7 +640,7 @@ namespace Game {
 		logger::info(userJsonString);
 		rapidjson::Document userJson = utils::json::Parse(userJsonString);
 
-		const auto& user = Game::UserManager::GetUserByEmail(mail, false);
+		const auto& user = Repository::Users::GetUserByEmail(mail, false);
 
 		rapidjson::Document document = utils::json::NewDocumentObject();
 
@@ -651,7 +652,7 @@ namespace Game {
 		}
 		else {
 			user->FromJson(userJson);
-			user->Save();
+			Repository::Users::SaveUser(user);
 
 			// stat
 			utils::json::Set(document, "stat", "ok");
@@ -1011,7 +1012,7 @@ namespace Game {
 			// key = auth_token::0
 			auto keyData = utils::explode_string(key, "::");
 
-			const auto& user = Game::UserManager::GetUserByAuthToken(keyData.front());
+			const auto& user = Repository::Users::GetUserByAuthToken(keyData.front());
 			if (user) {
 				session.set_user(user);
 			}
@@ -1215,7 +1216,7 @@ namespace Game {
 	void API::game_account_logout(HTTP::Session& session, HTTP::Response& response) {
 		const auto& user = session.get_user();
 		if (user) {
-			user->Logout();
+			Repository::Users::LogoutUser(user);
 		}
 	}
 
@@ -1274,7 +1275,7 @@ namespace Game {
 				squadIndex++;
 			}
 
-			user->Save();
+			Repository::Users::SaveUser(user);
 		}
 
 		pugi::xml_document document;
@@ -1381,7 +1382,7 @@ namespace Game {
 				creature->statsAbilityKeyvalues = request.uri.parameter("stats_ability_keyvalues");
 				// thumb 
 				// thumb_crc 
-				user->Save();
+				Repository::Users::SaveUser(user);
 			}
 		}
 		
@@ -1402,7 +1403,7 @@ namespace Game {
 		const auto& user = session.get_user();
 		if (user) {
 			user->UnlockCreature(templateId);
-			user->Save();
+			Repository::Users::SaveUser(user);
 
 			creatureId = user->GetCreatureByTemplateId(templateId)->id;
 		}
