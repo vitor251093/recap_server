@@ -477,29 +477,19 @@ namespace Game {
 			utils::json::Set(document, "stat", "ok");
 		}
 
-		// TODO: Unlocking all parts from start to test; remove that in the future
+		uint64_t index = 1;
 		for (int i = 1; i <= 1573; i++) {
-			Part part(i);
-			part.id = i;
-			part.flair = false;
-			part.cost = 1;
-			part.level = 5;
-			part.market_status = 1;
-			part.rarity = 1;
-			part.status = 1;
-			part.usage = 1;
+			CreaturePart part(i);
+			part.id = index++;
+			part.status = 0;
+			part.equipped_to_creature_id = 0;
 			user->get_parts().Add(part);
 		}
 		for (int i = 10001; i <= 10835; i++) {
-			Part part(i);
-			part.id = i;
-			part.flair = false;
-			part.cost = 1;
-			part.level = 5;
-			part.market_status = 1;
-			part.rarity = 1;
-			part.status = 1;
-			part.usage = 1;
+			CreaturePart part(i);
+			part.id = index++;
+			part.status = 0;
+			part.equipped_to_creature_id = 0;
 			user->get_parts().Add(part);
 		}
 
@@ -511,7 +501,6 @@ namespace Game {
 
 			auto creature = user->GetCreatureByTemplateId(templateCreature->id);
 			creature->gearScore = 100;
-			creature->parts = user->get_parts();
 		}
 
 		// TODO: Unlocking everything from start to test; remove that in the future
@@ -789,13 +778,32 @@ namespace Game {
 	void API::game_inventory_getPartList(HTTP::Session& session, HTTP::Response& response) {
 		pugi::xml_document document;
 
+		auto& request = session.get_request();
+		auto filter = request.uri.parameter("filter");
+		
 		if (auto docResponse = document.append_child("response")) {
 			const auto& user = session.get_user();
 			if (user) {
 				user->get_parts().WriteXml(docResponse, true);
 			}
 			else {
-				docResponse.append_child("parts");
+				CreatureParts creatureParts;
+				uint64_t index = 1;
+				for (int i = 1; i <= 1573; i++) {
+					CreaturePart part(i);
+					part.id = index++;
+					part.status = 0;
+					part.equipped_to_creature_id = 0;
+					creatureParts.Add(part);
+				}
+				for (int i = 10001; i <= 10835; i++) {
+					CreaturePart part(i);
+					part.id = index++;
+					part.status = 0;
+					part.equipped_to_creature_id = 0;
+					creatureParts.Add(part);
+				}
+				creatureParts.WriteXml(docResponse, true);
 			}
 			add_common_keys(docResponse, session.get_darkspore_version());
 		}
@@ -911,15 +919,14 @@ namespace Game {
 
 		size_t len = std::min<size_t>(partIds.size(), statuses.size());
 		if (len > 0) {
+			// It should be possible to update part status without getting the user
 			const auto& user = session.get_user();
+			if (user) {
+				auto& parts = user->get_parts();
+				for (size_t i = 0; i < len; i++) {
+					uint32_t partId = utils::to_number<uint32_t>(partIds[i]);
+					uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
 
-			auto& parts = user->get_parts();
-			size_t realLen = parts.data().size();
-			for (size_t i = 0; i < len; i++) {
-				uint64_t partId = utils::to_number<uint64_t>(partIds[i]);
-				uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
-	
-				if (partId < realLen) {
 					auto part = parts.GetPartById(partId);
 					if (part != nullptr) {
 						part->SetStatus(status);

@@ -12,74 +12,78 @@
 namespace Game {
 	// Part
 	class Part {
-	public:
-		uint64_t id;
-		uint16_t rigblock_asset_id;
-		
-		uint64_t timestamp;
+		public:
+			uint16_t rigblock_asset_id;
 
-		uint32_t rigblock_asset_hash;
-		uint32_t prefix_asset_hash;
-		uint32_t prefix_secondary_asset_hash;
-		uint32_t suffix_asset_hash;
-		uint32_t cost;
-		uint32_t equipped_to_creature_id;
+			uint32_t rigblock_asset_hash;
+			uint32_t prefix_asset_hash;
+			uint32_t prefix_secondary_asset_hash;
+			uint32_t suffix_asset_hash;
 
-		uint16_t prefix_asset_id;
-		uint16_t prefix_secondary_asset_id;
-		uint16_t suffix_asset_id;
-		uint16_t level;
+			uint32_t cost;
 
-		uint8_t rarity;
-		uint8_t market_status;
-		uint8_t status;
-		uint8_t usage;
+			uint16_t prefix_asset_id;
+			uint16_t prefix_secondary_asset_id;
+			uint16_t suffix_asset_id;
+			uint16_t level;
 
-		bool flair;
+			uint8_t rarity;
+			uint8_t market_status;
+			uint8_t usage;
 
-		Part();
-		Part(uint32_t rigblock);
-		Part(const pugi::xml_node& node);
+			bool flair;
 
-		bool ReadXml(const pugi::xml_node& node);
-		void WriteXml(pugi::xml_node& node, uint32_t index, bool api = false) const;
+			std::string stats;
+			std::string type_full;
+			std::string class_types_full;
+			std::string science_types_full;
+			std::string rarity_full;
+			std::string png_key;
+			std::string weapon_damage_modifier;
+			std::string modifiers;
+			std::string rand_seed;
 
-		void ReadJson(rapidjson::Value& object);
-		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
+			Part();
+			Part(uint32_t rigblock);
+			Part(const pugi::xml_node& node);
 
-		void SetRigblock(uint16_t rigblock);
-		void SetPrefix(uint16_t prefix, bool secondary = false);
-		void SetSuffix(uint16_t suffix);
+			bool ReadXml(const pugi::xml_node& node);
+			void WriteXml(pugi::xml_node& node, uint32_t index, bool api = false) const;
 
-		void SetStatus(uint8_t newStatus);
+			void ReadJson(rapidjson::Value& object);
+			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
 
-	private:
-		friend class Parts;
+			void SetRigblock(uint16_t rigblock);
+			void SetPrefix(uint16_t prefix, bool secondary = false);
+			void SetSuffix(uint16_t suffix);
+
+		private:
+			friend class CreatureParts;
 	};
 
 	// Parts
 	class Parts {
-	public:
-		decltype(auto) begin() { return mItems.begin(); }
-		decltype(auto) begin() const { return mItems.begin(); }
-		decltype(auto) end() { return mItems.end(); }
-		decltype(auto) end() const { return mItems.end(); }
+		public:
+			decltype(auto) begin() { return mItems.begin(); }
+			decltype(auto) begin() const { return mItems.begin(); }
+			decltype(auto) end() { return mItems.end(); }
+			decltype(auto) end() const { return mItems.end(); }
 
-		auto& data() { return mItems; }
-		const auto& data() const { return mItems; }
+			auto& data() { return mItems; }
+			const auto& data() const { return mItems; }
 
-		Part* GetPartById(uint32_t id);
+			Part* GetPartById(uint32_t id);
 
-		void ReadXml(const pugi::xml_node& node);
-		void WriteXml(pugi::xml_node& node, bool api = false) const;
+			void ReadXml(const pugi::xml_node& node);
+			void WriteXml(pugi::xml_node& node, bool api = false) const;
 
-		void ReadJson(rapidjson::Value& object);
-		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
+			void ReadJson(rapidjson::Value& object);
+			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
 
-		void Add(Part part);
+			void Add(Part part);
 
-	private:
-		std::vector<Part> mItems;
+		private:
+			std::vector<Part> mItems;
 	};
 }
 

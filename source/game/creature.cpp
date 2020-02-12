@@ -8,7 +8,7 @@
 // Game
 namespace Game {
 	// Creature
-	void Creature::ReadXml(const pugi::xml_node& node, Parts mParts) {
+	void Creature::ReadXml(const pugi::xml_node& node, CreatureParts mParts) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "creature") {
 			return;
@@ -40,6 +40,36 @@ namespace Game {
 
 		for (const auto& partNode : mParts) {
 			parts.Add(partNode);
+		}
+	}
+
+	void Creature::WriteSmallXml(pugi::xml_node& node) const {
+		if (auto creature = node.append_child("creature")) {
+			
+			// TODO: image url should depend of the changes of the creature
+			//utils::xml::Set(creature, "png_large_url", pngLargeUrl);
+			//utils::xml::Set(creature, "png_thumb_url", pngThumbUrl);
+			auto pngUrl = "http://" + Config::Get(CONFIG_SERVER_HOST) + "/game/service/png?template_id=" + std::to_string(nounId) + "&size=large";
+			utils::xml::Set(creature, "png_large_url", pngUrl);
+			utils::xml::Set(creature, "png_thumb_url", pngUrl);
+
+			utils::xml::Set(creature, "gear_score", gearScore);
+			utils::xml::Set(creature, "item_points", itemPoints);
+
+			utils::xml::Set(creature, "id", id);
+			utils::xml::Set(creature, "noun_id", nounId);
+			utils::xml::Set(creature, "version", version);
+
+			utils::xml::Set(creature, "stats", stats);
+			utils::xml::Set(creature, "stats_ability_keyvalues", statsAbilityKeyvalues);
+
+			// TODO: 
+			//utils::xml::Set(creature, "stats_template_ability", templateCreature->statsTemplateAbilityKeyvalues);
+			//utils::xml::Set(creature, "stats_template_ability_keyvalues", templateCreature->statsTemplateAbilityKeyvalues);
+			utils::xml::Set(creature, "stats_template_ability", statsAbilityKeyvalues);
+			utils::xml::Set(creature, "stats_template_ability_keyvalues", statsAbilityKeyvalues);
+
+			parts.WriteSmallXml(creature);
 		}
 	}
 
@@ -151,7 +181,7 @@ namespace Game {
 
 
 	// Creatures
-	void Creatures::ReadXml(const pugi::xml_node& node, Parts mParts) {
+	void Creatures::ReadXml(const pugi::xml_node& node, CreatureParts mParts) {
 		auto creatures = node.child("creatures");
 		if (!creatures) {
 			return;
@@ -160,6 +190,14 @@ namespace Game {
 		for (const auto& creatureNode : creatures) {
 			decltype(auto) creature = mCreatures.emplace_back();
 			creature.ReadXml(creatureNode, mParts);
+		}
+	}
+
+	void Creatures::WriteSmallXml(pugi::xml_node& node) const {
+		if (auto creatures = node.append_child("creatures")) {
+			for (const auto& creature : mCreatures) {
+				creature.WriteSmallXml(creatures);
+			}
 		}
 	}
 

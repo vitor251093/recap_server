@@ -2,14 +2,14 @@
 // Include
 #include "user.h"
 #include "config.h"
-
+#include "part.h"
 #include "../utils/functions.h"
 #include <algorithm>
 #include <filesystem>
 
 // Game
 namespace Game {
-	
+
 	// Part
 	Part::Part() {
 
@@ -37,16 +37,22 @@ namespace Game {
 			return false;
 		}
 
-		id = utils::xml::GetString<uint64_t>(node, "_id");
-		flair = utils::xml::GetString<bool>(node, "is_flair");
-		cost = utils::xml::GetString<uint32_t>(node, "cost");
-		equipped_to_creature_id = utils::xml::GetString<uint32_t>(node, "creature_id");
-		level = utils::xml::GetString<uint16_t>(node, "level");
+		flair         = utils::xml::GetString<bool>(node, "is_flair");
+		cost          = utils::xml::GetString<uint32_t>(node, "cost");
+		level         = utils::xml::GetString<uint16_t>(node, "level");
 		market_status = utils::xml::GetString<uint8_t>(node, "market_status");
-		rarity = utils::xml::GetString<uint8_t>(node, "rarity");
-		status = utils::xml::GetString<uint8_t>(node, "status");
-		usage = utils::xml::GetString<uint8_t>(node, "usage");
-		timestamp = utils::xml::GetString<uint64_t>(node, "creation_date");
+		rarity        = utils::xml::GetString<uint8_t>(node, "rarity");
+		usage         = utils::xml::GetString<uint8_t>(node, "usage");
+
+		stats                  = utils::xml::GetString(node, "stats");
+		type_full              = utils::xml::GetString(node, "type_full");
+		class_types_full       = utils::xml::GetString(node, "class_types_full");
+		science_types_full     = utils::xml::GetString(node, "science_types_full");
+		rarity_full            = utils::xml::GetString(node, "rarity_full");
+		png_key                = utils::xml::GetString(node, "png_key");
+		weapon_damage_modifier = utils::xml::GetString(node, "weapon_damage_modifier");
+		modifiers              = utils::xml::GetString(node, "modifiers");
+		rand_seed              = utils::xml::GetString(node, "rand_seed");
 
 		SetRigblock(utils::xml::GetString<uint32_t>(node, "rigblock_asset_id"));
 		SetPrefix(utils::xml::GetString<uint32_t>(node, "prefix_asset_id"), false);
@@ -58,16 +64,13 @@ namespace Game {
 
 	void Part::WriteXml(pugi::xml_node& node, uint32_t index, bool api) const {
 		if (auto part = node.append_child("part")) {
-			utils::xml::Set(part, "_id", id);
 			utils::xml::Set(part, "is_flair", flair);
 			utils::xml::Set(part, "cost", cost);
-			utils::xml::Set(part, "creature_id", equipped_to_creature_id);
 			utils::xml::Set(part, "level", level);
 			utils::xml::Set(part, "market_status", market_status);
 			utils::xml::Set(part, "rarity", rarity);
-			utils::xml::Set(part, "status", status);
 			utils::xml::Set(part, "usage", usage);
-			utils::xml::Set(part, "creation_date", timestamp);
+
 			if (api) {
 				utils::xml::Set(part, "id", index);
 				utils::xml::Set(part, "reference_id", index);
@@ -83,22 +86,38 @@ namespace Game {
 				utils::xml::Set(part, "prefix_secondary_asset_id", prefix_secondary_asset_id);
 				utils::xml::Set(part, "suffix_asset_id", suffix_asset_id);
 			}
+
+			utils::xml::Set(part, "stats", stats);
+			utils::xml::Set(part, "type_full", type_full);
+			utils::xml::Set(part, "class_types_full", class_types_full);
+			utils::xml::Set(part, "science_types_full", science_types_full);
+			utils::xml::Set(part, "rarity_full", rarity_full);
+			utils::xml::Set(part, "png_key", png_key);
+			utils::xml::Set(part, "weapon_damage_modifier", weapon_damage_modifier);
+			utils::xml::Set(part, "modifiers", modifiers);
+			utils::xml::Set(part, "rand_seed", rand_seed);
 		}
 	}
 
 	void Part::ReadJson(rapidjson::Value& object) {
 		if (!object.IsObject()) return;
-		id = utils::json::GetUint64(object, "_id");
 		flair = utils::json::GetBool(object, "is_flair");
 		cost = utils::json::GetUint(object, "cost");
-		equipped_to_creature_id = utils::json::GetUint(object, "creature_id");
 		level = utils::json::GetUint16(object, "level");
 		market_status = utils::json::GetUint8(object, "market_status");
 		rarity = utils::json::GetUint8(object, "rarity");
-		status = utils::json::GetUint8(object, "status");
 		usage = utils::json::GetUint8(object, "usage");
-		timestamp = utils::json::GetUint64(object, "creation_date");
 
+		stats = utils::json::GetString(object, "stats");
+		type_full = utils::json::GetString(object, "type_full");
+		class_types_full = utils::json::GetString(object, "class_types_full");
+		science_types_full = utils::json::GetString(object, "science_types_full");
+		rarity_full = utils::json::GetString(object, "rarity_full");
+		png_key = utils::json::GetString(object, "png_key");
+		weapon_damage_modifier = utils::json::GetString(object, "weapon_damage_modifier");
+		modifiers = utils::json::GetString(object, "modifiers");
+		rand_seed = utils::json::GetString(object, "rand_seed");
+		
 		SetRigblock(utils::json::GetUint16(object, "rigblock_asset_id"));
 		SetPrefix(utils::json::GetUint16(object, "prefix_asset_id"), false);
 		SetPrefix(utils::json::GetUint16(object, "prefix_secondary_asset_id"), true);
@@ -107,16 +126,13 @@ namespace Game {
 
 	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const {
 		rapidjson::Value object = utils::json::NewObject();
-		utils::json::Set(object, "_id", id, allocator);
 		utils::json::Set(object, "is_flair", flair, allocator);
 		utils::json::Set(object, "cost", cost, allocator);
-		utils::json::Set(object, "creature_id", equipped_to_creature_id, allocator);
 		utils::json::Set(object, "level", level, allocator);
 		utils::json::Set(object, "market_status", market_status, allocator);
 		utils::json::Set(object, "rarity", rarity, allocator);
-		utils::json::Set(object, "status", status, allocator);
 		utils::json::Set(object, "usage", usage, allocator);
-		utils::json::Set(object, "creation_date", timestamp, allocator);
+
 		if (api) {
 			utils::json::Set(object, "id", index, allocator);
 			utils::json::Set(object, "reference_id", index, allocator);
@@ -132,6 +148,17 @@ namespace Game {
 			utils::json::Set(object, "prefix_secondary_asset_id", prefix_secondary_asset_id, allocator);
 			utils::json::Set(object, "suffix_asset_id", suffix_asset_id, allocator);
 		}
+
+		utils::json::Set(object, "stats", stats, allocator);
+		utils::json::Set(object, "type_full", type_full, allocator);
+		utils::json::Set(object, "class_types_full", class_types_full, allocator);
+		utils::json::Set(object, "science_types_full", science_types_full, allocator);
+		utils::json::Set(object, "rarity_full", rarity_full, allocator);
+		utils::json::Set(object, "png_key", png_key, allocator);
+		utils::json::Set(object, "weapon_damage_modifier", weapon_damage_modifier, allocator);
+		utils::json::Set(object, "modifiers", modifiers, allocator);
+		utils::json::Set(object, "rand_seed", rand_seed, allocator);
+
 		return object;
 	}
 
@@ -179,17 +206,13 @@ namespace Game {
 		suffix_asset_hash = utils::hash_id(suffix_string.c_str());
 	}
 
-	void Part::SetStatus(uint8_t newStatus) {
-		status = newStatus;
-	}
-
 
 
 	// Parts
 	Part* Parts::GetPartById(uint32_t id) {
 		Part* partPtr = nullptr;
 		for (auto& part : mItems) {
-			if (part.id == id) {
+			if (part.rigblock_asset_id == id) {
 				partPtr = &part;
 				break;
 			}

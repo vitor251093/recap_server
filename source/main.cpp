@@ -5,6 +5,7 @@
 #include "http/uri.h"
 #include "game/config.h"
 #include "repository/template.h"
+#include "repository/part.h"
 #include "utils/logger.h"
 
 #include <iostream>
@@ -47,6 +48,7 @@ bool Application::OnInit() {
 
 	// Repository
 	Repository::CreatureTemplates::Load();
+	Repository::Parts::Load();
 
 	// Game
 	mGameAPI = std::make_unique<Game::API>();

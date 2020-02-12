@@ -31,6 +31,17 @@ namespace Game {
 		}
 	}
 
+	void Squad::WriteSmallXml(pugi::xml_node& node) const {
+		if (auto deck = node.append_child("deck")) {
+			utils::xml::Set(deck, "name", name);
+			utils::xml::Set(deck, "id", id);
+			utils::xml::Set(deck, "category", category);
+			utils::xml::Set(deck, "slot", slot);
+			utils::xml::Set(deck, "locked", locked ? 1 : 0);
+			creatures.WriteSmallXml(deck);
+		}
+	}
+
 	void Squad::WriteXml(pugi::xml_node& node) const {
 		if (auto deck = node.append_child("deck")) {
 			utils::xml::Set(deck, "name", name);
@@ -75,6 +86,14 @@ namespace Game {
 		for (const auto& deckNode : decks) {
 			decltype(auto) squad = mSquads.emplace_back();
 			squad.ReadXml(deckNode, mCreatures);
+		}
+	}
+
+	void Squads::WriteSmallXml(pugi::xml_node& node) const {
+		if (auto decks = node.append_child("decks")) {
+			for (const auto& squad : mSquads) {
+				squad.WriteSmallXml(decks);
+			}
 		}
 	}
 

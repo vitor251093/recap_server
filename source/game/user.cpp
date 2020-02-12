@@ -412,10 +412,10 @@ namespace Game {
 			utils::xml::Set(user, "password", mPassword);
 
 			  mAccount.WriteXml(user);
-			mCreatures.WriteXml(user);
-			   mSquads.WriteXml(user);
+			mCreatures.WriteSmallXml(user);
+			   mSquads.WriteSmallXml(user);
 			     mFeed.WriteXml(user);
-			    mParts.WriteXml(user);
+			    mParts.WriteSmallXml(user);
 		}
 		return document;
 	}

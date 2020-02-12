@@ -5,7 +5,7 @@
 // Include
 #include "game.h"
 #include "squad.h"
-#include "part.h"
+#include "creaturepart.h"
 
 #include <map>
 #include "../utils/functions.h"
@@ -173,7 +173,7 @@ namespace Game {
 			Creatures mCreatures;
 			Squads mSquads;
 			Feed mFeed;
-			Parts mParts;
+			CreatureParts mParts;
 
 			std::string mEmail;
 			std::string mPassword;
