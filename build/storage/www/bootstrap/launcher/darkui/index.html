@@ -243,7 +243,7 @@
             {
                 var tooltip = document.getElementById("Progress_comment_bottom_right_tooltip");
                 var container = document.getElementById("Progress_comment_bottom_right_container");
-                var orginalText = container.firstChild.firstChild.innerHTML;
+                var orginalText = container.innerHTML;
                 if (orginalText != "")
                 {
                     tooltip.innerHTML = orginalText;
@@ -492,7 +492,7 @@
 
             function updateBottomrightProgressComment(text){
                 var container = document.getElementById("Progress_comment_bottom_right_container");
-                container.firstChild.firstChild.innerHTML = text;
+                container.innerHTML = text;
                 ellipsisTestRightComment(container);
                 updateToolTipTextRight();
             }
@@ -1008,8 +1008,8 @@
                 position: relative;
                 width: 132px;
                 height: 20px;
-                top: 1px;
-                left:232px;
+                top:-5px;
+                left:192px;
                 float:right;
             }
 
@@ -1019,8 +1019,8 @@
                 position: relative;
                 width: 132px;
                 height: 20px;
-                top: 1px;
-                left:232px;
+                top:-5px;
+                left:192px;
                 float:right;
             }
 
@@ -1127,7 +1127,7 @@
                 font-size:11px;
                 z-index:20;
                 bottom: 17px;
-
+                right: 0px;
                 overflow:hidden;
              }
 
@@ -1173,11 +1173,15 @@
 
             #Progress_comment_bottom_right_container{
                 position: absolute;
-                width: 131px;
-                left: 288px;
-                top:60px;
-                float:left;
+                width: 161px;
+                right: 0px;
+                bottom:0px;
                 overflow:hidden;
+
+                color:#FFFFFF;
+                font-size:11px;
+                padding-right: 15px;
+                white-space: nowrap;
             }
 
             #ValidateInstallButton_active
@@ -1303,7 +1307,7 @@
                         <div id="Left_comment_ellipsis" style="display:none;"><div class="Progress_left_comment_font_ellipsis">...</div></div>
 
                         <div id="Progress_comment_bottom_right_tooltip" style="display:none;"></div>
-                        <div id="Progress_comment_bottom_right_container" align="right"><span style="display:inline-block; width:auto;" class="exceed_bounds_test"><font class="Progress_comment_font remove_right_padding"></font></span></div>
+                        <div id="Progress_comment_bottom_right_container" align="right"></div>
                         <div id="Right_comment_ellipsis" style="display:none;"><div class="Progress_right_comment_font_ellipsis">...</div></div>
 
 
