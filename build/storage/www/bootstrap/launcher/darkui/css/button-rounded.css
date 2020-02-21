@@ -1,0 +1,62 @@
+
+.button-rounded {
+    box-sizing: border-box;
+    border: none;
+    color: #b4b7b9;
+    text-align: center;
+    height: 25px;
+    padding: 17px;
+    position: relative;
+    background: url("../images/registrationButton-center.png") repeat-x;
+    background-size: 1px 48px;
+    z-index: 1;
+}
+.button-rounded:hover:not(:active) {
+    background: url("../images/registrationButton-hover-center.png") repeat-x;
+	color: #fff;
+}
+.button-rounded .left-side {
+    position: absolute;
+    top: 0;
+    left: -17px;
+    height: 48px;
+    width: 26px;
+    display: block;
+    background: url("../images/registrationButton-left.png") no-repeat;
+    background-size: 26px 48px;
+    z-index: 2;
+}
+.button-rounded:hover:not(:active) .left-side {
+    background: url("../images/registrationButton-hover-left.png") no-repeat;
+}
+.button-rounded .text {
+    position: absolute;
+    font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
+	font-size: 16px;
+    top: 13px;
+    right: 0;
+    left: 0;
+    height: 48px;
+    z-index: 2;
+}
+.button-rounded .right-side {
+    position: absolute;
+    top: 0;
+    right: -17px;
+    height: 48px;
+    width: 26px;
+    display: block;
+    background: url("../images/registrationButton-right.png") no-repeat;
+    background-size: 26px 48px;
+    z-index: 2;
+}
+.button-rounded:hover:not(:active) .right-side {
+    background: url("../images/registrationButton-hover-right.png") no-repeat;
+}
+.button-rounded:hover:not(:active) {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}

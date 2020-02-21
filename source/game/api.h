@@ -83,7 +83,7 @@ namespace Game {
 			void add_common_keys(pugi::xml_node& node, const std::string& darksporeVersion);
 		
 		private:
-			std::string mActiveTheme = "default";
+			std::string mActiveTheme = "classic";
 
 			uint32_t mPacketId = 0;
 	};
