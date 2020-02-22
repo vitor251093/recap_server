@@ -7,6 +7,7 @@
     height: 25px;
     padding: 17px;
     position: relative;
+    background: url("../images/registrationButton-hover-center.png") repeat-x; /* avoids blink on first hover */
     background: url("../images/registrationButton-center.png") repeat-x;
     background-size: 1px 48px;
     z-index: 1;
@@ -22,6 +23,7 @@
     height: 48px;
     width: 26px;
     display: block;
+    background: url("../images/registrationButton-hover-left.png") no-repeat; /* avoids blink on first hover */
     background: url("../images/registrationButton-left.png") no-repeat;
     background-size: 26px 48px;
     z-index: 2;
@@ -46,6 +48,7 @@
     height: 48px;
     width: 26px;
     display: block;
+    background: url("../images/registrationButton-hover-right.png") no-repeat; /* avoids blink on first hover */
     background: url("../images/registrationButton-right.png") no-repeat;
     background-size: 26px 48px;
     z-index: 2;
