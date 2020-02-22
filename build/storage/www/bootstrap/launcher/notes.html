@@ -6,21 +6,27 @@
                 font-family:"EA Pirulen Rg DS";
             }
             .title {
-                color:#FFF; 
+                color:#f5fbfb; 
                 font-size:18px;
             }
             .topic {
-                color:#EEE;
+                position: relative;
+                color:#f5fbfb;
                 font-size:11px;
             }
             .topic .topic-label {
                 font-size:14px;
+                color:#B0C5FF;
+            }
+            .topic .topic-value {
+                position: absolute;
+                left: 200px;
             }
         </style>
     </head>
     <body>
-        <div class="title">Resurrection Capsule {{recap-version}}</div>
+        <div class="topic"><span class="topic-label">Recap version:</span><span class="topic-value">{{recap-version}}</span></div>
         <br/>
-        <div class="topic"><span class="topic-label">Game mode:</span> {{game-mode}}</div>
+        <div class="topic"><span class="topic-label">Game mode:</span><span class="topic-value">{{game-mode}}</span></div>
     </body>
 </html>

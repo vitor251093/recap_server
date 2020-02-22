@@ -1,11 +1,12 @@
 
 body{
-    background: url(../images/PatcherBackgroundImage.png) no-repeat 0 0;
+    background: url(../images/PatcherBackgroundImage2.png) no-repeat 0 0;
     height: 600;
     width: 800px;
     margin: 0;
     -moz-user-select: none;
     -webkit-user-select: none;
+    overflow: hidden;
 }
 
 * {
@@ -72,68 +73,61 @@ body{
     left:-11px;
 }
 
-.minButton.off{
-    background: url(../images/PatcherMinButtonOn.png)no-repeat 0 0;
-    background: url(../images/PatcherMinButtonOff.png)no-repeat 0 0;
+.darkspore-logo {
+    background: url(../images/logo.png)no-repeat 0 0;
+    width: 266px;
+    height: 31px;
+    position: absolute;
+    top: 100px;
+    left: 267px;
+}
+
+.minButton {
     width: 36px;
     height: 27px;
     Position: absolute;
-    left: 726px;
+    top: 9px;
+    right: 46px;
+}
+.minButton.off{
+    background: url(../images/PatcherMinButtonOn.png)no-repeat 0 0;
+    background: url(../images/PatcherMinButtonOff.png)no-repeat 0 0;
 }
 
 .minButton.clicked{
     background: url(../images/PatcherMinButtonOnClick.png)no-repeat 0 0;
-    width: 36px;
-    height: 27px;
-    Position: absolute;
-    left: 726px;
 }
 
 .minButton.on{
     background: url(../images/PatcherMinButtonOn.png)no-repeat 0 0;
-    width: 36px;
-    height: 27px;
-    Position: absolute;
-    left: 726px;
 }
 
-.closeButton.off{
-    background: url(../images/PatcherCloseButtonOn.png)no-repeat 0 0;
-    background: url(../images/PatcherCloseButtonOff.png)no-repeat 0 0;
+.closeButton {
     width: 35px;
     height: 27px;
     Position: absolute;
-    left: 762px;
+    top: 9px;
+    right: 10px;
+}
+.closeButton.off{
+    background: url(../images/PatcherCloseButtonOn.png)no-repeat 0 0;
+    background: url(../images/PatcherCloseButtonOff.png)no-repeat 0 0;
 }
 
 .closeButton.on{
     background: url(../images/PatcherCloseButtonOn.png)no-repeat 0 0;
-    width: 36px;
-    height: 27px;
-    Position: absolute;
-    left: 762px;
 }
 
 .closeButton.clicked{
     background: url(../images/PatcherCloseButtonOnClick.png)no-repeat 0 0;
-    width: 36px;
-    height: 27px;
-    Position: absolute;
-    left: 762px;
 }
 
-#Playbutton_deactive{
-    position: relative;
-    width: 300px;
-    top: 426px;
-    left: 250px;
-}
-
-#Playbutton_active{
+#Playbutton_deactive,
+#Playbutton_active {
     position: absolute;
-    width: 300px;
-    top: 426px;
-    left: 250px;
+    width: 150px;
+    top: 537px;
+    right: 34px;
 }
 
 #Play_button_font_active{
@@ -142,25 +136,23 @@ body{
 }
 
 
-#Validatebutton_deactive{
-    background: url(../images/PatcherValidateButtonDisabled.png)no-repeat 0 0;
+#Validatebutton_deactive,
+#Validatebutton_active{
     position: relative;
     width: 132px;
     height: 20px;
-    top:-5px;
-    left:192px;
+    top:0px;
+    left:-1px;
     float:right;
+}
+
+#Validatebutton_deactive{
+    background: url(../images/PatcherValidateButtonDisabled.png)no-repeat 0 0;
 }
 
 #Validatebutton_active{
     background: url(../images/PatcherValidateButtonOn.png)no-repeat 0 0;
     background: url(../images/PatcherValidateButtonActive.png)no-repeat 0 0;
-    position: relative;
-    width: 132px;
-    height: 20px;
-    top:-5px;
-    left:192px;
-    float:right;
 }
 
 #Validatebutton_label_container{
@@ -313,9 +305,10 @@ body{
 #Progress_comment_bottom_right_container{
     position: absolute;
     width: 161px;
-    right: 0px;
-    bottom:0px;
+    right: 140px;
+    bottom:5px;
     overflow:hidden;
+    text-align: right;
 
     color:#FFFFFF;
     font-size:11px;

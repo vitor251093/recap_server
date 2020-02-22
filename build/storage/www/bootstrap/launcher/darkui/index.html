@@ -579,16 +579,13 @@
                 var container = document.getElementById("Server_condition");
                 var innervar;
                 if (mServerHealth) {
-                    innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['SERVER_GOOD'];
-                    innervar += '<img src="images/icon_light_green.png" style="position: relative;top: 3px; left: 2px;" /></div>';
+                    innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['SERVER_GOOD']+'</div>';
                 }
                 else if (mServerMaintenance) {
-                    innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['SERVER_UNAVAILABLE'];
-                    innervar += '<img src="images/icon_light_yellow.png" style="position: relative;top: 3px; left: 2px;"  /></div>';
+                    innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['SERVER_UNAVAILABLE']+'</div>';
                     mError = true;
                 } else {
-                    innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['SERVER_UNAVAILABLE'];
-                    innervar += '<img src="images/icon_light_red.png" style="position: relative;top: 3px; left: 2px;"  /></div>';
+                    innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['SERVER_UNAVAILABLE']+'</div>';
                     mError = true;
                 }
 
@@ -830,13 +827,12 @@
                 document.getElementById("Validate_button_font_active").innerHTML = localizedstringmap['VALIDATE_INSTALL'];
 
                 // server status
-                document.getElementById("Server_Header").innerHTML = localizedstringmap['SERVER_STATUS'];
+                document.getElementById("Server_Header").innerHTML = localizedstringmap['SERVER_STATUS'] + ':';
 
                 // server condition
                 var container = document.getElementById("Server_condition");
                 var innervar;
-                innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['CONTACTING'];
-                innervar += '<img src="images/icon_light_yellow.png" style="position: relative;top: 3px; left: 2px;" /></div>';
+                innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['CONTACTING'] + '</div>';
                 container.innerHTML = innervar;
 
             }
@@ -873,21 +869,23 @@
             </tr>
         </table>
 
+        <div class="darkspore-logo"></div>
+
         <!-- Server status -->
         <div id="server_notes">
-            <div id="Server_status" style="position: absolute;top: 60px; left: 355px;">
-                <div id="Server_Status_Header" style="position: relative;top: 7px; left: 4px;padding-bottom:10px;" align="right">
+            <div id="Server_status" style="position:absolute; top:155px; left:92px;">
+                <div style="position:absolute; top:7px; left:0px; padding-bottom:10px; text-align:left;">
                     <span id="Server_Header"></span>
                 </div>
-                <span id="Server_condition">
-                     <div style="color:#FFFFFF;font-size:11px;" align="right">
+                <span id="Server_condition" style="position:absolute; top:10px; left:200px; padding-bottom:10px; text-align:left;">
+                     <div style="color:#FFFFFF; font-size:11px; text-align:left;">
                      </div>
                 </span>
             </div>
         </div>
 
         <!-- Display downloaded patch notes -->
-        <div id="Patch_note_frame" style="position:absolute; top:147px; left:92px; width:630px">
+        <div id="Patch_note_frame" style="position:absolute; top:197px; left:84px; width:630px">
             <iframe id="Patch_Content_Frame" src="/bootstrap/launcher/notes" width="673" height="280" frameBorder="0"></iframe>
         </div>
 
@@ -904,7 +902,7 @@
         </div>
 
         <!-- Patching progress and play button -->
-        <div id="Play_container" style="display:block; position:absolute; top:512px; left:-3px;">
+        <div id="Play_container" style="display:block; position:absolute; top:508px; left:-3px;">
             <div id="Progress_comment_upper_left_container"><font class="Progress_comment_font"></font></div>
             <table>
                 <tr>
