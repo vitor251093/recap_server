@@ -7,6 +7,8 @@
     <script type="text/javascript" src="js/eawebkit.ui.js"></script>
     <script type="text/javascript" src="js/recapclient.js"></script>
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="css/checkbox.css">
+    <link rel="stylesheet" type="text/css" href="css/button-rounded.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <style type="text/css">
@@ -81,18 +83,18 @@
                 <div class="view">
                     <form method="POST" id="signup-form">
 						<div class="form-group form-group-title">
-							<div class="title">Register</div>
+							<div class="title darkspore-font">Register</div>
 						</div>
                         <div class="form-group">
-							<p>Enter Username</p>
+							<p class="darkspore-font">Enter Username</p>
                             <div class="form-input-bg"><input type="text" class="form-input" name="name" id="name"/></div>
                         </div>
                         <div class="form-group">
-							<p>Enter Email</p>
+							<p class="darkspore-font">Enter Email</p>
                             <div class="form-input-bg"><input type="email" class="form-input" name="email" id="email"/></div>
                         </div>
                         <div class="form-group">
-							<p>Enter Password</p>
+							<p class="darkspore-font">Enter Password</p>
                             <div class="form-input-bg"><input type="text" class="form-input password" name="password" id="password"/></div>
                         </div>
                         <div class="form-group-tos">
@@ -110,14 +112,14 @@
                             </div>
                         </div>
                     </form>
-					<div class="creating-account-view" id="creatingAccountView"><p>Creating account...</p></div>
+					<div class="creating-account-view darkspore-font" id="creatingAccountView"><p>Creating account...</p></div>
                 </div>
             </div>
         </div>
         <div id="message-dialog" class="body modal">
             <div class="modal-window">
                 <img src="images/register_bg.png" class="fullscreen-background"/>
-                <div class="modal-title" id="modal-title">Error</div>
+                <div class="modal-title darkspore-font" id="modal-title">Error</div>
                 <div class="modal-message" id="message">x</div>
                 <div class="form-group form-group-button">
                     <div name="submit" id="ok-success-button" class="form-submit button-rounded" onMouseUp="closeModal(true);">

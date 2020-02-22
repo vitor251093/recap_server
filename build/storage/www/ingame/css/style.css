@@ -93,119 +93,11 @@ color: #999; }
 }
 .title {
     color: #b4b7b9;
-    font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
 	font-size: 20px;
 	text-align: center;
 }
 .view label {
     font-family: "Arial";
-}
-
-
-
-
-
-.input-checkbox-container {
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}            
-.input-checkbox-container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-.input-checkbox-container .checkmark {
-    position: absolute;
-    height: 16px;
-    width: 16px;
-    border: none;
-}
-.input-checkbox-container:hover input ~ .checkmark {
-    background-image: url("../images/checkbox-hover.png");
-}
-.input-checkbox-container:hover input:checked ~ .checkmark {
-    background-image: url("../images/checkbox-hover-checked.png");
-}
-.input-checkbox-container input:checked ~ .checkmark {
-    background-image: url("../images/checkbox-idle-checked.png");
-}
-.input-checkbox-container .checkmark {
-    content: "";
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border: none !important;
-    background-image: url("../images/checkbox-idle.png");
-}
-
-.button-rounded {
-    box-sizing: border-box;
-    border: none;
-    color: #b4b7b9;
-    text-align: center;
-    height: 25px;
-    padding: 17px;
-    position: relative;
-    background: url("../images/registrationButton-center.png") repeat-x;
-    background-size: 1px 48px;
-    z-index: 1;
-}
-.button-rounded:hover:not(:active) {
-    background: url("../images/registrationButton-hover-center.png") repeat-x;
-	color: #fff;
-}
-.button-rounded .left-side {
-    position: absolute;
-    top: 0;
-    left: -17px;
-    height: 48px;
-    width: 26px;
-    display: block;
-    background: url("../images/registrationButton-left.png") no-repeat;
-    background-size: 26px 48px;
-    z-index: 2;
-}
-.button-rounded:hover:not(:active) .left-side {
-    background: url("../images/registrationButton-hover-left.png") no-repeat;
-}
-.button-rounded .text {
-    position: absolute;
-    font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
-	font-size: 16px;
-    top: 13px;
-    right: 0;
-    left: 0;
-    height: 48px;
-    z-index: 2;
-}
-.button-rounded .right-side {
-    position: absolute;
-    top: 0;
-    right: -17px;
-    height: 48px;
-    width: 26px;
-    display: block;
-    background: url("../images/registrationButton-right.png") no-repeat;
-    background-size: 26px 48px;
-    z-index: 2;
-}
-.button-rounded:hover:not(:active) .right-side {
-    background: url("../images/registrationButton-hover-right.png") no-repeat;
-}
-.button-rounded:hover:not(:active) {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
 }
 
 form {
@@ -236,7 +128,6 @@ form > .form-group-button {
 }
 
 .form-group > p {
-	font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
 	filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 1));
 	font-size: 11px;
 	color: #b4b7b9;
@@ -257,7 +148,6 @@ form > .form-group-button {
 }
 
 .creating-account-view p {
-	font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
 	color: #b4b7b9;
 	text-align: center;
 	width: 100%;
@@ -295,7 +185,6 @@ form > .form-group-button {
 
 .view .modal-title {
     color: #fff;
-    font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
 }
 
 .fullscreen-background {

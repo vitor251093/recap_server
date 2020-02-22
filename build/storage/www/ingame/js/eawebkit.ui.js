@@ -26,19 +26,18 @@ var $ = function(domId) {
 	var obj = {};
 
 	var _dom = _arrayOfElementsWithIdentifier(domId);
-	Utils.forEach(_dom,function(dom, index){ obj[index] = dom; });
+	obj.length = 0;
+	_dom.forEach(function(dom){ obj[obj.length++] = dom; });
 	obj._dom = _dom;
-	obj.length = _dom.length;
 
 	obj.add = function(newDomId) {
 		var el = $(domId);
 		el._dom.push(_arrayOfElementsWithIdentifier(newDomId));
-		Utils.forEach(el._dom,function(dom, index){ el[index] = dom; });
-		el.length = el._dom.length;
+		el._dom.forEach(function(dom){ el[el.length++] = dom; });
 		return el;
 	};
 	obj._mapClasses = function(func) {
-		Utils.forEach(this._dom,function(dom){ 
+		this._dom.forEach(function(dom){ 
 			var classes = _arrayOfClassesWithClassesString(dom.className);
 			classes = func(classes);
 			dom.className = classes.join(" "); 
@@ -48,7 +47,7 @@ var $ = function(domId) {
 	obj.addClass = function(className) {
 		return this._mapClasses(function(classesList){
 			classesList.push(className);
-			var classes = Utils.filter(classesList, function(item, pos) {
+			var classes = classesList.filter(function(item, pos) {
 				return classes.indexOf(item) == pos;
 			});
 			return classes;
@@ -56,7 +55,7 @@ var $ = function(domId) {
 	};
 	obj.removeClass = function(className) {
 		return this._mapClasses(function(classesList){
-			var classes = Utils.filter(classesList, function(item) {
+			var classes = classesList.filter(function(item) {
 				return className !== item;
 			});
 			return classes;
@@ -67,14 +66,14 @@ var $ = function(domId) {
 		if (state === false) return this.removeClass(className);
 		return this._mapClasses(function(classesList){
 			if (classesList.includes(className)) {
-				var classes = Utils.filter(classesList, function(item) {
+				var classes = classesList.filter(function(item) {
 					return className !== item;
 				});
 				return classes;
 			}
 			else {
 				classesList.push(className);
-				var classes = Utils.filter(classesList, function(item, pos) {
+				var classes = classesList.filter(function(item, pos) {
 					return classes.indexOf(item) == pos;
 				});
 				return classes;
@@ -86,16 +85,16 @@ var $ = function(domId) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0][attrName];
 		}
-		Utils.forEach(this._dom,function(dom){dom[attrName] = attrValue});
+		this._dom.forEach(function(dom){dom[attrName] = attrValue});
 		return this;
 	};
 	obj.children = function() {
 		var newArray = [];
-		Utils.forEach(this._dom,function(dom){ newArray = newArray.concat(dom.childNodes) });
+		this._dom.forEach(function(dom){ newArray = newArray.concat(dom.childNodes) });
 		return $(newArray);
 	};
 	obj.click = function(func) {
-		Utils.forEach(this._dom,function(dom){ dom.onmouseup = func });
+		this._dom.forEach(function(dom){ dom.onmouseup = func });
 		return this;
 	};
 	obj.css = function(name, value) {
@@ -103,11 +102,11 @@ var $ = function(domId) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0].style[name];
 		}
-		Utils.forEach(this._dom,function(dom){ dom.style[name] = value; });
+		this._dom.forEach(function(dom){ dom.style[name] = value; });
 		return this;
 	};
 	obj.empty = function() {		
-		Utils.forEach(this._dom,function(dom){ 
+		this._dom.forEach(function(dom){ 
 			while (dom.childNodes.length > 0) dom.removeChild(dom.childNodes[0]); 
 		});
 		return this;
@@ -126,11 +125,11 @@ var $ = function(domId) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0].innerHTML;
 		}
-		Utils.forEach(this._dom,function(dom){dom.innerHTML = text});
+		this._dom.forEach(function(dom){dom.innerHTML = text});
 		return this;
 	};
 	obj.toggleChecked = function(value) {
-		Utils.forEach(this._dom,function(dom){
+		this._dom.forEach(function(dom){
 			var tagName = dom.tagName.toUpperCase();
 			var type = dom.type.toUpperCase();
 			if (tagName === "INPUT" && type === "CHECKBOX") {
@@ -144,7 +143,7 @@ var $ = function(domId) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0].value;
 		}
-		Utils.forEach(this._dom,function(dom){ dom.value = value; });
+		this._dom.forEach(function(dom){ dom.value = value; });
 		return this;
 	};
 

@@ -22,19 +22,6 @@ var EAWebKit = {
 
 
 var Utils = {
-	filter: function(array, func) {
-		var newArray = [];
-		for (var i = 0; i < array.length; i++) if (func(array[i], i)) newArray.push(array[i]);
-		return newArray;
-	},
-	forEach: function(array, func) {
-		for (var i = 0; i < array.length; i++) func(array[i], i)
-	},
-	map: function(array, func) {
-		var newArray = [];
-		for (var i = 0; i < array.length; i++) newArray.push(func(array[i], i));
-		return newArray;
-	},
 	type: function(obj) {
 		return Object.prototype.toString.call(obj);
 	},
