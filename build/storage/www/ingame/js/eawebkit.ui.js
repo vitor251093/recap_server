@@ -6,6 +6,7 @@ var _arrayOfElementsWithIdentifier = function(domId) {
 		var realId = domId.substr(1);
 		     if (prefix === '#') _dom = [document.getElementById(realId)];
 		else if (prefix === '.') _dom =  document.getElementsByClassName(realId);
+		else if (prefix === '<') _dom = [document.createElement(realId.substr(0, realId.length - 1))];
 		else _dom = [];
 	}
 	else if (Utils.isArray(domId)) {
@@ -33,25 +34,40 @@ var $ = function(domId) {
 	obj.add = function(newDomId) {
 		var el = $(domId);
 		el._dom.push(_arrayOfElementsWithIdentifier(newDomId));
-		el._dom.forEach(function(dom){ el[el.length++] = dom; });
+		el.forEach(function(dom){ el[el.length++] = dom; });
 		return el;
 	};
 	obj._mapClasses = function(func) {
-		this._dom.forEach(function(dom){ 
+		return this.forEach(function(dom){ 
 			var classes = _arrayOfClassesWithClassesString(dom.className);
 			classes = func(classes);
 			dom.className = classes.join(" "); 
 		});
-		return this;
 	};
 	obj.addClass = function(className) {
 		return this._mapClasses(function(classesList){
 			classesList.push(className);
 			var classes = classesList.filter(function(item, pos) {
-				return classes.indexOf(item) == pos;
+				return classesList.indexOf(item) == pos;
 			});
 			return classes;
 		});
+	};
+	obj.append = function(el) {
+		if (this._dom.length == 0) return;
+		if (el === undefined || el === null) return;
+
+		var dom = this._dom[0];
+		if (el.length !== undefined) {
+			el.forEach(function(rEl){dom.appendChild(rEl);});
+			return;
+		}
+		dom.appendChild(el);
+		return this;
+	};
+	obj.forEach = function(func) {
+		this._dom.forEach(func);
+		return this;
 	};
 	obj.removeClass = function(className) {
 		return this._mapClasses(function(classesList){
@@ -85,31 +101,27 @@ var $ = function(domId) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0][attrName];
 		}
-		this._dom.forEach(function(dom){dom[attrName] = attrValue});
-		return this;
+		return this.forEach(function(dom){dom[attrName] = attrValue});
 	};
 	obj.children = function() {
 		var newArray = [];
-		this._dom.forEach(function(dom){ newArray = newArray.concat(dom.childNodes) });
+		this._dom.forEach(function(dom){ newArray = newArray.concat(Array.prototype.slice.call(dom.childNodes)) });
 		return $(newArray);
 	};
 	obj.click = function(func) {
-		this._dom.forEach(function(dom){ dom.onmouseup = func });
-		return this;
+		return this.forEach(function(dom){ dom.onmouseup = func });
 	};
 	obj.css = function(name, value) {
 		if (value === undefined) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0].style[name];
 		}
-		this._dom.forEach(function(dom){ dom.style[name] = value; });
-		return this;
+		return this.forEach(function(dom){ dom.style[name] = value; });
 	};
 	obj.empty = function() {		
-		this._dom.forEach(function(dom){ 
+		return this.forEach(function(dom){ 
 			while (dom.childNodes.length > 0) dom.removeChild(dom.childNodes[0]); 
 		});
-		return this;
 	};
 	obj.get = function(index) {
 		return this._dom[index];
@@ -120,31 +132,33 @@ var $ = function(domId) {
 	obj.hide = function(hide) {
 		return this.css('visibility', ((hide === undefined || hide === true) ? "hidden" : "visible"));
 	};
+	obj.mouseUp = function(func) {
+		return this.forEach(function(dom){
+			dom.addEventListener('mouseup', func);
+		});
+	};
 	obj.html = function(text) {
 		if (text === undefined) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0].innerHTML;
 		}
-		this._dom.forEach(function(dom){dom.innerHTML = text});
-		return this;
+		return this.forEach(function(dom){dom.innerHTML = text});
 	};
 	obj.toggleChecked = function(value) {
-		this._dom.forEach(function(dom){
+		return this.forEach(function(dom){
 			var tagName = dom.tagName.toUpperCase();
 			var type = dom.type.toUpperCase();
 			if (tagName === "INPUT" && type === "CHECKBOX") {
 				dom.checked = (value === true || value === false) ? value : !dom.checked;
 			}
 		});
-		return this;
 	};
 	obj.val = function(value) {
 		if (value === undefined) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0].value;
 		}
-		this._dom.forEach(function(dom){ dom.value = value; });
-		return this;
+		return this.forEach(function(dom){ dom.value = value; });
 	};
 
 	return obj;
