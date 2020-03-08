@@ -137,6 +137,11 @@ var $ = function(domId) {
 			dom.addEventListener('mouseup', func);
 		});
 	};
+	obj.change = function(func) {
+		return this.forEach(function(dom){
+			dom.onchange = func;
+		});
+	};
 	obj.html = function(text) {
 		if (text === undefined) {
 			if (this._dom.length == 0) return null;
