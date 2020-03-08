@@ -467,6 +467,7 @@ namespace Game {
 		auto name = request.uri.parameter("name");
 		auto mail = request.uri.parameter("mail");
 		auto pass = request.uri.parameter("pass");
+		auto avatar = request.uri.parameteri("avatar");
 
 		const auto& user = Repository::Users::CreateUserWithNameMailAndPassword(name, mail, pass);
 		rapidjson::Document document = utils::json::NewDocumentObject();
@@ -512,7 +513,7 @@ namespace Game {
 		user->get_account().defaultDeckPveId = 1;
 		user->get_account().defaultDeckPvpId = 1;
 		user->get_account().level = 100;
-		user->get_account().avatarId = 11;
+		user->get_account().avatarId = avatar;
 		user->get_account().dna = 10000000;
 		user->get_account().newPlayerInventory = 1;
 		user->get_account().newPlayerProgress = 9500;
