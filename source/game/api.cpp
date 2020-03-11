@@ -13,6 +13,8 @@
 
 #include "../repository/template.h"
 #include "../repository/user.h"
+#include "../repository/part.h"
+#include "../repository/creaturepart.h"
 
 #include "../utils/functions.h"
 #include "../utils/logger.h"
@@ -22,6 +24,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <stdlib.h>
 
 /*
 	api.account.auth
@@ -329,14 +332,6 @@ namespace Game {
 			responseWithFileInStorage(session, response, "/www");
 		});
 
-		router->add("/ingame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "/www");
-		});
-
-		router->add("/panel/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "/www");
-		});
-
 
 		// Survey
 		router->add("/survey/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -350,6 +345,12 @@ namespace Game {
 				logger::error("Undefined /survey/api method: " + method);
 				empty_xml_response(session, response);
 			}
+		});
+
+
+		// Ingame Webviews
+		router->add("/ingame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "/www");
 		});
 
 		router->add("/web/sporelabs/alerts", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -379,6 +380,7 @@ namespace Game {
 		router->add("/web/sporelabs/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			response.body() = utils::EAWebKit::loadFile("www/ingame" + session.get_request().uri.resource().substr(14));
 		});
+
 
 		// QOS
 		router->add("/qos/qos", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -473,26 +475,21 @@ namespace Game {
 		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
 			utils::json::Set(document, "stat", "error");
+			response.set(boost::beast::http::field::content_type, "application/json");
+			response.body() = utils::json::ToString(document);
+			return;
 		}
-		else {
-			utils::json::Set(document, "stat", "ok");
-		}
+		
+		utils::json::Set(document, "stat", "ok");
+		user->get_account().id = rand();
 
+		auto actualPartsSize = Repository::CreatureParts::ListAll().size();
+		auto parts = Repository::Parts::ListAll();
 		uint64_t index = 1;
-		for (int i = 1; i <= 1573; i++) {
-			CreaturePart part(i);
-			part.id = index++;
-			part.status = 0;
-			part.equipped_to_creature_id = 0;
-			user->get_parts().Add(part);
+		for (auto& part : parts) {
+			Repository::CreatureParts::Add(std::make_shared<Game::CreaturePart>(actualPartsSize + index++, part->rigblock_asset_id, user->get_account().id));
 		}
-		for (int i = 10001; i <= 10835; i++) {
-			CreaturePart part(i);
-			part.id = index++;
-			part.status = 0;
-			part.equipped_to_creature_id = 0;
-			user->get_parts().Add(part);
-		}
+		Repository::CreatureParts::Save();
 
 		// TODO: Unlocking all creatures from start to test; remove that in the future
 		std::vector<Repository::CreatureTemplatePtr> templates = Repository::CreatureTemplates::ListAll();
@@ -533,32 +530,16 @@ namespace Game {
 		user->get_account().grantAllAccess = true;
 		user->get_account().grantOnlineAccess = true;
 
-		Squad squad1;
-		squad1.id = 1;
-		squad1.slot = 1;
-		squad1.name = "Slot 1";
-		squad1.locked = false;
-		squad1.creatures.Add(templates[0]->id);
-		squad1.creatures.data()[0].gearScore = 100;
-		user->get_squads().data().push_back(squad1);
-
-		Squad squad2;
-		squad2.id = 2;
-		squad2.slot = 2;
-		squad2.name = "Slot 2";
-		squad2.locked = false;
-		squad2.creatures.Add(templates[1]->id);
-		squad2.creatures.data()[0].gearScore = 100;
-		user->get_squads().data().push_back(squad2);
-
-		Squad squad3;
-		squad3.id = 3;
-		squad3.slot = 3;
-		squad3.name = "Slot 3";
-		squad3.locked = false;
-		squad3.creatures.Add(templates[2]->id);
-		squad3.creatures.data()[0].gearScore = 100;
-		user->get_squads().data().push_back(squad3);
+		for (int squadSlot = 1; squadSlot <= 3; squadSlot++) {
+			Squad squad1;
+			squad1.id = squadSlot;
+			squad1.slot = squadSlot;
+			squad1.name = "Slot " + std::to_string(squadSlot);
+			squad1.locked = false;
+			squad1.creatures.Add(templates[(squadSlot - 1)]->id);
+			squad1.creatures.data()[0].gearScore = 100;
+			user->get_squads().data().push_back(squad1);
+		}
 
 		Repository::Users::SaveUser(user);
 
@@ -781,31 +762,23 @@ namespace Game {
 
 		auto& request = session.get_request();
 		auto filter = request.uri.parameter("filter");
+
+		auto fullOwnedOnly = filter == "market_status_full-owned";
 		
 		if (auto docResponse = document.append_child("response")) {
-			const auto& user = session.get_user();
-			if (user) {
-				user->get_parts().WriteXml(docResponse, true);
-			}
-			else {
-				CreatureParts creatureParts;
-				uint64_t index = 1;
-				for (int i = 1; i <= 1573; i++) {
-					CreaturePart part(i);
-					part.id = index++;
-					part.status = 0;
-					part.equipped_to_creature_id = 0;
-					creatureParts.Add(part);
+			auto allParts = Repository::CreatureParts::ListAll();
+
+			if (auto parts = docResponse.append_child("parts")) {
+				for (const auto& part : allParts) {
+					if (fullOwnedOnly) {
+						if (part->equipped_to_creature_id == 0) part->WriteXml(parts, true);
+					}
+					else {
+						part->WriteXml(parts, true);
+					}
 				}
-				for (int i = 10001; i <= 10835; i++) {
-					CreaturePart part(i);
-					part.id = index++;
-					part.status = 0;
-					part.equipped_to_creature_id = 0;
-					creatureParts.Add(part);
-				}
-				creatureParts.WriteXml(docResponse, true);
 			}
+
 			add_common_keys(docResponse, session.get_darkspore_version());
 		}
 
@@ -817,45 +790,13 @@ namespace Game {
 		pugi::xml_document document;
 
 		if (auto docResponse = document.append_child("response")) {
+			auto allParts = Repository::CreatureParts::ListAll();
 			auto timestamp = utils::get_unix_time();
 
 			utils::xml::Set(docResponse, "expires", timestamp + (3 * 60 * 60 * 1000));
 			if (auto parts = docResponse.append_child("parts")) {
-				/*
-				if (auto part = parts.append_child("part")) {
-					utils::xml::Set(part, "is_flair", "0");
-					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint32_t>(CreatureTemplateID::BlitzAlpha));
-					utils::xml::Set(part, "id", "1");
-					utils::xml::Set(part, "level", "1");
-					utils::xml::Set(part, "market_status", "1");
-					utils::xml::Set(part, "prefix_asset_id", 0x010C);
-					utils::xml::Set(part, "prefix_secondary_asset_id", "0");
-					utils::xml::Set(part, "rarity", "1");
-					utils::xml::Set(part, "reference_id", 1);
-					utils::xml::Set(part, "rigblock_asset_id", 0x27A1); // 0xA14538E5
-					utils::xml::Set(part, "status", "1");
-					utils::xml::Set(part, "suffix_asset_id", 0x0005);
-					utils::xml::Set(part, "usage", "1");
-					utils::xml::Set(part, "creation_date", timestamp);
-				}
-				*/
-				if (auto part = parts.append_child("part")) {
-					utils::xml::Set(part, "is_flair", "0");
-					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint32_t>(CreatureTemplateID::BlitzAlpha));
-					utils::xml::Set(part, "id", "1");
-					utils::xml::Set(part, "level", "1");
-					utils::xml::Set(part, "market_status", "1");
-					utils::xml::Set(part, "prefix_asset_id", utils::hash_id("_Generated/lootprefix1.lootprefix"));
-					utils::xml::Set(part, "prefix_secondary_asset_id", utils::hash_id("_Generated/lootprefix2.lootprefix"));
-					utils::xml::Set(part, "rarity", "1");
-					utils::xml::Set(part, "reference_id", 1);
-					utils::xml::Set(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock1.lootrigblock"));
-					utils::xml::Set(part, "status", "1");
-					utils::xml::Set(part, "suffix_asset_id", utils::hash_id("_Generated/lootsuffix1.lootsuffix"));
-					utils::xml::Set(part, "usage", "1");
-					utils::xml::Set(part, "creation_date", timestamp);
+				for (const auto& part : allParts) {
+					if (part->equipped_to_creature_id == 0) part->WriteXml(parts, true);
 				}
 			}
 
@@ -870,38 +811,40 @@ namespace Game {
 		pugi::xml_document document;
 
 		auto& request = session.get_request();
+		const auto& user = session.get_user();
 
 		const auto& transactionsString = request.uri.parameter("transactions");
 		if (!transactionsString.empty()) {
 			for (const auto& transaction : utils::explode_string(transactionsString, ';')) {
-				// w = weapon, check for more later
 				char type = transaction[0];
-				logger::info("Transaction: " + transaction);
-
 				int64_t index = utils::to_number<int64_t>(&transaction[1]);
-				// Stuff
+				
+				if (type == 's') { // sell item
+					auto part = Repository::CreatureParts::getById(index);
+					Repository::CreatureParts::Remove(part);
+					user->get_account().dna += Repository::Parts::getById(part->rigblock_asset_id)->cost;
+				}
+				else if (type == 'f') { // turn item into detail/flair
+					auto part = Repository::CreatureParts::getById(index);
+					part->flair = true;
+				}
+				else {
+					logger::info("Transaction: " + transaction);
+					// w = weapon (?)
+					// TODO: check for more later
+				}
 			}
+			Repository::CreatureParts::Save();
+			Repository::Users::SaveUser(user);
 		}
 
 		if (auto docResponse = document.append_child("response")) {
+			auto allParts = Repository::CreatureParts::ListAll();
 			auto timestamp = utils::get_unix_time();
+			
 			if (auto parts = docResponse.append_child("parts")) {
-				if (auto part = parts.append_child("part")) {
-					utils::xml::Set(part, "is_flair", "0");
-					utils::xml::Set(part, "cost", "100");
-					utils::xml::Set(part, "creature_id", static_cast<uint32_t>(CreatureTemplateID::BlitzAlpha));
-					utils::xml::Set(part, "id", "1");
-					utils::xml::Set(part, "level", "1");
-					utils::xml::Set(part, "market_status", "1");
-					utils::xml::Set(part, "prefix_asset_id", utils::hash_id("_Generated/lootprefix1.lootprefix"));
-					utils::xml::Set(part, "prefix_secondary_asset_id", utils::hash_id("_Generated/lootprefix2.lootprefix"));
-					utils::xml::Set(part, "rarity", "1");
-					utils::xml::Set(part, "reference_id", 1);
-					utils::xml::Set(part, "rigblock_asset_id", utils::hash_id("_Generated/lootrigblock10001.lootrigblock"));
-					utils::xml::Set(part, "status", "1");
-					utils::xml::Set(part, "suffix_asset_id", utils::hash_id("_Generated/lootsuffix1.lootsuffix"));
-					utils::xml::Set(part, "usage", "1");
-					utils::xml::Set(part, "creation_date", timestamp);
+				for (const auto& part : allParts) {
+					if (part->equipped_to_creature_id == 0) part->WriteXml(parts, true);
 				}
 			}
 
@@ -920,20 +863,16 @@ namespace Game {
 
 		size_t len = std::min<size_t>(partIds.size(), statuses.size());
 		if (len > 0) {
-			// It should be possible to update part status without getting the user
-			const auto& user = session.get_user();
-			if (user) {
-				auto& parts = user->get_parts();
-				for (size_t i = 0; i < len; i++) {
-					uint32_t partId = utils::to_number<uint32_t>(partIds[i]);
-					uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
+			for (size_t i = 0; i < len; i++) {
+				uint32_t partId = utils::to_number<uint32_t>(partIds[i]);
+				uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
 
-					auto part = parts.GetPartById(partId);
-					if (part != nullptr) {
-						part->SetStatus(status);
-					}
+				auto part = Repository::CreatureParts::getById(partId);
+				if (part != nullptr) {
+					part->SetStatus(status);
 				}
 			}
+			Repository::CreatureParts::Save();
 		}
 
 		pugi::xml_document document;
@@ -1377,14 +1316,21 @@ namespace Game {
 
 		const auto& user = session.get_user();
 		if (user) {
-			Creature* creature = user->GetCreatureById(request.uri.parameteru("id"));
+			auto creatureId = request.uri.parameteru("id");
+			Creature* creature = user->GetCreatureById(creatureId);
 			if (creature) {
 				creature->version++;
 				// cost
 				creature->gearScore = request.uri.parameterd("gear");
 				// large
 				// large_crc
-				// parts (comma separated IDs)
+
+				auto partIds = utils::explode_string(request.uri.parameter("parts"), ",");
+				for (const auto& partId : partIds) {
+					Repository::CreatureParts::getById(std::stoi(partId))->equipped_to_creature_id = creatureId;
+				}
+				if (!partIds.empty()) Repository::CreatureParts::Save();
+
 				creature->itemPoints = request.uri.parameterd("points");
 				creature->stats = request.uri.parameter("stats");
 				creature->statsAbilityKeyvalues = request.uri.parameter("stats_ability_keyvalues");

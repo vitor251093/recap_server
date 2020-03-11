@@ -33,7 +33,7 @@ namespace Game {
 		uint32_t xp = 0;
 		uint32_t dna = 0;
 		uint32_t avatarId = 0;
-		uint32_t id = 1;
+		uint64_t id = 1;
 
 		uint32_t newPlayerInventory = 0;
 		uint32_t newPlayerProgress = 0;
@@ -122,9 +122,6 @@ namespace Game {
 			auto& get_feed() { return mFeed; }
 			const auto& get_feed() const { return mFeed; }
 
-			auto& get_parts() { return mParts; }
-			const auto& get_parts() const { return mParts; }
-
 			const std::string& get_auth_token() const { return mAuthToken; }
 			void set_auth_token(const std::string& authToken) { mAuthToken = authToken; }
 
@@ -173,7 +170,6 @@ namespace Game {
 			Creatures mCreatures;
 			Squads mSquads;
 			Feed mFeed;
-			CreatureParts mParts;
 
 			std::string mEmail;
 			std::string mPassword;

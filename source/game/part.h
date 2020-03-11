@@ -31,8 +31,6 @@ namespace Game {
 			uint8_t market_status;
 			uint8_t usage;
 
-			bool flair;
-
 			std::string stats;
 			std::string type_full;
 			std::string class_types_full;

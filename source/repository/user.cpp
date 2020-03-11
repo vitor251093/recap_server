@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <filesystem>
 #include "../game/config.h"
+#include "../repository/creaturepart.h"
 
 // Repository
 namespace Repository {
@@ -46,9 +47,8 @@ namespace Repository {
 			userPtr->set_email(utils::xml::GetString(user, "email"));
 			userPtr->set_password(utils::xml::GetString(user, "password")); // Hash this later?
 
-			userPtr->get_parts().ReadXml(user);
 			userPtr->get_account().ReadXml(user);
-			userPtr->get_creatures().ReadXml(user, userPtr->get_parts());
+			userPtr->get_creatures().ReadXml(user);
 			userPtr->get_squads().ReadXml(user, userPtr->get_creatures());
 			userPtr->get_feed().ReadXml(user);
 		}

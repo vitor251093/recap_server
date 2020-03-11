@@ -37,7 +37,6 @@ namespace Game {
 			return false;
 		}
 
-		flair         = utils::xml::GetString<bool>(node, "is_flair");
 		cost          = utils::xml::GetString<uint32_t>(node, "cost");
 		level         = utils::xml::GetString<uint16_t>(node, "level");
 		market_status = utils::xml::GetString<uint8_t>(node, "market_status");
@@ -64,7 +63,6 @@ namespace Game {
 
 	void Part::WriteXml(pugi::xml_node& node, uint32_t index, bool api) const {
 		if (auto part = node.append_child("part")) {
-			utils::xml::Set(part, "is_flair", flair);
 			utils::xml::Set(part, "cost", cost);
 			utils::xml::Set(part, "level", level);
 			utils::xml::Set(part, "market_status", market_status);
@@ -101,7 +99,7 @@ namespace Game {
 
 	void Part::ReadJson(rapidjson::Value& object) {
 		if (!object.IsObject()) return;
-		flair = utils::json::GetBool(object, "is_flair");
+
 		cost = utils::json::GetUint(object, "cost");
 		level = utils::json::GetUint16(object, "level");
 		market_status = utils::json::GetUint8(object, "market_status");
@@ -126,7 +124,6 @@ namespace Game {
 
 	rapidjson::Value Part::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const {
 		rapidjson::Value object = utils::json::NewObject();
-		utils::json::Set(object, "is_flair", flair, allocator);
 		utils::json::Set(object, "cost", cost, allocator);
 		utils::json::Set(object, "level", level, allocator);
 		utils::json::Set(object, "market_status", market_status, allocator);

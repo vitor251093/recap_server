@@ -16,8 +16,10 @@ namespace Game {
 
 	}
 
-	CreaturePart::CreaturePart(uint32_t rigblock) {
+	CreaturePart::CreaturePart(uint64_t identifier, uint32_t rigblock, uint64_t creator_id) {
+		id = identifier;
 		rigblock_asset_id = rigblock;
+		user_id = creator_id;
 	}
 
 	CreaturePart::CreaturePart(const pugi::xml_node& node) {
@@ -33,8 +35,10 @@ namespace Game {
 		}
 
 		id = utils::xml::GetString<uint16_t>(node, "id");
+		user_id = utils::xml::GetString<uint64_t>(node, "user_id");
 		equipped_to_creature_id = utils::xml::GetString<uint32_t>(node, "creature_id");
 		status = utils::xml::GetString<uint8_t>(node, "status");
+		flair = utils::xml::GetString<bool>(node, "is_flair");
 		timestamp = utils::xml::GetString<uint64_t>(node, "creation_date");
 		rigblock_asset_id = utils::xml::GetString<uint32_t>(node, "rigblock_asset_id");
 
@@ -44,18 +48,20 @@ namespace Game {
 	void CreaturePart::WriteSmallXml(pugi::xml_node& node) const {
 		if (auto part = node.append_child("part")) {
 			utils::xml::Set(part, "id", id);
+			utils::xml::Set(part, "user_id", user_id);
 			utils::xml::Set(part, "creature_id", equipped_to_creature_id);
 			utils::xml::Set(part, "status", status);
+			utils::xml::Set(part, "is_flair", flair);
 			utils::xml::Set(part, "creation_date", timestamp);
 			utils::xml::Set(part, "rigblock_asset_id", rigblock_asset_id);
 		}
 	}
 
-	void CreaturePart::WriteXml(pugi::xml_node& node, uint32_t index, bool api) const {
+	void CreaturePart::WriteXml(pugi::xml_node& node, bool api) const {
 		auto partDetails = Repository::Parts::getById(rigblock_asset_id);
 
 		if (auto part = node.append_child("part")) {
-			utils::xml::Set(part, "is_flair", partDetails->flair);
+			utils::xml::Set(part, "is_flair", flair);
 			utils::xml::Set(part, "cost", partDetails->cost);
 			utils::xml::Set(part, "creature_id", equipped_to_creature_id);
 			utils::xml::Set(part, "level", partDetails->level);
@@ -91,11 +97,11 @@ namespace Game {
 		rigblock_asset_id = utils::json::GetUint16(object, "rigblock_asset_id");
 	}
 
-	rapidjson::Value CreaturePart::WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api) const {
+	rapidjson::Value CreaturePart::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const {
 		auto part = Repository::Parts::getById(rigblock_asset_id);
 
 		rapidjson::Value object = utils::json::NewObject();
-		utils::json::Set(object, "is_flair", part->flair, allocator);
+		utils::json::Set(object, "is_flair", flair, allocator);
 		utils::json::Set(object, "cost", part->cost, allocator);
 		utils::json::Set(object, "creature_id", equipped_to_creature_id, allocator);
 		utils::json::Set(object, "level", part->level, allocator);
@@ -162,9 +168,8 @@ namespace Game {
 
 	void CreatureParts::WriteXml(pugi::xml_node& node, bool api) const {
 		if (auto parts = node.append_child("parts")) {
-			uint32_t index = 0;
 			for (const auto& part : mItems) {
-				part.WriteXml(parts, ++index, api);
+				part.WriteXml(parts, api);
 			}
 		}
 	}
@@ -181,8 +186,7 @@ namespace Game {
 	rapidjson::Value CreatureParts::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const {
 		rapidjson::Value value = utils::json::NewArray();
 		for (const auto& part : mItems) {
-			uint32_t index = 0;
-			rapidjson::Value partNode = part.WriteJson(allocator, ++index, api);
+			rapidjson::Value partNode = part.WriteJson(allocator, api);
 			utils::json::Add(value, partNode, allocator);
 		}
 		return value;

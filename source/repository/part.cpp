@@ -36,8 +36,9 @@ namespace Repository {
 	std::map<uint32_t, PartPtr> Parts::mParts;
 
 	std::vector<PartPtr> Parts::ListAll() {
-		std::vector<PartPtr> l;
+		Load();
 
+		std::vector<PartPtr> l;
 		for (const auto& t : mParts)
 			l.push_back(t.second);
 

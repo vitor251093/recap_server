@@ -516,7 +516,6 @@
                 {
                     ellipsisDiv.style.display = "inline";
                     container.style.width = 246
-
                 }
                 else
                 {
@@ -535,7 +534,6 @@
                 {
                     ellipsisDiv.style.display = "inline";
                     container.style.width = 122;
-
                 }
                 else
                 {
@@ -681,7 +679,6 @@
              */
             function attemptBypass()
             {
-
                 if (mError && mRefresh)
                 {
                     // basically lie and say everything is OK
@@ -689,7 +686,6 @@
                     mServerHealth = true;
                     checkPlayStatus();
                 }
-
             } // end attemptByPass
 
 
@@ -698,14 +694,12 @@
              */
             function startCountdown()
             {
-
                 var now = new Date();
                 var diff = (mCountdown * 1000) - now.getTime();
 
                 if (0 < diff) {
                     mCountdownId = setInterval("updateCountdown()", 500);
                 }
-
             } //end startCountdown
 
             /**
@@ -713,13 +707,11 @@
              */
             function stopCountdown()
             {
-
                 if (-1 < mCountdownId)
                 {
                     clearInterval(mCountdownId);
                     mCountdownId = -1;
                 }
-
             }
 
             /**
@@ -727,7 +719,6 @@
              */
             function updateCountdown()
             {
-
                 // how much time till go time?
 
                 var ts = Math.round(new Date().getTime() / 1000);
@@ -773,31 +764,14 @@
               location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
               return queryDict["version"];
             }
-            function gameVersionParts() {
-              var version = gameVersion();
-              if (version === undefined) return true;
-
-              var versionParts = version.split(".");
-              if (versionParts.length !== 4) return true;
-
-              var versionComp1 = parseInt(versionParts[0]);
-              var versionComp2 = parseInt(versionParts[1]);
-              var versionComp3 = parseInt(versionParts[2]);
-              var versionComp4 = parseInt(versionParts[3]);
-              return [versionComp1,versionComp2,versionComp3,versionComp4];
-            }
             function isGameVersionAtLeast(versionArray) {
-              var versionParts = gameVersionParts();
-              if (versionParts[0] > versionArray[0]) return true;
-              if (versionParts[1] > versionArray[1]) return true;
-              if (versionParts[2] > versionArray[2]) return true;
-              return versionParts[3] >= versionArray[3];
+              return Utils.compareVersions(gameVersion(), versionArray) != 1;
             }
             function hasClientRequestStatusRefresh() {
-              return isGameVersionAtLeast([5,3,0,103]);
+              return isGameVersionAtLeast("5.3.0.103");
             }
             function hasClientCheckImage() {
-              return isGameVersionAtLeast([5,3,0,127]);
+              return isGameVersionAtLeast("5.3.0.127");
             }
 
             /**
@@ -821,25 +795,20 @@
                 localizedstringmap = localizedkeymap;
 
                 // play button
-                document.getElementById("Play_button_font_active").innerHTML = localizedstringmap['PLAY'];
+                $("#Play_button_font_active").html(localizedstringmap['PLAY']);
 
                 // validate button
-                document.getElementById("Validate_button_font_active").innerHTML = localizedstringmap['VALIDATE_INSTALL'];
+                $("#Validate_button_font_active").html(localizedstringmap['VALIDATE_INSTALL']);
 
                 // server status
-                document.getElementById("Server_Header").innerHTML = localizedstringmap['SERVER_STATUS'] + ':';
+                $("#Server_Header").html(localizedstringmap['SERVER_STATUS'] + ':');
 
                 // server condition
-                var container = document.getElementById("Server_condition");
-                var innervar;
-                innervar = '<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['CONTACTING'] + '</div>';
-                container.innerHTML = innervar;
-
+                $("#Server_condition").html('<div style="color:#FFFFFF;font-size:11px;" align="right">'+localizedstringmap['CONTACTING'] + '</div>');
             }
 
             window.onload = function()
             {
-
                 setLeftCommentActive();
                 setRightCommentActive();
 
@@ -855,7 +824,6 @@
 
                 // refresh the launcher every 5 minutes
                 setInterval("refreshStatus()", 300000);
-
             }
 
         </script>

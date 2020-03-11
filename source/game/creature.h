@@ -16,6 +16,7 @@ namespace Game {
 
 		uint32_t id = 0;
 		uint32_t nounId = 0;
+		uint64_t creator_id = 0;
 
 		std::string stats;
 		//    example (with no spaces): STR, 14, 0; DEX, 13, 0; MIND, 23, 0; HLTH, 100, 70; MANA, 125, 23; PDEF, 50, 88; EDEF, 150, 138; CRTR, 50, 66; MOV, 0, 1                  
@@ -33,7 +34,7 @@ namespace Game {
 
 		uint32_t version = 0;
 
-		void ReadXml(const pugi::xml_node& node, CreatureParts mParts);
+		void ReadXml(const pugi::xml_node& node);
 
 		void WriteSmallXml(pugi::xml_node& node) const;
 		void WriteXml(pugi::xml_node& node, uint32_t creatorId) const;
@@ -55,7 +56,7 @@ namespace Game {
 
 			void setData(std::vector<Creature> creatures) { mCreatures = creatures; }
 
-			void ReadXml(const pugi::xml_node& node, CreatureParts mParts);
+			void ReadXml(const pugi::xml_node& node);
 			
 			void WriteSmallXml(pugi::xml_node& node) const;
 			void WriteXml(pugi::xml_node& node) const;

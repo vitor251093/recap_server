@@ -82,7 +82,7 @@ namespace Game {
 		xp       = utils::xml::GetString<uint32_t>(account, "xp");
 		dna      = utils::xml::GetString<uint32_t>(account, "dna");
 		avatarId = std::clamp<uint32_t>(utils::xml::GetString<uint32_t>(account, "avatar_id"), 0, 16);
-		id       = utils::xml::GetString<uint32_t>(account, "id");
+		id       = utils::xml::GetString<uint64_t>(account, "id");
 
 		newPlayerInventory = utils::xml::GetString<uint32_t>(account, "new_player_inventory");
 		newPlayerProgress  = utils::xml::GetString<uint32_t>(account, "new_player_progress");
@@ -152,7 +152,7 @@ namespace Game {
 		defaultDeckPvpId        = utils::json::GetUint(object, "default_deck_pvp_id");
 		level                   = utils::json::GetUint(object, "level");
 		avatarId                = utils::json::GetUint(object, "avatar_id");
-		id                      = utils::json::GetUint(object, "id");
+		id                      = utils::json::GetUint64(object, "id");
 		dna                     = utils::json::GetUint(object, "dna");
 		newPlayerInventory      = utils::json::GetUint(object, "new_player_inventory");
 		newPlayerProgress       = utils::json::GetUint(object, "new_player_progress");
@@ -415,7 +415,6 @@ namespace Game {
 			mCreatures.WriteSmallXml(user);
 			   mSquads.WriteSmallXml(user);
 			     mFeed.WriteXml(user);
-			    mParts.WriteSmallXml(user);
 		}
 		return document;
 	}
@@ -431,13 +430,11 @@ namespace Game {
 		rapidjson::Value creatures = mCreatures.WriteJson(allocator);
 		rapidjson::Value squads    =    mSquads.WriteJson(allocator);
 		rapidjson::Value feed      =      mFeed.WriteJson(allocator);
-		rapidjson::Value parts     =     mParts.WriteJson(allocator);
 
 		utils::json::Set(object, "account",   account,   allocator);
 		utils::json::Set(object, "creatures", creatures, allocator);
 		utils::json::Set(object, "squads",    squads,    allocator);
 		utils::json::Set(object, "feed",      feed,      allocator);
-		utils::json::Set(object, "parts",     parts,     allocator);
 
 		return object;
 	}
@@ -451,6 +448,5 @@ namespace Game {
 		mCreatures.ReadJson(utils::json::Get(object, "creatures"));
 		   mSquads.ReadJson(utils::json::Get(object, "squads"));
 		     mFeed.ReadJson(utils::json::Get(object, "feed"));
-		    mParts.ReadJson(utils::json::Get(object, "parts"));
 	}
 }

@@ -3,12 +3,13 @@
 #include "creature.h"
 #include <algorithm>
 #include "../repository/template.h"
+#include "../repository/creaturepart.h"
 #include "config.h"
 
 // Game
 namespace Game {
 	// Creature
-	void Creature::ReadXml(const pugi::xml_node& node, CreatureParts mParts) {
+	void Creature::ReadXml(const pugi::xml_node& node) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "creature") {
 			return;
@@ -27,19 +28,13 @@ namespace Game {
 		stats = utils::xml::GetString(node, "stats");
 		statsAbilityKeyvalues = utils::xml::GetString(node, "stats_ability_keyvalues");
 
-		// TODO: Creature should have its specific parts, not all parts (?)
-		//auto partsXml = node.child("parts");
-		//for (const auto& partXmlNode : partsXml) {
-		//	auto partId = utils::xml::GetString<uint32_t>(partXmlNode, "id");
-		//	for (const auto& partNode : mParts) {
-		//		if (partId == partNode.rigblock_asset_id) {
-		//			parts.Add(partNode);
-		//		}
-		//	}
-		//}
-
-		for (const auto& partNode : mParts) {
-			parts.Add(partNode);
+		auto partsXml = node.child("parts");
+		for (const auto& partXmlNode : partsXml) {
+			auto partId = utils::xml::GetString<uint32_t>(partXmlNode, "id");
+			auto creaturePart = Repository::CreatureParts::getById(partId);
+			if (creaturePart) {
+				parts.Add(*creaturePart);
+			}
 		}
 	}
 
@@ -68,8 +63,6 @@ namespace Game {
 			//utils::xml::Set(creature, "stats_template_ability_keyvalues", templateCreature->statsTemplateAbilityKeyvalues);
 			utils::xml::Set(creature, "stats_template_ability", statsAbilityKeyvalues);
 			utils::xml::Set(creature, "stats_template_ability_keyvalues", statsAbilityKeyvalues);
-
-			parts.WriteSmallXml(creature);
 		}
 	}
 
@@ -181,7 +174,7 @@ namespace Game {
 
 
 	// Creatures
-	void Creatures::ReadXml(const pugi::xml_node& node, CreatureParts mParts) {
+	void Creatures::ReadXml(const pugi::xml_node& node) {
 		auto creatures = node.child("creatures");
 		if (!creatures) {
 			return;
@@ -189,7 +182,7 @@ namespace Game {
 
 		for (const auto& creatureNode : creatures) {
 			decltype(auto) creature = mCreatures.emplace_back();
-			creature.ReadXml(creatureNode, mParts);
+			creature.ReadXml(creatureNode);
 		}
 	}
 

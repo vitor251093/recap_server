@@ -36,6 +36,8 @@ namespace Repository {
 	std::map<uint32_t, CreatureTemplatePtr> CreatureTemplates::mTemplates;
 
 	std::vector<CreatureTemplatePtr> CreatureTemplates::ListAll() {
+		Load();
+
 		std::vector<CreatureTemplatePtr> l;
 
 		for (const auto& t : mTemplates)

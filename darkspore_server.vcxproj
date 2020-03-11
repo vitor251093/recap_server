@@ -180,6 +180,7 @@
     <ClInclude Include="source\network\client.h" />
     <ClInclude Include="source\raknet\client.h" />
     <ClInclude Include="source\raknet\server.h" />
+    <ClInclude Include="source\repository\creaturepart.h" />
     <ClInclude Include="source\repository\part.h" />
     <ClInclude Include="source\repository\template.h" />
     <ClInclude Include="source\repository\user.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="source\network\client.cpp" />
     <ClCompile Include="source\raknet\client.cpp" />
     <ClCompile Include="source\raknet\server.cpp" />
+    <ClCompile Include="source\repository\creaturepart.cpp" />
     <ClCompile Include="source\repository\part.cpp" />
     <ClCompile Include="source\repository\template.cpp" />
     <ClCompile Include="source\repository\user.cpp" />

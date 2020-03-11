@@ -14,24 +14,27 @@ namespace Game {
 	class CreaturePart {
 	public:
 		uint64_t id;
+
+		uint64_t user_id;
 		uint16_t rigblock_asset_id;
 		
 		uint64_t timestamp;
 		uint32_t equipped_to_creature_id;
 
 		uint8_t status;
+		bool flair;
 
 		CreaturePart();
-		CreaturePart(uint32_t rigblock);
+		CreaturePart(uint64_t identifier, uint32_t rigblock, uint64_t creator_id);
 		CreaturePart(const pugi::xml_node& node);
 
 		bool ReadXml(const pugi::xml_node& node);
 		
 		void WriteSmallXml(pugi::xml_node& node) const;
-		void WriteXml(pugi::xml_node& node, uint32_t index, bool api = false) const;
+		void WriteXml(pugi::xml_node& node, bool api = false) const;
 
 		void ReadJson(rapidjson::Value& object);
-		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
+		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
 
 		void SetStatus(uint8_t newStatus);
 
@@ -65,6 +68,8 @@ namespace Game {
 	private:
 		std::vector<CreaturePart> mItems;
 	};
+
+	using CreaturePartPtr = std::shared_ptr<Game::CreaturePart>;
 }
 
 #endif
