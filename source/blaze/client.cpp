@@ -150,10 +150,10 @@ namespace Blaze {
 				boost::bind(&Client::handle_write, this, boost::asio::placeholders::error));
 #endif
 		} else if (error == boost::asio::error::eof || error == boost::asio::error::connection_reset) {
-			logger::error("Error: Client disconnected.");
+			logger::error("ERROR Client disconnected.");
 			delete this;
 		} else {
-			logger::error("Error: " + error.message());
+			logger::error("ERROR " + error.message());
 			delete this;
 		}
 	}
@@ -164,10 +164,10 @@ namespace Blaze {
 			mSocket.async_read_some(boost::asio::buffer(mReadBuffer.data(), mReadBuffer.capacity()),
 				boost::bind(&Client::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 		} else if (error == boost::asio::error::eof || error == boost::asio::error::connection_reset) {
-			logger::error("Error: Client disconnected.");
+			logger::error("ERROR Client disconnected.");
 			delete this;
 		} else {
-			logger::error("Error: " + error.message());
+			logger::error("ERROR " + error.message());
 			delete this;
 		}
 	}

@@ -237,7 +237,7 @@ namespace Game {
 							}
 						}
 					}
-					logger::info(name + " = " + value);
+					logger::info(" - " + name + " = " + value);
 				}
 				logger::info("");
 			}
@@ -292,7 +292,7 @@ namespace Game {
 			else {
 				logger::error("Undefined /game/api method: " + method);
 				for (const auto& [name, value] : request.uri) {
-					logger::error(name + " = " + value);
+					logger::error(" - " + name + " = " + value);
 				}
 				logger::error("");
 				empty_xml_response(session, response);
@@ -1203,26 +1203,29 @@ namespace Game {
 		if (user) {
 			auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
 
-			int squadIndex = 0;
-			int creaturesPerSquad = 3;
+			uint16_t squadIndex = 0;
+			uint16_t creaturesPerSquad = 3;
+			uint16_t creatureIndex = 0;
 
 			auto squads = user->get_squads().data();
-			for (Squad squad : squads) {
-				std::vector<Creature> squadCreatures = squad.creatures.data();
-				squadCreatures.clear();
-
-				for (int i = squadIndex*creaturesPerSquad; i < (squadIndex+1)*creaturesPerSquad; i++) {
-					auto creature = user->GetCreatureById(std::stoull(creaturesIds[i]));
-					if (creature) {
-						squadCreatures.push_back(*creature);
-					}
-					else {
-						logger::error("game.deck.updateDecks: Creature not found " + creaturesIds[i]);
+			for (squadIndex = 0; squadIndex < squads.size(); squadIndex++) {
+				squads[squadIndex].creatures.data().clear();
+			
+				for (creatureIndex = 0; creatureIndex < creaturesPerSquad; creatureIndex++) {
+					auto i = squadIndex * creaturesPerSquad + creatureIndex;
+					auto creatureId = std::stoull(creaturesIds[i]);
+					if (creatureId > 0) {
+						auto creature = user->GetCreatureById(creatureId);
+						if (creature) {
+							squads[squadIndex].creatures.data().push_back(*creature);
+						}
+						else {
+							logger::error("game.deck.updateDecks: Creature not found " + std::to_string(creatureId));
+						}
 					}
 				}
-				squadIndex++;
 			}
-
+			user->get_squads().setData(squads);
 			Repository::Users::SaveUser(user);
 		}
 		else {

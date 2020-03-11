@@ -51,6 +51,8 @@ namespace Game {
 			decltype(auto) end() { return mCreatures.end(); }
 			decltype(auto) end() const { return mCreatures.end(); }
 
+			void clear() { mCreatures.clear(); }
+
 			auto& data() { return mCreatures; }
 			const auto& data() const { return mCreatures; }
 

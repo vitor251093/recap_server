@@ -156,9 +156,6 @@ namespace Game {
 			// Upgrades
 			void UnlockUpgrade(uint32_t unlockId);
 
-			// Storage
-			bool Save();
-
 			pugi::xml_document ToXml();
 
 			rapidjson::Value ToJson(rapidjson::Document::AllocatorType& allocator);

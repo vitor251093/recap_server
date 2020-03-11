@@ -83,7 +83,7 @@ namespace HTTP {
 	void handle_request(Session& session, Router& router) {
 		auto& request = session.get_request().data;
 
-		logger::info(std::string(request.target()));
+		logger::info("PATH " + std::string(request.target()));
 
 		// Returns a bad request response
 		const auto bad_request = [&request](boost::beast::string_view why) {

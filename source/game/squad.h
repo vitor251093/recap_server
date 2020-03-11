@@ -40,6 +40,8 @@ namespace Game {
 			auto& data() { return mSquads; }
 			const auto& data() const { return mSquads; }
 
+			void setData(std::vector<Squad> squads) { mSquads = squads; }
+
 			void ReadXml(const pugi::xml_node& node, Creatures mCreatures);
 			
 			void WriteSmallXml(pugi::xml_node& node) const;
