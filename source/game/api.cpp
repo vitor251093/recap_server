@@ -1202,17 +1202,22 @@ namespace Game {
 		const auto& user = session.get_user();
 		if (user) {
 			auto creaturesIds = utils::explode_string(request.uri.parameter("pve_creatures"), ",");
-			int creaturesPerSquad = 3;
 
 			int squadIndex = 0;
-			Squads squads = user->get_squads();
+			int creaturesPerSquad = 3;
+
+			auto squads = user->get_squads().data();
 			for (Squad squad : squads) {
 				std::vector<Creature> squadCreatures = squad.creatures.data();
 				squadCreatures.clear();
+
 				for (int i = squadIndex*creaturesPerSquad; i < (squadIndex+1)*creaturesPerSquad; i++) {
-					Creature* creature = user->GetCreatureById(std::stoull(creaturesIds[i]));
+					auto creature = user->GetCreatureById(std::stoull(creaturesIds[i]));
 					if (creature) {
 						squadCreatures.push_back(*creature);
+					}
+					else {
+						logger::error("game.deck.updateDecks: Creature not found " + creaturesIds[i]);
 					}
 				}
 				squadIndex++;
@@ -1220,9 +1225,11 @@ namespace Game {
 
 			Repository::Users::SaveUser(user);
 		}
+		else {
+			logger::error("game.deck.updateDecks: User not found");
+		}
 
 		pugi::xml_document document;
-
 		auto docResponse = document.append_child("response");
 		add_common_keys(docResponse, session.get_darkspore_version());
 		response.set(boost::beast::http::field::content_type, "text/xml");
