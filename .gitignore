@@ -325,12 +325,8 @@ ASALocalRun/
 
 # Project specific
 build/storage/users/
-!libs/boost_1_70_0/boost/preprocessor/debug/⁩
-!libs/boost_1_70_0/boost/log/
-!libs/boost_1_70_0/boost/predef/
-!libs/boost_1_70_0/boost/preprocessor/
-!libs/boost_1_70_0/boost/spirit/home/classic/debug/
-!libs/boost_1_70_0/libs/log/config/
-!libs/boost_1_70_0/libs/log/src/
+build/storage/creature_parts.xml
+libs/boost_1_70_0/
 !libs/raknet-3.902-mod/
-
+build/darkspore_server.iobj
+build/darkspore_server.ipdb
