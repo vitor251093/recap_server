@@ -37,6 +37,7 @@ var $ = function(domId) {
 		el.forEach(function(dom){ el[el.length++] = dom; });
 		return el;
 	};
+
 	obj._mapClasses = function(func) {
 		return this.forEach(function(dom){ 
 			var classes = _arrayOfClassesWithClassesString(dom.className);
@@ -47,12 +48,36 @@ var $ = function(domId) {
 	obj.addClass = function(className) {
 		return this._mapClasses(function(classesList){
 			classesList.push(className);
-			var classes = classesList.filter(function(item, pos) {
+			return classesList.filter(function(item, pos) {
 				return classesList.indexOf(item) == pos;
 			});
-			return classes;
 		});
 	};
+	obj.removeClass = function(className) {
+		return this._mapClasses(function(classesList){
+			return classesList.filter(function(item) {
+				return className !== item;
+			});
+		});
+	};
+	obj.toggleClass = function(className, state) {
+		if (state === true)  return this.addClass(className);
+		if (state === false) return this.removeClass(className);
+		return this._mapClasses(function(classesList){
+			if (classesList.includes(className)) {
+				return classesList.filter(function(item) {
+					return className !== item;
+				});
+			}
+			else {
+				classesList.push(className);
+				return classesList.filter(function(item, pos) {
+					return classesList.indexOf(item) == pos;
+				});
+			}
+		});
+	};
+	
 	obj.append = function(el) {
 		if (this._dom.length == 0) return;
 		if (el === undefined || el === null) return;
@@ -69,33 +94,6 @@ var $ = function(domId) {
 		this._dom.forEach(func);
 		return this;
 	};
-	obj.removeClass = function(className) {
-		return this._mapClasses(function(classesList){
-			var classes = classesList.filter(function(item) {
-				return className !== item;
-			});
-			return classes;
-		});
-	};
-	obj.toggleClass = function(className, state) {
-		if (state === true)  return this.addClass(className);
-		if (state === false) return this.removeClass(className);
-		return this._mapClasses(function(classesList){
-			if (classesList.includes(className)) {
-				var classes = classesList.filter(function(item) {
-					return className !== item;
-				});
-				return classes;
-			}
-			else {
-				classesList.push(className);
-				var classes = classesList.filter(function(item, pos) {
-					return classes.indexOf(item) == pos;
-				});
-				return classes;
-			}
-		});
-	};
 	obj.attr = function(attrName, attrValue) {
 		if (attrValue === undefined) {
 			if (this._dom.length == 0) return null;
@@ -107,9 +105,6 @@ var $ = function(domId) {
 		var newArray = [];
 		this._dom.forEach(function(dom){ newArray = newArray.concat(Array.prototype.slice.call(dom.childNodes)) });
 		return $(newArray);
-	};
-	obj.click = function(func) {
-		return this.forEach(function(dom){ dom.onmouseup = func });
 	};
 	obj.css = function(name, value) {
 		if (value === undefined) {
@@ -132,15 +127,14 @@ var $ = function(domId) {
 	obj.hide = function(hide) {
 		return this.css('visibility', ((hide === undefined || hide === true) ? "hidden" : "visible"));
 	};
-	obj.mouseUp = function(func) {
-		return this.forEach(function(dom){
-			dom.addEventListener('mouseup', func);
-		});
-	};
 	obj.change = function(func) {
-		return this.forEach(function(dom){
-			dom.onchange = func;
-		});
+		return this.forEach(function(dom){ dom.onchange = func; });
+	};
+	obj.click = function(func) {
+		return this.mouseUp(func);
+	};
+	obj.mouseUp = function(func) {
+		return this.forEach(function(dom){ dom.addEventListener('mouseup', func); });
 	};
 	obj.html = function(text) {
 		if (text === undefined) {
