@@ -481,7 +481,6 @@ namespace Game {
 		}
 		
 		utils::json::Set(document, "stat", "ok");
-		user->get_account().id = rand();
 
 		auto actualPartsSize = Repository::CreatureParts::ListAll().size();
 		auto parts = Repository::Parts::ListAll();
@@ -496,9 +495,6 @@ namespace Game {
 		user->get_account().creatureRewards = templates.size();
 		for (auto &templateCreature: templates) {
 			user->UnlockCreature(templateCreature->id);
-
-			auto creature = user->GetCreatureByTemplateId(templateCreature->id);
-			creature->gearScore = 100;
 		}
 
 		// TODO: Unlocking everything from start to test; remove that in the future
@@ -530,14 +526,14 @@ namespace Game {
 		user->get_account().grantAllAccess = true;
 		user->get_account().grantOnlineAccess = true;
 
-		for (int squadSlot = 1; squadSlot <= 3; squadSlot++) {
+		for (uint16_t squadSlot = 1; squadSlot <= 3; squadSlot++) {
+			uint16_t templateId = squadSlot - 1;
 			Squad squad1;
 			squad1.id = squadSlot;
 			squad1.slot = squadSlot;
 			squad1.name = "Slot " + std::to_string(squadSlot);
 			squad1.locked = false;
-			squad1.creatures.Add(templates[(squadSlot - 1)]->id);
-			squad1.creatures.data()[0].gearScore = 100;
+			squad1.creatures.Add(templates[templateId]->id);
 			user->get_squads().data().push_back(squad1);
 		}
 

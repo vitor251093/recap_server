@@ -92,6 +92,10 @@ namespace Repository {
 		}
 		else {
 			user = std::make_shared<Game::User>(name, email, password);
+
+			srand(time(NULL));
+			user->get_account().id = rand();
+
 			if (SaveUser(user)) {
 				sUsersByEmail.emplace(email, user);
 			}
