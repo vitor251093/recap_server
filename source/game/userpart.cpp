@@ -2,7 +2,7 @@
 // Include
 #include "user.h"
 #include "config.h"
-#include "creaturepart.h"
+#include "userpart.h"
 #include "../utils/functions.h"
 #include "../repository/part.h"
 #include <algorithm>
@@ -12,23 +12,23 @@
 namespace Game {
 	
 	// Part
-	CreaturePart::CreaturePart() {
+	UserPart::UserPart() {
 
 	}
 
-	CreaturePart::CreaturePart(uint64_t identifier, uint32_t rigblock, uint64_t creator_id) {
+	UserPart::UserPart(uint64_t identifier, uint32_t rigblock, uint64_t creator_id) {
 		id = identifier;
 		rigblock_asset_id = rigblock;
 		user_id = creator_id;
 	}
 
-	CreaturePart::CreaturePart(const pugi::xml_node& node) {
+	UserPart::UserPart(const pugi::xml_node& node) {
 		if (!ReadXml(node)) {
 			rigblock_asset_id = 1;
 		}
 	}
 
-	bool CreaturePart::ReadXml(const pugi::xml_node& node) {
+	bool UserPart::ReadXml(const pugi::xml_node& node) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "part") {
 			return false;
@@ -45,7 +45,7 @@ namespace Game {
 		return true;
 	}
 
-	void CreaturePart::WriteSmallXml(pugi::xml_node& node) const {
+	void UserPart::WriteSmallXml(pugi::xml_node& node) const {
 		if (auto part = node.append_child("part")) {
 			utils::xml::Set(part, "id", id);
 			utils::xml::Set(part, "user_id", user_id);
@@ -57,7 +57,7 @@ namespace Game {
 		}
 	}
 
-	void CreaturePart::WriteXml(pugi::xml_node& node, bool api) const {
+	void UserPart::WriteXml(pugi::xml_node& node, bool api) const {
 		auto partDetails = Repository::Parts::getById(rigblock_asset_id);
 
 		if (auto part = node.append_child("part")) {
@@ -88,7 +88,7 @@ namespace Game {
 		}
 	}
 
-	void CreaturePart::ReadJson(rapidjson::Value& object) {
+	void UserPart::ReadJson(rapidjson::Value& object) {
 		if (!object.IsObject()) return;
 		id = utils::json::GetUint16(object, "id");
 		equipped_to_creature_id = utils::json::GetUint(object, "creature_id");
@@ -97,7 +97,7 @@ namespace Game {
 		rigblock_asset_id = utils::json::GetUint16(object, "rigblock_asset_id");
 	}
 
-	rapidjson::Value CreaturePart::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const {
+	rapidjson::Value UserPart::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const {
 		auto part = Repository::Parts::getById(rigblock_asset_id);
 
 		rapidjson::Value object = utils::json::NewObject();
@@ -128,15 +128,15 @@ namespace Game {
 		return object;
 	}
 
-	void CreaturePart::SetStatus(uint8_t newStatus) {
+	void UserPart::SetStatus(uint8_t newStatus) {
 		status = newStatus;
 	}
 
 
 
 	// Parts
-	CreaturePart* CreatureParts::GetPartById(uint32_t id) {
-		CreaturePart* partPtr = nullptr;
+	UserPart* UserParts::GetPartById(uint32_t id) {
+		UserPart* partPtr = nullptr;
 		for (auto& part : mItems) {
 			if (part.id == id) {
 				partPtr = &part;
@@ -146,7 +146,7 @@ namespace Game {
 		return partPtr;
 	}
 
-	void CreatureParts::ReadXml(const pugi::xml_node& node) {
+	void UserParts::ReadXml(const pugi::xml_node& node) {
 		auto parts = node.child("parts");
 		if (!parts) {
 			return;
@@ -158,7 +158,7 @@ namespace Game {
 		}
 	}
 
-	void CreatureParts::WriteSmallXml(pugi::xml_node& node) const {
+	void UserParts::WriteSmallXml(pugi::xml_node& node) const {
 		if (auto parts = node.append_child("parts")) {
 			for (const auto& part : mItems) {
 				part.WriteSmallXml(parts);
@@ -166,7 +166,7 @@ namespace Game {
 		}
 	}
 
-	void CreatureParts::WriteXml(pugi::xml_node& node, bool api) const {
+	void UserParts::WriteXml(pugi::xml_node& node, bool api) const {
 		if (auto parts = node.append_child("parts")) {
 			for (const auto& part : mItems) {
 				part.WriteXml(parts, api);
@@ -174,7 +174,7 @@ namespace Game {
 		}
 	}
 
-	void CreatureParts::ReadJson(rapidjson::Value& object) {
+	void UserParts::ReadJson(rapidjson::Value& object) {
 		if (!object.IsArray()) return;
 		mItems.clear();
 		for (auto& partNode : object.GetArray()) {
@@ -183,7 +183,7 @@ namespace Game {
 		}
 	}
 
-	rapidjson::Value CreatureParts::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const {
+	rapidjson::Value UserParts::WriteJson(rapidjson::Document::AllocatorType& allocator, bool api) const {
 		rapidjson::Value value = utils::json::NewArray();
 		for (const auto& part : mItems) {
 			rapidjson::Value partNode = part.WriteJson(allocator, api);
@@ -192,7 +192,7 @@ namespace Game {
 		return value;
 	}
 
-	void CreatureParts::Add(CreaturePart part) {
+	void UserParts::Add(UserPart part) {
 		mItems.emplace_back(part);
 	}
 }

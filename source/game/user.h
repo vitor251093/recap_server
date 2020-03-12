@@ -5,7 +5,7 @@
 // Include
 #include "game.h"
 #include "squad.h"
-#include "creaturepart.h"
+#include "userpart.h"
 
 #include <map>
 #include "../utils/functions.h"

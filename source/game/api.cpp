@@ -14,7 +14,7 @@
 #include "../repository/template.h"
 #include "../repository/user.h"
 #include "../repository/part.h"
-#include "../repository/creaturepart.h"
+#include "../repository/userpart.h"
 
 #include "../utils/functions.h"
 #include "../utils/logger.h"
@@ -482,13 +482,13 @@ namespace Game {
 		
 		utils::json::Set(document, "stat", "ok");
 
-		auto actualPartsSize = Repository::CreatureParts::ListAll().size();
+		auto actualPartsSize = Repository::UserParts::ListAll().size();
 		auto parts = Repository::Parts::ListAll();
 		uint64_t index = 1;
 		for (auto& part : parts) {
-			Repository::CreatureParts::Add(std::make_shared<Game::CreaturePart>(actualPartsSize + index++, part->rigblock_asset_id, user->get_account().id));
+			Repository::UserParts::Add(std::make_shared<Game::UserPart>(actualPartsSize + index++, part->rigblock_asset_id, user->get_account().id));
 		}
-		Repository::CreatureParts::Save();
+		Repository::UserParts::Save();
 
 		// TODO: Unlocking all creatures from start to test; remove that in the future
 		std::vector<Repository::CreatureTemplatePtr> templates = Repository::CreatureTemplates::ListAll();
@@ -519,7 +519,7 @@ namespace Game {
 		user->get_account().unlockPveDecks = 2;
 		user->get_account().unlockPvpDecks = 1;
 		user->get_account().unlockStats = 1,
-		user->get_account().unlockInventoryIdentify = 2500;
+		user->get_account().unlockInventoryIdentify = 250000;
 		user->get_account().unlockEditorFlairSlots = 1;
 		user->get_account().upsell = 1;
 		user->get_account().xp = 10000;
@@ -762,7 +762,7 @@ namespace Game {
 		auto fullOwnedOnly = filter == "market_status_full-owned";
 		
 		if (auto docResponse = document.append_child("response")) {
-			auto allParts = Repository::CreatureParts::ListAll();
+			auto allParts = Repository::UserParts::ListAll();
 
 			if (auto parts = docResponse.append_child("parts")) {
 				for (const auto& part : allParts) {
@@ -786,7 +786,7 @@ namespace Game {
 		pugi::xml_document document;
 
 		if (auto docResponse = document.append_child("response")) {
-			auto allParts = Repository::CreatureParts::ListAll();
+			auto allParts = Repository::UserParts::ListAll();
 			auto timestamp = utils::get_unix_time();
 
 			utils::xml::Set(docResponse, "expires", timestamp + (3 * 60 * 60 * 1000));
@@ -816,12 +816,12 @@ namespace Game {
 				int64_t index = utils::to_number<int64_t>(&transaction[1]);
 				
 				if (type == 's') { // sell item
-					auto part = Repository::CreatureParts::getById(index);
-					Repository::CreatureParts::Remove(part);
+					auto part = Repository::UserParts::getById(index);
+					Repository::UserParts::Remove(part);
 					user->get_account().dna += Repository::Parts::getById(part->rigblock_asset_id)->cost;
 				}
 				else if (type == 'f') { // turn item into detail/flair
-					auto part = Repository::CreatureParts::getById(index);
+					auto part = Repository::UserParts::getById(index);
 					part->flair = true;
 				}
 				else if (type == 'w'){ // buy weapon
@@ -832,12 +832,12 @@ namespace Game {
 					// TODO: check for more later
 				}
 			}
-			Repository::CreatureParts::Save();
+			Repository::UserParts::Save();
 			Repository::Users::SaveUser(user);
 		}
 
 		if (auto docResponse = document.append_child("response")) {
-			auto allParts = Repository::CreatureParts::ListAll();
+			auto allParts = Repository::UserParts::ListAll();
 			auto timestamp = utils::get_unix_time();
 			
 			if (auto parts = docResponse.append_child("parts")) {
@@ -865,12 +865,12 @@ namespace Game {
 				uint32_t partId = utils::to_number<uint32_t>(partIds[i]);
 				uint8_t  status = utils::to_number<uint8_t>(statuses[i]);
 
-				auto part = Repository::CreatureParts::getById(partId);
+				auto part = Repository::UserParts::getById(partId);
 				if (part != nullptr) {
 					part->SetStatus(status);
 				}
 			}
-			Repository::CreatureParts::Save();
+			Repository::UserParts::Save();
 		}
 
 		pugi::xml_document document;
@@ -1333,9 +1333,9 @@ namespace Game {
 
 				auto partIds = utils::explode_string(request.uri.parameter("parts"), ",");
 				for (const auto& partId : partIds) {
-					Repository::CreatureParts::getById(std::stoi(partId))->equipped_to_creature_id = creatureId;
+					Repository::UserParts::getById(std::stoi(partId))->equipped_to_creature_id = creatureId;
 				}
-				if (!partIds.empty()) Repository::CreatureParts::Save();
+				if (!partIds.empty()) Repository::UserParts::Save();
 
 				creature->itemPoints = request.uri.parameterd("points");
 				creature->stats = request.uri.parameter("stats");

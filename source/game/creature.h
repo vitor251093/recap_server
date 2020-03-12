@@ -5,7 +5,7 @@
 // Include
 #include <vector>
 #include "template.h"
-#include "creaturepart.h"
+#include "userpart.h"
 #include "../utils/functions.h"
 
 // Game
@@ -24,7 +24,7 @@ namespace Game {
 		std::string statsAbilityKeyvalues;
 		//    example (with no spaces): 885660025!minDamage, 5; 885660025!maxDamage, 8; 885660025!percentToHeal, 20; 1152331895!duration, 20; 1152331895!spawnMax, 2; 424126604!radius, 8; 424126604!healing, 5; 424126604!duration, 6; 424126604!minHealing, 21; 424126604!maxHealing, 32; 1577880566!Enrage.damage, 9; 1577880566!Enrage.duration, 30; 1577880566!Enrage.healing, 35; 1829107826!diameter, 12; 1829107826!damage, 6; 1829107826!duration, 10; 1829107826!speedDebuff, 75
 
-		CreatureParts parts;
+		UserParts parts;
 
 		std::string pngLargeUrl;
 		std::string pngThumbUrl;

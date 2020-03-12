@@ -56,7 +56,7 @@ namespace Game {
 			void SetSuffix(uint16_t suffix);
 
 		private:
-			friend class CreatureParts;
+			friend class UserParts;
 	};
 
 	// Parts

@@ -24,9 +24,9 @@ namespace Game {
 		//stats_template_ability
 		statsTemplateAbilityKeyvalues = utils::xml::GetString(node, "stats_template_ability_keyvalues");
 
-		auto creatureParts = utils::xml::GetString(node, "creature_parts");
-		hasHands = (creatureParts != "no_hands");
-		hasFeet  = (creatureParts != "no_feet" );
+		auto userParts = utils::xml::GetString(node, "creature_parts");
+		hasHands = (userParts != "no_hands");
+		hasFeet  = (userParts != "no_feet" );
 
 		abilityPassive  = utils::xml::GetString<uint64_t>(node, "ability_passive");
 		abilityBasic    = utils::xml::GetString<uint64_t>(node, "ability_basic");

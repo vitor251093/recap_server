@@ -11,7 +11,7 @@
 // Game
 namespace Game {
 	// Part
-	class CreaturePart {
+	class UserPart {
 	public:
 		uint64_t id;
 
@@ -24,9 +24,9 @@ namespace Game {
 		uint8_t status;
 		bool flair;
 
-		CreaturePart();
-		CreaturePart(uint64_t identifier, uint32_t rigblock, uint64_t creator_id);
-		CreaturePart(const pugi::xml_node& node);
+		UserPart();
+		UserPart(uint64_t identifier, uint32_t rigblock, uint64_t creator_id);
+		UserPart(const pugi::xml_node& node);
 
 		bool ReadXml(const pugi::xml_node& node);
 		
@@ -39,11 +39,11 @@ namespace Game {
 		void SetStatus(uint8_t newStatus);
 
 	private:
-		friend class CreatureParts;
+		friend class UserParts;
 	};
 
 	// Parts
-	class CreatureParts {
+	class UserParts {
 	public:
 		decltype(auto) begin() { return mItems.begin(); }
 		decltype(auto) begin() const { return mItems.begin(); }
@@ -53,7 +53,7 @@ namespace Game {
 		auto& data() { return mItems; }
 		const auto& data() const { return mItems; }
 
-		CreaturePart* GetPartById(uint32_t id);
+		UserPart* GetPartById(uint32_t id);
 
 		void ReadXml(const pugi::xml_node& node);
 
@@ -63,13 +63,13 @@ namespace Game {
 		void ReadJson(rapidjson::Value& object);
 		rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator, bool api = false) const;
 
-		void Add(CreaturePart part);
+		void Add(UserPart part);
 
 	private:
-		std::vector<CreaturePart> mItems;
+		std::vector<UserPart> mItems;
 	};
 
-	using CreaturePartPtr = std::shared_ptr<Game::CreaturePart>;
+	using UserPartPtr = std::shared_ptr<Game::UserPart>;
 }
 
 #endif

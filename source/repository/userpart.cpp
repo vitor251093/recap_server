@@ -1,6 +1,6 @@
 
 // Include
-#include "creaturepart.h"
+#include "userpart.h"
 #include <algorithm>
 #include "../game/config.h"
 #include "../utils/logger.h"
@@ -8,20 +8,20 @@
 // Repository
 namespace Repository {
 
-	void CreatureParts::Add(Game::CreaturePartPtr part) {
+	void UserParts::Add(Game::UserPartPtr part) {
 		mPartsById.emplace(part->id, part);
 	}
-	void CreatureParts::Remove(Game::CreaturePartPtr part) {
+	void UserParts::Remove(Game::UserPartPtr part) {
 		mPartsById.erase(part->id);
 	}
-	void CreatureParts::Remove(uint64_t id) {
+	void UserParts::Remove(uint64_t id) {
 		mPartsById.erase(id);
 	}
 
-	Game::CreaturePartPtr CreatureParts::getById(uint64_t id) {
+	Game::UserPartPtr UserParts::getById(uint64_t id) {
 		Load();
 
-		Game::CreaturePartPtr part;
+		Game::UserPartPtr part;
 
 		auto it = mPartsById.find(id);
 		if (it != mPartsById.end()) {
@@ -31,10 +31,10 @@ namespace Repository {
 		return part;
 	}
 
-	void CreatureParts::Load() {
+	void UserParts::Load() {
 		if (!mPartsById.empty()) return;
 
-		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "creature_parts.xml";
+		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "user_parts.xml";
 
 		pugi::xml_document document;
 		if (!document.load_file(filepath.c_str())) {
@@ -50,14 +50,14 @@ namespace Repository {
 		}
 
 		for (const auto& partNode : parts) {
-			Add(std::make_shared<Game::CreaturePart>(partNode));
+			Add(std::make_shared<Game::UserPart>(partNode));
 		}
 	}
 
-	bool CreatureParts::Save() {
+	bool UserParts::Save() {
 		pugi::xml_document document;
 
-		auto allParts = Repository::CreatureParts::ListAll();
+		auto allParts = Repository::UserParts::ListAll();
 		if (auto parts = document.append_child("parts")) {
 			uint32_t index = 0;
 			for (const auto& part : allParts) {
@@ -65,16 +65,16 @@ namespace Repository {
 			}
 		}
 
-		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "creature_parts.xml";
+		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "user_parts.xml";
 		return document.save_file(filepath.c_str(), "\t", 1U, pugi::encoding_latin1);
 	}
 
-	std::map<uint64_t, Game::CreaturePartPtr> CreatureParts::mPartsById;
+	std::map<uint64_t, Game::UserPartPtr> UserParts::mPartsById;
 
-	std::vector<Game::CreaturePartPtr> CreatureParts::ListAll() {
+	std::vector<Game::UserPartPtr> UserParts::ListAll() {
 		Load();
 
-		std::vector<Game::CreaturePartPtr> l;
+		std::vector<Game::UserPartPtr> l;
 		for (const auto& t : mPartsById)
 			l.push_back(t.second);
 

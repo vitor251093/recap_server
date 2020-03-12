@@ -325,7 +325,7 @@ ASALocalRun/
 
 # Project specific
 build/storage/users/
-build/storage/creature_parts.xml
+build/storage/user_parts.xml
 libs/boost_1_70_0/
 !libs/raknet-3.902-mod/
 build/darkspore_server.iobj

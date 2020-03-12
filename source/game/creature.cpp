@@ -3,7 +3,7 @@
 #include "creature.h"
 #include <algorithm>
 #include "../repository/template.h"
-#include "../repository/creaturepart.h"
+#include "../repository/userpart.h"
 #include "config.h"
 
 // Game
@@ -31,9 +31,9 @@ namespace Game {
 		auto partsXml = node.child("parts");
 		for (const auto& partXmlNode : partsXml) {
 			auto partId = utils::xml::GetString<uint32_t>(partXmlNode, "id");
-			auto creaturePart = Repository::CreatureParts::getById(partId);
-			if (creaturePart) {
-				parts.Add(*creaturePart);
+			auto userPart = Repository::UserParts::getById(partId);
+			if (userPart) {
+				parts.Add(*userPart);
 			}
 		}
 	}

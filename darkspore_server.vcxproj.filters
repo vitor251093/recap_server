@@ -186,17 +186,17 @@
     <ClInclude Include="source\repository\user.h">
       <Filter>Header Files\repository</Filter>
     </ClInclude>
-    <ClInclude Include="source\game\creaturepart.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="source\game\part.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="source\repository\part.h">
       <Filter>Header Files\repository</Filter>
     </ClInclude>
-    <ClInclude Include="source\repository\creaturepart.h">
+    <ClInclude Include="source\repository\userpart.h">
       <Filter>Header Files\repository</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\userpart.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -317,17 +317,17 @@
     <ClCompile Include="source\repository\user.cpp">
       <Filter>Source Files\repository</Filter>
     </ClCompile>
-    <ClCompile Include="source\game\creaturepart.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="source\game\part.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="source\repository\part.cpp">
       <Filter>Source Files\repository</Filter>
     </ClCompile>
-    <ClCompile Include="source\repository\creaturepart.cpp">
+    <ClCompile Include="source\repository\userpart.cpp">
       <Filter>Source Files\repository</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\userpart.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

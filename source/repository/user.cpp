@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <filesystem>
 #include "../game/config.h"
-#include "../repository/creaturepart.h"
+#include "../repository/userpart.h"
 
 // Repository
 namespace Repository {

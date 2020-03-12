@@ -166,7 +166,7 @@
     <ClInclude Include="source\game\creature.h" />
     <ClInclude Include="source\game\game.h" />
     <ClInclude Include="source\game\leaderboard.h" />
-    <ClInclude Include="source\game\creaturepart.h" />
+    <ClInclude Include="source\game\userpart.h" />
     <ClInclude Include="source\game\part.h" />
     <ClInclude Include="source\game\squad.h" />
     <ClInclude Include="source\game\template.h" />
@@ -180,7 +180,7 @@
     <ClInclude Include="source\network\client.h" />
     <ClInclude Include="source\raknet\client.h" />
     <ClInclude Include="source\raknet\server.h" />
-    <ClInclude Include="source\repository\creaturepart.h" />
+    <ClInclude Include="source\repository\userpart.h" />
     <ClInclude Include="source\repository\part.h" />
     <ClInclude Include="source\repository\template.h" />
     <ClInclude Include="source\repository\user.h" />
@@ -212,7 +212,7 @@
     <ClCompile Include="source\game\creature.cpp" />
     <ClCompile Include="source\game\game.cpp" />
     <ClCompile Include="source\game\leaderboard.cpp" />
-    <ClCompile Include="source\game\creaturepart.cpp" />
+    <ClCompile Include="source\game\userpart.cpp" />
     <ClCompile Include="source\game\part.cpp" />
     <ClCompile Include="source\game\squad.cpp" />
     <ClCompile Include="source\game\template.cpp" />
@@ -226,7 +226,7 @@
     <ClCompile Include="source\network\client.cpp" />
     <ClCompile Include="source\raknet\client.cpp" />
     <ClCompile Include="source\raknet\server.cpp" />
-    <ClCompile Include="source\repository\creaturepart.cpp" />
+    <ClCompile Include="source\repository\userpart.cpp" />
     <ClCompile Include="source\repository\part.cpp" />
     <ClCompile Include="source\repository\template.cpp" />
     <ClCompile Include="source\repository\user.cpp" />
