@@ -824,9 +824,11 @@ namespace Game {
 					auto part = Repository::CreatureParts::getById(index);
 					part->flair = true;
 				}
+				else if (type == 'w'){ // buy weapon
+					// TODO: Implement buying weapon
+				}
 				else {
 					logger::info("Transaction: " + transaction);
-					// w = weapon (?)
 					// TODO: check for more later
 				}
 			}
@@ -1095,7 +1097,7 @@ namespace Game {
 			}
 
 			if (request.uri.parameter("include_settings") == "true") {
-				docResponse.append_child("settings");
+				utils::xml::Set(docResponse, "settings", user->get_account().settings);
 			}
 
 			if (request.uri.parameter("cookie") == "true") {
@@ -1179,13 +1181,11 @@ namespace Game {
 		
 		auto& request = session.get_request();
 
-		/*
-			Undefined / game / api method : api.account.setSettings
-			method = api.account.setSettings
-			settings = DisableLMBAttack, off; ShowAllyHealthAndManaBars, on; ShowAllyNames, on; ShowDamageDoneByAllies, off; ShowDamageDoneByMe, on; ShowDamageDoneToAllies, off; ShowDamageDoneToMe, on; ShowDamagedNPCHealthBars, on; ShowEnemyNames, on; ShowHealingDoneToAllies, off; ShowHealingDoneToEnemies, off; ShowHealingDoneToMe, on; ShowManaGainedOrLostByAllies, off; ShowManaGainedOrLostByMe, on; ShowMyHealthAndManaBars, on; ShowMyName, on; ShowPickupsByAllies, on; ShowPickupsByMe, on; ShowRadar, on;
-			token = ABCDEFGHIJKLMNOPQRSTUVWXYZ
-			version = 1
-		*/
+		const auto& user = session.get_user();
+		if (user) {
+			user->get_account().settings = request.uri.parameter("settings");
+			Repository::Users::SaveUser(user);
+		}
 
 		pugi::xml_document document;
 

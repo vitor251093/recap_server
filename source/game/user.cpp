@@ -104,6 +104,8 @@ namespace Game {
 
 		capLevel       = utils::xml::GetString<uint32_t>(account, "cap_level");
 		capProgression = utils::xml::GetString<uint32_t>(account, "cap_progression");
+
+		settings = utils::xml::GetString(account, "settings");
 	}
 
 	void Account::WriteXml(pugi::xml_node& node) const {
@@ -139,6 +141,7 @@ namespace Game {
 			utils::xml::Set(account, "grant_online_access", grantOnlineAccess ? "1" : "0");
 			utils::xml::Set(account, "cap_level", capLevel);
 			utils::xml::Set(account, "cap_progression", capProgression);
+			utils::xml::Set(account, "settings", settings);
 		}
 	}
 
@@ -173,6 +176,7 @@ namespace Game {
 		grantOnlineAccess       = utils::json::GetBool(object, "grant_online_access");
 		capLevel                = utils::json::GetUint(object, "cap_level");
 		capProgression          = utils::json::GetUint(object, "cap_progression");
+		settings                = utils::json::GetString(object, "settings");
 	}
 
 	rapidjson::Value Account::WriteJson(rapidjson::Document::AllocatorType& allocator) const { 
@@ -208,6 +212,7 @@ namespace Game {
 		utils::json::Set(object, "grant_online_access",       grantOnlineAccess,       allocator);
 		utils::json::Set(object, "cap_level",                 capLevel,                allocator);
 		utils::json::Set(object, "cap_progression",           capProgression,          allocator);
+		utils::json::Set(object, "settings",                  settings,                allocator);
 		return object;
 	}
 

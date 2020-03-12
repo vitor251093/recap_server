@@ -56,6 +56,8 @@ namespace Game {
 		uint32_t capLevel = 0;
 		uint32_t capProgression = 0;
 
+		std::string settings;
+
 		void ReadXml(const pugi::xml_node& node);
 		void WriteXml(pugi::xml_node& node) const;
 
@@ -113,6 +115,7 @@ namespace Game {
 			auto& get_account() { return mAccount; }
 			const auto& get_account() const { return mAccount; }
 
+
 			auto& get_creatures() { return mCreatures; }
 			const auto& get_creatures() const { return mCreatures; }
 
@@ -122,22 +125,25 @@ namespace Game {
 			auto& get_feed() { return mFeed; }
 			const auto& get_feed() const { return mFeed; }
 
+
+			const auto& get_email() const { return mEmail; }
+			void set_email(const std::string& email) { mEmail = email; }
+
+			const auto& get_password() const { return mPassword; }
+			void set_password(const std::string& password) { mPassword = password; }
+
+			const auto& get_name() const { return mName; }
+			void set_name(const std::string& name) { mName = name; }
+
 			const std::string& get_auth_token() const { return mAuthToken; }
 			void set_auth_token(const std::string& authToken) { mAuthToken = authToken; }
+
 
 			const GameInfoPtr& get_game_info() const { return mGameInfo; }
 			void set_game_info(const GameInfoPtr& gameInfo) { mGameInfo = gameInfo; }
 
+
 			auto get_id() const { return mAccount.id; }
-
-			const auto& get_email() const { return mEmail; }
-			void set_email(const std::string& email){ mEmail = email; }
-
-			const auto& get_password() const { return mPassword; }
-			void set_password(const std::string& password) { mPassword = password; }
-			
-			const auto& get_name() const { return mName; }
-			void set_name(const std::string& name) { mName = name; }
 
 			bool UpdateState(uint32_t newState);
 
