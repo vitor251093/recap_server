@@ -332,6 +332,9 @@
     <ClCompile Include="source\game\userpart.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
+    <ClCompile Include="source\utils\logger.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="darkspore_server.rc">

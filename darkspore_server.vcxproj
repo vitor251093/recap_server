@@ -237,6 +237,7 @@
     <ClCompile Include="source\utils\eawebkit.cpp" />
     <ClCompile Include="source\utils\functions.cpp" />
     <ClCompile Include="source\utils\json.cpp" />
+    <ClCompile Include="source\utils\logger.cpp" />
     <ClCompile Include="source\utils\xml.cpp" />
   </ItemGroup>
   <ItemGroup>
