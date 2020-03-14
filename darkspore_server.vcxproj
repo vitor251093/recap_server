@@ -147,6 +147,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="source\blaze\client.h" />
     <ClInclude Include="source\blaze\component\associationcomponent.h" />
     <ClInclude Include="source\blaze\component\authcomponent.h" />
@@ -237,6 +238,13 @@
     <ClCompile Include="source\utils\functions.cpp" />
     <ClCompile Include="source\utils\json.cpp" />
     <ClCompile Include="source\utils\xml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="darkspore_server.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
+    <Image Include="recap_icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
