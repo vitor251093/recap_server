@@ -1,6 +1,8 @@
 input[type="text"].password {
     font-family: 'dotsfont-regular';
-	line-height: 33px;
+    line-height: 33px;
+    margin-top: 7px;
+    background-color: transparent;
 }
 
 .form-input-bg {
