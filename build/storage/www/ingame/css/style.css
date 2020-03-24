@@ -33,8 +33,7 @@ input[type="text"].password {
 	line-height: 33px;
 }
 
-input[type="text"],
-input[type="email"] {
+input[type="text"] {
 	resize: none;
 	border: transparent;
 	background-color: #282729;
