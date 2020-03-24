@@ -1,0 +1,54 @@
+body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #222;
+    font-family: Arial;
+    background-color: #0b0b0b;
+    margin: 0px;
+    padding: 0px; 
+    overflow: hidden;
+}
+
+a:focus, a:active {
+    text-decoration: none;
+    outline: none;
+    transition: all 300ms ease 0s;
+    -moz-transition: all 300ms ease 0s;
+    -webkit-transition: all 300ms ease 0s;
+    -o-transition: all 300ms ease 0s;
+    -ms-transition: all 300ms ease 0s; 
+}
+
+input, select, textarea {
+    outline: none;
+    appearance: unset !important;
+    -moz-appearance: unset !important;
+    -webkit-appearance: unset !important;
+    -o-appearance: unset !important;
+    -ms-appearance: unset !important; 
+}
+
+input[type="text"] {
+	resize: none;
+	border: transparent;
+	background-color: #282729;
+	color: #b4b7b9;
+	height: 18px;
+	width: 256px;
+	margin-left: 15px;
+	margin-top: 9px;
+	margin-bottom: 13px;
+}
+
+input::-webkit-input-placeholder {
+color: #999; }
+input::-moz-placeholder {
+color: #999; }
+input:-ms-input-placeholder {
+color: #999; }
+input:-moz-placeholder {
+color: #999; }
+
+.hidden {
+    display: none !important;
+}

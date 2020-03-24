@@ -12,10 +12,14 @@
 
     <script type="text/javascript" src="angular/directive/dsbutton.js"></script>
     <script type="text/javascript" src="angular/directive/dscheckbox.js"></script>
+    <script type="text/javascript" src="angular/directive/dsinput.js"></script>
     <script type="text/javascript" src="angular/directive/dsmodal.js"></script>
     <script type="text/javascript" src="angular/directive/dswindow.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" type="text/css" href="css/dsbutton.css">
     <link rel="stylesheet" type="text/css" href="css/dscheckbox.css">
+    <link rel="stylesheet" type="text/css" href="css/dsinput.css">
     <link rel="stylesheet" type="text/css" href="css/dsmodal.css">
     <link rel="stylesheet" type="text/css" href="css/dswindow.css">
 
@@ -31,11 +35,11 @@
                     </div>
                     <div class="form-group">
                         <p class="darkspore-font">Enter Username</p>
-                        <div class="form-input-bg"><input type="text" class="form-input" ng-model="$parent.name" ng-style="{color: ((name.length > 6) ? 'yellow' : 'white')}"/></div>
+                        <dsinput type="text" ng-model="$parent.name" maxlength="6"></dsinput>
                     </div>
                     <div class="form-group">
                         <p class="darkspore-font">Enter Email</p>
-                        <div class="form-input-bg"><input type="text" class="form-input" ng-model="$parent.email"/></div>
+                        <dsinput type="text" ng-model="$parent.email"></dsinput>
                     </div>
                     <div class="form-group float">
                         <p class="darkspore-font">Select Avatar</p>
@@ -43,7 +47,7 @@
                     </div>
                     <div class="form-group">
                         <p class="darkspore-font">Enter Password</p>
-                        <div class="form-input-bg"><input type="text" class="form-input password" ng-model="$parent.password"/></div>
+                        <dsinput type="password" ng-model="$parent.password"></dsinput>
                     </div>
                     <div class="form-group-tos">
                         <dscheckbox ng-model="$parent.agreeTerms">

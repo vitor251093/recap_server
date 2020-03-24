@@ -1,0 +1,18 @@
+input[type="text"].password {
+    font-family: 'dotsfont-regular';
+	line-height: 33px;
+}
+
+.form-input-bg {
+    width: 288px;
+    background-image: url("/ingame/images/TextField.png");
+}
+
+.form-input-bg:hover:not(:active) {
+    background-image: url("/ingame/images/TextField-hover.png");
+}
+
+.form-input {
+    width: 100%;
+}
+
