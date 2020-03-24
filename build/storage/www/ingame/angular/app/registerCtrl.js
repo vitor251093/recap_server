@@ -48,6 +48,12 @@ app.controller('registerCtrl', function($scope, $timeout) {
         $scope.showAvatarDialog = !$scope.showAvatarDialog;
     };
 
+
+    $scope.showTerms = function() {
+        EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore');
+    };
+
+
     $scope.name = "";
     $scope.email = ""
     $scope.password = "";

@@ -51,7 +51,7 @@
                     </div>
                     <div class="form-group-tos">
                         <dscheckbox ng-model="$parent.agreeTerms">
-                            I understand & accept the <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a>
+                            I understand & accept the <a href="#" class="term-service" ng-mouseup="$parent.showTerms()">Terms of service</a>
                         </dscheckbox>
                     </div>
                     <div class="form-group form-group-button">
