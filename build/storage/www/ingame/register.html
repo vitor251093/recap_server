@@ -4,17 +4,18 @@
     <title>Darkspore Registration</title>
     <script type="text/javascript" src="js/json2.js"></script>
     <script type="text/javascript" src="js/eawebkit.js"></script>
-    <script type="text/javascript" src="js/eawebkit.ui.js"></script>
-
-    <script type="text/javascript" src="js/angular.js"></script>
-    <script type="text/javascript" src="app/app.js"></script>
-    <script type="text/javascript" src="app/registerCtrl.js"></script>
-    
     <script type="text/javascript" src="js/recapclient.js"></script>
 
+    <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="angular/app.js"></script>
+    <script type="text/javascript" src="angular/app/registerCtrl.js"></script>
+
+    <script type="text/javascript" src="angular/directive/dsbutton.js"></script>
+    <script type="text/javascript" src="angular/directive/dscheckbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/dsbutton.css">
+    <link rel="stylesheet" type="text/css" href="css/dscheckbox.css">
+
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
-    <link rel="stylesheet" type="text/css" href="css/checkbox.css">
-    <link rel="stylesheet" type="text/css" href="css/button-rounded.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <style type="text/css">
@@ -29,10 +30,6 @@
 
         .form-input {
             width: 100%;
-        }
-
-        .label-agree-term {
-            color: #c9c9c9;
         }
 
         .term-service {
@@ -75,24 +72,19 @@
                                 <div class="form-input-bg"><input type="text" class="form-input password" name="password" id="password" ng-model="password"/></div>
                             </div>
                             <div class="form-group-tos">
-                                <span class="input-checkbox-container">
-                                    <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" ng-model="agreeTerms"/>
-                                    <span class="checkmark" ng-mouseup="toggleAgreeTerms()"></span>
-                                    <label class="label-agree-term">I understand & accept the <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a></label>
-                                </span>
+                                <dscheckbox ng-model="agreeTerms">
+                                    I understand & accept the <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a>
+                                </dscheckbox>
                             </div>
                             <div class="form-group form-group-button">
-                                <div name="submit" id="submit" class="form-submit button-rounded" ng-mouseup="register()">
-                                    <div class="left-side"></div>
-                                    <div class="text">Sign up</div>
-                                    <div class="right-side"></div>
-                                </div>
+                                <dsbutton title="Sign up" ng-click="register()"></dsbutton>
                             </div>
                         </form>
                         <div class="creating-account-view darkspore-font" id="creatingAccountView" ng-show="isLoading"><p>Creating account...</p></div>
                     </div>
                 </div>
             </div>
+
             <div id="avatar-dialog" class="body modal" ng-show="showAvatarDialog">
                 <div class="modal-window">
                     <img src="images/register_bg.png" class="fullscreen-background"/>
@@ -103,25 +95,18 @@
                         </div>
                     </div>
                     <div class="form-group form-group-button">
-                        <div name="submit" class="form-submit button-rounded" ng-mouseup="showAvatarDialog = false">
-                            <div class="left-side"></div>
-                            <div class="text">Done</div>
-                            <div class="right-side"></div>
-                        </div>
+                        <dsbutton title="Done" ng-click="showAvatarDialog = false"></dsbutton>
                     </div>
                 </div>
             </div>
+
             <div id="message-dialog" class="body modal" ng-show="showMessageDialog">
                 <div class="modal-window">
                     <img src="images/register_bg.png" class="fullscreen-background"/>
                     <div class="modal-title darkspore-font" id="modal-title">{{messageDialogTitle}}</div>
                     <div class="modal-message" id="message">{{messageDialogMessage}}</div>
                     <div class="form-group form-group-button">
-                        <div name="submit" class="form-submit button-rounded" ng-mouseup="closeModal(closeWindowOnMessageClose)">
-                            <div class="left-side"></div>
-                            <div class="text">Ok</div>
-                            <div class="right-side"></div>
-                        </div>
+                        <dsbutton title="Ok" ng-click="closeModal(closeWindowOnMessageClose)"></dsbutton>
                     </div>
                 </div>
             </div>

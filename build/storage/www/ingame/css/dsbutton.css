@@ -1,5 +1,5 @@
 
-.button-rounded {
+.dsbutton {
     box-sizing: border-box;
     border: none;
     color: #b4b7b9;
@@ -12,11 +12,11 @@
     background-size: 1px 48px;
     z-index: 1;
 }
-.button-rounded:hover:not(:active) {
+.dsbutton:hover:not(:active) {
     background: url("../images/registrationButton-hover-center.png") repeat-x;
 	color: #fff;
 }
-.button-rounded .left-side {
+.dsbutton .left-side {
     position: absolute;
     top: 0;
     left: -17px;
@@ -28,10 +28,10 @@
     background-size: 26px 48px;
     z-index: 2;
 }
-.button-rounded:hover:not(:active) .left-side {
+.dsbutton:hover:not(:active) .left-side {
     background: url("../images/registrationButton-hover-left.png") no-repeat;
 }
-.button-rounded .text {
+.dsbutton .text {
     position: absolute;
     font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
 	font-size: 16px;
@@ -41,7 +41,7 @@
     height: 48px;
     z-index: 2;
 }
-.button-rounded .right-side {
+.dsbutton .right-side {
     position: absolute;
     top: 0;
     right: -17px;
@@ -53,10 +53,10 @@
     background-size: 26px 48px;
     z-index: 2;
 }
-.button-rounded:hover:not(:active) .right-side {
+.dsbutton:hover:not(:active) .right-side {
     background: url("../images/registrationButton-hover-right.png") no-repeat;
 }
-.button-rounded:hover:not(:active) {
+.dsbutton:hover:not(:active) {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;

@@ -39,3 +39,7 @@
     border: none !important;
     background-image: url("../images/checkbox-idle.png");
 }
+.input-checkbox-container label {
+    color: #c9c9c9;
+}
+
