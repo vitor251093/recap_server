@@ -55,7 +55,7 @@
                                 <dsbutton title="Sign up" ng-click="register()"></dsbutton>
                             </div>
                         </form>
-                        <div class="creating-account-view darkspore-font" id="creatingAccountView" ng-show="isLoading"><p>Creating account...</p></div>
+                        <div class="creating-account-view darkspore-font" ng-show="isLoading"><p>Creating account...</p></div>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@
             <dsmodal id="message-dialog" title="{{messageDialogTitle}}" ng-show="showMessageDialog">
                 <div class="modal-message" id="message">{{messageDialogMessage}}</div>
                 <div class="form-group form-group-button">
-                    <dsbutton title="Ok" ng-click="closeModal(closeWindowOnMessageClose)"></dsbutton>
+                    <dsbutton title="Ok" ng-click="closeModal()"></dsbutton>
                 </div>
             </dsmodal>
         </div>

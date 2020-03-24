@@ -11,14 +11,14 @@ app.controller('registerCtrl', function($scope, $timeout) {
         $scope.messageDialogTitle = title;
         $scope.messageDialogMessage = message;
         $scope.closeWindowOnMessageClose = closingWindow;
-    }
-    $scope.closeModal = function(closingWindow) {
+    };
+    $scope.closeModal = function() {
         $scope.showMessageDialog = false;
         
-        if (closingWindow) {
+        if ($scope.closeWindowOnMessageClose) {
             EAWebKit.closeWindow();
         }
-    }
+    };
 
     $scope.showAvatarDialog = false;
     $scope.avatarsById = [
@@ -53,9 +53,6 @@ app.controller('registerCtrl', function($scope, $timeout) {
     $scope.password = "";
     $scope.agreeTerms = false;
 
-    $scope.toggleAgreeTerms = function() {
-        $scope.agreeTerms = !$scope.agreeTerms;
-    }
     $scope.register = function() {
         $scope.isLoading = true;
 
@@ -75,5 +72,5 @@ app.controller('registerCtrl', function($scope, $timeout) {
                 }
             },0);
         });
-    }
+    };
 });
