@@ -12,36 +12,13 @@
 
     <script type="text/javascript" src="angular/directive/dsbutton.js"></script>
     <script type="text/javascript" src="angular/directive/dscheckbox.js"></script>
+    <script type="text/javascript" src="angular/directive/dsmodal.js"></script>
     <link rel="stylesheet" type="text/css" href="css/dsbutton.css">
     <link rel="stylesheet" type="text/css" href="css/dscheckbox.css">
+    <link rel="stylesheet" type="text/css" href="css/dsmodal.css">
 
     <link rel="stylesheet" type="text/css" href="css/fonts.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-
-    <style type="text/css">
-        .form-group {
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .form-group-button {
-            padding: 0px 27px;
-        }
-
-        .form-input {
-            width: 100%;
-        }
-
-        .term-service {
-            color: #c9c9c9;
-        }
-
-        #signup-form {
-            position: absolute;
-            top: 50%;
-            margin-top: -220px;
-        }
-    </style>
 </head>
     <body>
         <div ng-app="darksporeApp" ng-controller="registerCtrl">
@@ -59,11 +36,11 @@
                             </div>
                             <div class="form-group">
                                 <p class="darkspore-font">Enter Email</p>
-                                <div class="form-input-bg"><input type="email" class="form-input" name="email" id="email" ng-model="email"/></div>
+                                <div class="form-input-bg"><input type="text" class="form-input" name="email" id="email" ng-model="email"/></div>
                             </div>
                             <div class="form-group float">
                                 <p class="darkspore-font">Select Avatar</p>
-                                <div id="selected-avatar-div" ng-mouseup="showAvatarDialog = true">
+                                <div id="selected-avatar-div" ng-mouseup="toggleAvatarDialog()">
                                     <img src="images/avatars/{{selectedAvatar.code}}.png"/>
                                 </div>
                             </div>
@@ -85,31 +62,23 @@
                 </div>
             </div>
 
-            <div id="avatar-dialog" class="body modal" ng-show="showAvatarDialog">
-                <div class="modal-window">
-                    <img src="images/register_bg.png" class="fullscreen-background"/>
-                    <div class="modal-title darkspore-font">Choose your avatar</div>
-                    <div id="signup-select-avatar-form">
-                        <div ng-repeat="avatar in avatarsById" ng-mouseup="selectAvatar(avatar)" ng-class="{selected:(avatar.id === selectedAvatar.id)}">
-                            <img src="images/avatars/{{avatar.code}}.png"/>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-button">
-                        <dsbutton title="Done" ng-click="showAvatarDialog = false"></dsbutton>
+            <dsmodal id="avatar-dialog" title="Choose your avatar" ng-show="showAvatarDialog">
+                <div id="signup-select-avatar-form">
+                    <div ng-repeat="avatar in avatarsById" ng-mouseup="selectAvatar(avatar)" ng-class="{selected:(avatar.id === selectedAvatar.id)}">
+                        <img src="images/avatars/{{avatar.code}}.png"/>
                     </div>
                 </div>
-            </div>
+                <div class="form-group form-group-button">
+                    <dsbutton title="Done" ng-click="toggleAvatarDialog()"></dsbutton>
+                </div>
+            </dsmodal>
 
-            <div id="message-dialog" class="body modal" ng-show="showMessageDialog">
-                <div class="modal-window">
-                    <img src="images/register_bg.png" class="fullscreen-background"/>
-                    <div class="modal-title darkspore-font" id="modal-title">{{messageDialogTitle}}</div>
-                    <div class="modal-message" id="message">{{messageDialogMessage}}</div>
-                    <div class="form-group form-group-button">
-                        <dsbutton title="Ok" ng-click="closeModal(closeWindowOnMessageClose)"></dsbutton>
-                    </div>
+            <dsmodal id="message-dialog" title="{{messageDialogTitle}}" ng-show="showMessageDialog">
+                <div class="modal-message" id="message">{{messageDialogMessage}}</div>
+                <div class="form-group form-group-button">
+                    <dsbutton title="Ok" ng-click="closeModal(closeWindowOnMessageClose)"></dsbutton>
                 </div>
-            </div>
+            </dsmodal>
         </div>
     </body>
 </html>

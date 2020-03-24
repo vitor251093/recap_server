@@ -44,6 +44,9 @@ app.controller('registerCtrl', function($scope, $timeout) {
     $scope.selectAvatar = function(avatar) {
         $scope.selectedAvatar = avatar;  
     };
+    $scope.toggleAvatarDialog = function() {
+        $scope.showAvatarDialog = !$scope.showAvatarDialog;
+    };
 
     $scope.name = "";
     $scope.email = ""
@@ -60,7 +63,7 @@ app.controller('registerCtrl', function($scope, $timeout) {
             "name": $scope.name,
             "mail": $scope.email,
             "pass": $scope.password,
-            "avatar": $scope.selectedAvatar
+            "avatar": $scope.selectedAvatar.id
         }, function(data) {
             var response = JSON.parse(data);
 
