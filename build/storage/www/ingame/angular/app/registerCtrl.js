@@ -54,20 +54,27 @@ app.controller('registerCtrl', function($scope, $timeout) {
     $scope.agreeTerms = false;
 
     $scope.register = function() {
+        if (!$scope.agreeTerms) {
+            $scope.showModal('Error', "You must agree with the terms to proceed!", false);
+            return;
+        }
+
         $scope.isLoading = true;
 
         ReCapClient.getRequest("api.game.registration", {
-            "name": $scope.name,
-            "mail": $scope.email,
-            "pass": $scope.password,
-            "avatar": $scope.selectedAvatar.id
-        }, function(data) {
+            name:   $scope.name,
+            mail:   $scope.email,
+            pass:   $scope.password,
+            avatar: $scope.selectedAvatar.id
+        }, 
+        function(data) {
             var response = JSON.parse(data);
 
             $timeout(function(){
                 if (response.stat === true || response.stat === 'ok') {
                     $scope.showModal('Success', "Account created successfully!", true);
                 } else {
+                    $scope.isLoading = false;
                     $scope.showModal('Error', "Your account could not be created!", false);
                 }
             },0);

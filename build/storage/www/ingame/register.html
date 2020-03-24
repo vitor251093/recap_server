@@ -13,6 +13,7 @@
     <script type="text/javascript" src="angular/directive/dsbutton.js"></script>
     <script type="text/javascript" src="angular/directive/dscheckbox.js"></script>
     <script type="text/javascript" src="angular/directive/dsmodal.js"></script>
+    <script type="text/javascript" src="angular/directive/dswindow.js"></script>
     <link rel="stylesheet" type="text/css" href="css/dsbutton.css">
     <link rel="stylesheet" type="text/css" href="css/dscheckbox.css">
     <link rel="stylesheet" type="text/css" href="css/dsmodal.css">
@@ -22,43 +23,38 @@
 </head>
     <body>
         <div ng-app="darksporeApp" ng-controller="registerCtrl">
-            <div class="body">
-                <div class="fullscreen-window">
-                    <img src="images/register_bg.png" class="fullscreen-background"/>
-                    <div class="view">
-                        <form method="POST" id="signup-form" ng-hide="isLoading">
-                            <div class="form-group form-group-title">
-                                <div class="title darkspore-font">Register</div>
-                            </div>
-                            <div class="form-group">
-                                <p class="darkspore-font">Enter Username</p>
-                                <div class="form-input-bg"><input type="text" class="form-input" name="name" id="name" ng-model="name" ng-style="{color: ((name.length > 6) ? 'yellow' : 'white')}"/></div>
-                            </div>
-                            <div class="form-group">
-                                <p class="darkspore-font">Enter Email</p>
-                                <div class="form-input-bg"><input type="text" class="form-input" name="email" id="email" ng-model="email"/></div>
-                            </div>
-                            <div class="form-group float">
-                                <p class="darkspore-font">Select Avatar</p>
-                                <div id="selected-avatar-div" ng-mouseup="toggleAvatarDialog()"><img src="images/avatars/{{selectedAvatar.code}}.png"/></div>
-                            </div>
-                            <div class="form-group">
-                                <p class="darkspore-font">Enter Password</p>
-                                <div class="form-input-bg"><input type="text" class="form-input password" name="password" id="password" ng-model="password"/></div>
-                            </div>
-                            <div class="form-group-tos">
-                                <dscheckbox ng-model="agreeTerms">
-                                    I understand & accept the <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a>
-                                </dscheckbox>
-                            </div>
-                            <div class="form-group form-group-button">
-                                <dsbutton title="Sign up" ng-click="register()"></dsbutton>
-                            </div>
-                        </form>
-                        <div class="creating-account-view darkspore-font" ng-show="isLoading"><p>Creating account...</p></div>
+            <dswindow>
+                <form method="POST" id="signup-form" ng-hide="$parent.isLoading">
+                    <div class="form-group form-group-title">
+                        <div class="title darkspore-font">Register</div>
                     </div>
-                </div>
-            </div>
+                    <div class="form-group">
+                        <p class="darkspore-font">Enter Username</p>
+                        <div class="form-input-bg"><input type="text" class="form-input" ng-model="$parent.name" ng-style="{color: ((name.length > 6) ? 'yellow' : 'white')}"/></div>
+                    </div>
+                    <div class="form-group">
+                        <p class="darkspore-font">Enter Email</p>
+                        <div class="form-input-bg"><input type="text" class="form-input" ng-model="$parent.email"/></div>
+                    </div>
+                    <div class="form-group float">
+                        <p class="darkspore-font">Select Avatar</p>
+                        <div id="selected-avatar-div" ng-mouseup="toggleAvatarDialog()"><img src="images/avatars/{{selectedAvatar.code}}.png"/></div>
+                    </div>
+                    <div class="form-group">
+                        <p class="darkspore-font">Enter Password</p>
+                        <div class="form-input-bg"><input type="text" class="form-input password" ng-model="$parent.password"/></div>
+                    </div>
+                    <div class="form-group-tos">
+                        <dscheckbox ng-model="$parent.agreeTerms">
+                            I understand & accept the <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a>
+                        </dscheckbox>
+                    </div>
+                    <div class="form-group form-group-button">
+                        <dsbutton title="Sign up" ng-click="$parent.register()"></dsbutton>
+                    </div>
+                </form>
+                <div class="creating-account-view darkspore-font" ng-show="$parent.isLoading"><p>Creating account...</p></div>
+            </dswindow>
 
             <dsmodal id="avatar-dialog" title="Choose your avatar" ng-show="showAvatarDialog">
                 <div id="signup-select-avatar-form">
