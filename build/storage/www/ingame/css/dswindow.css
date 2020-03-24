@@ -1,0 +1,31 @@
+.body {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
+    overflow: hidden;
+}
+
+.fullscreen-window {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.fullscreen-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    z-index: -1 !important;
+}
+
+.view {
+    height: 100%;
+    font-size: 14px;
+    z-index: 2;
+}
