@@ -26,13 +26,29 @@ std::string hexStringToString(std::string hex) {
     return newString;
 }
 
+void replaceAllOccurencesInString(std::string* str, std::string wordToReplace, std::string wordToReplaceWith) {
+    size_t len = wordToReplace.length();
+    while (true)
+    {
+        size_t pos = str->find(wordToReplace);
+        if (pos == std::string::npos) break;
+        str->replace(pos, len, wordToReplaceWith);    
+    }
+}
+
+void replaceHostWithLocalhostInString(std::string* str, std::string host) {
+    int zeroCount = host.length() - 9;
+    std::string localhost = "127.0.0.";
+    for (int i = 0; i < zeroCount; i++) localhost += "0";
+    localhost += "1";
+    replaceAllOccurencesInString(str, host, localhost);
+}
+
 int main(int argc, char **argv)
 {
     std::ifstream in("Darkspore.exe", std::ios::binary);
-    std::ofstream out("Darkspore_nossl.exe", std::ios::binary);
-    std::string wordToReplace(hexStringToString("80BF2C0100000075"));
-    std::string wordToReplaceWith(hexStringToString("80BF2C0100000175"));
-
+    std::ofstream out("Darkspore_local.exe", std::ios::binary);
+    
     if (!in) {
         std::cerr << "Could not open Darkspore.exe\n";
         system("pause");
@@ -40,7 +56,7 @@ int main(int argc, char **argv)
     }
 
     if (!out) {
-        std::cerr << "Could not write Darkspore_nossl.exe\n";
+        std::cerr << "Could not write Darkspore_local.exe\n";
         system("pause");
         return 1;
     }
@@ -49,15 +65,17 @@ int main(int argc, char **argv)
     buffer << in.rdbuf();
     std::string str = buffer.str();
 
-    size_t len = wordToReplace.length();
-    while (true)
-    {
-        size_t pos = str.find(wordToReplace);
-        if (pos == std::string::npos) break;
-        str.replace(pos, len, wordToReplaceWith);    
-    }
+    replaceAllOccurencesInString(&str, hexStringToString("80BF2C0100000075"), 
+                                       hexStringToString("80BF2C0100000175"));
 
+    replaceHostWithLocalhostInString(&str, "config.darkspore.com");
+    replaceHostWithLocalhostInString(&str, "gosredirector.ea.com");
+    replaceHostWithLocalhostInString(&str, "gosredirector.scert.ea.com");
+    replaceHostWithLocalhostInString(&str, "gosredirector.stest.ea.com");
+    replaceHostWithLocalhostInString(&str, "gosredirector.online.ea.com");
+    replaceHostWithLocalhostInString(&str, "api.darkspore.com");
+                                      
     out << str;
-    std::cout << "Finished creating Darkspore_nossl.exe" << std::endl;
+    std::cout << "Finished creating Darkspore_local.exe" << std::endl;
     system("pause");
 }

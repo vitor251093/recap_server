@@ -5,29 +5,8 @@
 That version of Ressurection Capsule is still not functional for playing the game;
 although, it can be used to play with the hero editor already.
 
-You must add the items below to your C:\Windows\system32\Drivers\etc\hosts file:
-
-127.0.0.1 config.darkspore.com
-127.0.0.1 gosredirector.online.ea.com
-127.0.0.1 gosredirector.ea.com
-127.0.0.1 api.darkspore.com
-127.0.0.1 content.darkspore.com
-127.0.0.1 beta.darkspore.ea.com
-127.0.0.1 beta-sn.darkspore.ea.com
-127.0.0.1 beta-sn2.darkspore.ea.com
-127.0.0.1 dev.darkspore.ea.com
-127.0.0.1 dev-sn.darkspore.ea.com
-127.0.0.1 dev-sn2.darkspore.ea.com
-127.0.0.1 fail.spore.rws.ad.ea.com
-127.0.0.1 ea6.com.edgesuite.net
-127.0.0.1 darkspore.alpha.lockbox.ea.com
-127.0.0.1 www.sporelabs.com
-127.0.0.1 splabbetamydb1b.rspc-iad.ea.com
-127.0.0.1 321917-prodmydb009.spore.rspc-iad.ea.com
-127.0.0.1 telemetry.maxis.com
-
-After that, you will need to localize the Darkspore.exe. Depending of your 
-Darkspore version, its folder will be different:
+You need to localize the Darkspore.exe. Depending of your Darkspore version, 
+its folder will be different:
 
 - DVD/Latest version: C:\Program Files (x86)\Electronic Arts\Darkspore\DarksporeBin
 - Steam version: C:\Program Files (x86)\Steam\steamapps\common\Darkspore\DarksporeBin
@@ -36,10 +15,10 @@ Copy the `patch_darkspore_exe.exe` file from the patcher folder (from the ReCap
 release) to the DarksporeBin folder. Run the copied `patch_darkspore_exe.exe` file, 
 and a new window should pop up; you can close after the success message appears. 
 A new file should appear in the DarksporeBin folder after that, the 
-Darkspore_nossl.exe. Use it to launch Darkspore.
+Darkspore_local.exe. Use it to launch Darkspore.
 
 Now launch darkspore_server.exe, and while running it, launch Darkspore with
-Darkspore_nossl.exe, and keep both of them running. 
+Darkspore_local.exe, and keep both of them running. 
 
 Press Play in the Darkspore launcher and wait for the login screen. 
 Using the Register button in the Darkspore login screen, create a user account 
