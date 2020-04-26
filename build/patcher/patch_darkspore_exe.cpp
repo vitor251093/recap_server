@@ -17,7 +17,7 @@
 std::string hexStringToString(std::string hex) {
     size_t len = hex.length();
     std::string newString;
-    for(size_t i=0; i<len; i+=2)
+    for (size_t i=0; i<len; i+=2)
     {
         std::string byte = hex.substr(i,2);
         char chr = (char) (int)strtol(byte.c_str(), 0, 16);
@@ -46,18 +46,61 @@ void replaceHostWithLocalhostInString(std::string* str, std::string host) {
 
 int main(int argc, char **argv)
 {
-    std::ifstream in("Darkspore.exe", std::ios::binary);
-    std::ofstream out("Darkspore_local.exe", std::ios::binary);
+    bool showDisplay = true;
+    std::string in_path  = "Darkspore.exe";
+    std::string out_path = "Darkspore_local.exe";
+    
+    std::string last_arg = "";
+    std::string arg = "";
+    int argIndex = 0;
+    for (argIndex = 1; argIndex < argc; argIndex++) {
+        arg = argv[argIndex];
+        if (last_arg == "") {
+            if (arg == "--no-display" || arg == "-nd") {
+                showDisplay = false;
+                continue;
+            }
+            if (arg == "-in") {
+                last_arg = arg;
+                continue;
+            }
+            if (arg == "-out") {
+                last_arg = arg;
+                continue;
+            }
+            continue;
+        }
+        else if (last_arg == "-in") {
+            in_path = arg;
+            last_arg = "";
+            continue;
+        }
+        else if (last_arg == "-out") {
+            out_path = arg;
+            last_arg = "";
+            continue;
+        }
+        else {
+            last_arg = "";
+        }
+    }
+    
+    std::ifstream in(in_path, std::ios::binary);
+    std::ofstream out(out_path, std::ios::binary);
     
     if (!in) {
-        std::cerr << "Could not open Darkspore.exe\n";
-        system("pause");
+        if (showDisplay) {
+            std::cerr << "Could not open " << in_path << "\n";
+            system("pause");
+        }
         return 1;
     }
 
     if (!out) {
-        std::cerr << "Could not write Darkspore_local.exe\n";
-        system("pause");
+        if (showDisplay) {
+            std::cerr << "Could not write " << out_path << "\n";
+            system("pause");
+        }
         return 1;
     }
 
@@ -76,6 +119,10 @@ int main(int argc, char **argv)
     replaceHostWithLocalhostInString(&str, "api.darkspore.com");
                                       
     out << str;
-    std::cout << "Finished creating Darkspore_local.exe" << std::endl;
-    system("pause");
+    
+    if (showDisplay) {
+        std::cout << "Finished creating " << out_path << std::endl;
+        system("pause");
+    }
+    return 0;
 }
