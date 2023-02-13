@@ -1,0 +1,34 @@
+name: CMake Build (Windows x86-64)
+
+on:
+  push:
+    branches:
+      - master
+      - merge/dalkon_2
+  pull_request:
+    branches:
+      - master
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Visual Studio
+      uses: actions/setup-visual-studio@v1
+      with:
+        visual-studio-version: '2019'
+
+    - name: Build solution
+      working-directory: ${{runner.workspace}}
+      run: |
+        echo "Building solution in Release mode for x64 architecture..."
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
+        msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
