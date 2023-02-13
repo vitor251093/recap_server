@@ -25,15 +25,18 @@ jobs:
       with:
         msbuild-architecture: x64
     
-    - name: Install boost
+    - name: Boost - Build
       uses: MarkusJx/install-boost@v2.4.1
       id: install-boost
       with:
           boost_version: 1.73.0
           boost_install_dir: ${{runner.workspace}}\darkspore_server\libs\boost_tmp
           platform_version: 2019
+
+    - name: Test command
+      run: ls ${{runner.workspace}}\darkspore_server\libs\
           
-    - name: Moving boost to the correct place
+    - name: Boost - Install
       run: |
         rm -r "${{runner.workspace}}\darkspore_server\libs\boost_1_73_0"
         mv "${{runner.workspace}}\darkspore_server\libs\boost_tmp\boost\boost" "${{runner.workspace}}\darkspore_server\libs\boost_1_73_0"
