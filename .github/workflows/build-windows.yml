@@ -46,6 +46,14 @@ jobs:
     #   working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
     #   run: ls
 
+    - name: Check available Windows SDKs
+      id: check_sdks
+      run: |
+        set -x
+        echo "Checking available Windows SDKs..."
+        echo
+        setup-msbuild list-sdks
+        
     - name: Build Recap Server
       run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
 
