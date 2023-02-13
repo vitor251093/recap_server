@@ -26,7 +26,6 @@ jobs:
         msbuild-architecture: x64
     
     - name: Build solution
-      working-directory: ${{runner.workspace}}
       run: |
         echo "Building solution in Release mode for x64 architecture..."
         msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
