@@ -191,8 +191,6 @@
     <ClInclude Include="source\utils\log.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="libs\cpp-base64\base64.cpp" />
-    <ClCompile Include="libs\lodepng\lodepng.cpp" />
     <ClCompile Include="source\blaze\client.cpp" />
     <ClCompile Include="source\blaze\component.cpp" />
     <ClCompile Include="source\blaze\component\associationcomponent.cpp" />
