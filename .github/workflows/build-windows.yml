@@ -33,6 +33,9 @@ jobs:
           boost_install_dir: ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0
           platform_version: 2019
           
+    - name: Listing contents of the Boost folder (temporary step)
+      run: ls ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0\
+
     - name: Build Recap Server
       run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
 
