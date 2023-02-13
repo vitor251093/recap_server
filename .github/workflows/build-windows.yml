@@ -1,4 +1,4 @@
-name: CMake Build (Windows x86-64)
+name: Build (Windows x64)
 
 on:
   push:
@@ -18,9 +18,8 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
+    - uses: actions/checkout@v1
+    
     - name: Set up Visual Studio
       uses: actions/setup-visual-studio@v1
       with:
@@ -32,3 +31,8 @@ jobs:
         echo "Building solution in Release mode for x64 architecture..."
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
         msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: recap-server-windows-x64
+        path: ${{runner.workspace}}\darkspore_server\build
