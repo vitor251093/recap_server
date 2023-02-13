@@ -27,8 +27,6 @@ jobs:
     
     - name: Install Visual Studio components
       run: |
-        choco install visualstudio2022-workload-vctools
-        choco install visualstudio2022-workload-netweb
         choco install windows-sdk-8.1
 
     - name: Boost - Build
