@@ -18,18 +18,17 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v1
-    
-    - name: Set up Visual Studio
-      uses: actions/setup-visual-studio@v1
-      with:
-        visual-studio-version: '2019'
+    - uses: actions/checkout@v2
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        msbuild-architecture: x64
+    
     - name: Build solution
       working-directory: ${{runner.workspace}}
       run: |
         echo "Building solution in Release mode for x64 architecture..."
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
         msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
 
     - uses: actions/upload-artifact@v1
