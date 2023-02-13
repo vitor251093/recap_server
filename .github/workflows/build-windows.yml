@@ -38,6 +38,14 @@ jobs:
         rm -r "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
         mv "${{runner.temp}}\boost_tmp\boost\boost" "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
 
+    - name: LuaJIT - Build
+      working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
+      run: make
+
+    - name: LuaJIT - Test
+      working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
+      run: ls
+
     - name: Build Recap Server
       run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
 
