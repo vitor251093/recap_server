@@ -39,7 +39,7 @@ jobs:
         mv "${{runner.temp}}\boost_tmp\boost\boost" "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
 
     - name: Build Recap Server
-      run: msbuild recap_server\darkspore_server.sln /p:Configuration=Release /p:Platform=x64
+      run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
 
     - uses: actions/upload-artifact@v1
       with:
