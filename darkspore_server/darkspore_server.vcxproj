@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)source;$(ProjectDir)libs\raknet-3.902-mod\Source;$(ProjectDir)libs\sol2;E:\DevFolder\C++ Libraries\LuaJIT-2.1.0\include;$(ProjectDir)libs\glm\glm;E:\DevFolder\C++ Libraries\lodepng;E:\DevFolder\C++ Libraries\cpp-base64;$(ProjectDir)libs\pugixml-1.9\include;$(ProjectDir)libs\rapidjson-1.1.0\include;$(ProjectDir)libs\openssl-1.1.1b\include;$(ProjectDir)libs\boost_1_73_0;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)source;$(ProjectDir)libs\raknet-3.902-mod\Source;$(ProjectDir)libs\sol2;E:\DevFolder\C++ Libraries\LuaJIT-2.1.0\include;$(ProjectDir)libs\glm\glm;$(ProjectDir)libs\lodepng;$(ProjectDir)libs\cpp-base64;$(ProjectDir)libs\pugixml-1.9\include;$(ProjectDir)libs\rapidjson-1.1.0\include;$(ProjectDir)libs\openssl-1.1.1b\include;$(ProjectDir)libs\boost_1_73_0;$(IncludePath)</IncludePath>
     <LibraryPath>E:\DevFolder\C++ Libraries\LuaJIT-2.1.0\lib64;$(ProjectDir)libs\raknet-3.902-mod\Lib;$(ProjectDir)libs\pugixml-1.9\lib;$(ProjectDir)libs\openssl-1.1.1b\lib;$(ProjectDir)libs\boost_1_73_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -191,8 +191,8 @@
     <ClInclude Include="source\utils\log.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\C++ Libraries\cpp-base64\base64.cpp" />
-    <ClCompile Include="..\..\..\C++ Libraries\lodepng\lodepng.cpp" />
+    <ClCompile Include="libs\cpp-base64\base64.cpp" />
+    <ClCompile Include="libs\lodepng\lodepng.cpp" />
     <ClCompile Include="source\blaze\client.cpp" />
     <ClCompile Include="source\blaze\component.cpp" />
     <ClCompile Include="source\blaze\component\associationcomponent.cpp" />

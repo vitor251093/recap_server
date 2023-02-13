@@ -7,3 +7,9 @@
 [submodule "darkspore_server/libs/boost_1_73_0"]
 	path = darkspore_server/libs/boost_1_73_0
 	url = https://github.com/boostorg/boost.git
+[submodule "darkspore_server/libs/lodepng"]
+	path = darkspore_server/libs/lodepng
+	url = https://github.com/lvandeve/lodepng.git
+[submodule "darkspore_server/libs/cpp-base64"]
+	path = darkspore_server/libs/cpp-base64
+	url = https://github.com/ReneNyffenegger/cpp-base64.git
