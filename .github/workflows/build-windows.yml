@@ -25,6 +25,9 @@ jobs:
       with:
         msbuild-architecture: x64
     
+    - name: Test command 0
+      run: ls ${{runner.workspace}}\
+          
     - name: Test command 1
       run: ls ${{runner.workspace}}\darkspore_server\
           
