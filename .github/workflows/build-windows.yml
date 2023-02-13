@@ -26,7 +26,7 @@ jobs:
         msbuild-architecture: x64
     
     - name: Set up Windows environment
-      uses: actions/setup-windows@v1
+      uses: actions/setup-runner@v2
 
     - name: Install Visual Studio components
       run: |
