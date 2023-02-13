@@ -48,6 +48,7 @@ jobs:
 
     - name: Check available Windows SDKs
       id: check_sdks
+      uses: microsoft/setup-msbuild@v1.1
       run: |
         setup-msbuild list-sdks
 
