@@ -25,9 +25,6 @@ jobs:
       with:
         msbuild-architecture: x64
     
-    - name: Set up Windows environment
-      uses: actions/setup-chocolatey@v1
-
     - name: Install Visual Studio components
       run: |
         choco install visualstudio2022-workload-vctools
