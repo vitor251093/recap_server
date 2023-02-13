@@ -1,0 +1,3 @@
+[submodule "darkspore_server/libs/glm"]
+	path = darkspore_server/libs/glm
+	url = https://github.com/g-truc/glm.git
