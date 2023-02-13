@@ -40,7 +40,7 @@ jobs:
 
     # - name: LuaJIT - Build
     #   working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
-    #   run: make
+    #   run: make install
 
     # - name: LuaJIT - Test
     #   working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
