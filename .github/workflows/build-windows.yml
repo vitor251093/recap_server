@@ -21,11 +21,19 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.1
       with:
         msbuild-architecture: x64
-        msbuild-version: 16.10.0
     
+    - name: Set up Windows environment
+      uses: actions/setup-windows@v1
+
+    - name: Install Visual Studio components
+      run: |
+        choco install visualstudio2022-workload-vctools
+        choco install visualstudio2022-workload-netweb
+        choco install windows-sdk-8.1
+
     - name: Boost - Build
       uses: MarkusJx/install-boost@v2.4.1
       id: install-boost
