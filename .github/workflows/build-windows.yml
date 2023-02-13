@@ -30,7 +30,8 @@ jobs:
       id: install-boost
       with:
           boost_version: 1.73.0
-          working-directory: ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0
+          boost_install_dir: ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0
+          platform_version: 2019
           toolset: msvc
           
     - name: Build Recap Server
