@@ -25,24 +25,30 @@ jobs:
       with:
         msbuild-architecture: x64
     
-    - name: Boost - Build
-      uses: MarkusJx/install-boost@v2.4.1
-      id: install-boost
-      with:
-          boost_version: 1.73.0
-          boost_install_dir: ${{runner.workspace}}\darkspore_server\libs\boost_tmp
-          platform_version: 2019
-
     - name: Test command 1
       run: ls ${{runner.workspace}}\darkspore_server\
           
     - name: Test command 2
       run: ls ${{runner.workspace}}\darkspore_server\libs\
           
+    - name: Boost - Build
+      uses: MarkusJx/install-boost@v2.4.1
+      id: install-boost
+      with:
+          boost_version: 1.73.0
+          boost_install_dir: ${{runner.temp}}\boost_tmp
+          platform_version: 2019
+
+    - name: Test command 3
+      run: ls ${{runner.workspace}}\darkspore_server\
+          
+    - name: Test command 4
+      run: ls ${{runner.workspace}}\darkspore_server\libs\
+          
     - name: Boost - Install
       run: |
         rm -r "${{runner.workspace}}\darkspore_server\libs\boost_1_73_0"
-        mv "${{runner.workspace}}\darkspore_server\libs\boost_tmp\boost\boost" "${{runner.workspace}}\darkspore_server\libs\boost_1_73_0"
+        mv "${{runner.temp}}\boost_tmp\boost\boost" "${{runner.workspace}}\darkspore_server\libs\boost_1_73_0"
 
     - name: Build Recap Server
       run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
