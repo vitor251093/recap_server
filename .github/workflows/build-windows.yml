@@ -25,15 +25,6 @@ jobs:
       with:
         msbuild-architecture: x64
     
-    - name: Test command 0
-      run: ls ${{runner.workspace}}\recap_server\
-          
-    - name: Test command 1
-      run: ls ${{runner.workspace}}\recap_server\darkspore_server\
-          
-    - name: Test command 2
-      run: ls ${{runner.workspace}}\recap_server\darkspore_server\libs\
-          
     - name: Boost - Build
       uses: MarkusJx/install-boost@v2.4.1
       id: install-boost
@@ -42,12 +33,6 @@ jobs:
           boost_install_dir: ${{runner.temp}}\boost_tmp
           platform_version: 2019
 
-    - name: Test command 3
-      run: ls ${{runner.workspace}}\recap_server\darkspore_server\
-          
-    - name: Test command 4
-      run: ls ${{runner.workspace}}\recap_server\darkspore_server\libs\
-          
     - name: Boost - Install
       run: |
         rm -r "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
