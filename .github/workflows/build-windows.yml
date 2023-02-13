@@ -35,7 +35,8 @@ jobs:
           
     - name: Moving boost to the correct place
       run: |
-        move /Y ${{runner.workspace}}\darkspore_server\libs\boost_tmp\boost\boost ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0
+        rm -rf "${{runner.workspace}}\darkspore_server\libs\boost_1_73_0"
+        mv "${{runner.workspace}}\darkspore_server\libs\boost_tmp\boost\boost" "${{runner.workspace}}\darkspore_server\libs\boost_1_73_0"
 
     - name: Build Recap Server
       run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
