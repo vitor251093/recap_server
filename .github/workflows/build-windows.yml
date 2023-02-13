@@ -33,7 +33,10 @@ jobs:
           boost_install_dir: ${{runner.workspace}}\darkspore_server\libs\boost_tmp
           platform_version: 2019
 
-    - name: Test command
+    - name: Test command 1
+      run: ls ${{runner.workspace}}\darkspore_server\
+          
+    - name: Test command 2
       run: ls ${{runner.workspace}}\darkspore_server\libs\
           
     - name: Boost - Install
