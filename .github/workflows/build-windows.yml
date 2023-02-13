@@ -25,10 +25,6 @@ jobs:
       with:
         msbuild-architecture: x64
     
-    - name: Install Visual Studio components
-      run: |
-        choco install windows-sdk-8.1
-
     - name: Boost - Build
       uses: MarkusJx/install-boost@v2.4.1
       id: install-boost
@@ -50,13 +46,8 @@ jobs:
     #   working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
     #   run: ls
 
-    - name: Test
-      run: ls "/c/Program Files (x86)/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/"
-
     - name: Build Recap Server
       run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
-      env: 
-        PATH: ${{ env.PATH }}:/c/Program Files (x86)/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.30.28729/bin/Hostx64/x64
 
     - uses: actions/upload-artifact@v1
       with:
