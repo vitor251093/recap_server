@@ -31,7 +31,7 @@ jobs:
       with:
           boost_version: 1.73.0
           boost_install_dir: ${{runner.temp}}\boost_tmp
-          platform_version: 2019
+          platform_version: 2022
 
     - name: Boost - Install
       run: |
