@@ -13,3 +13,6 @@
 [submodule "darkspore_server/libs/cpp-base64"]
 	path = darkspore_server/libs/cpp-base64
 	url = https://github.com/ReneNyffenegger/cpp-base64.git
+[submodule "darkspore_server/libs/LuaJIT"]
+	path = darkspore_server/libs/LuaJIT
+	url = https://github.com/LuaJIT/LuaJIT.git
