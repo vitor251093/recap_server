@@ -11,6 +11,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  PATH: ${{ env.PATH }}:/c/Program Files (x86)/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.30.28729/bin/Hostx64/x64
 
 jobs:
   build:
@@ -28,6 +29,9 @@ jobs:
     - name: Install Visual Studio components
       run: |
         choco install windows-sdk-8.1
+
+    - name: Test
+      run: ls "/c/Program Files (x86)/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/"
 
     - name: Boost - Build
       uses: MarkusJx/install-boost@v2.4.1
