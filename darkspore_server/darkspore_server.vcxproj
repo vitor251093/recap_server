@@ -118,7 +118,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NDEBUG;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NOMINMAX;BOOST_NETWORK_ENABLE_HTTPS;BOOST_ASIO_DISABLE_CONCEPTS;RAPIDJSON_HAS_STDSTRING;SOL_STRINGS_ARE_NUMBERS=1;SOL_SAFE_FUNCTION=1;SOL_LUAJIT=1;SOL_EXCEPTIONS_SAFE_PROPAGATION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;NDEBUG;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NOMINMAX;BOOST_NETWORK_ENABLE_HTTPS;BOOST_ASIO_DISABLE_CONCEPTS;RAPIDJSON_HAS_STDSTRING;SOL_STRINGS_ARE_NUMBERS=1;SOL_SAFE_FUNCTION=1;SOL_LUAJIT=1;SOL_EXCEPTIONS_SAFE_PROPAGATION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
