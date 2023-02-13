@@ -35,7 +35,7 @@ jobs:
           
     - name: Moving boost to the correct place
       run: |
-        rd /S /Q ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0
+        rmdir /s /q ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0
         move ${{runner.workspace}}\darkspore_server\libs\boost_tmp\boost\boost ${{runner.workspace}}\darkspore_server\libs\boost_1_73_0
 
     - name: Build Recap Server
