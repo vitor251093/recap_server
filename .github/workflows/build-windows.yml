@@ -47,10 +47,8 @@ jobs:
     #   run: ls
 
     - name: Check available Windows SDKs
-      id: check_sdks
-      uses: microsoft/setup-msbuild@v1.1
       run: |
-        setup-msbuild list-sdks
+        Get-WindowsSDKVersion
 
     - name: Build Recap Server
       run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
