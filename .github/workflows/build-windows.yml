@@ -52,7 +52,7 @@ jobs:
     #   run: ls
 
     - name: Build Recap Server
-      run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
+      run: msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
 
     - uses: actions/upload-artifact@v1
       with:
