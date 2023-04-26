@@ -59,6 +59,8 @@ jobs:
       run: |
         ls "C:\Program Files (x86)\Microsoft Visual Studio\"
         ls "C:\Program Files (x86)\Microsoft Visual Studio\Shared\"
+        ls "C:\Program Files (x86)\Microsoft Visual Studio\Shared\Common\"
+        ls "C:\Program Files (x86)\Microsoft Visual Studio\Shared\SDKs\"
         ls "C:\Program Files (x86)\Microsoft Visual Studio\2022\"
         ls "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\"
         ls "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\"
