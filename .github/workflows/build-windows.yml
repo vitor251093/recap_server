@@ -56,7 +56,7 @@ jobs:
         set ProjectDir=${{runner.workspace}}\recap_server\
         set IncludePath="%ProjectDir%source;%ProjectDir%libs\raknet-3.902-mod\Source;%ProjectDir%libs\sol2;%ProjectDir%libs\LuaJIT\include;%ProjectDir%libs\glm;%ProjectDir%libs\lodepng;%ProjectDir%libs\cpp-base64;%ProjectDir%libs\pugixml-1.9\include;%ProjectDir%libs\rapidjson-1.1.0\include;%ProjectDir%libs\openssl-1.1.1b\include;%ProjectDir%libs\boost_1_73_0"
         set LibraryPath="%ProjectDir%libs\LuaJIT\lib64;%ProjectDir%libs\raknet-3.902-mod\Lib;%ProjectDir%libs\pugixml-1.9\lib;%ProjectDir%libs\openssl-1.1.1b\lib;%ProjectDir%libs\boost_1_73_0\stage\lib"
-        msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
+        msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64
 
     - uses: actions/upload-artifact@v1
       with:
