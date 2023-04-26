@@ -27,7 +27,7 @@ jobs:
         vs-version: '[17.0, 18.0)'
     
     - name: Install Windows SDK 10.0.22621.0
-      uses: ros-tooling/setup-windows-sdk@v0.1
+      uses: ros-tooling/setup-windows-sdk-action@v0.1
       with:
         sdk-version: 10.0.22621.0
         components: Microsoft.VisualStudio.Component.Windows10SDK.22621
