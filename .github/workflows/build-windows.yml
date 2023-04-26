@@ -57,7 +57,7 @@ jobs:
     
     - name: Build Recap Server
       run: |
-        ls "C:\Program Files (x86)\Microsoft Visual Studio\Shared\SDKs\Azure\v2.9\"
+        ls "C:\Program Files (x86)\Microsoft Visual Studio\Shared\SDKs\Azure\v2.9\ToolsRef\"
         ls "C:\Program Files (x86)\Microsoft Visual Studio\2022\"
         ls "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\"
         ls "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\"
