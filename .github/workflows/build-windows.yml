@@ -26,6 +26,12 @@ jobs:
         msbuild-architecture: x64
         vs-version: '[17.0, 18.0)'
     
+    - name: Install Windows SDK 10.0.22621.0
+      uses: ros-tooling/windows-sdk-action@v0.1
+      with:
+        sdk-version: 10.0.22621.0
+        components: Microsoft.VisualStudio.Component.Windows10SDK.22621
+
     - name: Boost - Build
       uses: MarkusJx/install-boost@v2.4.1
       id: install-boost
