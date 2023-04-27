@@ -55,9 +55,11 @@ jobs:
     # set IncludePath="%ProjectDir%source;%ProjectDir%libs\raknet-3.902-mod\Source;%ProjectDir%libs\sol2;%ProjectDir%libs\LuaJIT\include;%ProjectDir%libs\glm;%ProjectDir%libs\lodepng;%ProjectDir%libs\cpp-base64;%ProjectDir%libs\pugixml-1.9\include;%ProjectDir%libs\rapidjson-1.1.0\include;%ProjectDir%libs\openssl-1.1.1b\include;%ProjectDir%libs\boost_1_73_0"
     # set LibraryPath="%ProjectDir%libs\LuaJIT\lib64;%ProjectDir%libs\raknet-3.902-mod\Lib;%ProjectDir%libs\pugixml-1.9\lib;%ProjectDir%libs\openssl-1.1.1b\lib;%ProjectDir%libs\boost_1_73_0\stage\lib"
     
+    - name: Enable Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+
     - name: Build Recap Server
       run: |
-        ls "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\"
         $env:VCToolsInstallDir = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.29.30133"
         $env:WindowsSdkDir = "C:\Program Files (x86)\Windows Kits\10"
         msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
