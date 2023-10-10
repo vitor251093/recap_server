@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - merge/dalkon_2
+      - cmake
   pull_request:
     branches:
       - master
