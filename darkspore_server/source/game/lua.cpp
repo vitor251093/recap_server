@@ -1981,7 +1981,7 @@ namespace Game {
 	// Coroutine
 	Coroutine::Coroutine(Lua& lua, sol::table&& self) : mLua(lua), mSelf(std::move(self)) {
 		if (mSelf == sol::nil) {
-			throw std::exception("Coroutine::Coroutine: self is nil");
+			throw std::logic_error("Coroutine::Coroutine: self is nil");
 		}
 
 		sol::state_view state = mSelf.lua_state();

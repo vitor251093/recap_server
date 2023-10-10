@@ -1578,10 +1578,11 @@ if (health <= 0) {
 	}
 
 	void Object::RequestAbility(const AbilityPtr& ability, const ObjectPtr& attacker) {
-		auto value = CanUseAbility(ability);
-		if (value != 0) {
-			return;
-		}
+		// TODO: Doesn't work because the number of arguments doesn't match
+		//auto value = CanUseAbility(ability);
+		//if (value != 0) {
+		//	return;
+		//}
 
 		if (ability->RequiresAgent()) {
 
