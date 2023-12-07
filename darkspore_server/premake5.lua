@@ -2,6 +2,7 @@ project "darkspore_server"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
+    architecture "x86_64"
     targetdir "build/%{cfg.buildcfg}"
     files {
       "source/**.h",
@@ -58,14 +59,6 @@ project "darkspore_server"
       "Win32",
       "x64"
     }
-
-    filter "platform:Win32"
-      system "Windows"
-      architecture "x86"
-
-    filter "platform:x64"
-      system "Windows"
-      architecture "x86_64"
 
     filter "configurations:Debug"
       runtime "Debug"
