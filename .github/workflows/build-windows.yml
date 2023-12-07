@@ -28,6 +28,8 @@ jobs:
         
       - name: Install Premake
         uses: abel0b/setup-premake@v2.3
+        with:
+          version: "5.0.0-beta2"
 
       - name: Prepare source
         run: premake5 vs2022
