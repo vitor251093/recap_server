@@ -13,58 +13,25 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
-
-    runs-on: windows-2022
+  build_and_test:
+    runs-on: windows-latest
+    name: Build and Test
     
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1.0
-      with:
-        msbuild-architecture: x64
-        vs-version: '17.0'
-
-    - uses: GuillaumeFalourd/setup-windows10-sdk-action@v1.11
-      with:
-        sdk-version: 22621
-
-    - name: Boost - Build
-      uses: MarkusJx/install-boost@v2.4.1
-      id: install-boost
-      with:
-          boost_version: 1.73.0
-          boost_install_dir: ${{runner.temp}}\boost_tmp
-          platform_version: 2019
-
-    - name: Boost - Install
-      run: |
-        rm -r "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
-        mv "${{runner.temp}}\boost_tmp\boost\boost" "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
-
-    # - name: LuaJIT - Build
-    #   working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
-    #   run: make install
-
-    # - name: LuaJIT - Test
-    #   working-directory: ${{runner.workspace}}\recap_server\darkspore_server\libs\LuaJIT
-    #   run: ls
-
-    # set ProjectDir=${{runner.workspace}}\recap_server\
-    # set IncludePath="%ProjectDir%source;%ProjectDir%libs\raknet-3.902-mod\Source;%ProjectDir%libs\sol2;%ProjectDir%libs\LuaJIT\include;%ProjectDir%libs\glm;%ProjectDir%libs\lodepng;%ProjectDir%libs\cpp-base64;%ProjectDir%libs\pugixml-1.9\include;%ProjectDir%libs\rapidjson-1.1.0\include;%ProjectDir%libs\openssl-1.1.1b\include;%ProjectDir%libs\boost_1_73_0"
-    # set LibraryPath="%ProjectDir%libs\LuaJIT\lib64;%ProjectDir%libs\raknet-3.902-mod\Lib;%ProjectDir%libs\pugixml-1.9\lib;%ProjectDir%libs\openssl-1.1.1b\lib;%ProjectDir%libs\boost_1_73_0\stage\lib"
-    
-    - name: Enable Developer Command Prompt (needed to run CL.exe)
-      uses: ilammy/msvc-dev-cmd@v1
-
-    - name: Build Recap Server
-      run: |
-        $env:VCToolsInstallDir = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.29.30133"
-        $env:WindowsSdkDir = "C:\Program Files (x86)\Windows Kits\10"
-        msbuild darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
-
-    - uses: actions/upload-artifact@v1
-      with:
-        name: recap-server-windows-x64
-        path: ${{runner.workspace}}\recap_server\darkspore_server\build
+      - name: Checkout code
+        uses: actions/checkout@v2.3.3
+        with:
+          submodules: recursive
+        
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        
+      - name: Run MSBuild
+        id: run_msbuild
+        working-directory: ${{ github.workspace }}
+        run: msbuild .\darkspore_server.sln -m
+        
+      - uses: actions/upload-artifact@v1
+        with:
+          name: recap-server-windows-x64
+          path: ${{runner.workspace}}\recap_server\darkspore_server\build
