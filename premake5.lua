@@ -61,10 +61,6 @@ workspace "DarkSporeServer"
       "x64"
     }
 
-    defines {
-      "anything that goes to x32, x64, debug, release, etc..."
-    }
-
     filter "platform:Win32"
       system "Windows"
       architecture "x86"
