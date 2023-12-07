@@ -37,7 +37,7 @@ jobs:
       - name: Run MSBuild
         id: run_msbuild
         working-directory: ${{ github.workspace }}
-        run: msbuild .\darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
+        run: msbuild .\darkspore_server.sln
         
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
