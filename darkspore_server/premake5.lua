@@ -18,7 +18,7 @@ project "darkspore_server"
       "libs/pugixml-1.9/include",
       "libs/rapidjson-1.1.0/include",
       "libs/openssl-1.1.1b/include",
-      "libs/boost_1_73_0
+      "libs/boost_1_73_0"
     }
     libdirs {
       "libs/LuaJIT/lib64",
