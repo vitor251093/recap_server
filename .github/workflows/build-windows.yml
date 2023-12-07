@@ -13,9 +13,9 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build_and_test:
+  build:
     runs-on: windows-latest
-    name: Build and Test
+    name: Build
     
     steps:
       - name: Checkout code
@@ -23,15 +23,22 @@ jobs:
         with:
           submodules: recursive
         
-      - name: setup-msbuild
+      - name: Install MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
         
+      - name: Install Premake
+        uses: abel0b/setup-premake@v2.3
+
+      - name: Prepare source
+        run: premake5 vs2022
+
       - name: Run MSBuild
         id: run_msbuild
         working-directory: ${{ github.workspace }}
         run: msbuild .\darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:useenv=true
         
-      - uses: actions/upload-artifact@v1
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
         with:
           name: recap-server-windows-x64
           path: ${{runner.workspace}}\recap_server\darkspore_server\build
