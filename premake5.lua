@@ -1,2 +1,4 @@
 workspace "darkspore_server"
-  include "darkspore_server"
+  configurations { "Debug", "Release" }
+
+include "darkspore_server"
