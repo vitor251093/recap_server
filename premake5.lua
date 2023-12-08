@@ -5,15 +5,10 @@ workspace "darkspore_server"
   }
 
   platforms {
-    "Win32",
     "x64"
   }
 
-  filter "platform:Win32"
-    system "Windows"
-    architecture "x86"
-
-  filter "platform:x64"
+  filter "platforms:x64"
     system "Windows"
     architecture "x86_64"
 
