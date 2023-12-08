@@ -1,12 +1,6 @@
 [submodule "darkspore_server/libs/glm"]
 	path = darkspore_server/libs/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "darkspore_server/libs/boost"]
-	path = darkspore_server/libs/boost
-	url = https://github.com/boostorg/boost.git
-[submodule "darkspore_server/libs/boost_1_73_0"]
-	path = darkspore_server/libs/boost_1_73_0
-	url = https://github.com/boostorg/boost.git
 [submodule "darkspore_server/libs/lodepng"]
 	path = darkspore_server/libs/lodepng
 	url = https://github.com/lvandeve/lodepng.git
