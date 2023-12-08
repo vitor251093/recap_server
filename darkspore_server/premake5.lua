@@ -9,7 +9,9 @@ project "darkspore_server"
       "source/**.cpp"
     }
     includedirs {
-      "source",
+      "source"
+    }
+    externalincludedirs {
       "libs/raknet-3.902-mod/Source",
       "libs/sol2",
       "libs/LuaJIT/include",
