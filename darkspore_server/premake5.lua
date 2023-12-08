@@ -1,7 +1,7 @@
 project "darkspore_server"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     architecture "x86_64"
     targetdir "build/%{cfg.buildcfg}"
     files {
