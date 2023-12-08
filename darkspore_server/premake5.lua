@@ -49,29 +49,3 @@ project "darkspore_server"
       "SOL_LUAJIT=1",
       "SOL_EXCEPTIONS_SAFE_PROPAGATION=1"
     }
-    
-    configurations {
-      "Debug",
-      "Release"
-    }
-
-    platforms {
-      "Win32",
-      "x64"
-    }
-
-    filter "configurations:Debug"
-      runtime "Debug"
-      symbols "On"
-      optimize "Off"
-    
-    filter "configurations:Release"
-      runtime "Release"
-      symbols "Off"
-      optimize "On"
-
-      defines {
-        "NDEBUG"
-      }
-
-    filter {}
