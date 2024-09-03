@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: windows-latest
     name: Build
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -33,8 +33,13 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "INCLUDE_PATH=D:\a\recap_server\recap_server\darkspore_server\source;D:\a\recap_server\recap_server\darkspore_server\libs\boost_1_73_0\include" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=D:\a\recap_server\recap_server\darkspore_server\libs\boost_1_73_0\lib" >> $GITHUB_ENV
+          echo "INCLUDE_PATH=${{ runner.workspace }}\recap_server\darkspore_server\source;${{ runner.workspace }}\recap_server\darkspore_server\libs\boost_1_73_0\include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=${{ runner.workspace }}\recap_server\darkspore_server\libs\boost_1_73_0\lib" >> $GITHUB_ENV
+
+      - name: Debug Environment Variables
+        run: |
+          echo "INCLUDE_PATH=${{ env.INCLUDE_PATH }}"
+          echo "LIBRARY_PATH=${{ env.LIBRARY_PATH }}"
 
       - name: Run MSBuild
         working-directory: ${{ github.workspace }}
