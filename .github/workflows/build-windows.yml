@@ -40,11 +40,14 @@ jobs:
       - name: Install MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
+      - name: List include files
+        run: dir ${{ github.workspace }}\darkspore_server\source\blaze
+
       - name: Run MSBuild
         id: run_msbuild
         working-directory: ${{ github.workspace }}
         run: |
-          msbuild .\darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:IncludePath=${{env.INCLUDE}} /p:LibraryPath=${{env.LIB}}
+          msbuild .\darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:IncludePath="${{ github.workspace }}\darkspore_server\source;${{ github.workspace }}\darkspore_server\libs\boost_1_73_0\include" /p:LibraryPath="${{ github.workspace }}\darkspore_server\libs\boost_1_73_0\lib"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
