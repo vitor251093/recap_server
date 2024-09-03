@@ -1,0 +1,7 @@
+on:
+  push:
+    branches:
+      - "merge/dalkon_2"
+  pull_request:
+    branches:
+      - "main"
