@@ -34,23 +34,17 @@ jobs:
       - name: Boost - Install
         run: |
           mv "${{runner.temp}}\boost_tmp\boost\boost" "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
+          echo "INCLUDE=${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0" >> $GITHUB_ENV
+          echo "LIB=${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0\lib" >> $GITHUB_ENV
 
       - name: Install MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
-        
-      # - name: Install Premake
-      #   uses: abel0b/setup-premake@v2.3
-      #   with:
-      #     version: "5.0.0-beta2"
-
-      # - name: Prepare source
-      #   run: premake5 vs2022
 
       - name: Run MSBuild
         id: run_msbuild
         working-directory: ${{ github.workspace }}
         run: msbuild .\darkspore_server.sln /p:Configuration=Release /p:Platform=x64
-        
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
