@@ -19,38 +19,28 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.3.3
-        with:
-          submodules: recursive
+        uses: actions/checkout@v2
 
-      - name: Boost - Build
-        uses: MarkusJx/install-boost@v2.4.1
-        id: install-boost
+      - name: Install Boost
+        uses: MarkusJx/install-boost@v2
         with:
-            boost_version: 1.73.0
-            boost_install_dir: ${{runner.temp}}\boost_tmp
-            platform_version: 2019
-
-      - name: Boost - Install
-        run: |
-          mv "${{runner.temp}}\boost_tmp\boost\boost" "${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0"
-          echo "INCLUDE=${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0" >> $GITHUB_ENV
-          echo "LIB=${{runner.workspace}}\recap_server\darkspore_server\libs\boost_1_73_0\lib" >> $GITHUB_ENV
+          boost_version: 1.73.0
+          boost_install_dir: ${{ runner.workspace }}\recap_server\darkspore_server\libs\boost_1_73_0
+          platform_version: 2019
 
       - name: Install MSBuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1
 
       - name: List include files
         run: dir ${{ github.workspace }}\darkspore_server\source\blaze
 
       - name: Run MSBuild
-        id: run_msbuild
         working-directory: ${{ github.workspace }}
         run: |
           msbuild .\darkspore_server.sln /p:Configuration=Release /p:Platform=x64 /p:IncludePath="${{ github.workspace }}\darkspore_server\source;${{ github.workspace }}\darkspore_server\libs\boost_1_73_0\include" /p:LibraryPath="${{ github.workspace }}\darkspore_server\libs\boost_1_73_0\lib"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: recap-server-windows-x64
-          path: ${{runner.workspace}}\recap_server\darkspore_server\build
+          path: ${{ runner.workspace }}\recap_server\darkspore_server\build
