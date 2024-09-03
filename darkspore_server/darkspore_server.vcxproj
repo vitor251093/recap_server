@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -68,7 +68,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)source;$(ProjectDir)libs\raknet-3.902-mod\Source;$(ProjectDir)libs\sol2;$(ProjectDir)libs\LuaJIT\include;$(ProjectDir)libs\glm;$(ProjectDir)libs\lodepng;$(ProjectDir)libs\cpp-base64;$(ProjectDir)libs\pugixml-1.9\include;$(ProjectDir)libs\rapidjson-1.1.0\include;$(ProjectDir)libs\openssl-1.1.1b\include;$(ProjectDir)libs\boost_1_73_0;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)source;$(ProjectDir)source\blaze;$(ProjectDir)libs\raknet-3.902-mod\Source;$(ProjectDir)libs\sol2;$(ProjectDir)libs\LuaJIT\include;$(ProjectDir)libs\glm;$(ProjectDir)libs\lodepng;$(ProjectDir)libs\cpp-base64;$(ProjectDir)libs\pugixml-1.9\include;$(ProjectDir)libs\rapidjson-1.1.0\include;$(ProjectDir)libs\openssl-1.1.1b\include;$(ProjectDir)libs\boost_1_73_0;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)libs\LuaJIT\lib64;$(ProjectDir)libs\raknet-3.902-mod\Lib;$(ProjectDir)libs\pugixml-1.9\lib;$(ProjectDir)libs\openssl-1.1.1b\lib;$(ProjectDir)libs\boost_1_73_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -77,6 +77,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)source\blaze;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -88,6 +89,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)source\blaze;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,6 +103,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)source\blaze;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +124,7 @@
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)source\blaze;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
