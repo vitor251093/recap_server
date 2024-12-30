@@ -135,9 +135,22 @@ if(lodepng_ADDED)
 endif()
 
 # RakNet
-add_subdirectory(libs/raknet-3.902-mod)
-IF(WIN32 AND NOT UNIX)
-	target_link_libraries(recap_server PRIVATE DLL)
-ELSE()
-	target_link_libraries(recap_server PRIVATE RakNetDynamic)
-ENDIF()
+CPMAddPackage(
+    NAME raknet
+    VERSION 3.902
+    URL http://www.jenkinssoftware.com/raknet/downloads/RakNet-3.902.zip
+    URL_HASH SHA256=8c45d0c25a77ef095e060bcbbc01e198eb98a7a1f713fdf067bfe01a919e4274
+    DOWNLOAD_ONLY YES)
+if(raknet_ADDED)
+    # Apply patches
+    set(RAKNET_PATCH "${CMAKE_CURRENT_LIST_DIR}/cmake/patches/RakNet-3.902.patch")
+    execute_process(COMMAND git init WORKING_DIRECTORY ${raknet_SOURCE_DIR})
+    execute_process(COMMAND git apply --ignore-whitespace --verbose ${RAKNET_PATCH} WORKING_DIRECTORY ${raknet_SOURCE_DIR})
+
+    add_subdirectory(${raknet_SOURCE_DIR} ${raknet_BINARY_DIR})
+    if(WIN32 AND NOT UNIX)
+        target_link_libraries(recap_server PRIVATE DLL)
+    else()
+        target_link_libraries(recap_server PRIVATE RakNetDynamic)
+    endif()
+endif()

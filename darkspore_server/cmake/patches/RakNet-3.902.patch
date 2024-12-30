@@ -1,0 +1,601 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9fe7f18..525d768 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.0)
+ 
+ IF(WIN32 AND NOT UNIX)
+ 	set(CMAKE_SUPPRESS_REGENERATION TRUE) #Gets rid of ZERO_CHECK 
+@@ -35,7 +35,7 @@ ELSE(WIN32 AND NOT UNIX)
+ 	set(WIN32NOTUNIX "FALSE" CACHE INTERNAL "HIDDEN" FORCE)
+ ENDIF(WIN32 AND NOT UNIX)
+ 
+-project(RakNet)
++project(RakNet VERSION 3.902)
+ set (PS3ENABLED FALSE)
+ if( NOT APPLE )
+ # check 64 bit
+@@ -46,22 +46,24 @@ else(  CMAKE_SIZEOF_VOID_P MATCHES "4")
+ endif(  CMAKE_SIZEOF_VOID_P MATCHES "4")
+ 
+ # check endianness
+-include( TestBigEndian )
+-test_big_endian( HAVE_BIG_ENDIAN )
+-if( HAVE_BIG_ENDIAN )
+-  set( HAVE_BIG_ENDIAN 1 )
+-else( HAVE_BIG_ENDIAN )
+-  set( HAVE_BIG_ENDIAN 0 )
+-endif( HAVE_BIG_ENDIAN )
++set( HAVE_BIG_ENDIAN 0 )
++# include( TestBigEndian )
++# test_big_endian( HAVE_BIG_ENDIAN )
++# if( HAVE_BIG_ENDIAN )
++#   set( HAVE_BIG_ENDIAN 1 )
++# else( HAVE_BIG_ENDIAN )
++#   set( HAVE_BIG_ENDIAN 0 )
++# endif( HAVE_BIG_ENDIAN )
++
+ endif( NOT APPLE )
+ 
+ IF (WIN32 AND NOT UNIX)
+ 	IF (HAVE_64_BIT)
+-		set (PROGRAMFILESX86 $ENV{PROGRAMFILESX86})
++		set (PROGRAMFILESX86_ENV_VAR "ProgramFiles(x86)")
+ 	ELSE(HAVE_64_BIT)
+-		set (PROGRAMFILESX86 $ENV{PROGRAMFILES})
++		set (PROGRAMFILESX86_ENV_VAR "ProgramFiles")
+ 	ENDIF(HAVE_64_BIT)
+-	string(REPLACE "\\" "/" PROGRAMFILESX86 ${PROGRAMFILESX86})
++	get_filename_component(PROGRAMFILESX86 "[ENV:${PROGRAMFILESX86_ENV_VAR}]" ABSOLUTE)
+ ENDIF(WIN32 AND NOT UNIX)
+ 
+ IF (WIN32 AND NOT UNIX)
+@@ -85,5 +87,5 @@ ENDIF(WIN32 AND NOT UNIX)
+ 
+ set(RAKNETHEADERFILES ${RakNet_SOURCE_DIR}/Source)
+ 
+-add_subdirectory(DependentExtensions)
+-add_subdirectory(Samples)
++# add_subdirectory(DependentExtensions)
++# add_subdirectory(Samples)
+diff --git a/Lib/CMakeLists.txt b/Lib/CMakeLists.txt
+index e15e1b6..098f764 100644
+--- a/Lib/CMakeLists.txt
++++ b/Lib/CMakeLists.txt
+@@ -1,3 +1,2 @@
+-cmake_minimum_required(VERSION 2.6)
+ add_subdirectory(LibStatic)
+ add_subdirectory(DLL)
+\ No newline at end of file
+diff --git a/Lib/DLL/CMakeLists.txt b/Lib/DLL/CMakeLists.txt
+index 472dabd..23f1478 100644
+--- a/Lib/DLL/CMakeLists.txt
++++ b/Lib/DLL/CMakeLists.txt
+@@ -1,18 +1,19 @@
+-cmake_minimum_required(VERSION 2.6)
+-project(DLL)
++cmake_minimum_required(VERSION 3.0)
++project(DLL VERSION 3.902)
+ FILE(GLOB ALL_HEADER_SRCS ${RakNet_SOURCE_DIR}/Source/*.h)
+ FILE(GLOB ALL_CPP_SRCS ${RakNet_SOURCE_DIR}/Source/*.cpp)
+-include_directories(${RakNet_SOURCE_DIR}/Source) 
+ 
+ IF(WIN32 AND NOT UNIX)
+-	SET( CMAKE_CXX_FLAGS "/D WIN32 /D _RAKNET_DLL /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
++	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D WIN32 /D _RAKNET_DLL /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
+ ENDIF(WIN32 AND NOT UNIX)
+ 
+ IF(WIN32 AND NOT UNIX)
+ 	add_library(DLL SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+ 	target_link_libraries (DLL ${RAKNET_LIBRARY_LIBS})
++	target_include_directories (DLL PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
+ ELSE(WIN32 AND NOT UNIX)
+ 	add_library(RakNetDynamic SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+ 	target_link_libraries (RakNetDynamic ${RAKNET_LIBRARY_LIBS})
++	target_include_directories (RakNetDynamic PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
+ 	INSTALL(TARGETS RakNetDynamic DESTINATION ${RakNet_SOURCE_DIR}/Lib/DLL)
+ ENDIF(WIN32 AND NOT UNIX)
+diff --git a/Lib/LibStatic/CMakeLists.txt b/Lib/LibStatic/CMakeLists.txt
+index dd2d5d2..7c809fe 100644
+--- a/Lib/LibStatic/CMakeLists.txt
++++ b/Lib/LibStatic/CMakeLists.txt
+@@ -1,10 +1,9 @@
+-cmake_minimum_required(VERSION 2.6)
+-project(LibStatic)
++cmake_minimum_required(VERSION 3.0)
++project(LibStatic VERSION 3.902)
+ 
+ FILE(GLOB ALL_HEADER_SRCS ${RakNet_SOURCE_DIR}/Source/*.h)
+ FILE(GLOB ALL_CPP_SRCS ${RakNet_SOURCE_DIR}/Source/*.cpp)
+ 
+-include_directories(${RakNet_SOURCE_DIR}/Source) 
+ IF(WIN32 AND NOT UNIX)
+ 	add_library(LibStatic STATIC ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+ ELSE(WIN32 AND NOT UNIX)
+@@ -12,13 +11,15 @@ ELSE(WIN32 AND NOT UNIX)
+ ENDIF(WIN32 AND NOT UNIX)
+ 
+ IF(WIN32 AND NOT UNIX)
+-	SET( CMAKE_CXX_FLAGS "/D WIN32 /D _RAKNET_LIB /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
++	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D WIN32 /D _RAKNET_LIB /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
+ ENDIF(WIN32 AND NOT UNIX)
+ 
+ IF(WIN32 AND NOT UNIX)
++	target_include_directories (LibStatic PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
+ 	target_link_libraries (LibStatic ${RAKNET_LIBRARY_LIBS})
+ 	set_target_properties(LibStatic PROPERTIES STATIC_LIBRARY_FLAGS "/NODEFAULTLIB:\"LIBCD.lib LIBCMTD.lib MSVCRT.lib\"" )
+ ELSE(WIN32 AND NOT UNIX)
++	target_include_directories (RakNetStatic PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
+ 	target_link_libraries (RakNetStatic ${RAKNET_LIBRARY_LIBS})
+ 	INSTALL(TARGETS RakNetStatic DESTINATION ${RakNet_SOURCE_DIR}/Lib/LibStatic)
+ 	INSTALL(FILES ${ALL_HEADER_SRCS} DESTINATION ${RakNet_SOURCE_DIR}/include/raknet)
+diff --git a/Source/DS_BinarySearchTree.h b/Source/DS_BinarySearchTree.h
+index 49aad44..af3ccd2 100644
+--- a/Source/DS_BinarySearchTree.h
++++ b/Source/DS_BinarySearchTree.h
+@@ -166,19 +166,19 @@ namespace DataStructures
+ 			if ( current->left == 0 )
+ 				left_height = 0;
+ 			else
+-				left_height = Height( current->left );
++				left_height = this->Height( current->left );
+ 				
+ 			if ( current->right == 0 )
+ 				right_height = 0;
+ 			else
+-				right_height = Height( current->right );
++				right_height = this->Height( current->right );
+ 				
+ 			if ( right_height - left_height == 2 )
+ 			{
+-				if ( RightHigher( current->right ) )
+-					RotateLeft( current->right );
++				if ( this->RightHigher( current->right ) )
++					this->RotateLeft( current->right );
+ 				else
+-					DoubleRotateLeft( current );
++					this->DoubleRotateLeft( current );
+ 					
+ 				if ( rotateOnce )
+ 					break;
+@@ -187,10 +187,10 @@ namespace DataStructures
+ 			else
+ 				if ( right_height - left_height == -2 )
+ 				{
+-					if ( LeftHigher( current->left ) )
+-						RotateRight( current->left );
++					if ( this->LeftHigher( current->left ) )
++						this->RotateRight( current->left );
+ 					else
+-						DoubleRotateRight( current );
++						this->DoubleRotateRight( current );
+ 						
+ 					if ( rotateOnce )
+ 						break;
+@@ -199,7 +199,7 @@ namespace DataStructures
+ 			if ( current == this->root )
+ 				break;
+ 				
+-			current = FindParent( *( current->item ) );
++			current = this->FindParent( *( current->item ) );
+ 			
+ 		}
+ 	}
+@@ -209,14 +209,14 @@ namespace DataStructures
+ 	{
+ 	
+ 		typename BinarySearchTree<BinarySearchTreeType>::node * current = BinarySearchTree<BinarySearchTreeType>::Add ( input, __FILE__,__LINE__ );
+-		BalanceTree( current, true );
++		this->BalanceTree( current, true );
+ 	}
+ 	
+ 	template <class BinarySearchTreeType>
+ 	void AVLBalancedBinarySearchTree<BinarySearchTreeType>::Del( const BinarySearchTreeType& input )
+ 	{
+ 		typename BinarySearchTree<BinarySearchTreeType>::node * current = BinarySearchTree<BinarySearchTreeType>::Del( input, __FILE__,__LINE__ );
+-		BalanceTree( current, false );
++		this->BalanceTree( current, false );
+ 		
+ 	}
+ 	
+@@ -226,7 +226,7 @@ namespace DataStructures
+ 		if ( A == 0 )
+ 			return false;
+ 			
+-		return Height( A->right ) > Height( A->left );
++		return this->Height( A->right ) > this->Height( A->left );
+ 	}
+ 	
+ 	template <class BinarySearchTreeType>
+@@ -235,7 +235,7 @@ namespace DataStructures
+ 		if ( A == 0 )
+ 			return false;
+ 			
+-		return Height( A->left ) > Height( A->right );
++		return this->Height( A->left ) > this->Height( A->right );
+ 	}
+ 	
+ 	template <class BinarySearchTreeType>
+@@ -272,8 +272,8 @@ namespace DataStructures
+ 		
+ 		*/
+ 		
+-		B = FindParent( *( C->item ) );
+-		A = FindParent( *( B->item ) );
++		B = this->FindParent( *( C->item ) );
++		A = this->FindParent( *( B->item ) );
+ 		D = C->right;
+ 		
+ 		if ( A )
+@@ -298,8 +298,8 @@ namespace DataStructures
+ 	void AVLBalancedBinarySearchTree<BinarySearchTreeType>::DoubleRotateRight( typename BinarySearchTree<BinarySearchTreeType>::node *A )
+ 	{
+ 		// The left side of the left child must be higher for the tree to balance with a right rotation.  If it isn't, rotate it left before the normal rotation so it is.
+-		RotateLeft( A->left->right );
+-		RotateRight( A->left );
++		this->RotateLeft( A->left->right );
++		this->RotateRight( A->left );
+ 	}
+ 	
+ 	template <class BinarySearchTreeType>
+@@ -336,8 +336,8 @@ namespace DataStructures
+ 		
+ 		*/
+ 		
+-		B = FindParent( *( C->item ) );
+-		A = FindParent( *( B->item ) );
++		B = this->FindParent( *( C->item ) );
++		A = this->FindParent( *( B->item ) );
+ 		D = C->left;
+ 		
+ 		if ( A )
+@@ -384,7 +384,7 @@ namespace DataStructures
+ 		if ( BinarySearchTree_size == 0 || starting_node == 0 )
+ 			return 0;
+ 		else
+-			return HeightRecursive( starting_node );
++			return this->HeightRecursive( starting_node );
+ 	}
+ 	
+ 	// Recursively return the height of a binary tree
+@@ -426,7 +426,7 @@ namespace DataStructures
+ 	{
+ 		static typename BinarySearchTree::node * tempnode;
+ 		static BinarySearchTreeType* dummyptr = 0;
+-		tempnode = Find ( element, &tempnode );
++		tempnode = this->Find ( element, &tempnode );
+ 		
+ 		if ( this->direction == this->NOT_FOUND )
+ 			return dummyptr;
+@@ -543,11 +543,11 @@ namespace DataStructures
+ 			
+ 		if ( BinarySearchTree_size == 1 )
+ 		{
+-			Clear(file, line);
++			this->Clear(file, line);
+ 			return 0;
+ 		}
+ 		
+-		node_to_delete = Find( input, &parent );
++		node_to_delete = this->Find( input, &parent );
+ 		
+ 		if ( direction == NOT_FOUND )
+ 			return 0;  // Couldn't find the element
+diff --git a/Source/PacketLogger.cpp b/Source/PacketLogger.cpp
+index 3f8c971..21fbffc 100644
+--- a/Source/PacketLogger.cpp
++++ b/Source/PacketLogger.cpp
+@@ -70,7 +70,7 @@ unsigned int splitPacketId, unsigned int splitPacketIndex, unsigned int splitPac
+ 	char localtime[128];
+ 	GetLocalTime(localtime);
+ 
+-	sprintf(into, "%s,%s%s,%s,%5u,%5u,%s,%u,%"PRINTF_64_BIT_MODIFIER"u,%s,%s,%i,%i,%i,%i,%s,"
++	sprintf(into, "%s,%s%s,%s,%5u,%5u,%s,%u,%" PRINTF_64_BIT_MODIFIER "u,%s,%s,%i,%i,%i,%i,%s,"
+ 					, localtime
+ 					, prefix
+ 					, dir
+@@ -129,7 +129,7 @@ void PacketLogger::OnAck(unsigned int messageNumber, SystemAddress remoteSystemA
+ 	char localtime[128];
+ 	GetLocalTime(localtime);
+ 
+-	sprintf(str, "%s,Rcv,Ack,%i,,,,%"PRINTF_64_BIT_MODIFIER"u,%s,%s,,,,,,"
++	sprintf(str, "%s,Rcv,Ack,%i,,,,%" PRINTF_64_BIT_MODIFIER "u,%s,%s,,,,,,"
+ 					, localtime
+ 					, messageNumber
+ 					, (unsigned long long) time
+@@ -149,7 +149,7 @@ void PacketLogger::OnPushBackPacket(const char *data, const BitSize_t bitsUsed,
+ 	char localtime[128];
+ 	GetLocalTime(localtime);
+ 
+-	sprintf(str, "%s,Lcl,PBP,,,%s,%i,%"PRINTF_64_BIT_MODIFIER"u,%s,%s,,,,,,"
++	sprintf(str, "%s,Lcl,PBP,,,%s,%i,%" PRINTF_64_BIT_MODIFIER "u,%s,%s,,,,,,"
+ 					, localtime
+ 					, BaseIDTOString(data[0])
+ 					, bitsUsed
+@@ -214,7 +214,7 @@ void PacketLogger::WriteMiscellaneous(const char *type, const char *msg)
+ 	char localtime[128];
+ 	GetLocalTime(localtime);
+ 
+-	sprintf(str, "%s,Lcl,%s,,,,,%"PRINTF_64_BIT_MODIFIER"u,%s,,,,,,,%s"
++	sprintf(str, "%s,Lcl,%s,,,,,%" PRINTF_64_BIT_MODIFIER "u,%s,,,,,,,%s"
+ 					, localtime
+ 					, type
+ 					, (unsigned long long) time
+diff --git a/Source/PacketOutputWindowLogger.cpp b/Source/PacketOutputWindowLogger.cpp
+index 0aa93d2..b3a014f 100644
+--- a/Source/PacketOutputWindowLogger.cpp
++++ b/Source/PacketOutputWindowLogger.cpp
+@@ -18,7 +18,7 @@ void PacketOutputWindowLogger::WriteLog(const char *str)
+ #if defined(_WIN32) && !defined(__X360__) 
+ 	RakNet::RakString str2 = str;
+ 	str2+="\n";
+-	OutputDebugStr(str2.C_String());
++	OutputDebugString(str2.C_String());
+ #endif
+ }
+ 
+diff --git a/Source/Platform.h b/Source/Platform.h
+index a0ae351..630d9db 100644
+--- a/Source/Platform.h
++++ b/Source/Platform.h
+@@ -33,7 +33,7 @@
+ 	  defined(_M_ALPHA) || defined(ns32000) || defined(__ns32000__) || defined(sequent) || \
+ 	  defined(MIPSEL) || defined(_MIPSEL) || defined(sun386) || defined(__sun386__) || \
+ 	  defined(x86_64) || defined(__x86_64) || (defined(TARGET_OS_IPHONE) && defined(TARGET_CPU_ARM)) || \
+-	  defined(__arm__)
++	  defined(__arm__) || defined(_WIN32)
+ #  define LITTLE_ENDIAN
+ # else
+ #  error "Add your platform to the list"
+diff --git a/Source/RakNetStatistics.cpp b/Source/RakNetStatistics.cpp
+index 9a7c226..ded5ebb 100644
+--- a/Source/RakNetStatistics.cpp
++++ b/Source/RakNetStatistics.cpp
+@@ -25,8 +25,8 @@ void RAK_DLL_EXPORT StatisticsToString( RakNetStatistics *s, char *buffer, int v
+ 	if (verbosityLevel==0)
+ 	{
+ 		sprintf(buffer,
+-			"Bytes per second sent     %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Bytes per second received %"PRINTF_64_BIT_MODIFIER"u\n"
++			"Bytes per second sent     %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Bytes per second received %" PRINTF_64_BIT_MODIFIER "u\n"
+ 			"Current packetloss        %.1f%%\n",
+ 			(long long unsigned int) s->valueOverLastSecond[ACTUAL_BYTES_SENT],
+ 			(long long unsigned int) s->valueOverLastSecond[ACTUAL_BYTES_RECEIVED],
+@@ -36,15 +36,15 @@ void RAK_DLL_EXPORT StatisticsToString( RakNetStatistics *s, char *buffer, int v
+ 	else if (verbosityLevel==1)
+ 	{
+ 		sprintf(buffer,
+-			"Actual bytes per second sent       %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Actual bytes per second received   %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Message bytes per second pushed    %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total actual bytes sent            %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total actual bytes received        %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total message bytes pushed         %"PRINTF_64_BIT_MODIFIER"u\n"
++			"Actual bytes per second sent       %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Actual bytes per second received   %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Message bytes per second pushed    %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total actual bytes sent            %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total actual bytes received        %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total message bytes pushed         %" PRINTF_64_BIT_MODIFIER "u\n"
+ 			"Current packetloss                 %.1f%%\n"
+ 			"Average packetloss                 %.1f%%\n"
+-			"Elapsed connection time in seconds %"PRINTF_64_BIT_MODIFIER"u\n",
++			"Elapsed connection time in seconds %" PRINTF_64_BIT_MODIFIER "u\n",
+ 			(long long unsigned int) s->valueOverLastSecond[ACTUAL_BYTES_SENT],
+ 			(long long unsigned int) s->valueOverLastSecond[ACTUAL_BYTES_RECEIVED],
+ 			(long long unsigned int) s->valueOverLastSecond[USER_MESSAGE_BYTES_PUSHED],
+@@ -60,7 +60,7 @@ void RAK_DLL_EXPORT StatisticsToString( RakNetStatistics *s, char *buffer, int v
+ 		{
+ 			char buff2[128];
+ 			sprintf(buff2,
+-				"Send capacity                    %"PRINTF_64_BIT_MODIFIER"u bytes per second (%.0f%%)\n",
++				"Send capacity                    %" PRINTF_64_BIT_MODIFIER "u bytes per second (%.0f%%)\n",
+ 				(long long unsigned int) s->BPSLimitByCongestionControl,
+ 				100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] / s->BPSLimitByCongestionControl
+ 				);
+@@ -70,7 +70,7 @@ void RAK_DLL_EXPORT StatisticsToString( RakNetStatistics *s, char *buffer, int v
+ 		{
+ 			char buff2[128];
+ 			sprintf(buff2,
+-				"Send limit                       %"PRINTF_64_BIT_MODIFIER"u (%.0f%%)\n",
++				"Send limit                       %" PRINTF_64_BIT_MODIFIER "u (%.0f%%)\n",
+ 				(long long unsigned int) s->BPSLimitByOutgoingBandwidthLimit,
+ 				100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] / s->BPSLimitByOutgoingBandwidthLimit
+ 				);
+@@ -80,27 +80,27 @@ void RAK_DLL_EXPORT StatisticsToString( RakNetStatistics *s, char *buffer, int v
+ 	else
+ 	{
+ 		sprintf(buffer,
+-			"Actual bytes per second sent         %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Actual bytes per second received     %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Message bytes per second sent        %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Message bytes per second resent      %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Message bytes per second pushed      %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Message bytes per second processed   %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Message bytes per second ignored     %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total bytes sent                     %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total bytes received                 %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total message bytes sent             %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total message bytes resent           %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total message bytes pushed           %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total message bytes received         %"PRINTF_64_BIT_MODIFIER"u\n"
+-			"Total message bytes ignored          %"PRINTF_64_BIT_MODIFIER"u\n"
++			"Actual bytes per second sent         %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Actual bytes per second received     %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Message bytes per second sent        %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Message bytes per second resent      %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Message bytes per second pushed      %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Message bytes per second processed   %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Message bytes per second ignored     %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total bytes sent                     %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total bytes received                 %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total message bytes sent             %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total message bytes resent           %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total message bytes pushed           %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total message bytes received         %" PRINTF_64_BIT_MODIFIER "u\n"
++			"Total message bytes ignored          %" PRINTF_64_BIT_MODIFIER "u\n"
+ 			"Messages in send buffer, by priority %i,%i,%i,%i\n"
+ 			"Bytes in send buffer, by priority    %i,%i,%i,%i\n"
+ 			"Messages in resend buffer            %i\n"
+-			"Bytes in resend buffer               %"PRINTF_64_BIT_MODIFIER"u\n"
++			"Bytes in resend buffer               %" PRINTF_64_BIT_MODIFIER "u\n"
+ 			"Current packetloss                   %.1f%%\n"
+ 			"Average packetloss                   %.1f%%\n"
+-			"Elapsed connection time in seconds   %"PRINTF_64_BIT_MODIFIER"u\n",
++			"Elapsed connection time in seconds   %" PRINTF_64_BIT_MODIFIER "u\n",
+ 			(long long unsigned int) s->valueOverLastSecond[ACTUAL_BYTES_SENT],
+ 			(long long unsigned int) s->valueOverLastSecond[ACTUAL_BYTES_RECEIVED],
+ 			(long long unsigned int) s->valueOverLastSecond[USER_MESSAGE_BYTES_SENT],
+@@ -128,7 +128,7 @@ void RAK_DLL_EXPORT StatisticsToString( RakNetStatistics *s, char *buffer, int v
+ 		{
+ 			char buff2[128];
+ 			sprintf(buff2,
+-				"Send capacity                    %"PRINTF_64_BIT_MODIFIER"u bytes per second (%.0f%%)\n",
++				"Send capacity                    %" PRINTF_64_BIT_MODIFIER "u bytes per second (%.0f%%)\n",
+ 				(long long unsigned int) s->BPSLimitByCongestionControl,
+ 				100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] / s->BPSLimitByCongestionControl
+ 				);
+@@ -138,7 +138,7 @@ void RAK_DLL_EXPORT StatisticsToString( RakNetStatistics *s, char *buffer, int v
+ 		{
+ 			char buff2[128];
+ 			sprintf(buff2,
+-				"Send limit                       %"PRINTF_64_BIT_MODIFIER"u (%.0f%%)\n",
++				"Send limit                       %" PRINTF_64_BIT_MODIFIER "u (%.0f%%)\n",
+ 				(long long unsigned int) s->BPSLimitByOutgoingBandwidthLimit,
+ 				100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] / s->BPSLimitByOutgoingBandwidthLimit
+ 				);
+diff --git a/Source/SocketLayer.cpp b/Source/SocketLayer.cpp
+index d012a31..44ca21a 100644
+--- a/Source/SocketLayer.cpp
++++ b/Source/SocketLayer.cpp
+@@ -1205,7 +1205,7 @@ void GetMyIP_Win32( char ipList[ MAXIMUM_NUMBER_OF_INTERNAL_IDS ][ 16 ], unsigne
+ 			NULL, dwIOError, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),  // Default language
+ 			( LPTSTR ) & messageBuffer, 0, NULL );
+ 		// something has gone wrong here...
+-		RAKNET_DEBUG_PRINTF( "gethostname failed:Error code - %d\n%s", dwIOError, messageBuffer );
++		RAKNET_DEBUG_PRINTF( "gethostname failed:Error code - %d\n%s", dwIOError, reinterpret_cast<char*>(messageBuffer) );
+ 		//Free the buffer.
+ 		LocalFree( messageBuffer );
+ 		return ;
+@@ -1221,7 +1221,7 @@ void GetMyIP_Win32( char ipList[ MAXIMUM_NUMBER_OF_INTERNAL_IDS ][ 16 ], unsigne
+ 			NULL, dwIOError, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),  // Default language
+ 			( LPTSTR ) & messageBuffer, 0, NULL );
+ 		// something has gone wrong here...
+-		RAKNET_DEBUG_PRINTF( "gethostbyname failed:Error code - %d\n%s", dwIOError, messageBuffer );
++		RAKNET_DEBUG_PRINTF( "gethostbyname failed:Error code - %d\n%s", dwIOError, reinterpret_cast<char*>(messageBuffer));
+ 
+ 		//Free the buffer.
+ 		LocalFree( messageBuffer );
+diff --git a/Source/UDPForwarder.cpp b/Source/UDPForwarder.cpp
+index 648bb51..cceff65 100644
+--- a/Source/UDPForwarder.cpp
++++ b/Source/UDPForwarder.cpp
+@@ -11,6 +11,8 @@ static const unsigned short DEFAULT_MAX_FORWARD_ENTRIES=64;
+ 
+ RAK_THREAD_DECLARATION(UpdateUDPForwarder);
+ 
++namespace RakNet {
++
+ bool operator<( const DataStructures::MLKeyRef<UDPForwarder::SrcAndDest> &inputKey, const UDPForwarder::ForwardEntry *cls )
+ {
+ 	return inputKey.Get().source < cls->srcAndDest.source ||
+@@ -26,6 +28,7 @@ bool operator==( const DataStructures::MLKeyRef<UDPForwarder::SrcAndDest> &input
+ 	return inputKey.Get().source == cls->srcAndDest.source && inputKey.Get().dest == cls->srcAndDest.dest;
+ }
+ 
++}  // namespace RakNet
+ 
+ UDPForwarder::ForwardEntry::ForwardEntry() {socket=INVALID_SOCKET; timeLastDatagramForwarded=RakNet::GetTimeMS(); updatedSourcePort=false; updatedDestPort=false;}
+ UDPForwarder::ForwardEntry::~ForwardEntry() {
+diff --git a/Source/UDPForwarder.h b/Source/UDPForwarder.h
+index 95c9eb3..94fc2f0 100644
+--- a/Source/UDPForwarder.h
++++ b/Source/UDPForwarder.h
+@@ -153,6 +153,10 @@ public:
+ 
+ };
+ 
++bool operator<( const DataStructures::MLKeyRef<UDPForwarder::SrcAndDest> &inputKey, const UDPForwarder::ForwardEntry *cls );
++bool operator>( const DataStructures::MLKeyRef<UDPForwarder::SrcAndDest> &inputKey, const UDPForwarder::ForwardEntry *cls );
++bool operator==( const DataStructures::MLKeyRef<UDPForwarder::SrcAndDest> &inputKey, const UDPForwarder::ForwardEntry *cls );
++
+ } // End namespace
+ 
+ #endif
+diff --git a/Source/UDPProxyClient.cpp b/Source/UDPProxyClient.cpp
+index b907f81..9bf57f2 100644
+--- a/Source/UDPProxyClient.cpp
++++ b/Source/UDPProxyClient.cpp
+@@ -11,10 +11,13 @@
+ using namespace RakNet;
+ static const int DEFAULT_UNRESPONSIVE_PING_TIME=1000;
+ 
++namespace RakNet {
++
+ bool operator<( const DataStructures::MLKeyRef<UDPProxyClient::ServerWithPing> &inputKey, const UDPProxyClient::ServerWithPing &cls ) {return inputKey.Get().serverAddress < cls.serverAddress;}
+ bool operator>( const DataStructures::MLKeyRef<UDPProxyClient::ServerWithPing> &inputKey, const UDPProxyClient::ServerWithPing &cls ) {return inputKey.Get().serverAddress > cls.serverAddress;}
+ bool operator==( const DataStructures::MLKeyRef<UDPProxyClient::ServerWithPing> &inputKey, const UDPProxyClient::ServerWithPing &cls ) {return inputKey.Get().serverAddress == cls.serverAddress;}
+ 
++}  // namespace RakNet
+ 
+ UDPProxyClient::UDPProxyClient()
+ {
+diff --git a/Source/UDPProxyClient.h b/Source/UDPProxyClient.h
+index 6b4105b..52c485d 100644
+--- a/Source/UDPProxyClient.h
++++ b/Source/UDPProxyClient.h
+@@ -161,6 +161,10 @@ protected:
+ 
+ };
+ 
++bool operator<( const DataStructures::MLKeyRef<UDPProxyClient::ServerWithPing> &inputKey, const UDPProxyClient::ServerWithPing &cls );
++bool operator>( const DataStructures::MLKeyRef<UDPProxyClient::ServerWithPing> &inputKey, const UDPProxyClient::ServerWithPing &cls );
++bool operator==( const DataStructures::MLKeyRef<UDPProxyClient::ServerWithPing> &inputKey, const UDPProxyClient::ServerWithPing &cls );
++
+ } // End namespace
+ 
+ #endif
+diff --git a/Source/UDPProxyCoordinator.cpp b/Source/UDPProxyCoordinator.cpp
+index b864599..479dab2 100644
+--- a/Source/UDPProxyCoordinator.cpp
++++ b/Source/UDPProxyCoordinator.cpp
+@@ -16,6 +16,8 @@ static const int DEFAULT_UNRESPONSIVE_PING_TIME=DEFAULT_CLIENT_UNRESPONSIVE_PING
+ 
+ using namespace RakNet;
+ 
++namespace RakNet {
++
+ bool operator<( const DataStructures::MLKeyRef<unsigned short> &inputKey, const UDPProxyCoordinator::ServerWithPing &cls ) {return inputKey.Get() < cls.ping;}
+ bool operator>( const DataStructures::MLKeyRef<unsigned short> &inputKey, const UDPProxyCoordinator::ServerWithPing &cls ) {return inputKey.Get() > cls.ping;}
+ bool operator==( const DataStructures::MLKeyRef<unsigned short> &inputKey, const UDPProxyCoordinator::ServerWithPing &cls ) {return inputKey.Get() == cls.ping;}
+@@ -35,6 +37,8 @@ bool operator==( const DataStructures::MLKeyRef<UDPProxyCoordinator::SenderAndTa
+ 	return inputKey.Get().senderClientAddress == cls->sata.senderClientAddress && inputKey.Get().targetClientAddress == cls->sata.targetClientAddress;
+ }
+ 
++}  // namespace RakNet
++
+ UDPProxyCoordinator::UDPProxyCoordinator()
+ {
+ 
+diff --git a/Source/UDPProxyCoordinator.h b/Source/UDPProxyCoordinator.h
+index d8763bd..97a0467 100644
+--- a/Source/UDPProxyCoordinator.h
++++ b/Source/UDPProxyCoordinator.h
+@@ -97,6 +97,14 @@ namespace RakNet
+ 
+ 	};
+ 
++bool operator<( const DataStructures::MLKeyRef<unsigned short> &inputKey, const UDPProxyCoordinator::ServerWithPing &cls );
++bool operator>( const DataStructures::MLKeyRef<unsigned short> &inputKey, const UDPProxyCoordinator::ServerWithPing &cls );
++bool operator==( const DataStructures::MLKeyRef<unsigned short> &inputKey, const UDPProxyCoordinator::ServerWithPing &cls );
++
++bool operator<( const DataStructures::MLKeyRef<UDPProxyCoordinator::SenderAndTargetAddress> &inputKey, const UDPProxyCoordinator::ForwardingRequest *cls );
++bool operator>( const DataStructures::MLKeyRef<UDPProxyCoordinator::SenderAndTargetAddress> &inputKey, const UDPProxyCoordinator::ForwardingRequest *cls );
++bool operator==( const DataStructures::MLKeyRef<UDPProxyCoordinator::SenderAndTargetAddress> &inputKey, const UDPProxyCoordinator::ForwardingRequest *cls );
++
+ } // End namespace
+ 
+ #endif
