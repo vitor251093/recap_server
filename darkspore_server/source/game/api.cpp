@@ -232,7 +232,7 @@ auto parse_cookies(HTTP::Request& request) {
 		return data;
 	}
 
-	auto cookieList = utils::explode_string(';' + cookies.to_string(), ';');
+	auto cookieList = utils::explode_string(';' + std::string{cookies}, ';');
 	for (const auto& cookie : cookieList) {
 		auto cookieData = utils::explode_string(cookie, '=', 1);
 		if (cookieData.size() == 2) {
