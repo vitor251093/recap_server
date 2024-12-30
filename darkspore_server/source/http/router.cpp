@@ -114,7 +114,7 @@ namespace HTTP {
 	// Router
 	bool Router::run(Session& session, Response& response) {
 		decltype(auto) request = session.get_request();
-		request.uri.parse(request.data.target().to_string());
+		request.uri.parse(std::string{request.data.target()});
 
 		for (const auto& route : mRoutes) {
 			if (route.mMethod == request.data.method() && route.equals(request.uri.resource())) {
