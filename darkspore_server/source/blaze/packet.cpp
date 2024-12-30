@@ -2,6 +2,47 @@
 // Include
 #include "packet.h"
 
+#ifdef _MSC_VER
+
+#include <stdlib.h>
+#define bswap32(x) _byteswap_ulong(x)
+#define bswap64(x) _byteswap_uint64(x)
+
+#elif defined(__APPLE__)
+
+#include <libkern/OSByteOrder.h>
+#define bswap32(x) OSSwapInt32(x)
+#define bswap64(x) OSSwapInt64(x)
+
+#elif defined(__sun) || defined(sun)
+
+#include <sys/byteorder.h>
+#define bswap32(x) BSWAP_32(x)
+#define bswap64(x) BSWAP_64(x)
+
+#elif defined(__FreeBSD__)
+
+#include <sys/endian.h>
+
+#elif defined(__OpenBSD__)
+
+#include <sys/types.h>
+#define bswap32(x) swap32(x)
+#define bswap64(x) swap64(x)
+
+#elif defined(__NetBSD__)
+
+#include <sys/types.h>
+#include <machine/bswap.h>
+
+#else
+
+#include <byteswap.h>
+#define bswap32 bswap_32
+#define bswap64 bswap_64
+
+#endif
+
 // Network
 namespace Network {
 	uint32_t CompressLabel(const std::string& label) {
@@ -9,11 +50,11 @@ namespace Network {
 		for (int i = 0; i < 4; ++i) {
 			ret |= (0x20 | (label[i] & 0x1F)) << ((3 - i) * 6);
 		}
-		return _byteswap_ulong(ret) >> 8;
+		return bswap32(ret) >> 8;
 	}
 
 	std::string DecompressLabel(uint32_t label) {
-		label = _byteswap_ulong(label) >> 8;
+		label = bswap32(label) >> 8;
 
 		std::string ret;
 		for (uint32_t i = 0; i < 4; ++i) {
@@ -67,7 +108,7 @@ namespace Network {
 	}
 
 	void Packet::write_header(const std::string& label, Type type) {
-		mStream.write<uint32_t>(CompressLabel(label) | (type << 24));
+		mStream.write<uint32_t>(CompressLabel(label) | (static_cast<uint32_t>(type) << 24));
 	}
 
 	uint32_t Packet::read_integer() {

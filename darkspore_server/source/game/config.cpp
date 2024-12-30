@@ -2,9 +2,20 @@
 // Include
 #include "config.h"
 
-#include <vector>
-#include <iostream>
 #include <pugixml.hpp>
+
+#include <array>
+#include <iostream>
+#include <string>
+#include <vector>
+
+#ifdef _MSC_VER
+#include <string.h>
+#define STRCMP_CASE_SENSITIVE _stricmp
+#else
+#include <strings.h>
+#define STRCMP_CASE_SENSITIVE strcasecmp
+#endif
 
 // Game
 namespace Game {
@@ -70,7 +81,7 @@ namespace Game {
 		const auto& str = Get(key);
 		if (str == "1") {
 			return true;
-		} else if (_stricmp(str.c_str(), "true") == 0) {
+		} else if (STRCMP_CASE_SENSITIVE(str.c_str(), "true") == 0) {
 			return true;
 		} else {
 			return false;
