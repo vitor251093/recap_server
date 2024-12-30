@@ -4,8 +4,9 @@
 #define _DATA_BUFFER_HEADER
 
 // Include
-#include <vector>
 #include <algorithm>
+#include <cstdint>
+#include <vector>
 
 // DataBuffer
 class DataBuffer {

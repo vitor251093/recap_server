@@ -1,7 +1,11 @@
 
 // Include
 #include "databuffer.h"
+
+#include <algorithm>
 #include <bit>
+#include <cstring>
+#include <vector>
 
 // Endianess
 #ifdef _MSC_VER

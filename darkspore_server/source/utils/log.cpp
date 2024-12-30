@@ -3,14 +3,15 @@
 #include "log.h"
 #include "functions.h"
 
-#include <io.h>
-#include <fcntl.h>
-#include <iomanip>
+#ifdef _WIN32
+    #include <io.h>
+    #include <fcntl.h>
+    #include <windows.h>
+#endif
+
 #include <ctime>
 #include <chrono>
-#ifdef _WIN32
-#	include <windows.h>
-#endif
+#include <iomanip>
 
 // utils
 namespace utils {
