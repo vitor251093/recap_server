@@ -23,6 +23,9 @@ add_definitions(-DSOL_STRINGS_ARE_NUMBERS=1 -DSOL_SAFE_FUNCTION=1 -DSOL_LUAJIT=1
 
 add_executable(recap_server ${RECAP_SOURCES} ${RECAP_SOURCES})
 target_include_directories(recap_server PRIVATE source)
+if(MSVC)
+    target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
+endif()
 
 # Boost
 set(BOOST_INCLUDE_LIBRARIES "asio;bind;regex;beast")
