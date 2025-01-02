@@ -4,6 +4,7 @@
 
 // Include
 #include <cstdint>
+#include <cstring>
 #include <algorithm>
 #include <vector>
 #include <string>
