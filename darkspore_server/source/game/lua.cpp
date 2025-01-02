@@ -15,6 +15,10 @@
 #include <algorithm>
 #include <filesystem>
 
+#ifndef _MSC_VER
+#include <stdexcept>
+#endif
+
 /*
 	Darkspore "docs"
 		attribute snapshot (
@@ -1981,7 +1985,11 @@ namespace Game {
 	// Coroutine
 	Coroutine::Coroutine(Lua& lua, sol::table&& self) : mLua(lua), mSelf(std::move(self)) {
 		if (mSelf == sol::nil) {
+			#ifdef _MSC_VER
 			throw std::exception("Coroutine::Coroutine: self is nil");
+			#else
+			throw std::runtime_error("Coroutine::Coroutine: self is nil");
+			#endif
 		}
 
 		sol::state_view state = mSelf.lua_state();
