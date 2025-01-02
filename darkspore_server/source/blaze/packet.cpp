@@ -116,7 +116,7 @@ namespace Network {
 	}
 
 	void Packet::write_integer(const std::string& label, uint32_t value) {
-		write_header(label, Type::Integer1);
+		write_header(label, Type::Integer);
 		encode_integer(value);
 	}
 
