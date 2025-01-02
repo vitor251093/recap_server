@@ -121,8 +121,8 @@ class DataBuffer {
 
 	private:
 		std::vector<uint8_t> mBuffer;
-		size_t mSize;
-		size_t mPosition;
+		size_t mSize = 0;
+		size_t mPosition = 0;
 };
 
 #endif

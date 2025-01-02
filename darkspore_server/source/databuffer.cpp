@@ -1,6 +1,7 @@
 
 // Include
 #include "databuffer.h"
+#include <bit>
 
 #include <algorithm>
 #include <bit>
@@ -19,12 +20,11 @@
 #endif
 
 constexpr static bool is_big_endian() {
-	constexpr uint32_t value = 0x12345678;
-	return ((const uint8_t&)value) == 0x12;
+	return std::endian::native == std::endian::big;
 }
 
 constexpr static bool is_little_endian() {
-	return !is_big_endian();
+	return std::endian::native == std::endian::little;
 }
 
 // DataBuffer
@@ -92,6 +92,10 @@ void DataBuffer::encode_tdf_integer(uint64_t value) {
 
 uint64_t DataBuffer::decode_tdf_integer() {
 	uint64_t value = read<uint8_t>();
+#if 0
+	if (value & 0x40) {
+	}
+#else
 	if (value >= 0x80) {
 		value &= 0x3F;
 		for (uint32_t i = 1; i < 8; i++) {
@@ -103,6 +107,7 @@ uint64_t DataBuffer::decode_tdf_integer() {
 			}
 		}
 	}
+#endif
 	return value;
 }
 

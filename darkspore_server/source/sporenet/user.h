@@ -1,23 +1,39 @@
 
-#ifndef _GAME_USER_HEADER
-#define _GAME_USER_HEADER
+#ifndef _SPORENET_USER_HEADER
+#define _SPORENET_USER_HEADER
 
 // Include
-#include "game.h"
+#include "predefined.h"
+
+#include "part.h"
 #include "squad.h"
+#include "room.h"
+
+#include "game/instance.h"
+
+#include "blaze/functions.h"
 
 #include <cstdint>
 #include <string>
 #include <map>
 #include <pugixml.hpp>
 
-// Game
-namespace Game {
+// SporeNet
+namespace SporeNet {
+	// FeedMessageType
+	enum class FeedMessageType : uint32_t {
+		Friend = 1,
+		Creature = 2,
+		Upgrade = 3
+	};
+
 	// Account
 	struct Account {
 		bool tutorialCompleted = false;
 		bool grantAllAccess = false;
 		bool grantOnlineAccess = false;
+
+		int64_t id = 1;
 
 		uint32_t chainProgression = 0;
 		uint32_t creatureRewards = 0;
@@ -32,7 +48,6 @@ namespace Game {
 		uint32_t xp = 0;
 		uint32_t dna = 0;
 		uint32_t avatarId = 0;
-		uint32_t id = 1;
 
 		uint32_t newPlayerInventory = 0;
 		uint32_t newPlayerProgress = 0;
@@ -64,11 +79,12 @@ namespace Game {
 		std::string metadata;
 		std::string name;
 
-		uint64_t timestamp;
+		uint64_t timestamp; // time in seconds?
 
 		uint32_t accountId;
 		uint32_t id;
-		uint32_t messageId;
+
+		FeedMessageType messageId;
 	};
 
 	// Feed
@@ -89,65 +105,6 @@ namespace Game {
 
 		private:
 			std::vector<FeedItem> mItems;
-	};
-
-	// Part
-	class Part {
-		public:
-			Part(uint32_t rigblock);
-			Part(const pugi::xml_node& node);
-
-			bool Read(const pugi::xml_node& node);
-			void Write(pugi::xml_node& node, uint32_t index, bool api = false) const;
-
-			void SetRigblock(uint16_t rigblock);
-			void SetPrefix(uint16_t prefix, bool secondary = false);
-			void SetSuffix(uint16_t suffix);
-
-			void SetStatus(uint8_t newStatus);
-
-		private:
-			uint64_t timestamp;
-
-			uint32_t rigblock_asset_hash;
-			uint32_t prefix_asset_hash;
-			uint32_t prefix_secondary_asset_hash;
-			uint32_t suffix_asset_hash;
-			uint32_t cost;
-			uint32_t equipped_to_creature_id;
-
-			uint16_t rigblock_asset_id;
-			uint16_t prefix_asset_id;
-			uint16_t prefix_secondary_asset_id;
-			uint16_t suffix_asset_id;
-			uint16_t level;
-
-			uint8_t rarity;
-			uint8_t market_status;
-			uint8_t status;
-			uint8_t usage;
-
-			bool flair;
-
-			friend class Parts;
-	};
-
-	// Parts
-	class Parts {
-		public:
-			decltype(auto) begin() { return mItems.begin(); }
-			decltype(auto) begin() const { return mItems.begin(); }
-			decltype(auto) end() { return mItems.end(); }
-			decltype(auto) end() const { return mItems.end(); }
-
-			auto& data() { return mItems; }
-			const auto& data() const { return mItems; }
-
-			void Read(const pugi::xml_node& node);
-			void Write(pugi::xml_node& node, bool api = false) const;
-
-		private:
-			std::vector<Part> mItems;
 	};
 
 	// User
@@ -175,8 +132,8 @@ namespace Game {
 			const std::string& get_auth_token() const { return mAuthToken; }
 			void set_auth_token(const std::string& authToken) { mAuthToken = authToken; }
 
-			const GameInfoPtr& get_game_info() const { return mGameInfo; }
-			void set_game_info(const GameInfoPtr& gameInfo) { mGameInfo = gameInfo; }
+			const Game::InstancePtr& get_game() const { return mGame; }
+			void set_game(const Game::InstancePtr& game) { mGame = game; }
 
 			auto get_id() const { return mAccount.id; }
 
@@ -186,27 +143,57 @@ namespace Game {
 
 			bool UpdateState(uint32_t newState);
 
-			// Creature
-			Creature* GetCreatureById(uint32_t id);
-			const Creature* GetCreatureById(uint32_t id) const;
+			// Blaze
+			auto& get_extended_data() { return mExtendedData; }
+			const auto& get_extended_data() const { return mExtendedData; }
 
-			void UnlockCreature(uint32_t templateId);
+			// Creature
+			CreaturePtr GetCreatureById(uint32_t id) const;
+
+			uint32_t UnlockCreature(uint32_t templateId);
+
+			// Squads
+			const std::vector<SquadPtr>& GetSquads() const;
+
+			SquadPtr GetSquadById(uint32_t id) const;
+
+			void UpdateSquad(uint32_t slot, const std::string& creatureStringList, bool pvp);
 
 			// Upgrades
-			void UnlockUpgrade(uint32_t unlockId);
+			bool UnlockUpgrade(uint32_t unlockId);
 
 			// Auth
 			void Logout();
+
+			// Rooms
+			const RoomPtr& GetRoom() const;
+			void SetRoom(const RoomPtr& room);
 
 			// Storage
 			bool Load();
 			bool Save();
 
+			// AssociationLists
+			bool IsFriend(const User& user) const;
+			void AddFriendUser(const User& user);
+			void RemoveFriendUser(const User& user);
+
+			bool IsIgnored(const User& user) const;
+			void AddIgnoredUser(const User& user);
+			void RemoveIgnoredUser(const User& user);
+
+			// WebAPI
+			void WriteAccountAPI(pugi::xml_node& node) const;
+			void WriteCreaturesAPI(pugi::xml_node& node) const;
+			void WriteSquadsAPI(pugi::xml_node& node) const;
+
 		private:
 			Account mAccount;
 
+			std::map<uint32_t, Blaze::ListMembers> mAssociationLists;
+			std::vector<SquadPtr> mSquads;
+
 			Creatures mCreatures;
-			Squads mSquads;
 			Feed mFeed;
 			Parts mParts;
 
@@ -215,25 +202,33 @@ namespace Game {
 			std::string mName;
 			std::string mAuthToken;
 
-			GameInfoPtr mGameInfo;
+			Game::InstancePtr mGame;
+
+			RoomPtr mRoom;
 
 			uint32_t mId = 0;
 			uint32_t mState = 0;
-	};
 
-	using UserPtr = std::shared_ptr<User>;
+			// Blaze server data
+			Blaze::UserSessionExtendedData mExtendedData;
+	};
 
 	// UserManager
 	class UserManager {
 		public:
-			static UserPtr GetUserByEmail(const std::string& username);
-			static UserPtr GetUserByAuthToken(const std::string& authToken);
+			std::tuple<UserPtr, bool, bool> Login(const std::string& username, const std::string& password);
+
+			std::vector<UserPtr> GetUsers() const;
+
+			UserPtr GetUserById(int64_t id) const;
+			UserPtr GetUserByEmail(const std::string& username) const;
+			UserPtr GetUserByAuthToken(const std::string& authToken) const;
 
 		private:
-			static void RemoveUser(const std::string& username);
+			void RemoveUser(const std::string& username);
 
 		private:
-			static std::map<std::string, UserPtr> sUsersByEmail;
+			std::map<std::string, UserPtr> sUsersByEmail;
 
 			friend class User;
 	};

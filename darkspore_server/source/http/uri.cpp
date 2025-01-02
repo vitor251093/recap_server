@@ -2,7 +2,7 @@
 // Include
 #include "uri.h"
 
-#include "../utils/functions.h"
+#include "utils/functions.h"
 
 #include <charconv>
 
@@ -91,30 +91,6 @@ namespace HTTP {
 	std::string URI::parameter(const std::string& name) const {
 		auto it = mQuery.find(name);
 		return it != mQuery.end() ? it->second : std::string();
-	}
-
-	int64_t URI::parameteri(const std::string& name) const {
-		int64_t value;
-		try {
-			value = std::stoll(parameter(name));
-		} catch (...) {
-			value = 0;
-		}
-		return value;
-	}
-
-	uint64_t URI::parameteru(const std::string& name) const {
-		uint64_t value;
-		try {
-			value = std::stoull(parameter(name));
-		} catch (...) {
-			value = std::numeric_limits<uint64_t>::max();
-		}
-		return value;
-	}
-
-	bool URI::parameterb(const std::string& name) const {
-		return parameteru(name) != 0;
 	}
 
 	void URI::set_parameter(const std::string& name, const std::string& value) {

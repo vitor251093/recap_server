@@ -3,11 +3,12 @@
 #define _HTTP_URI_HEADER
 
 // Include
+#include "utils/functions.h"
+
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <array>
 #include <map>
-#include <regex>
 
 // HTTP
 namespace HTTP {
@@ -24,15 +25,22 @@ namespace HTTP {
 			decltype(auto) end() { return mQuery.end(); }
 			decltype(auto) end() const { return mQuery.end(); }
 
+			decltype(auto) find(const std::string& name) { return mQuery.find(name); }
+			decltype(auto) find(const std::string& name) const { return mQuery.find(name); }
+
+			bool empty() const { return mQuery.empty(); }
+
 			const std::string& protocol() const;
 			const std::string& domain() const;
 			const std::string& resource() const;
 			uint16_t port() const;
 
 			std::string parameter(const std::string& name) const;
-			int64_t parameteri(const std::string& name) const;
-			uint64_t parameteru(const std::string& name) const;
-			bool parameterb(const std::string& name) const;
+
+			template<typename T>
+			std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>, T> parameter(const std::string& name) const {
+				return utils::to_number<T>(parameter(name));
+			}
 
 			void set_parameter(const std::string& name, const std::string& value);
 

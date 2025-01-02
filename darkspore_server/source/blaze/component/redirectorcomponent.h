@@ -3,23 +3,29 @@
 #define _BLAZE_COMPONENT_REDIRECTOR_HEADER
 
 // Include
-#include "../tdf.h"
+#include "blaze/component.h"
 
 // Blaze
 namespace Blaze {
-	class Client;
-
 	// RedirectorComponent
-	class RedirectorComponent {
+	class RedirectorComponent : public Component {
 		public:
-			static void Parse(Client* client, const Header& header);
+			enum : uint16_t { Id = 0x05 };
 
+			uint16_t GetId() const override;
+
+			std::string_view GetName() const override;
+			std::string_view GetReplyPacketName(uint16_t command) const override;
+
+			bool ParsePacket(Request& request) override;
+
+		public:
 			// Responses
-			static void SendServerInstanceInfo(Client* client, const std::string& host, uint16_t port);
-			static void SendServerAddressInfo(Client* client, const std::string& host, uint16_t port);
+			static void WriteServerInstanceInfo(TDF::Packet& packet, const std::string& host, uint16_t port);
+			static void WriteServerAddressInfo(TDF::Packet& packet, const std::string& host, uint16_t port);
 
 		private:
-			static void ServerInstanceInfo(Client* client, Header header);
+			static void GetServerInstance(Request& request);
 	};
 }
 

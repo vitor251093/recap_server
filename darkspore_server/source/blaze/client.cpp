@@ -1,18 +1,13 @@
 
 // Include
 #include "client.h"
+#include "component.h"
 
-#include "component/authcomponent.h"
-#include "component/redirectorcomponent.h"
-#include "component/utilcomponent.h"
 #include "component/usersessioncomponent.h"
-#include "component/gamemanagercomponent.h"
-#include "component/associationcomponent.h"
-#include "component/roomscomponent.h"
-#include "component/messagingcomponent.h"
-#include "component/playgroupscomponent.h"
 
-#include <boost/bind.hpp>
+#include "utils/log.h"
+
+#include <boost/bind/bind.hpp>
 #include <iostream>
 
 // Blaze
@@ -40,30 +35,40 @@ namespace Blaze {
 			boost::bind(&Client::handle_handshake, this, boost::asio::placeholders::error));
 	}
 
-	void Client::send(const Header& header, const DataBuffer* buffer) {
+	void Client::send(MessageType message_type, uint32_t message_id, uint16_t component_id, uint16_t command_id, uint16_t error_code, const DataBuffer& buffer) {
+		const auto component = ComponentManager::Get(component_id);
+		if (component) {
+			bool dontSend = component_id == UserSessionComponent::Id && command_id == 25;
+			if (!dontSend) {
+				std::cout << utils::timestamp << component->GetName() << "::";
+				if (message_type == MessageType::Notification) {
+					std::cout << component->GetNotificationPacketName(command_id);
+				} else {
+					std::cout << component->GetReplyPacketName(command_id);
+				}
+				std::cout << " sent" << std::endl;
+			}
+		} else {
+			std::cout << utils::timestamp << " sending unknown? (" << component_id << ", " << command_id << ")" << std::endl;
+		}
+
 #if 1
 		DataBuffer& writeBuffer = mWriteBuffers.emplace_back();
 
-		size_t length;
-		if (buffer) {
-			length = buffer->size();
-		} else {
-			length = 0;
-		}
+		size_t length = buffer.size();
 
 		writeBuffer.write_u16_be(static_cast<uint16_t>(length));
-		writeBuffer.write_u16_be(static_cast<uint16_t>(header.component));
-		writeBuffer.write_u16_be(header.command);
-		writeBuffer.write_u16_be(header.error_code);
+		writeBuffer.write_u16_be(component_id);
+		writeBuffer.write_u16_be(command_id);
+		writeBuffer.write_u16_be(error_code);
 
 		uint32_t message = 0;
-		message |= static_cast<uint32_t>(header.message_type) << 28;
-		// message |= 0 & 0x3FF;
-		message |= header.message_id & 0xFFFFF;
+		message |= static_cast<uint32_t>(message_type) << 28;
+		message |= message_id & 0xFFFFF;
 		writeBuffer.write_u32_be(message);
 
 		if (length > 0) {
-			writeBuffer.insert(*buffer);
+			writeBuffer.insert(buffer);
 		}
 #else
 		size_t length = buffer.size();
@@ -90,26 +95,27 @@ namespace Blaze {
 #endif
 	}
 
-	void Client::notify(Header header, const DataBuffer& buffer) {
-		header.message_type = MessageType::Notification;
-		header.message_id = 0;
-		send(header, &buffer);
+	void Client::notify(const TDF::Packet& packet, uint16_t component, uint16_t command, ErrorCode error) {
+		DataBuffer buffer;
+		packet.Write(buffer);
+
+		send(MessageType::Notification, 0, component, command, static_cast<uint32_t>(error) >> 16, buffer);
 	}
 
-	void Client::reply(Header header) {
-		header.message_type = (header.error_code > 0) ? MessageType::ErrorReply : MessageType::Reply;
-		if (header.message_id == 0) {
-			header.message_id = mCurrentMessageId;
-		}
-		send(header, nullptr);
+	void Client::reply(const Request& request, ErrorCode error) {
+		MessageType messageType = (error != ErrorCode::NONE) ? MessageType::ErrorReply : MessageType::Reply;
+
+		DataBuffer emptyBuffer;
+		send(messageType, request.mMessageId, request.mComponent, request.mCommand, static_cast<uint32_t>(error) >> 16, emptyBuffer);
 	}
 
-	void Client::reply(Header header, const DataBuffer& buffer) {
-		header.message_type = (header.error_code > 0) ? MessageType::ErrorReply : MessageType::Reply;
-		if (header.message_id == 0) {
-			header.message_id = mCurrentMessageId;
-		}
-		send(header, &buffer);
+	void Client::reply(const Request& request, const TDF::Packet& packet, ErrorCode error) {
+		MessageType messageType = (error != ErrorCode::NONE) ? MessageType::ErrorReply : MessageType::Reply;
+
+		DataBuffer buffer;
+		packet.Write(buffer);
+
+		send(messageType, request.mMessageId, request.mComponent, request.mCommand, static_cast<uint32_t>(error) >> 16, buffer);
 	}
 
 	void Client::handle_handshake(const boost::system::error_code& error) {
@@ -136,12 +142,17 @@ namespace Blaze {
 			}
 
 #if 1
-			for (const auto& buffer : mWriteBuffers) {
-				boost::asio::write(mSocket, boost::asio::buffer(buffer.data(), buffer.size()));
-			}
+			try {
+				for (const auto& buffer : mWriteBuffers) {
+					boost::asio::write(mSocket, boost::asio::buffer(buffer.data(), buffer.size()));
+				}
 
-			mSocket.async_read_some(boost::asio::buffer(mReadBuffer.data(), mReadBuffer.capacity()),
-				boost::bind(&Client::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+				mSocket.async_read_some(boost::asio::buffer(mReadBuffer.data(), mReadBuffer.capacity()),
+					boost::bind(&Client::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+			} catch (std::exception&) {
+				// Just drop connection?
+				delete this;
+			}
 #else
 			boost::asio::async_write(mSocket,
 				boost::asio::buffer(mWriteBuffer.data(), mWriteBuffer.size()),
@@ -177,74 +188,54 @@ namespace Blaze {
 		header.message_id = message & 0x3FFFFFF;
 		*/
 
-		Header header;
-		header.length = mReadBuffer.read_u16_be();
-		header.component = static_cast<Blaze::Component>(mReadBuffer.read_u16_be());
-		header.command = mReadBuffer.read_u16_be();
-		header.error_code = mReadBuffer.read_u16_be();
+		Request request(*this);
+		request.mLength = mReadBuffer.read_u16_be();
+		request.mComponent = mReadBuffer.read_u16_be();
+		request.mCommand = mReadBuffer.read_u16_be();
+		request.mErrorCode = mReadBuffer.read_u16_be();
 
 		uint32_t message = mReadBuffer.read_u32_be();
-		header.message_type = static_cast<Blaze::MessageType>(message >> 28);
-		header.message_id = message & 0xFFFFF;
-		/*
+		request.mMessageType = static_cast<MessageType>(message >> 28);
+		request.mMessageId = message & 0xFFFFF;
+		/* As far as I can tell darkspore limits blaze packets to 0xFFFF bytes
 		if (message & 1) {
-			header.length |= mReadBuffer.read_u16_be();
+			request.mLength |= mReadBuffer.read_u16_be();
 		}
 		*/
+		mParser.Read(mReadBuffer);
 
-		mRequest = {};
-		TDF::Parse(mReadBuffer, mRequest);
-		
-		if (header.component != Blaze::Component::UserSessions) {
-			// Log(mRequest);
-			std::cout << "Component: " << static_cast<int>(header.component) <<
-				", Command: 0x" << std::hex << header.command << std::dec <<
-				", Type: " << (message >> 28) <<
-				std::endl;
+		const auto component = ComponentManager::Get(request.mComponent);
+		if (!component) {
+			std::cout << "Unknown component: " << request.mComponent << std::endl;
+			return;
 		}
 
-		mCurrentMessageId = header.message_id;
-		switch (header.component) {
-			case Blaze::Component::AssociationLists:
-				Blaze::AssociationComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Authentication:
-				Blaze::AuthComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Redirector:
-				Blaze::RedirectorComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Messaging:
-				Blaze::MessagingComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Playgroups:
-				Blaze::PlaygroupsComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Util:
-				Blaze::UtilComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::GameManager:
-				Blaze::GameManagerComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::Rooms:
-				Blaze::RoomsComponent::Parse(this, header);
-				break;
-
-			case Blaze::Component::UserSessions:
-				Blaze::UserSessionComponent::Parse(this, header);
-				break;
-
-			default:
-				std::cout << "Unknown component: " << static_cast<int>(header.component) << std::endl;
-				break;
+		if (component->ParsePacket(request)) {
+			bool dontSend = request.mComponent == UserSessionComponent::Id && request.mCommand == 25;
+			if (!dontSend) {
+				std::cout << utils::timestamp << component->GetName() << "::" << component->GetReplyPacketName(request.mCommand) << " received" << std::endl;
+				Log(get_request());
+				std::cout << std::endl;
+			}
+		} else {
+			std::cout << utils::timestamp << component->GetName() << ": Command " << request.mCommand << " does not exist." << std::endl;
 		}
+	}
+
+	// Request
+	Request::Request(Client& client)
+		: mClient(client) {}
+
+	void Request::notify(const TDF::Packet& packet, uint16_t component, uint16_t command, ErrorCode error) const {
+		mClient.notify(packet, component, command, error);
+	}
+
+	void Request::reply(ErrorCode error) const {
+		mClient.reply(*this, error);
+	}
+
+	void Request::reply(const TDF::Packet& packet, ErrorCode error) const {
+		mClient.reply(*this, packet, error);
 	}
 }
 

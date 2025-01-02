@@ -3,44 +3,48 @@
 #define _BLAZE_COMPONENT_AUTH_HEADER
 
 // Include
-#include "../tdf.h"
+#include "blaze/component.h"
+#include "predefined.h"
 
 // Blaze
 namespace Blaze {
-	class Client;
-
 	// AuthComponent
-	class AuthComponent {
+	class AuthComponent : public Component {
 		public:
-			static void Parse(Client* client, const Header& header);
+			enum : uint16_t { Id = 0x01 };
 
-			// Responses
-			static void SendAuthToken(Client* client, const std::string& token);
+			uint16_t GetId() const override;
 
-			static void SendLogin(Client* client, Header header);
-			static void SendLoginPersona(Client* client, Header header);
-			static void SendFullLogin(Client* client, Header header);
-			static void SendConsoleLogin(Client* client, Header header);
+			std::string_view GetName() const override;
+			std::string_view GetReplyPacketName(uint16_t command) const override;
+			std::string_view GetNotificationPacketName(uint16_t command) const override;
 
-			static void SendTOSInfo(Client* client, Header header);
-			static void SendTermsAndConditions(Client* client, Header header);
-			static void SendPrivacyPolicy(Client* client, Header header);
+			bool ParsePacket(Request& request) override;
 
 		private:
-			static void ListUserEntitlements(Client* client, Header header);
-			static void GetAuthToken(Client* client, Header header);
+			// Responses
+			static void WriteAuthToken(TDF::Packet& packet, const std::string& token);
+			static void WriteLogin(TDF::Packet& packet, const SporeNet::UserPtr& user);
+			static void WriteFullLogin(TDF::Packet& packet, const SporeNet::UserPtr& user);
+			static void WriteTOSInfo(TDF::Packet& packet);
+			static void WriteTermsAndConditions(TDF::Packet& packet);
+			static void WritePrivacyPolicy(TDF::Packet& packet);
+
+			// Requests
+			static void GetAuthToken(Request& request);
 
 			// Login
-			static void Login(Client* client, Header header);
-			static void SilentLogin(Client* client, Header header);
-			static void LoginPersona(Client* client, Header header);
-			static void Logout(Client* client, Header header);
+			static void Login(Request& request);
+			static void SilentLogin(Request& request);
+			static void ExpressLogin(Request& request);
+			static void LoginPersona(Request& request);
+			static void Logout(Request& request);
 
 			// Terms and such
-			static void AcceptTOS(Client* client, Header header);
-			static void GetTOSInfo(Client* client, Header header);
-			static void GetTermsAndConditions(Client* client, Header header);
-			static void GetPrivacyPolicy(Client* client, Header header);
+			static void AcceptTOS(Request& request);
+			static void GetTOSInfo(Request& request);
+			static void GetTermsAndConditions(Request& request);
+			static void GetPrivacyPolicy(Request& request);
 	};
 }
 

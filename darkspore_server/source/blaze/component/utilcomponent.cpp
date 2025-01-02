@@ -1,442 +1,295 @@
 
 // Include
 #include "utilcomponent.h"
-#include "usersessioncomponent.h"
+#include "associationcomponent.h"
+#include "authcomponent.h"
 #include "gamemanagercomponent.h"
+#include "messagingcomponent.h"
+#include "playgroupscomponent.h"
 #include "redirectorcomponent.h"
+#include "roomscomponent.h"
+#include "usersessioncomponent.h"
 
-#include "../client.h"
-#include "../../utils/functions.h"
+#include "main.h"
+
+#include "blaze/client.h"
+#include "utils/functions.h"
 
 #include <iostream>
 
 /*
 	Values in EXE for label parsing
 		0x41 = Address?
-
 */
 
-/*
-	Packet IDs
-		0x01 = FetchClientConfig
-		0x02 = Ping
-		0x03 = SetClientData
-		0x04 = LocalizeStrings
-		0x05 = GetTelemetryServer
-		0x06 = GetTickerServer
-		0x07 = PreAuth
-		0x08 = PostAuth
-		0x0A = UserSettingsLoad
-		0x0B = UserSettingsSave
-		0x0C = UserSettingsLoadAll
-		0x14 = FilterForProfanity
-		0x15 = FetchQosConfig
-		0x16 = SetClientMetrics
-		0x17 = SetConnectionState
-		0x18 = GetPssConfig
-		0x19 = GetUserOptions
-		0x1A = SetUserOptions
-
-	BlazeValues meanings
-		PDTL = PersonaDetails
-		SESS = SessionInfo
-		NTOS = Need Terms Of Service
-		PID = Persona ID
-		MAIL = Client Email
-		UID = Unique ID
-		PCTK = Packet Key
-
-	BlazeValues
-		ADDR
-			HOST
-			IP
-			PORT
-
-		PSS
-			ADRS = 0x24
-			CSIG = 0x20
-			OIDS = 0x58
-			PJID = 0x24
-			PORT = 0x38
-			RPRT = 0x28
-			TIID = 0x38
-
-		QOSS
-			BWPS = 0x18
-			LNP = 0x40
-			LTPS = 0x54
-			SVID = 0x38
-
-		TELE
-			ADRS = 0x24
-			ANON = 0x50
-			DISA = 0x24
-			FILT = 0x24
-			LOC = 0x38
-			NOOK = 0x24
-			PORT = 0x38
-			SDLY = 0x38
-			SESS = 0x24
-			SKEY = 0x24
-			SPCT = 0x38
-
-		(Xbox Server Address)
-			PORT
-			SID
-			SITE
-
-		(Xbox Id)
-			GTAG
-			XUID
-
-		(Server Endpoint Info)
-			ADRS
-			CCON
-			CHAN
-			DEC
-			ENC
-			MCON
-			PROT
-
-		(Server Instance)
-			CWD
-			ENDP
-			ID
-			LOAD
-			NAME
-			SVC
-
-		(Server Info Data)
-			AMAP
-			BTGT
-			BTIM
-			CVER
-			DEPO
-			INST
-			IVER
-			LOCN
-			MSTR
-			NAME
-			NASP
-			NMAP
-			PLAT
-			SNMS
-			SVID
-			VERS
-			XDNS
-			XMST
-			XSLV
-
-		(Server Instance Error)
-			MSGS
-
-		(Xbox Client Address)
-			XDDR
-			XUID
-
-	Request Packets
-		ConsumeCode
-			CDKY
-			DEID
-			GNAM
-			KEY
-			PID
-			PNID
-
-		Login | Yes this is actually what the client sends, completely static
-			53 8B 5C 24 10 8B 53 20  55 8B 6C 24 10 56 57 8B
-			7C 24 14 8B 07 6A 00 6A  00 8B F1 8B 4B 24 51 52
-			8B 50 30 8D 4E 20 51 68  00 64 6A 93 56 55 8B CF
-			FF D2 8B 07 8B 40 24 68  01 01 00 00 68 A4 D5 FC
-			00 8D 4B 08 51 8D 56 08  52 68 00 6C
-
-		ExpressLogin
-			MAIL
-			PASS
-			PNAM
-
-		LoginPersona
-			PNAM
-
-	Response Packets
-		PreAuth
-			ASRC = 0x24
-			CIDS = 0x58
-			CONF = 0x18
-			INST = 0x24
-			NASP = 0x24
-			PILD = 0x24
-			PLAT = 0x24
-			QOSS = 0x18
-			RSRC = 0x24
-			SVER = 0x24
-
-		PostAuth
-			PSS = 0x18
-			TELE = 0x18
-			TICK = 0x18
-			UROP = 0x18
-*/
+enum PacketID : uint16_t {
+	FetchClientConfig = 0x01,
+	Ping = 0x02,
+	SetClientData = 0x03,
+	LocalizeStrings = 0x04,
+	GetTelemetryServer = 0x05,
+	GetTickerServer = 0x06,
+	PreAuth = 0x07,
+	PostAuth = 0x08,
+	UserSettingsLoad = 0x0A,
+	UserSettingsSave = 0x0B,
+	UserSettingsLoadAll = 0x0C,
+	FilterForProfanity = 0x14,
+	FetchQosConfig = 0x15,
+	SetClientMetrics = 0x16,
+	SetConnectionState = 0x17,
+	GetPssConfig = 0x18,
+	GetUserOptions = 0x19,
+	SetUserOptions = 0x1A
+};
 
 // Blaze
 namespace Blaze {
 	// UtilComponent
-	void UtilComponent::Parse(Client* client, const Header& header) {
-		switch (header.command) {
-			case 0x01:
-				FetchClientConfig(client, header);
+	uint16_t UtilComponent::GetId() const {
+		return Id;
+	}
+
+	std::string_view UtilComponent::GetName() const {
+		return "Util";
+	}
+
+	std::string_view UtilComponent::GetReplyPacketName(uint16_t command) const {
+		switch (static_cast<PacketID>(command)) {
+			case PacketID::FetchClientConfig: return "fetchClientConfig";
+			case PacketID::Ping: return "ping";
+			case PacketID::SetClientData: return "setClientData";
+			case PacketID::LocalizeStrings: return "localizeStrings";
+			case PacketID::GetTelemetryServer: return "getTelemetryServer";
+			case PacketID::GetTickerServer: return "getTickerServer";
+			case PacketID::PreAuth: return "preAuth";
+			case PacketID::PostAuth: return "postAuth";
+			case PacketID::UserSettingsLoad: return "userSettingsLoad";
+			case PacketID::UserSettingsSave: return "userSettingsSave";
+			case PacketID::UserSettingsLoadAll: return "userSettingsLoadAll";
+			case PacketID::FilterForProfanity: return "filterForProfanity";
+			case PacketID::FetchQosConfig: return "fetchQosConfig";
+			case PacketID::SetClientMetrics: return "setClientMetrics";
+			case PacketID::SetConnectionState: return "setConnectionState";
+			case PacketID::GetPssConfig: return "getPssConfig";
+			case PacketID::GetUserOptions: return "getUserOptions";
+			case PacketID::SetUserOptions: return "setUserOptions";
+
+			default: return "";
+		}
+	}
+
+	bool UtilComponent::ParsePacket(Request& request) {
+		switch (request.get_command()) {
+			case PacketID::FetchClientConfig:
+				FetchClientConfig(request);
 				break;
 
-			case 0x02:
-				Ping(client, header);
+			case PacketID::Ping:
+				Ping(request);
 				break;
 
-			case 0x05:
-				GetTelemetryServer(client, header);
+			case PacketID::GetTelemetryServer:
+				GetTelemetryServer(request);
 				break;
 
-			case 0x07:
-				PreAuth(client, header);
+			case PacketID::PreAuth:
+				PreAuth(request);
 				break;
 
-			case 0x08:
-				PostAuth(client, header);
+			case PacketID::PostAuth:
+				PostAuth(request);
 				break;
 
-			case 0x0B:
-				UserSettingsSave(client, header);
+			case PacketID::UserSettingsSave:
+				UserSettingsSave(request);
 				break;
 
-			case 0x0C:
-				UserSettingsLoadAll(client, header);
+			case PacketID::UserSettingsLoadAll:
+				UserSettingsLoadAll(request);
 				break;
 
-			case 0x16:
-				SetClientMetrics(client, header);
+			case PacketID::SetClientMetrics:
+				SetClientMetrics(request);
 				break;
 
 			default:
-				std::cout << "Unknown util command: 0x" << std::hex << header.command << std::dec << std::endl;
-				break;
-		}
-	}
-
-	void UtilComponent::SendPostAuth(Client* client, Header header) {
-		auto& request = client->get_request();
-
-		TDF::Packet packet;
-		{
-			auto& pssStruct = packet.CreateStruct(nullptr, "PSS");
-			packet.PutString(&pssStruct, "ADRS", "127.0.0.1");
-			packet.PutBlob(&pssStruct, "CSIG", nullptr, 0);
-			packet.PutString(&pssStruct, "PJID", "123071");
-			packet.PutInteger(&pssStruct, "PORT", 8443);
-			packet.PutInteger(&pssStruct, "RPRT", 9);
-			packet.PutInteger(&pssStruct, "TIID", 0);
-		} {
-			auto& teleStruct = packet.CreateStruct(nullptr, "TELE");
-			packet.PutString(&teleStruct, "ADRS", "127.0.0.1");
-			packet.PutInteger(&teleStruct, "ANON", 0);
-
-			packet.PutString(&teleStruct, "DISA", "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ");
-			packet.PutString(&teleStruct, "FILT", "");
-			packet.PutInteger(&teleStruct, "LOC", client->localization());
-
-			packet.PutString(&teleStruct, "NOOK", "US,CA,MX");
-			packet.PutInteger(&teleStruct, "PORT", 9988);
-
-			packet.PutInteger(&teleStruct, "SDLY", 15000);
-			packet.PutString(&teleStruct, "SESS", "telemetry_session");
-			packet.PutString(&teleStruct, "SKEY", "telemetry_key");
-			packet.PutInteger(&teleStruct, "SPCT", 75);
-		} {
-			auto& tickStruct = packet.CreateStruct(nullptr, "TICK");
-			packet.PutString(&tickStruct, "ADRS", "127.0.0.1");
-			packet.PutInteger(&tickStruct, "PORT", 8999);
-			packet.PutString(&tickStruct, "SKEY", "0,127.0.0.1:8999,darkspore-pc,10,50,50,50,50,0,0");
-		} {
-			auto& uropStruct = packet.CreateStruct(nullptr, "UROP");
-			packet.PutInteger(&uropStruct, "TMOP", TelemetryOpt::OptOut);
+				return false;
 		}
 
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
-
-		header.error_code = 0;
-		client->reply(header, outBuffer);
+		return true;
 	}
 
-	void UtilComponent::SendGetTickerServer(Client* client) {
-		TDF::Packet packet;
-		packet.PutString(nullptr, "ADRS", "127.0.0.1");
-		packet.PutInteger(nullptr, "PORT", 8999);
-		packet.PutString(nullptr, "SKEY", "0,127.0.0.1:8999,darkspore-pc,10,50,50,50,50,0,0");
+	void UtilComponent::WritePostAuth(TDF::Packet& packet, const PssConfig& pss, const TelemetryServer& telemetry, const TickerServer& tick, const UserOptions& options) {
+		packet.push_struct("PSS");
+		pss.Write(packet);
+		packet.pop();
 
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
+		packet.push_struct("TELE");
+		telemetry.Write(packet);
+		packet.pop();
 
-		Header header;
-		header.component = Component::Util;
-		header.command = 0x06;
-		header.error_code = 0;
+		packet.push_struct("TICK");
+		tick.Write(packet);
+		packet.pop();
 
-		client->reply(header, outBuffer);
+		packet.push_struct("UROP");
+		options.Write(packet);
+		packet.pop();
 	}
 
-	void UtilComponent::SendUserOptions(Client* client) {
-		TDF::Packet packet;
-		packet.PutInteger(nullptr, "TMOP", TelemetryOpt::OptIn);
-
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
-
-		Header header;
-		header.component = Component::Util;
-		header.command = 0x19;
-		header.error_code = 0;
-
-		client->reply(header, outBuffer);
+	void UtilComponent::WriteGetTickerServer(TDF::Packet& packet, const TickerServer& tick) {
+		tick.Write(packet);
 	}
 
-	void UtilComponent::FetchClientConfig(Client* client, Header header) {
+	void UtilComponent::WriteUserOptions(TDF::Packet& packet, const UserOptions& options) {
+		options.Write(packet);
+	}
+
+	void UtilComponent::FetchClientConfig(Request& request) {
 		std::cout << "Client " << 0 << " requested client configuration" << std::endl;
-		/*
+	}
+
+	void UtilComponent::Ping(Request& request) {
 		TDF::Packet packet;
+		packet.put_integer("STIM", utils::get_unix_time());
 
-		auto& confMap = packet.CreateMap(nullptr, "CONF", TDF::Type::String, TDF::Type::String);
-		{
-			packet.PutString(&confMap, "Achievements", "");
-			packet.PutString(&confMap, "WinCodes", "");
-		}
-
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
-
-		header.error_code = 0;
-		client->reply(header, outBuffer);
-		*/
+		request.reply(packet);
 	}
 
-	void UtilComponent::Ping(Client* client, Header header) {
-		DataBuffer outBuffer;
-		TDF::WriteInteger(outBuffer, "STIM", utils::get_unix_time());
+	void UtilComponent::GetTelemetryServer(Request& request) {
+		decltype(auto) application = GetApp();
 
-		header.error_code = 0;
-		client->reply(header, outBuffer);
-	}
+		auto telemetryServer = application.get_telemetry_server();
 
-	void UtilComponent::GetTelemetryServer(Client* client, Header header) {
-		auto& request = client->get_request();
-
-		DataBuffer outBuffer;
-		TDF::WriteString(outBuffer, "ADRS", "127.0.0.1");
-		TDF::WriteInteger(outBuffer, "ANON", 0);
-
-		TDF::WriteString(outBuffer, "DISA", "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ");
-		TDF::WriteString(outBuffer, "FILT", "");
-		TDF::WriteInteger(outBuffer, "LOC", client->localization());
-
-		TDF::WriteString(outBuffer, "NOOK", "US,CA,MX");
-		TDF::WriteInteger(outBuffer, "PORT", 9988);
-
-		TDF::WriteInteger(outBuffer, "SDLY", 15000);
-		TDF::WriteString(outBuffer, "SESS", "telemetry_session");
-		TDF::WriteString(outBuffer, "SKEY", "telemetry_key");
-		TDF::WriteInteger(outBuffer, "SPCT", 75);
-		TDF::WriteString(outBuffer, "STIM", "Default");
-
-		header.error_code = 0;
-		client->reply(header, outBuffer);
-	}
-
-	void UtilComponent::PreAuth(Client* client, Header header) {
-		std::cout << "Client 0 pre-authenticating" << std::endl;
-
-		auto& request = client->get_request();
-		auto& clientData = request["CDAT"];
-		auto& clientInfo = request["CINF"];
-
-		client->type() = static_cast<ClientType>(clientData["TYPE"].GetUint());
-		client->localization() = clientInfo["LOC"].GetUint();
+		TelemetryServer telemetry;
+		telemetry.address = "127.0.0.1";
+		telemetry.anonymous = true;
+		telemetry.disable = "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ";
+		telemetry.filter = "";
+		telemetry.location = request.get_client().data().lang;
+		telemetry.noToggleOk = "US,CA,MX";
+		telemetry.port = telemetryServer->get_port();
+		telemetry.sendDelay = 15000;
+		telemetry.session = "telemetry_session";
+		telemetry.key = "telemetry_key";
+		telemetry.sendPercentage = 75;
 
 		TDF::Packet packet;
-		packet.PutString(nullptr, "ASRC", "321915");
-		{
-			auto& cidsList = packet.CreateList(nullptr, "CIDS", TDF::Type::Integer);
-			for (auto cid : { 1, 25, 4, 27, 28, 6, 7, 9, 10, 11, 30720, 30721, 30722, 30723, 20, 30725, 30726, 2000 }) {
-				packet.PutInteger(&cidsList, "", cid);
-			}
-		} {
-			auto& confStruct = packet.CreateStruct(nullptr, "CONF");
-			{
-				auto& confStructMap = packet.CreateMap(&confStruct, "CONF", TDF::Type::String, TDF::Type::String);
-#if 0
-				packet.PutString(&confStructMap, "associationListSkipInitialSet", "1");
-				packet.PutString(&confStructMap, "blazeServerClientId", "GOS-Darkspore-PC");
-				packet.PutString(&confStructMap, "bytevaultHostname", "127.0.0.1");
-				packet.PutString(&confStructMap, "bytevaultPort", "42210");
-				packet.PutString(&confStructMap, "bytevaultSecure", "false");
-				packet.PutString(&confStructMap, "capsStringValidationUri", "127.0.0.1");
-				packet.PutString(&confStructMap, "connIdleTimeout", "90s");
-				packet.PutString(&confStructMap, "defaultRequestTimeout", "60s");
-				packet.PutString(&confStructMap, "identityDisplayUri", "console2/welcome");
-				packet.PutString(&confStructMap, "identityRedirectUri", "http://127.0.0.1/success");
-				packet.PutString(&confStructMap, "nucleusConnect", "http://127.0.0.1");
-				packet.PutString(&confStructMap, "nucleusProxy", "http://127.0.0.1/");
-				packet.PutString(&confStructMap, "pingPeriod", "20s");
-				packet.PutString(&confStructMap, "userManagerMaxCachedUsers", "0");
-				packet.PutString(&confStructMap, "voipHeadsetUpdateRate", "1000");
-				packet.PutString(&confStructMap, "xblTokenUrn", "http://127.0.0.1");
-				packet.PutString(&confStructMap, "xlspConnectionIdleTimeout", "300");
-#else
-				packet.PutString(&confStructMap, "connIdleTimeout", "90s");
-				packet.PutString(&confStructMap, "defaultRequestTimeout", "80s");
-				packet.PutString(&confStructMap, "pingPeriod", "20s");
-				packet.PutString(&confStructMap, "voipHeadsetUpdateRate", "1000");
-				packet.PutString(&confStructMap, "xlspConnectionIdleTimeout", "300");
-#endif
-			}
-		}
-		packet.PutString(nullptr, "INST", clientData["SVCN"].GetString());
-		packet.PutString(nullptr, "NASP", "cem_ea_id");
-		packet.PutString(nullptr, "PILD", "");
-		packet.PutString(nullptr, "PLAT", clientInfo["PLAT"].GetString());
-		{
-			auto& qossStruct = packet.CreateStruct(nullptr, "QOSS");
-			{
-				auto& bwpsStruct = packet.CreateStruct(&qossStruct, "BWPS");
-				packet.PutString(&bwpsStruct, "PSA", "127.0.0.1");
-				packet.PutInteger(&bwpsStruct, "PSP", 17502);
-				packet.PutString(&bwpsStruct, "SNA", "ams");
-			}
-			packet.PutInteger(&qossStruct, "LNP", 10);
-			{
-				auto& ltpsMap = packet.CreateMap(&qossStruct, "LTPS", TDF::Type::String, TDF::Type::Struct);
-				{
-					auto& amsStruct = packet.CreateStruct(&ltpsMap, "ams");
-					packet.PutString(&amsStruct, "PSA", "127.0.0.1");
-					packet.PutInteger(&amsStruct, "PSP", 17502);
-					packet.PutString(&amsStruct, "SNA", "ams");
-				}
-			}
-			packet.PutInteger(&qossStruct, "SVID", 1161889797);
-		}
-		packet.PutString(nullptr, "RSRC", "321915");
-		packet.PutString(nullptr, "SVER", "Blaze 3.9.3.1");
+		telemetry.Write(packet);
 
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
-
-		header.error_code = 0;
-		client->reply(header, outBuffer);
+		request.reply(packet);
 	}
 
-	void UtilComponent::PostAuth(Client* client, Header header) {
-		std::cout << "Client 0 post-authenticating" << std::endl;
-		SendPostAuth(client, std::move(header));
+	void UtilComponent::PreAuth(Request& request) {
+		constexpr uint16_t componentIds[] = {
+			AssociationComponent::Id,
+			AuthComponent::Id,
+			GameManagerComponent::Id,
+			MessagingComponent::Id,
+			PlaygroupsComponent::Id,
+			RedirectorComponent::Id,
+			RoomsComponent::Id,
+			UserSessionComponent::Id,
+			UtilComponent::Id
+		};
+
+		// decltype(auto) application = GetApp();
+
+		// auto httpQosServer = application.get_http_qos_server();
+
+		const auto& clientInfo = request["CINF"];
+
+		auto& data = request.get_client().data();
+		data.Read(request["CDAT"]);
+
+		TDF::Packet packet;
+		packet.put_string("ASRC", "321915");
+
+		packet.push_list("CIDS", TDF::Type::Integer);
+		for (uint16_t componentId : componentIds) {
+			packet.put_integer("", componentId);
+		}
+		packet.pop();
+
+		packet.push_struct("CONF");
+		{
+			packet.push_map("CONF", TDF::Type::String, TDF::Type::String);
+			packet.put_string("pingPeriod", "20000");
+			packet.pop();
+		}
+		packet.pop();
+
+		packet.put_string("INST", data.serviceName);
+		packet.put_string("NASP", "cem_ea_id");
+		packet.put_string("PILD", "");
+		packet.put_string("PLAT", clientInfo["PLAT"].GetString());
+		
+		packet.push_struct("QOSS");
+		{
+			// if client qos port == 0, use 7673 (but the client seems to set it to 3659 internally either way)
+
+			QosConfigInfo qosConfig;
+			qosConfig.latencyProbes = 1;
+			qosConfig.serviceId = 1161889797;
+			
+			QosPingSiteInfo& qosPingSiteInfo = qosConfig.pingSiteInfoByAlias.try_emplace("ams").first->second;
+			qosPingSiteInfo.address = "127.0.0.1";
+			qosPingSiteInfo.port = 80;
+			qosPingSiteInfo.name = "ams";
+
+			qosConfig.Write(packet);
+		}
+		packet.pop();
+
+		packet.put_string("RSRC", "321915");
+		packet.put_string("SVER", "Blaze 3.9.3.1");
+
+		request.reply(packet);
 	}
 
-	void UtilComponent::UserSettingsSave(Client* client, Header header) {
+	void UtilComponent::PostAuth(Request& request) {
+		decltype(auto) application = GetApp();
+
+		auto pssServer = application.get_pss_server();
+		auto telemetryServer = application.get_telemetry_server();
+		auto tickServer = application.get_tick_server();
+
+		PssConfig pss;
+		pss.address = "127.0.0.1";
+		pss.pjid = "123071"; // Random numbers (means nothing)
+		pss.port = pssServer->get_port();
+		pss.rprt = 9;
+		pss.tiid = 0;
+
+		TelemetryServer telemetry;
+		telemetry.address = "127.0.0.1";
+		telemetry.anonymous = false;
+		telemetry.disable = "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ";
+		telemetry.filter = "";
+		telemetry.location = request.get_client().data().lang;
+		telemetry.noToggleOk = "US,CA,MX";
+		telemetry.port = telemetryServer->get_port();
+		telemetry.sendDelay = 15000;
+		telemetry.session = "telemetry_session";
+		telemetry.key = "telemetry_key";
+		telemetry.sendPercentage = 75;
+
+		TickerServer tick;
+		tick.address = "127.0.0.1";
+		tick.port = tickServer->get_port();
+		tick.key = "0,127.0.0.1:8999,darkspore-pc,10,50,50,50,50,0,0";
+
+		UserOptions options;
+		options.value = TelemetryOpt::OptIn;
+
+		TDF::Packet packet;
+		WritePostAuth(packet, pss, telemetry, tick, options);
+
+		request.reply(packet);
+	}
+
+	void UtilComponent::UserSettingsSave(Request& request) {
 		/*
 		Log.Info(string.Format("Client {0} saving user settings for user {1}", request.Client.ID, request.Client.User.ID));
 
@@ -455,7 +308,7 @@ namespace Blaze {
 		*/
 	}
 
-	void UtilComponent::UserSettingsLoadAll(Client* client, Header header) {
+	void UtilComponent::UserSettingsLoadAll(Request& request) {
 		/*
 		Log.Info(string.Format("Client {0} loading all user settings for user {1}", request.Client.ID, request.Client.User.ID));
 
@@ -480,11 +333,10 @@ namespace Blaze {
 		*/
 	}
 
-	void UtilComponent::SetClientMetrics(Client* client, Header header) {
-		std::cout << "Client 0 setting metrics" << std::endl;
+	void UtilComponent::SetClientMetrics(Request& request) {
+		// UDEV = router info?
+		// USTA = upnp on or off
 
-		DataBuffer outBuffer;
-		header.error_code = 0;
-		client->reply(header, outBuffer);
+		request.reply();
 	}
 }
