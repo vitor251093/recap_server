@@ -32,6 +32,10 @@ jobs:
           pacman -Syu --noconfirm
           pacman -S --needed --noconfirm git
 
+      - name: Set up NASM
+        run: |
+          pacman -S --needed --noconfirm nasm
+
       - name: Configure
         working-directory: ${{runner.workspace}}/recap_server/darkspore_server
         run: cmake . -B build -G "Visual Studio 17 2022"
