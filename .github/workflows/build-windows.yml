@@ -38,13 +38,16 @@ jobs:
           pacman -S --needed --noconfirm git nasm
 
       - name: Configure
-        working-directory: ${{runner.workspace}}/recap_server/darkspore_server
+        working-directory: ${{runner.workspace}}\recap_server\darkspore_server
         run: |
-          cmake . -B build -G "Visual Studio 17 2022" -DPerl_ROOT="C:\\hostedtoolcache\\windows\\perl\\5.30.3-thr\\x64\\bin\\"
+          export MSYS2_PATH_TYPE=inherit
+          cmake . -B build -G "Visual Studio 17 2022" -DPerl_ROOT="C:\\hostedtoolcache\\windows\\perl\\5.30.3-thr\\x64\\bin"
 
       - name: Build
-        working-directory: ${{runner.workspace}}/recap_server/darkspore_server/build
-        run: cmake --build . --config Release
+        working-directory: ${{runner.workspace}}\recap_server\darkspore_server\build
+        run: |
+          export MSYS2_PATH_TYPE=inherit
+          cmake --build . --config Release
 
       - uses: actions/upload-artifact@v4
         with:
