@@ -49,6 +49,7 @@ jobs:
       - name: Build
         working-directory: ${{runner.workspace}}\recap_server\darkspore_server\build
         run: |
+          export PATH=/c/Users/runneradmin/nasm:$PATH
           cmake --build . --config Release
 
       - uses: actions/upload-artifact@v4
