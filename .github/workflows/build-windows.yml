@@ -27,18 +27,16 @@ jobs:
           update: true
           pacboy: gcc:p cmake:p make:p
 
-      - name: Set up Git
+      - name: Set up dependencies
         run: |
           pacman -Syu --noconfirm
-          pacman -S --needed --noconfirm git
-
-      - name: Set up NASM
-        run: |
-          pacman -S --needed --noconfirm nasm
+          pacman -S --needed --noconfirm git nasm perl
 
       - name: Configure
         working-directory: ${{runner.workspace}}/recap_server/darkspore_server
-        run: cmake . -B build -G "Visual Studio 17 2022"
+        run: |
+          export MSYS2_PATH_TYPE=inherit
+          cmake . -B build -G "Visual Studio 17 2022"
 
       - name: Build
         working-directory: ${{runner.workspace}}/recap_server/darkspore_server/build
