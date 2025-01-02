@@ -25,7 +25,7 @@ jobs:
         with:
           msystem: ucrt64
           update: true
-          pacboy: gcc:p cmake:p make:p
+          pacboy: gcc:p cmake:p make:p git:p
 
       - name: Configure
         working-directory: ${{runner.workspace}}/recap_server/darkspore_server
