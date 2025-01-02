@@ -27,15 +27,15 @@ jobs:
           update: true
           pacboy: gcc:p cmake:p make:p
 
-      - name: Set up dependencies
-        run: |
-          pacman -Syu --noconfirm
-          pacman -S --needed --noconfirm git nasm
-
       - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: '5.30'
+
+      - name: Set up dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --needed --noconfirm git nasm
 
       - name: Configure
         working-directory: ${{runner.workspace}}/recap_server/darkspore_server
