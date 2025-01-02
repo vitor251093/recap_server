@@ -41,7 +41,7 @@ jobs:
         working-directory: ${{runner.workspace}}\recap_server\darkspore_server
         run: |
           export MSYS2_PATH_TYPE=inherit
-          cmake . -B build -G "Visual Studio 17 2022" -DPerl_ROOT="C:\\hostedtoolcache\\windows\\perl\\5.30.3-thr\\x64\\bin"
+          cmake . -B build -G "Visual Studio 17 2022" -Dperl_ROOT="C:\\hostedtoolcache\\windows\\perl\\5.30.3-thr\\x64\\bin"
 
       - name: Build
         working-directory: ${{runner.workspace}}\recap_server\darkspore_server\build
