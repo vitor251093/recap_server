@@ -212,7 +212,9 @@ namespace Blaze {
 				default: {
 					std::cout << "Unknown header(" << position << ", " << header.label << "): " << static_cast<int>(header.type)
 						<< ", Previous type(" << previousHeader.label << "): " << static_cast<int>(previousHeader.type) << std::endl;
+					#ifdef _MSC_VER
 					__debugbreak();
+					#endif
 					break;
 				}
 			}

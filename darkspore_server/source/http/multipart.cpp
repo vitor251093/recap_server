@@ -75,7 +75,9 @@ namespace HTTP {
 				std::cmatch match;
 				if (std::regex_search(bodyView.data(), match, mMultipartRegex)) {
 					if (match[1] == "thumb") {
+						#ifdef _MSC_VER
 						__debugbreak();
+						#endif
 					}
 					mFields.emplace(match[1], match[2]);
 				}
@@ -97,7 +99,9 @@ namespace HTTP {
 				std::cmatch match;
 				if (std::regex_search(bodyView.data(), match, mMultipartRegex)) {
 					if (match[1] == "thumb") {
+						#ifdef _MSC_VER
 						__debugbreak();
+						#endif
 					}
 					mFields.emplace(match[1], match[2]);
 				}
