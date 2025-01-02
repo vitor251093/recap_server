@@ -1,0 +1,38 @@
+name: Build ReCap (Linux)
+
+on:
+  push:
+    branches:
+      - main
+      - feature/cmake
+      - original/cmake
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install g++-13 cmake libfindbin-libs-perl libstdc++-13-dev build-essential git
+
+      - name: Set LDFLAGS environment
+        run: echo "LDFLAGS=-Wl,--copy-dt-needed-entries" >> $GITHUB_ENV
+
+      - name: Build ReCap
+        working-directory: ${{runner.workspace}}/recap_server/darkspore_server
+        run: |
+          cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations -Wno-narrowing"
+          make
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recap-server-linux-x64
+          path: ${{runner.workspace}}/recap_server/darkspore_server/build
