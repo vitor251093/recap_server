@@ -34,7 +34,13 @@ jobs:
         working-directory: ${{runner.workspace}}/recap_server/darkspore_server/build
         run: make
 
+      - name: Prepare artifacts
+        working-directory: ${{runner.workspace}}/recap_server/darkspore_server/build
+        run: |
+          mkdir Release
+          mv recap_server Release/recap_server
+
       - uses: actions/upload-artifact@v4
         with:
           name: recap-server-linux-x64
-          path: ${{runner.workspace}}/recap_server/darkspore_server/build/recap_server
+          path: ${{runner.workspace}}/recap_server/darkspore_server/build/Release
