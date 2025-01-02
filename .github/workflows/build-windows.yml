@@ -20,17 +20,17 @@ jobs:
       - name: Check out sources
         uses: actions/checkout@v3
 
-      - name: Set up Git
-        run: |
-          pacman -Syu --noconfirm
-          pacman -S --needed --noconfirm git
-
       - name: Set up MSYS2
         uses: msys2/setup-msys2@v2
         with:
           msystem: ucrt64
           update: true
           pacboy: gcc:p cmake:p make:p
+
+      - name: Set up Git
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --needed --noconfirm git
 
       - name: Configure
         working-directory: ${{runner.workspace}}/recap_server/darkspore_server
