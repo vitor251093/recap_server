@@ -32,10 +32,13 @@ jobs:
         with:
           perl-version: '5.30'
 
-      - name: Set up dependencies
+      - name: Set up NASM
+        uses: ilammy/setup-nasm@v1
+
+      - name: Set up Git
         run: |
           pacman -Syu --noconfirm
-          pacman -S --needed --noconfirm git nasm
+          pacman -S --needed --noconfirm git
 
       - name: Configure
         working-directory: ${{runner.workspace}}\recap_server\darkspore_server
