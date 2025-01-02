@@ -70,15 +70,14 @@ namespace HTTP {
 			response.content_length(size);
 			session.send(std::move(response));
 		} else {
-			boost::beast::http::response<boost::beast::http::string_body> response {
-				mResult, realVersion
-			};
-
+			boost::beast::http::response<boost::beast::http::string_body> response { mResult, realVersion };
 			for (const auto& [field, value] : mFields) {
 				response.set(field, value);
 			}
 
-			response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
+			if (response[boost::beast::http::field::server].empty()) {
+				response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
+			}
 
 			response.keep_alive(mKeepAlive);
 			response.body() = mBody;
@@ -101,14 +100,14 @@ namespace HTTP {
 	}
 
 	bool RoutePath::equals(const std::string& resource) const {
-		if (std::regex_match(resource, mRegExpr)) {
+		if (boost::regex_match(resource, mRegExpr)) {
 			return true;
 		}
 		return false;
 	}
 
 	void RoutePath::construct() {
-		mRegExpr = std::regex(mPath);
+		mRegExpr = boost::regex(mPath);
 	}
 
 	// Router
@@ -121,6 +120,7 @@ namespace HTTP {
 				response.result() = boost::beast::http::status::ok;
 				response.version() = request.data.version();
 				response.keep_alive() = request.data.keep_alive();
+				response.method() = request.data.method();
 
 				route.mFunction(session, response);
 				return true;

@@ -7,8 +7,8 @@
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
+#include <boost/regex.hpp>
 #include <vector>
-#include <regex>
 
 // HTTP
 namespace HTTP {
@@ -62,7 +62,7 @@ namespace HTTP {
 			RouteFn mFunction;
 
 			std::string mPath;
-			std::regex mRegExpr;
+			boost::regex mRegExpr;
 
 			friend class Router;
 	};

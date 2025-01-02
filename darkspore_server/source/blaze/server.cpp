@@ -2,7 +2,7 @@
 // Include
 #include "server.h"
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <iostream>
 
 // Blaze
@@ -87,6 +87,10 @@ bhzYZC4FokU2LZWUUDUCQCOdlEVsk42T36t837wE4HCpfw4Zdk1+ZgumkKXJmt+c
 			std::cout << error.message() << std::endl;
 			delete client;
 		}
+	}
+
+	uint16_t Server::get_port() const {
+		return mAcceptor.local_endpoint().port();
 	}
 
 	bool Server::verify_callback(bool preverified, boost::asio::ssl::verify_context& context) {

@@ -2,7 +2,7 @@
 // Include
 #include "server.h"
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/beast/core.hpp>
 #include <iostream>
 
@@ -13,12 +13,23 @@ namespace HTTP {
 		mIoService(io_service),
 		mAcceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
 	{
+		boost::beast::error_code error;
+		mAcceptor.set_option(boost::asio::socket_base::reuse_address(true), error);
+		if (error) {
+			std::cout << error.message() << std::endl;
+			return;
+		}
+
 		do_accept();
 		set_router(nullptr);
 	}
 
 	Server::~Server() {
 
+	}
+
+	uint16_t Server::get_port() const {
+		return mAcceptor.local_endpoint().port();
 	}
 
 	const std::shared_ptr<Router>& Server::get_router() const {

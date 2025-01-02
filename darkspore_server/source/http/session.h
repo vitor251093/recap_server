@@ -4,8 +4,7 @@
 
 // Include
 #include "uri.h"
-
-#include "../game/user.h"
+#include "sporenet/user.h"
 
 #include <boost/asio.hpp>
 
@@ -32,8 +31,8 @@ namespace HTTP {
 			auto& get_request() { return mRequest; }
 			const auto& get_request() const { return mRequest; }
 
-			const auto& get_user() const { return mUser; }
-			void set_user(const Game::UserPtr& user) { mUser = user; }
+			const SporeNet::UserPtr& get_user() const { return mUser; }
+			void set_user(const SporeNet::UserPtr& user) { mUser = user; }
 
 			template<class Message>
 			void send(Message&& message) {
@@ -61,7 +60,7 @@ namespace HTTP {
 			Request mRequest;
 			std::shared_ptr<void> mResponse;
 
-			Game::UserPtr mUser;
+			SporeNet::UserPtr mUser;
 	};
 }
 

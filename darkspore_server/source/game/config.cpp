@@ -38,6 +38,8 @@ namespace Game {
 				mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = value;
 			} else if (name == "DARKSPORE_LAUNCHER_THEMES_PATH") {
 				mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = get_path_value(value);
+			} else if (name == "TEMPLATE_CREATURE_PATH") {
+				mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = get_path_value(value);
 			} else {
 				std::cout << "Game::Config: Unknown config value '" << name << "'" << std::endl;
 			}
@@ -51,6 +53,7 @@ namespace Game {
 		mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = "index.html";
 		mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = "bootstrap/launcher/notes.html";
 		mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = "bootstrap/launcher/";
+		mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = "data/template_creature/";
 
 		pugi::xml_document document;
 		if (auto parse_result = document.load_file(path.c_str())) {
@@ -92,6 +95,7 @@ namespace Game {
 				case CONFIG_DARKSPORE_INDEX_PAGE_PATH: return "DARKSPORE_INDEX_PAGE_PATH";
 				case CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH: return "DARKSPORE_LAUNCHER_NOTES_PATH";
 				case CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH: return "DARKSPORE_LAUNCHER_THEMES_PATH";
+				case CONFIG_TEMPLATE_CREATURE_PATH: return "TEMPLATE_CREATURE_PATH";
 				default: return "UNKNOWN";
 			}
 		};

@@ -1,15 +1,14 @@
 
 // Include
 #include "redirectorcomponent.h"
-#include "../client.h"
+
+#include "main.h"
+#include "blaze/client.h"
+#include "game/config.h"
+
 #include <iostream>
 
 /*
-	Request Packet IDs
-		0x01 = ServerInstanceInfo
-
-	Response Packet IDs
-
 	BlazeValues meanings
 		PDTL = PersonaDetails
 		SESS = SessionInfo
@@ -96,134 +95,108 @@
 		(Xbox Client Address)
 			XDDR
 			XUID
-
-	Request Packets
-		ServerInstanceRequest
-			BSDK
-			BTIM
-			CLNT
-			CSKU
-			CVER
-			DSDK
-			ENV
-			FPID
-			LOC
-			NAME
-			PLAT
-			PROF
-
-	Response Packets
-		ServerInstanceInfo
-			ADDR = 0x14
-			AMAP = 0x58
-			MSGS = 0x58
-			NMAP = 0x58
-			SECU = 0x50
-			XDNS = 0x38
-
-		UserSessionExtendedData
-			ADDR
-			BPS
-			CMAP
-			CTY
-			CVAR
-			DMAP
-			HWFG
-			PSLM
-			QDAT
-			UATT
-			ULST
 */
+
+enum PacketID : uint16_t {
+	GetServerInstance = 0x01
+};
 
 // Blaze
 namespace Blaze {
 	// RedirectorComponent
-	void RedirectorComponent::Parse(Client* client, const Header& header) {
-		switch (header.command) {
-			case 0x01:
-				ServerInstanceInfo(client, header);
+	uint16_t RedirectorComponent::GetId() const {
+		return Id;
+	}
+
+	std::string_view RedirectorComponent::GetName() const {
+		return "Redirector";
+	}
+
+	std::string_view RedirectorComponent::GetReplyPacketName(uint16_t command) const {
+		switch (static_cast<PacketID>(command)) {
+			case PacketID::GetServerInstance: return "getServerInstance";
+
+			default: return "";
+		}
+	}
+
+	bool RedirectorComponent::ParsePacket(Request& request) {
+		switch (request.get_command()) {
+			case PacketID::GetServerInstance:
+				GetServerInstance(request);
 				break;
 
 			default:
-				std::cout << "Unknown redirector command: 0x" << std::hex << header.command << std::dec << std::endl;
-				break;
+				return false;
 		}
+
+		return true;
 	}
 
-	void RedirectorComponent::SendServerInstanceInfo(Client* client, const std::string& host, uint16_t port) {
-		TDF::Packet packet;
+	void RedirectorComponent::WriteServerInstanceInfo(TDF::Packet& packet, const std::string& host, uint16_t port) {
+		packet.push_union("ADDR", NetworkAddressMember::XboxClientAddress);
 
-		auto& addrUnion = packet.CreateUnion(nullptr, "ADDR", NetworkAddressMember::XboxClientAddress);
-		{
-			auto& valuStruct = packet.CreateStruct(&addrUnion, "VALU");
-			packet.PutString(&valuStruct, "HOST", host);
-			packet.PutInteger(&valuStruct, "IP", 0); // boost::asio::ip::address_v4::from_string(host).to_ulong()
-			packet.PutInteger(&valuStruct, "PORT", port);
-		}
+		// Redirector::IpAddress (not the same as other ones)
+		packet.push_struct("VALU");
+		packet.put_string("HOST", host);
+		packet.put_integer("IP", 0);
+		packet.put_integer("PORT", port);
+		packet.pop();
+
+		packet.pop();
 		/*
+		packet.push_list("AMAP", TDF::Type::Struct);
 		{
-			auto& amapList = packet.CreateList(nullptr, "AMAP", TDF::Type::Struct);
-			{
-				auto& amapStruct = packet.CreateStruct(&amapList, "");
-				packet.PutInteger(&amapStruct, "DPRT", 10000);
-				packet.PutInteger(&amapStruct, "MASK", 0);
-				packet.PutInteger(&amapStruct, "SID", 0);
-				packet.PutInteger(&amapStruct, "SIP", boost::asio::ip::address_v4::from_string(host).to_ulong());
-				packet.PutInteger(&amapStruct, "SPRT", 10000);
-			}
-		} {
-			auto& msgsList = packet.CreateList(nullptr, "MSGS", TDF::Type::String);
-			packet.PutString(&msgsList, "", "What goes here?");
-		} {
-			auto& nmapList = packet.CreateList(nullptr, "NMAP", TDF::Type::Struct);
-			{
-				auto& nmapStruct = packet.CreateStruct(&nmapList, "");
-				packet.PutInteger(&nmapStruct, "DPRT", 10000);
-				packet.PutInteger(&nmapStruct, "SID", 0);
-				packet.PutString(&nmapStruct, "SIP", host);
-				packet.PutString(&nmapStruct, "SITE", "");
-				packet.PutInteger(&nmapStruct, "SID", 10000);
-			}
+			packet.push_struct("");
+			packet.put_integer("DPRT", 10000);
+			packet.put_integer("MASK", 0);
+			packet.put_integer("SID", 0);
+			packet.put_integer("SIP", boost::asio::ip::address_v4::from_string(host).to_ulong());
+			packet.put_integer("SPRT", 10000);
+			packet.pop();
 		}
+		packet.pop();
+
+		packet.push_list("MSGS", TDF::Type::String);
+		packet.put_string("", "What goes here?");
+		packet.pop();
+
+		packet.push_list("NMAP", TDF::Type::Struct);
+		{
+			packet.push_struct("");
+			packet.put_integer("DPRT", 10000);
+			packet.put_integer("SID", 0);
+			packet.put_string("SIP", host);
+			packet.put_string("SITE", "");
+			packet.pop();
+		}
+		packet.pop();
 		*/
-		packet.PutInteger(nullptr, "SECU", 1);
-		packet.PutInteger(nullptr, "XDNS", 0);
-
-		Header header;
-		header.component = Component::Redirector;
-		header.command = 0x01;
-		header.error_code = 0;
-
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
-		
-		client->reply(header, outBuffer);
+		packet.put_integer("SECU", 1);
+		packet.put_integer("XDNS", 0);
 	}
 
-	void RedirectorComponent::SendServerAddressInfo(Client* client, const std::string& host, uint16_t port) {
+	void RedirectorComponent::WriteServerAddressInfo(TDF::Packet& packet, const std::string& host, uint16_t port) {
+		packet.push_union("ADDR", NetworkAddressMember::XboxClientAddress);
+
+		// Redirector::IpAddress (not the same as other ones)
+		packet.push_struct("VALU");
+		packet.put_string("HOST", host);
+		packet.put_integer("IP", 0);
+		packet.put_integer("PORT", port);
+		packet.pop();
+
+		packet.pop();
+
+		packet.put_integer("TYPE", AddressInfoType::ExternalIp);
+	}
+
+	void RedirectorComponent::GetServerInstance(Request& request) {
+		auto blazeServer = GetApp().get_blaze_server();
+
 		TDF::Packet packet;
-
-		auto& addrUnion = packet.CreateUnion(nullptr, "ADDR", NetworkAddressMember::XboxClientAddress);
-		{
-			auto& valuStruct = packet.CreateStruct(&addrUnion, "VALU");
-			packet.PutString(&valuStruct, "HOST", host);
-			packet.PutInteger(&valuStruct, "IP", 0);
-			packet.PutInteger(&valuStruct, "PORT", port);
-		}
-		packet.PutInteger(nullptr, "TYPE", AddressInfoType::ExternalIp);
-
-		DataBuffer outBuffer;
-		packet.Write(outBuffer);
-
-		Header header;
-		header.component = Component::Redirector;
-		header.command = 0x01;
-		header.error_code = 0;
-
-		client->reply(header, outBuffer);
-	}
-
-	void RedirectorComponent::ServerInstanceInfo(Client* client, Header header) {
-		SendServerInstanceInfo(client, "127.0.0.1", 10041);
+		WriteServerInstanceInfo(packet, Game::Config::Get(Game::CONFIG_SERVER_HOST), blazeServer->get_port());
+		
+		request.reply(packet);
 	}
 }

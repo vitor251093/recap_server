@@ -14,6 +14,8 @@ namespace HTTP {
 			Server(boost::asio::io_context& io_service, uint16_t port);
 			~Server();
 
+			uint16_t get_port() const;
+
 			const std::shared_ptr<Router>& get_router() const;
 			void set_router(const std::shared_ptr<Router>& router);
 

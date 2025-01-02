@@ -17,6 +17,8 @@ namespace Blaze {
 
 			void handle_accept(Client* client, const boost::system::error_code& error);
 
+			uint16_t get_port() const;
+
 		private:
 			static bool verify_callback(bool preverified, boost::asio::ssl::verify_context& context);
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -28,26 +28,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)source;E:\DevFolder\LibrarySources\raknet3\Source;E:\DevFolder\C++ Libraries\pugixml\include;E:\DevFolder\C++ Libraries\rapidjson\include;E:\DevFolder\C++ Libraries\openssl-1.1.1b\include;E:\DevFolder\C++ Libraries\boost_1_70_0;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\DevFolder\C++ Libraries\RakNet\lib;E:\DevFolder\C++ Libraries\pugixml\lib;E:\DevFolder\C++ Libraries\openssl-1.1.1b\lib;E:\DevFolder\C++ Libraries\boost_1_70_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)source;E:\DevFolder\LibrarySources\raknet3\Source;E:\DevFolder\C++ Libraries\sol2;E:\DevFolder\C++ Libraries\LuaJIT-2.1.0\include;E:\DevFolder\C++ Libraries\glm;E:\DevFolder\C++ Libraries\lodepng;E:\DevFolder\C++ Libraries\cpp-base64;E:\DevFolder\C++ Libraries\pugixml\include;E:\DevFolder\C++ Libraries\rapidjson\include;E:\DevFolder\C++ Libraries\openssl-1.1.1b\include;E:\DevFolder\C++ Libraries\boost_1_73_0;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\DevFolder\C++ Libraries\LuaJIT-2.1.0\lib64;E:\DevFolder\C++ Libraries\RakNet\lib;E:\DevFolder\C++ Libraries\pugixml\lib;E:\DevFolder\C++ Libraries\openssl-1.1.1b\lib;E:\DevFolder\C++ Libraries\boost_1_73_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,21 +118,22 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NOMINMAX;BOOST_NETWORK_ENABLE_HTTPS;RAPIDJSON_HAS_STDSTRING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NOMINMAX;BOOST_NETWORK_ENABLE_HTTPS;BOOST_ASIO_DISABLE_CONCEPTS;RAPIDJSON_HAS_STDSTRING;SOL_STRINGS_ARE_NUMBERS=1;SOL_SAFE_FUNCTION=1;SOL_LUAJIT=1;SOL_EXCEPTIONS_SAFE_PROPAGATION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/experimental:newLambdaProcessor- %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libssl.lib;libcrypto.lib;pugixml.lib;RakNetDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;pugixml.lib;RakNetDLL.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\blaze\client.h" />
+    <ClInclude Include="source\blaze\component.h" />
     <ClInclude Include="source\blaze\component\associationcomponent.h" />
     <ClInclude Include="source\blaze\component\authcomponent.h" />
     <ClInclude Include="source\blaze\component\gamemanagercomponent.h" />
@@ -142,16 +143,30 @@
     <ClInclude Include="source\blaze\component\roomscomponent.h" />
     <ClInclude Include="source\blaze\component\usersessioncomponent.h" />
     <ClInclude Include="source\blaze\component\utilcomponent.h" />
+    <ClInclude Include="source\blaze\functions.h" />
     <ClInclude Include="source\blaze\tdf.h" />
     <ClInclude Include="source\blaze\types.h" />
     <ClInclude Include="source\blaze\server.h" />
     <ClInclude Include="source\databuffer.h" />
     <ClInclude Include="source\game\api.h" />
+    <ClInclude Include="source\game\attributes.h" />
+    <ClInclude Include="source\game\collision.h" />
+    <ClInclude Include="source\game\catalyst.h" />
+    <ClInclude Include="source\game\character.h" />
     <ClInclude Include="source\game\config.h" />
     <ClInclude Include="source\game\creature.h" />
-    <ClInclude Include="source\game\game.h" />
-    <ClInclude Include="source\game\squad.h" />
-    <ClInclude Include="source\game\user.h" />
+    <ClInclude Include="source\game\gamemanager.h" />
+    <ClInclude Include="source\game\instance.h" />
+    <ClInclude Include="source\game\level.h" />
+    <ClInclude Include="source\game\locomotion.h" />
+    <ClInclude Include="source\game\lua.h" />
+    <ClInclude Include="source\game\noun.h" />
+    <ClInclude Include="source\game\object.h" />
+    <ClInclude Include="source\game\objectmanager.h" />
+    <ClInclude Include="source\game\octree.h" />
+    <ClInclude Include="source\game\party.h" />
+    <ClInclude Include="source\game\player.h" />
+    <ClInclude Include="source\game\serverevent.h" />
     <ClInclude Include="source\http\multipart.h" />
     <ClInclude Include="source\http\router.h" />
     <ClInclude Include="source\http\server.h" />
@@ -159,14 +174,27 @@
     <ClInclude Include="source\http\uri.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\network\client.h" />
+    <ClInclude Include="source\predefined.h" />
+    <ClInclude Include="source\qos\server.h" />
     <ClInclude Include="source\raknet\client.h" />
     <ClInclude Include="source\raknet\server.h" />
-    <ClInclude Include="source\tcptest.h" />
-    <ClInclude Include="source\udptest.h" />
+    <ClInclude Include="source\raknet\types.h" />
+    <ClInclude Include="source\scheduler.h" />
+    <ClInclude Include="source\sporenet\creature.h" />
+    <ClInclude Include="source\sporenet\instance.h" />
+    <ClInclude Include="source\sporenet\part.h" />
+    <ClInclude Include="source\sporenet\room.h" />
+    <ClInclude Include="source\sporenet\squad.h" />
+    <ClInclude Include="source\sporenet\user.h" />
+    <ClInclude Include="source\sporenet\vendor.h" />
     <ClInclude Include="source\utils\functions.h" />
+    <ClInclude Include="source\utils\log.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\C++ Libraries\cpp-base64\base64.cpp" />
+    <ClCompile Include="..\..\..\C++ Libraries\lodepng\lodepng.cpp" />
     <ClCompile Include="source\blaze\client.cpp" />
+    <ClCompile Include="source\blaze\component.cpp" />
     <ClCompile Include="source\blaze\component\associationcomponent.cpp" />
     <ClCompile Include="source\blaze\component\authcomponent.cpp" />
     <ClCompile Include="source\blaze\component\gamemanagercomponent.cpp" />
@@ -176,15 +204,30 @@
     <ClCompile Include="source\blaze\component\roomscomponent.cpp" />
     <ClCompile Include="source\blaze\component\usersessioncomponent.cpp" />
     <ClCompile Include="source\blaze\component\utilcomponent.cpp" />
+    <ClCompile Include="source\blaze\functions.cpp" />
     <ClCompile Include="source\blaze\server.cpp" />
     <ClCompile Include="source\blaze\tdf.cpp" />
     <ClCompile Include="source\databuffer.cpp" />
     <ClCompile Include="source\game\api.cpp" />
+    <ClCompile Include="source\game\attributes.cpp" />
+    <ClCompile Include="source\game\collision.cpp" />
+    <ClCompile Include="source\game\catalyst.cpp" />
+    <ClCompile Include="source\game\character.cpp" />
     <ClCompile Include="source\game\config.cpp" />
     <ClCompile Include="source\game\creature.cpp" />
-    <ClCompile Include="source\game\game.cpp" />
-    <ClCompile Include="source\game\squad.cpp" />
-    <ClCompile Include="source\game\user.cpp" />
+    <ClCompile Include="source\game\gamemanager.cpp" />
+    <ClCompile Include="source\game\instance.cpp" />
+    <ClCompile Include="source\game\level.cpp" />
+    <ClCompile Include="source\game\locomotion.cpp" />
+    <ClCompile Include="source\game\lua.cpp" />
+    <ClCompile Include="source\game\luafunctions.cpp" />
+    <ClCompile Include="source\game\noun.cpp" />
+    <ClCompile Include="source\game\object.cpp" />
+    <ClCompile Include="source\game\objectmanager.cpp" />
+    <ClCompile Include="source\game\octree.cpp" />
+    <ClCompile Include="source\game\party.cpp" />
+    <ClCompile Include="source\game\player.cpp" />
+    <ClCompile Include="source\game\serverevent.cpp" />
     <ClCompile Include="source\http\multipart.cpp" />
     <ClCompile Include="source\http\router.cpp" />
     <ClCompile Include="source\http\server.cpp" />
@@ -192,11 +235,20 @@
     <ClCompile Include="source\http\uri.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\network\client.cpp" />
+    <ClCompile Include="source\qos\server.cpp" />
     <ClCompile Include="source\raknet\client.cpp" />
     <ClCompile Include="source\raknet\server.cpp" />
-    <ClCompile Include="source\tcptest.cpp" />
-    <ClCompile Include="source\udptest.cpp" />
+    <ClCompile Include="source\raknet\types.cpp" />
+    <ClCompile Include="source\scheduler.cpp" />
+    <ClCompile Include="source\sporenet\creature.cpp" />
+    <ClCompile Include="source\sporenet\instance.cpp" />
+    <ClCompile Include="source\sporenet\part.cpp" />
+    <ClCompile Include="source\sporenet\room.cpp" />
+    <ClCompile Include="source\sporenet\squad.cpp" />
+    <ClCompile Include="source\sporenet\user.cpp" />
+    <ClCompile Include="source\sporenet\vendor.cpp" />
     <ClCompile Include="source\utils\functions.cpp" />
+    <ClCompile Include="source\utils\log.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

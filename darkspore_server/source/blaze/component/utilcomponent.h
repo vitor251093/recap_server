@@ -3,31 +3,37 @@
 #define _BLAZE_COMPONENT_UTIL_HEADER
 
 // Include
-#include "../tdf.h"
+#include "blaze/component.h"
 
 // Blaze
 namespace Blaze {
-	class Client;
-
 	// UtilComponent
-	class UtilComponent {
+	class UtilComponent : public Component {
 		public:
-			static void Parse(Client* client, const Header& header);
+			enum : uint16_t { Id = 0x09 };
 
-			// Response
-			static void SendPostAuth(Client* client, Header header);
-			static void SendGetTickerServer(Client* client);
-			static void SendUserOptions(Client* client);
+			uint16_t GetId() const override;
+
+			std::string_view GetName() const override;
+			std::string_view GetReplyPacketName(uint16_t command) const override;
+
+			bool ParsePacket(Request& request) override;
 
 		private:
-			static void FetchClientConfig(Client* client, Header header);
-			static void Ping(Client* client, Header header);
-			static void GetTelemetryServer(Client* client, Header header);
-			static void PreAuth(Client* client, Header header);
-			static void PostAuth(Client* client, Header header);
-			static void UserSettingsSave(Client* client, Header header);
-			static void UserSettingsLoadAll(Client* client, Header header);
-			static void SetClientMetrics(Client* client, Header header);
+			// Response
+			static void WritePostAuth(TDF::Packet& packet, const PssConfig& pss, const TelemetryServer& telemetry, const TickerServer& tick, const UserOptions& options);
+			static void WriteGetTickerServer(TDF::Packet& packet, const TickerServer& tick);
+			static void WriteUserOptions(TDF::Packet& packet, const UserOptions& options);
+
+			// Requests
+			static void FetchClientConfig(Request& request);
+			static void Ping(Request& request);
+			static void GetTelemetryServer(Request& request);
+			static void PreAuth(Request& request);
+			static void PostAuth(Request& request);
+			static void UserSettingsSave(Request& request);
+			static void UserSettingsLoadAll(Request& request);
+			static void SetClientMetrics(Request& request);
 	};
 }
 

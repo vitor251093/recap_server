@@ -3,17 +3,20 @@
 #define _HTTP_MULTIPART_HEADER
 
 // Include
+#include <boost/regex.hpp>
+
 #include <string>
 #include <string_view>
 #include <map>
-#include <regex>
 
 // HTTP
 namespace HTTP {
+	struct Request;
+
 	// Multipart
 	class Multipart {
 		public:
-			Multipart(const std::string& body, const std::string& boundary);
+			Multipart();
 
 			decltype(auto) begin() { return mFields.begin(); }
 			decltype(auto) begin() const { return mFields.begin(); }
@@ -22,13 +25,17 @@ namespace HTTP {
 
 			std::string field(const std::string& name);
 
+			void parse(const Request& request);
+
 		private:
-			void parse(const std::string& body);
+			void parse(const std::string& body, const std::string& boundary);
 
 		private:
 			std::map<std::string, std::string> mFields;
 			std::string mBoundary;
-			std::regex mRegex;
+
+			boost::regex mRegex;
+			boost::regex mMultipartRegex;
 	};
 }
 

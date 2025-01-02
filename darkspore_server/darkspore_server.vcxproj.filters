@@ -55,14 +55,23 @@
     <Filter Include="Source Files\raknet">
       <UniqueIdentifier>{cebb3b25-878b-417c-804d-74cdd6f37307}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\sporenet">
+      <UniqueIdentifier>{641d1a99-0df1-4411-a8d4-6e36aa5a4b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sporenet">
+      <UniqueIdentifier>{04a12394-d603-48ec-aa2e-d2d24e574bf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\qos">
+      <UniqueIdentifier>{b2072fe4-1af2-45d4-94ee-90ebcf6bb781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\qos">
+      <UniqueIdentifier>{ac205851-552e-45f3-b50d-081982eff58b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\external">
+      <UniqueIdentifier>{8368c5b9-4bcf-4e91-9d93-6597ef782e51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\udptest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\tcptest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\databuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,9 +111,6 @@
     <ClInclude Include="source\http\session.h">
       <Filter>Header Files\http</Filter>
     </ClInclude>
-    <ClInclude Include="source\game\user.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="source\http\router.h">
       <Filter>Header Files\http</Filter>
     </ClInclude>
@@ -129,17 +135,8 @@
     <ClInclude Include="source\http\multipart.h">
       <Filter>Header Files\http</Filter>
     </ClInclude>
-    <ClInclude Include="source\game\creature.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="source\game\squad.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="source\blaze\component\associationcomponent.h">
       <Filter>Header Files\blaze\component</Filter>
-    </ClInclude>
-    <ClInclude Include="source\game\game.h">
-      <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="source\blaze\component\playgroupscomponent.h">
       <Filter>Header Files\blaze\component</Filter>
@@ -153,15 +150,102 @@
     <ClInclude Include="source\raknet\server.h">
       <Filter>Header Files\raknet</Filter>
     </ClInclude>
+    <ClInclude Include="source\game\party.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\log.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\object.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\objectmanager.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\raknet\types.h">
+      <Filter>Header Files\raknet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\gamemanager.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\player.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\character.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\blaze\functions.h">
+      <Filter>Header Files\blaze</Filter>
+    </ClInclude>
+    <ClInclude Include="source\predefined.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sporenet\creature.h">
+      <Filter>Header Files\sporenet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sporenet\squad.h">
+      <Filter>Header Files\sporenet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sporenet\user.h">
+      <Filter>Header Files\sporenet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sporenet\instance.h">
+      <Filter>Header Files\sporenet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sporenet\room.h">
+      <Filter>Header Files\sporenet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\instance.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sporenet\vendor.h">
+      <Filter>Header Files\sporenet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sporenet\part.h">
+      <Filter>Header Files\sporenet</Filter>
+    </ClInclude>
+    <ClInclude Include="source\blaze\component.h">
+      <Filter>Header Files\blaze</Filter>
+    </ClInclude>
+    <ClInclude Include="source\qos\server.h">
+      <Filter>Header Files\qos</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\creature.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\lua.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scheduler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\octree.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\noun.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\level.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\serverevent.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\attributes.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\locomotion.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\catalyst.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game\collision.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\udptest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\tcptest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\databuffer.cpp">
@@ -200,9 +284,6 @@
     <ClCompile Include="source\http\session.cpp">
       <Filter>Source Files\http</Filter>
     </ClCompile>
-    <ClCompile Include="source\game\user.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="source\http\router.cpp">
       <Filter>Source Files\http</Filter>
     </ClCompile>
@@ -224,17 +305,8 @@
     <ClCompile Include="source\http\multipart.cpp">
       <Filter>Source Files\http</Filter>
     </ClCompile>
-    <ClCompile Include="source\game\creature.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="source\game\squad.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="source\blaze\component\associationcomponent.cpp">
       <Filter>Source Files\blaze\component</Filter>
-    </ClCompile>
-    <ClCompile Include="source\game\game.cpp">
-      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="source\blaze\component\playgroupscomponent.cpp">
       <Filter>Source Files\blaze\component</Filter>
@@ -247,6 +319,105 @@
     </ClCompile>
     <ClCompile Include="source\raknet\server.cpp">
       <Filter>Source Files\raknet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\party.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\log.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\object.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\objectmanager.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\raknet\types.cpp">
+      <Filter>Source Files\raknet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\gamemanager.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\player.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\character.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\blaze\functions.cpp">
+      <Filter>Source Files\blaze</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sporenet\creature.cpp">
+      <Filter>Source Files\sporenet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sporenet\squad.cpp">
+      <Filter>Source Files\sporenet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sporenet\user.cpp">
+      <Filter>Source Files\sporenet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sporenet\instance.cpp">
+      <Filter>Source Files\sporenet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sporenet\room.cpp">
+      <Filter>Source Files\sporenet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\instance.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sporenet\vendor.cpp">
+      <Filter>Source Files\sporenet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sporenet\part.cpp">
+      <Filter>Source Files\sporenet</Filter>
+    </ClCompile>
+    <ClCompile Include="source\blaze\component.cpp">
+      <Filter>Source Files\blaze</Filter>
+    </ClCompile>
+    <ClCompile Include="source\qos\server.cpp">
+      <Filter>Source Files\qos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\C++ Libraries\cpp-base64\base64.cpp">
+      <Filter>Source Files\external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\C++ Libraries\lodepng\lodepng.cpp">
+      <Filter>Source Files\external</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\creature.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\lua.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\octree.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\noun.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\level.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\serverevent.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\attributes.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\locomotion.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\catalyst.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\collision.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game\luafunctions.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
