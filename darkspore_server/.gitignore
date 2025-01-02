@@ -1,0 +1,11 @@
+# CMake build artifacts
+CMakeCache.txt
+CMakeFiles/
+Makefile
+_deps/
+cmake/CPM_0.40.4.cmake
+cmake/CPM_0.40.5.cmake
+cmake_install.cmake
+cpm-package-lock.cmake
+libcpp_base64.a
+liblodepng.a
