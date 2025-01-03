@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<phase>
+    <gambit>
+        <entry>
+            <ability>ZelemBasicRanged</ability>
+            <randomizeCooldown>false</randomizeCooldown>
+        </entry>
+        <entry>
+            <ability>ZelemBasicRanged_Blink</ability>
+            <randomizeCooldown>false</randomizeCooldown>
+        </entry>
+    </gambit>
+    <phaseType>0</phaseType>
+    <startNode>false</startNode>
+</phase>
