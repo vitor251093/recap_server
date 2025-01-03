@@ -22,4 +22,6 @@ RUN cp -r res/data build/data
 RUN cp -r res/static build/static
 RUN mkdir -p build/storage
 
+EXPOSE 42127 10041 8443 8999 9988 3659 80 8080 17502
+
 ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
