@@ -164,7 +164,7 @@ if(raknet_ADDED)
 
     add_subdirectory(${raknet_SOURCE_DIR} ${raknet_BINARY_DIR})
     if(WIN32 AND NOT UNIX)
-        target_link_libraries(recap_server PRIVATE RakNet)
+        target_link_libraries(recap_server PRIVATE DLL)
     else()
         target_link_libraries(recap_server PRIVATE RakNetDynamic)
     endif()
