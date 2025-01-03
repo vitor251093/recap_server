@@ -65,8 +65,7 @@ target_link_libraries(recap_server PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL:
 CPMAddPackage(
     NAME luajit
     GIT_REPOSITORY https://github.com/LuaJIT/LuaJIT.git
-    VERSION 2.1.0-beta3
-    DOWNLOAD_ONLY YES)
+    VERSION 2.1.0-beta3)
 if(luajit_ADDED)
     add_library(luajit SHARED IMPORTED)
     file(GLOB_RECURSE LUAJIT_SOURCES "${luajit_SOURCE_DIR}/src/*.h" "${luajit_SOURCE_DIR}/src/*.c")
