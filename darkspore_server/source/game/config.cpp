@@ -50,7 +50,7 @@ namespace Game {
 			} else if (name == "DARKSPORE_LAUNCHER_THEMES_PATH") {
 				mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = get_path_value(value);
 			} else if (name == "TEMPLATE_CREATURE_PATH") {
-				mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = get_path_value(value);
+				mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = value;
 			} else {
 				std::cout << "Game::Config: Unknown config value '" << name << "'" << std::endl;
 			}
