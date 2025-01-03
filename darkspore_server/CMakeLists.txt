@@ -157,3 +157,17 @@ if(raknet_ADDED)
         target_link_libraries(recap_server PRIVATE RakNetDynamic)
     endif()
 endif()
+
+if (UNIX AND NOT APPLE)
+    foreach(SIZE 16 32 48 64 128 256)
+        install(FILES ${CMAKE_SOURCE_DIR}/res/icon/recap_${SIZE}x${SIZE}.png
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/${SIZE}x${SIZE}/apps
+            RENAME com.resurrectioncapsule.server.png)
+    endforeach()
+
+    install(FILES ${CMAKE_SOURCE_DIR}/res/com.resurrectioncapsule.server.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+    install(TARGETS recap_server BUNDLE DESTINATION ${CMAKE_BINARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+elseif(APPLE)
+    install(TARGETS recap_server BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}/Applications")
+endif()

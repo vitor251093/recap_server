@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Resurrection Capsule Server
+GenericName=Darkspore server
+Comment=A local server to run Darkspore.
+Exec=recap_server %f
+Type=Application
+Categories=Game;
+Terminal=false
+Icon=com.resurrectioncapsule.server
+Keywords=game
