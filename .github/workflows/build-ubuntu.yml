@@ -41,7 +41,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: recap-server-ubuntu-x64
-          path: darkspore_server/AppDir/usr/bin/
+          path: |
+            darkspore_server/AppDir/usr/lib/
+            darkspore_server/AppDir/usr/bin/
 
       - name: Fetch AppImage tools
         run: |
