@@ -65,7 +65,8 @@ target_link_libraries(recap_server PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL:
 CPMAddPackage(
     NAME luajit
     GIT_REPOSITORY https://github.com/LuaJIT/LuaJIT.git
-    VERSION 2.1.0-beta3)
+    VERSION 2.1.0-beta3
+    DOWNLOAD_ONLY YES)
 if(luajit_ADDED)
     add_library(luajit SHARED IMPORTED)
     file(GLOB_RECURSE LUAJIT_SOURCES "${luajit_SOURCE_DIR}/src/*.h" "${luajit_SOURCE_DIR}/src/*.c")
@@ -79,6 +80,8 @@ if(luajit_ADDED)
     else()
         set(LUAJIT_BUILD_COMMAND make)
         set(LUAJIT_BUILD_OUTPUT ${luajit_SOURCE_DIR}/src/libluajit.so)
+        set(LUAJIT_SYMLINK1 ${luajit_SOURCE_DIR}/src/libluajit-5.1.so)
+        set(LUAJIT_SYMLINK2 ${luajit_SOURCE_DIR}/src/libluajit-5.1.so.2)
     endif()
 
     set_target_properties(luajit PROPERTIES IMPORTED_LOCATION ${LUAJIT_BUILD_OUTPUT})
@@ -88,7 +91,17 @@ if(luajit_ADDED)
         DEPENDS ${LUAJIT_SOURCES}
         WORKING_DIRECTORY ${luajit_SOURCE_DIR}/src
         VERBATIM)
-    add_custom_target(luajit-build DEPENDS ${LUAJIT_BUILD_OUTPUT})
+
+    if(NOT MSVC)
+        add_custom_command(
+            OUTPUT ${LUAJIT_SYMLINK1} ${LUAJIT_SYMLINK2}
+            COMMAND ln -sf ${LUAJIT_BUILD_OUTPUT} ${LUAJIT_SYMLINK1}
+            COMMAND ln -sf ${LUAJIT_BUILD_OUTPUT} ${LUAJIT_SYMLINK2}
+            DEPENDS ${LUAJIT_BUILD_OUTPUT}
+            VERBATIM)
+    endif()
+
+    add_custom_target(luajit-build DEPENDS ${LUAJIT_BUILD_OUTPUT} ${LUAJIT_SYMLINK1} ${LUAJIT_SYMLINK2})
     add_dependencies(luajit luajit-build)
     target_include_directories(luajit SYSTEM INTERFACE $<BUILD_INTERFACE:${luajit_SOURCE_DIR}/src>)
 
