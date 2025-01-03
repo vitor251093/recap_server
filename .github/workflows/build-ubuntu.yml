@@ -30,13 +30,12 @@ jobs:
       - name: Configure
         run: |
           cd darkspore_server
-          cmake . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations -Wno-narrowing"
+          cmake . -B build -DCMAKE_INSTALL_PREFIX=./AppDir/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations -Wno-narrowing"
 
       - name: Build
         run: |
           cd darkspore_server
-          cmake --build build
-          DESTDIR=AppDir cmake --install build
+          cmake --build build --target install
 
       - uses: actions/upload-artifact@v4
         with:
@@ -52,7 +51,7 @@ jobs:
       - name: Build the AppImage
         run: |
           cd darkspore_server
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(find $(pwd)/build/_deps -maxdepth 3 -mindepth 1 -type d | tr '\n' ':')
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/AppDir/usr/bin
           ./linuxdeploy-x86_64.AppImage --list-plugins
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
           rm ./linuxdeploy-x86_64.AppImage

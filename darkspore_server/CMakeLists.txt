@@ -27,6 +27,12 @@ if(MSVC)
     target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
 endif()
 
+include(GNUInstallDirs)
+install(TARGETS recap_server
+    EXPORT recap-targets
+    RUNTIME
+        DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 # Boost
 set(BOOST_INCLUDE_LIBRARIES "asio;bind;regex;beast")
 CPMAddPackage(
@@ -52,10 +58,13 @@ target_include_directories(recap_server PRIVATE "${rapidjson_SOURCE_DIR}/include
 
 # OpenSSL
 CPMAddPackage(
-    GIT_REPOSITORY https://github.com/jimmy-park/openssl-cmake.git
-    GIT_TAG 5e5cef2e3c1713cc775ffe490bd0ff1c12a7ced7
+    GIT_REPOSITORY https://github.com/r0ptr/openssl-cmake.git
+    GIT_TAG 74ec40cedab235d566d4835a85fda5a0b02598df
     OPTIONS "BUILD_SHARED_LIBS ON"
             "OPENSSL_TARGET_VERSION 1.1.1b"
+            "OPENSSL_INSTALL ON"
+            "OPENSSL_INSTALL_TARGET install_sw"
+            "OPENSSL_CONFIGURE_OPTIONS --prefix=${CMAKE_INSTALL_PREFIX}"
             "OPENSSL_ENABLE_PARALLEL OFF"
             "OPENSSL_BUILD_VERBOSE ON"
             "OPENSSL_CONFIGURE_VERBOSE ON")
@@ -68,20 +77,17 @@ CPMAddPackage(
     VERSION 2.1.0-beta3
     DOWNLOAD_ONLY YES)
 if(luajit_ADDED)
-    add_library(luajit SHARED IMPORTED)
+    add_library(luajit STATIC IMPORTED)
     file(GLOB_RECURSE LUAJIT_SOURCES "${luajit_SOURCE_DIR}/src/*.h" "${luajit_SOURCE_DIR}/src/*.c")
 
     if(MSVC)
         include(cmake/get_findvcvars.cmake)
         find_package(Vcvars REQUIRED)
-        set(LUAJIT_BUILD_COMMAND ${Vcvars_LAUNCHER} ${luajit_SOURCE_DIR}/src/msvcbuild.bat)
-        set(LUAJIT_BUILD_OUTPUT ${luajit_SOURCE_DIR}/src/lua51.dll)
-        set_target_properties(luajit PROPERTIES IMPORTED_IMPLIB ${luajit_SOURCE_DIR}/src/lua51.lib)
+        set(LUAJIT_BUILD_COMMAND ${Vcvars_LAUNCHER} ${luajit_SOURCE_DIR}/src/msvcbuild.bat static)
+        set(LUAJIT_BUILD_OUTPUT ${luajit_SOURCE_DIR}/src/lua51.lib)
     else()
         set(LUAJIT_BUILD_COMMAND make)
-        set(LUAJIT_BUILD_OUTPUT ${luajit_SOURCE_DIR}/src/libluajit.so)
-        set(LUAJIT_SYMLINK1 ${luajit_SOURCE_DIR}/src/libluajit-5.1.so)
-        set(LUAJIT_SYMLINK2 ${luajit_SOURCE_DIR}/src/libluajit-5.1.so.2)
+        set(LUAJIT_BUILD_OUTPUT ${luajit_SOURCE_DIR}/src/libluajit.a)
     endif()
 
     set_target_properties(luajit PROPERTIES IMPORTED_LOCATION ${LUAJIT_BUILD_OUTPUT})
@@ -91,20 +97,9 @@ if(luajit_ADDED)
         DEPENDS ${LUAJIT_SOURCES}
         WORKING_DIRECTORY ${luajit_SOURCE_DIR}/src
         VERBATIM)
-
-    if (UNIX AND NOT APPLE)
-        add_custom_command(
-            OUTPUT ${LUAJIT_SYMLINK1} ${LUAJIT_SYMLINK2}
-            COMMAND ln -sf ${LUAJIT_BUILD_OUTPUT} ${LUAJIT_SYMLINK1}
-            COMMAND ln -sf ${LUAJIT_BUILD_OUTPUT} ${LUAJIT_SYMLINK2}
-            DEPENDS ${LUAJIT_BUILD_OUTPUT}
-            VERBATIM)
-    endif()
-
-    add_custom_target(luajit-build DEPENDS ${LUAJIT_BUILD_OUTPUT} ${LUAJIT_SYMLINK1} ${LUAJIT_SYMLINK2})
+    add_custom_target(luajit-build DEPENDS ${LUAJIT_BUILD_OUTPUT})
     add_dependencies(luajit luajit-build)
     target_include_directories(luajit SYSTEM INTERFACE $<BUILD_INTERFACE:${luajit_SOURCE_DIR}/src>)
-
     target_link_libraries(recap_server PRIVATE luajit)
 endif()
 
@@ -163,11 +158,7 @@ if(raknet_ADDED)
     execute_process(COMMAND git apply --ignore-whitespace --verbose ${RAKNET_PATCH} WORKING_DIRECTORY ${raknet_SOURCE_DIR})
 
     add_subdirectory(${raknet_SOURCE_DIR} ${raknet_BINARY_DIR})
-    if(WIN32 AND NOT UNIX)
-        target_link_libraries(recap_server PRIVATE DLL)
-    else()
-        target_link_libraries(recap_server PRIVATE RakNetDynamic)
-    endif()
+    target_link_libraries(recap_server PRIVATE RakNet)
 endif()
 
 if (UNIX AND NOT APPLE)
