@@ -65,6 +65,13 @@ jobs:
           mkdir dist_appimage
           mv *.AppImage ./dist_appimage/
 
+      - name: Adding needed files
+        run: |
+          cd darkspore_server
+          mkdir dist_appimage/storage
+          cd -r res/data dist_appimage/data
+          cd -r res/static dist_appimage/storage/static
+
       - uses: actions/upload-artifact@v4
         with:
           name: recap-server-appimage-x86_64

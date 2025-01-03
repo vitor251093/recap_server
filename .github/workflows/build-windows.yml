@@ -53,11 +53,12 @@ jobs:
           export PATH=/c/Users/runneradmin/nasm:$PATH
           cmake --build . --config Release --target install
 
-      - name: Preparing artifacts
+      - name: Adding needed files
         run: |
+          cd darkspore_server
           mkdir dist/bin/storage
-          cd -r darkspore_server/res/data dist/bin/data
-          cd -r darkspore_server/res/static dist/bin/storage/static
+          cd -r res/data dist/bin/data
+          cd -r res/static dist/bin/storage/static
 
       - uses: actions/upload-artifact@v4
         with:
