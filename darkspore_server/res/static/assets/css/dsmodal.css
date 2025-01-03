@@ -1,0 +1,55 @@
+
+.modal {
+    background-color: rgba(0,0,0,0.5);
+    z-index: 3;
+}
+
+.modal .modal-window {
+    position: relative;
+    border: 1px solid #fff;
+    height: 200px;
+    color: #fff;
+    width: 72%;
+    margin-left: 14%;
+    margin-top: 120px;
+}
+
+.modal .modal-window .modal-title {
+    margin-top: 15px;
+}
+.modal .modal-window .modal-message {
+    margin-top: 10px;
+}
+
+.modal .modal-window .modal-title,
+.modal .modal-window .modal-message,
+.modal .modal-window .form-group-button {
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+#avatar-dialog .modal-window {
+    height: 260px;
+    width: 84%;
+    margin-left: 8%;
+}
+#avatar-dialog .modal-window #signup-select-avatar-form {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+#avatar-dialog .modal-window #signup-select-avatar-form > div {
+    display: inline-block;
+    border: 4px solid transparent;
+    line-height: 0;
+}
+#avatar-dialog .modal-window #signup-select-avatar-form > div:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+#avatar-dialog .modal-window #signup-select-avatar-form > div.selected {
+    background-color: #52b7ff;
+}
+
+
+.view .modal-title {
+    color: #fff;
+}

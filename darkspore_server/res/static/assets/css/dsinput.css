@@ -1,0 +1,20 @@
+input[type="text"].password {
+    font-family: 'dotsfont-regular';
+    line-height: 33px;
+    margin-top: 7px;
+    background-color: transparent;
+}
+
+.dstextfield {
+    width: 288px;
+    background-image: url("../images/TextField.png");
+}
+
+.dstextfield:hover:not(:active) {
+    background-image: url("../images/TextField-hover.png");
+}
+
+.dstextfield input {
+    width: 100%;
+}
+

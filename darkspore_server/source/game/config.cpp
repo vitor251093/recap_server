@@ -62,9 +62,9 @@ namespace Game {
 		mConfig[CONFIG_SERVER_HOST] = "127.0.0.1";
 		mConfig[CONFIG_STORAGE_PATH] = "storage/";
 		mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = "index.html";
-		mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = "bootstrap/launcher/notes.html";
-		mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = "bootstrap/launcher/";
-		mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = "data/template_creature/";
+		mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = "static/bootstrap/launcher/notes.html";
+		mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = "static/bootstrap/launcher/";
+		mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = "data/creature_templates.json";
 
 		pugi::xml_document document;
 		if (auto parse_result = document.load_file(path.c_str())) {

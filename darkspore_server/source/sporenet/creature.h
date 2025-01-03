@@ -11,6 +11,11 @@
 #include <memory>
 #include <pugixml.hpp>
 
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/filereadstream.h>
+
 // SporeNet
 namespace SporeNet {
 	// Creature template IDs
@@ -141,6 +146,9 @@ namespace SporeNet {
 		public:
 			void Read(const pugi::xml_node& node);
 			void WriteApi(pugi::xml_node& node, bool include_abilities) const;
+
+			void ReadJson(rapidjson::Value& object);
+			rapidjson::Value WriteJson(rapidjson::Document::AllocatorType& allocator) const;
 
 			const std::string& GetName() const;
 

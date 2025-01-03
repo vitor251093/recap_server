@@ -1,0 +1,48 @@
+
+.dstitlebar-min-button {
+    width: 36px;
+    height: 27px;
+    Position: absolute;
+    top: 9px;
+    right: 46px;
+    background: url(../images/titlebar/titlebar-min-button-on-click.png)no-repeat 0 0;
+    background: url(../images/titlebar/titlebar-min-button-on.png)no-repeat 0 0;
+    background: url(../images/titlebar/titlebar-min-button-off.png)no-repeat 0 0;
+}
+.dstitlebar-min-button:hover:not(:active) {
+    background: url(../images/titlebar/titlebar-min-button-on.png)no-repeat 0 0;
+}
+.dstitlebar-min-button:active {
+    background: url(../images/titlebar/titlebar-min-button-on-click.png)no-repeat 0 0;
+}
+.dstitlebar-min-button:hover:not(:active) {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.dstitlebar-close-button {
+    width: 35px;
+    height: 27px;
+    Position: absolute;
+    top: 9px;
+    right: 10px;
+    background: url(../images/titlebar/titlebar-close-button-on-click.png)no-repeat 0 0;
+    background: url(../images/titlebar/titlebar-close-button-on.png)no-repeat 0 0;
+    background: url(../images/titlebar/titlebar-close-button-off.png)no-repeat 0 0;
+}
+.dstitlebar-close-button:hover:not(:active) {
+    background: url(../images/titlebar/titlebar-close-button-on.png)no-repeat 0 0;
+}
+.dstitlebar-close-button:active {
+    background: url(../images/titlebar/titlebar-close-button-on-click.png)no-repeat 0 0;
+}
+.dstitlebar-close-button:hover:not(:active) {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}

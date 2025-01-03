@@ -1,0 +1,32 @@
+
+/* 
+    The default font name is "EA Pirulen Rg DS",
+    only use "PirulenRg-Regular" if the former 
+    does not work in your specific webview. 
+ */
+
+* {
+    /*
+       "EA Pirulen Rg DS" requires font-weight: normal, and some tags, 
+        like the H1-H6 ones, have font-weight: bold by default. With that 
+        change, "EA Pirulen Rg DS" works in any tag by default
+     */
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'PirulenRg-Regular';
+    src: url("../fonts/PirulenRg-Regular.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'dotsfont-regular';
+    src: url("../fonts/dotsfont-regular.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.darkspore-font {
+    font-family: 'EA Pirulen Rg DS', 'PirulenRg-Regular';
+}

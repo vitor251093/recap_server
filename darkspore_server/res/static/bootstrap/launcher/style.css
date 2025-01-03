@@ -1,0 +1,84 @@
+body{
+    background: url(images/background.png) no-repeat 0 0;
+    height: 600;
+    width: 800px;
+    margin: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#server_notes{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#Server_status{
+    position: absolute;
+    width: 400px;
+    height: 55px;
+    top: 60px; 
+    left: 355px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#Server_Status_Header {
+    position: relative;
+    top: 7px; 
+    left: 4px;
+    padding-bottom:10px;
+}
+
+#Server_Header{
+    color:#B0C5FF;
+    font-family:  Arial;
+    font-size:16px;
+    font-weight: bold;
+}
+
+.darkspore-logo {
+    background: url(./images/logo.png)no-repeat 0 0;
+    width: 266px;
+    height: 31px;
+    position: absolute;
+    top: 100px;
+    left: 267px;
+}
+
+#buttons {
+    position: relative;
+    top: 30px;
+}
+#SingleplayerButton,
+#MultiplayerButton,
+#SettingsButton,
+#ExitButton {
+    position: absolute;
+    width: 260px;
+    left: 244px;
+    font-size: 18px !important;
+}
+#SingleplayerButton {
+    top: 160px;
+}
+#MultiplayerButton {
+    top: 220px;
+}
+#SettingsButton {
+    top: 280px;
+}
+#ExitButton {
+    top: 340px;
+}
+
+#darkspore_version {
+    display:block;
+    position:absolute;
+    top: 557px;
+    left: 25px;
+    width: 181px;
+    overflow:hidden;
+    color:#FFFFFF;
+    font-family:Arial;
+    font-size:11px;
+}

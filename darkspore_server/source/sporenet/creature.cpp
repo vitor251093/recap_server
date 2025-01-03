@@ -5,6 +5,7 @@
 
 #include "game/config.h"
 #include "utils/functions.h"
+#include "utils/json.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -238,6 +239,93 @@ namespace SporeNet {
 		}
 	}
 
+	void TemplateCreature::ReadJson(rapidjson::Value& object) {
+		if (!object.IsObject()) return;
+		// mId = utils::json::GetUint(object, "id");
+
+		mNameLocaleId = utils::json::GetString(object, "nameLocaleId");
+		mTextLocaleId = utils::json::GetString(object, "descLocaleId");
+
+		mName = utils::json::GetString(object, "name");
+		from_string(utils::json::GetString(object, "elementType"), mType);
+
+		mBaseWeaponDamageMin = utils::json::GetDouble(object, "weaponMinDamage");
+		mBaseWeaponDamageMax = utils::json::GetDouble(object, "weaponMaxDamage");
+		mGearScore = utils::json::GetDouble(object, "gearScore");
+
+		from_string(utils::json::GetString(object, "classType"), mClass);
+		from_string(utils::json::GetString(object, "classType"), mEquipableParts); // TODO: Should be a separate property?
+
+		//statsTemplateAbility = utils::json::GetString(object, "statsTemplateAbility");
+		//statsTemplateAbilityKeyvalues = utils::json::GetString(object, "statsTemplateAbilityKeyvalues");
+
+		// hasFeet  = utils::json::GetBool(object, "hasFeet");
+		// hasHands = utils::json::GetBool(object, "hasHands");
+
+		mAbility[0] = utils::json::GetUint64(object, "abilityBasic");
+		mAbility[1] = utils::json::GetUint64(object, "abilitySpecial1");
+		mAbility[2] = utils::json::GetUint64(object, "abilitySpecial2");
+		mAbility[3] = utils::json::GetUint64(object, "abilityRandom");
+		mAbility[4] = utils::json::GetUint64(object, "abilityPassive");
+
+		// parse stats
+		const auto& statsString = utils::json::GetString(object, "statsTemplate");
+
+		mStats.clear();
+		for (const auto& statString : utils::explode_string(statsString, ';')) {
+			if (statString.empty()) {
+				continue;
+			}
+
+			const auto& statData = utils::explode_string(statString, ',');
+
+			decltype(auto) stat = mStats.emplace_back();
+			stat.statName = statData[0];
+			stat.maxValue = utils::to_number<uint32_t>(statData[1]);
+			stat.currentValue = utils::to_number<uint32_t>(statData[2]);
+		}
+	}
+
+	rapidjson::Value TemplateCreature::WriteJson(rapidjson::Document::AllocatorType& allocator) const {
+		rapidjson::Value object = utils::json::NewObject();
+		// utils::json::Set(object, "id", mId, allocator);
+		
+		utils::json::Set(object, "nameLocaleId", mNameLocaleId, allocator);
+		utils::json::Set(object, "descLocaleId", mTextLocaleId, allocator);
+
+		utils::json::Set(object, "name", mName, allocator);
+		utils::json::Set(object, "elementType", to_string(mType), allocator);
+		
+		utils::json::Set(object, "weaponMinDamage", mBaseWeaponDamageMin, allocator);
+		utils::json::Set(object, "weaponMaxDamage", mBaseWeaponDamageMax, allocator);
+		utils::json::Set(object, "gearScore", mGearScore, allocator);
+
+		utils::json::Set(object, "classType", to_string(mClass), allocator);
+		// utils::json::Set(object, "classType", to_string(mEquipableParts), allocator); // TODO: Should be a separate property?
+
+		{
+			std::string statsString;
+			for (const auto& stat : mStats) {
+				statsString += stat.statName + ',' + std::to_string(stat.maxValue) + ',' + std::to_string(stat.currentValue) + ';';
+			}
+			utils::json::Set(object, "statsTemplate", statsString, allocator);
+		}
+		
+		//utils::json::Set(object, "statsTemplateAbility", statsTemplateAbility, allocator);
+		//utils::json::Set(object, "statsTemplateAbilityKeyvalues", statsTemplateAbilityKeyvalues, allocator);
+
+		// utils::json::Set(object, "hasFeet",  hasFeet,  allocator);
+		// utils::json::Set(object, "hasHands", hasHands, allocator);
+
+		utils::json::Set(object, "abilityBasic",    mAbility[0], allocator);
+		utils::json::Set(object, "abilitySpecial1", mAbility[1], allocator);
+		utils::json::Set(object, "abilitySpecial2", mAbility[2], allocator);
+		utils::json::Set(object, "abilityRandom",   mAbility[3], allocator);
+		utils::json::Set(object, "abilityPassive",  mAbility[4], allocator);
+
+		return object;
+	}
+
 	const std::string& TemplateCreature::GetName() const {
 		return mName;
 	}
@@ -270,19 +358,16 @@ namespace SporeNet {
 			return;
 		}
 
-		for (const auto& path : std::filesystem::directory_iterator(templateCreaturePath)) {
-			const auto& filePath = path.path();
-			if (path.is_regular_file() && filePath.extension() == ".xml") {
-				pugi::xml_document document;
-				if (auto parse_result = document.load_file(filePath.c_str())) {
-					TemplateCreaturePtr templateCreature = std::make_shared<TemplateCreature>();
-					templateCreature->Read(document.child("template"));
+		FILE* pFile = fopen(templateCreaturePath.c_str(), "rb");
+		char buffer[65536];
+		rapidjson::FileReadStream is(pFile, buffer, sizeof(buffer));
+		rapidjson::Document templatesList;
+		templatesList.ParseStream<0, rapidjson::UTF8<>, rapidjson::FileReadStream>(is);
 
-					mTemplateCreatures.try_emplace(templateCreature->GetName(), templateCreature);
-				} else {
-					std::cout << "Could not load '" << filePath << "'." << std::endl;
-				}
-			}
+		for (auto& templateNode : templatesList.GetArray()) {
+			TemplateCreaturePtr templateCreature = std::make_shared<TemplateCreature>();
+			templateCreature->ReadJson(templateNode);
+			mTemplateCreatures.try_emplace(templateCreature->GetName(), templateCreature);
 		}
 	}
 
