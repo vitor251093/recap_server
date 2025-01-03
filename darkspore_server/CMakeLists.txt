@@ -55,7 +55,6 @@ CPMAddPackage(
     GIT_REPOSITORY https://github.com/jimmy-park/openssl-cmake.git
     GIT_TAG 5e5cef2e3c1713cc775ffe490bd0ff1c12a7ced7
     OPTIONS "BUILD_SHARED_LIBS ON"
-            "OPENSSL_INSTALL ON"
             "OPENSSL_TARGET_VERSION 1.1.1b"
             "OPENSSL_ENABLE_PARALLEL OFF"
             "OPENSSL_BUILD_VERBOSE ON"
