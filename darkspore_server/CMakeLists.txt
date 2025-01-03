@@ -92,7 +92,7 @@ if(luajit_ADDED)
         WORKING_DIRECTORY ${luajit_SOURCE_DIR}/src
         VERBATIM)
 
-    if(NOT MSVC)
+    if (UNIX AND NOT APPLE)
         add_custom_command(
             OUTPUT ${LUAJIT_SYMLINK1} ${LUAJIT_SYMLINK2}
             COMMAND ln -sf ${LUAJIT_BUILD_OUTPUT} ${LUAJIT_SYMLINK1}
@@ -164,7 +164,7 @@ if(raknet_ADDED)
 
     add_subdirectory(${raknet_SOURCE_DIR} ${raknet_BINARY_DIR})
     if(WIN32 AND NOT UNIX)
-        target_link_libraries(recap_server PRIVATE DLL)
+        target_link_libraries(recap_server PRIVATE RakNet)
     else()
         target_link_libraries(recap_server PRIVATE RakNetDynamic)
     endif()
