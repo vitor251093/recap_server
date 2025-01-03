@@ -41,7 +41,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: recap-server-ubuntu-x64
-          path: darkspore_server/AppDir/usr/bin/
+          path: |
+            darkspore_server/AppDir/usr/lib/
+            darkspore_server/AppDir/usr/bin/
 
       - name: Fetch AppImage tools
         run: |
@@ -52,7 +54,7 @@ jobs:
       - name: Build the AppImage
         run: |
           cd darkspore_server
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/AppDir/usr/bin
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/AppDir/usr/lib
           ./linuxdeploy-x86_64.AppImage --list-plugins
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
           rm ./linuxdeploy-x86_64.AppImage
