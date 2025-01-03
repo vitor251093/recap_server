@@ -70,10 +70,10 @@ index e15e1b6..098f764 100644
  add_subdirectory(DLL)
 \ No newline at end of file
 diff --git a/Lib/DLL/CMakeLists.txt b/Lib/DLL/CMakeLists.txt
-index 472dabd..23f1478 100644
+index 472dabd..cec46a6 100644
 --- a/Lib/DLL/CMakeLists.txt
 +++ b/Lib/DLL/CMakeLists.txt
-@@ -1,18 +1,19 @@
+@@ -1,18 +1,25 @@
 -cmake_minimum_required(VERSION 2.6)
 -project(DLL)
 +cmake_minimum_required(VERSION 3.0)
@@ -87,21 +87,35 @@ index 472dabd..23f1478 100644
 +	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D WIN32 /D _RAKNET_DLL /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
  ENDIF(WIN32 AND NOT UNIX)
  
- IF(WIN32 AND NOT UNIX)
- 	add_library(DLL SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
- 	target_link_libraries (DLL ${RAKNET_LIBRARY_LIBS})
-+	target_include_directories (DLL PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
- ELSE(WIN32 AND NOT UNIX)
- 	add_library(RakNetDynamic SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
- 	target_link_libraries (RakNetDynamic ${RAKNET_LIBRARY_LIBS})
-+	target_include_directories (RakNetDynamic PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
- 	INSTALL(TARGETS RakNetDynamic DESTINATION ${RakNet_SOURCE_DIR}/Lib/DLL)
- ENDIF(WIN32 AND NOT UNIX)
+-IF(WIN32 AND NOT UNIX)
+-	add_library(DLL SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+-	target_link_libraries (DLL ${RAKNET_LIBRARY_LIBS})
+-ELSE(WIN32 AND NOT UNIX)
+-	add_library(RakNetDynamic SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+-	target_link_libraries (RakNetDynamic ${RAKNET_LIBRARY_LIBS})
+-	INSTALL(TARGETS RakNetDynamic DESTINATION ${RakNet_SOURCE_DIR}/Lib/DLL)
+-ENDIF(WIN32 AND NOT UNIX)
++include(GNUInstallDirs)
++
++add_library(RakNet SHARED ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS})
++target_link_libraries (RakNet ${RAKNET_LIBRARY_LIBS})
++target_include_directories (RakNet PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
++install(TARGETS RakNet
++	EXPORT RakNet-targets
++	RUNTIME
++		DESTINATION ${CMAKE_INSTALL_BINDIR}
++	LIBRARY
++		DESTINATION ${CMAKE_INSTALL_LIBDIR}
++	ARCHIVE
++		DESTINATION ${CMAKE_INSTALL_LIBDIR}
++	PUBLIC_HEADER
++		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 diff --git a/Lib/LibStatic/CMakeLists.txt b/Lib/LibStatic/CMakeLists.txt
-index dd2d5d2..7c809fe 100644
+index dd2d5d2..0a5d78f 100644
 --- a/Lib/LibStatic/CMakeLists.txt
 +++ b/Lib/LibStatic/CMakeLists.txt
-@@ -1,10 +1,9 @@
+@@ -1,27 +1,20 @@
 -cmake_minimum_required(VERSION 2.6)
 -project(LibStatic)
 +cmake_minimum_required(VERSION 3.0)
@@ -111,26 +125,32 @@ index dd2d5d2..7c809fe 100644
  FILE(GLOB ALL_CPP_SRCS ${RakNet_SOURCE_DIR}/Source/*.cpp)
  
 -include_directories(${RakNet_SOURCE_DIR}/Source) 
- IF(WIN32 AND NOT UNIX)
- 	add_library(LibStatic STATIC ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
- ELSE(WIN32 AND NOT UNIX)
-@@ -12,13 +11,15 @@ ELSE(WIN32 AND NOT UNIX)
- ENDIF(WIN32 AND NOT UNIX)
+-IF(WIN32 AND NOT UNIX)
+-	add_library(LibStatic STATIC ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+-ELSE(WIN32 AND NOT UNIX)
+-	add_library(RakNetStatic STATIC ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS} readme.txt)
+-ENDIF(WIN32 AND NOT UNIX)
++add_library(RakNetStatic STATIC ${ALL_CPP_SRCS} ${ALL_HEADER_SRCS})
  
  IF(WIN32 AND NOT UNIX)
 -	SET( CMAKE_CXX_FLAGS "/D WIN32 /D _RAKNET_LIB /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
 +	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D WIN32 /D _RAKNET_LIB /D _CRT_NONSTDC_NO_DEPRECATE /D _CRT_SECURE_NO_DEPRECATE ")
  ENDIF(WIN32 AND NOT UNIX)
  
++target_include_directories (RakNetStatic PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
++target_link_libraries (RakNetStatic ${RAKNET_LIBRARY_LIBS})
++
  IF(WIN32 AND NOT UNIX)
-+	target_include_directories (LibStatic PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
- 	target_link_libraries (LibStatic ${RAKNET_LIBRARY_LIBS})
- 	set_target_properties(LibStatic PROPERTIES STATIC_LIBRARY_FLAGS "/NODEFAULTLIB:\"LIBCD.lib LIBCMTD.lib MSVCRT.lib\"" )
- ELSE(WIN32 AND NOT UNIX)
-+	target_include_directories (RakNetStatic PUBLIC $<BUILD_INTERFACE:${RakNet_SOURCE_DIR}/Source>)
- 	target_link_libraries (RakNetStatic ${RAKNET_LIBRARY_LIBS})
- 	INSTALL(TARGETS RakNetStatic DESTINATION ${RakNet_SOURCE_DIR}/Lib/LibStatic)
- 	INSTALL(FILES ${ALL_HEADER_SRCS} DESTINATION ${RakNet_SOURCE_DIR}/include/raknet)
+-	target_link_libraries (LibStatic ${RAKNET_LIBRARY_LIBS})
+-	set_target_properties(LibStatic PROPERTIES STATIC_LIBRARY_FLAGS "/NODEFAULTLIB:\"LIBCD.lib LIBCMTD.lib MSVCRT.lib\"" )
+-ELSE(WIN32 AND NOT UNIX)
+-	target_link_libraries (RakNetStatic ${RAKNET_LIBRARY_LIBS})
+-	INSTALL(TARGETS RakNetStatic DESTINATION ${RakNet_SOURCE_DIR}/Lib/LibStatic)
+-	INSTALL(FILES ${ALL_HEADER_SRCS} DESTINATION ${RakNet_SOURCE_DIR}/include/raknet)
++	set_target_properties(RakNetStatic PROPERTIES STATIC_LIBRARY_FLAGS "/NODEFAULTLIB:\"LIBCD.lib LIBCMTD.lib MSVCRT.lib\"" )
+ ENDIF(WIN32 AND NOT UNIX)
+ 
+ 
 diff --git a/Source/DS_BinarySearchTree.h b/Source/DS_BinarySearchTree.h
 index 49aad44..af3ccd2 100644
 --- a/Source/DS_BinarySearchTree.h

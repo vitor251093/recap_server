@@ -44,22 +44,13 @@ jobs:
         run: |
           cd darkspore_server
           export PATH=/c/Users/runneradmin/nasm:$PATH
-          cmake . -B build -G "Visual Studio 17 2022" -DCMAKE_PREFIX_PATH="C:\\hostedtoolcache\\windows\\perl\\5.30.3-thr\\x64\\bin"
+          cmake . -B build -G "Visual Studio 17 2022" -DCMAKE_PREFIX_PATH="C:\\hostedtoolcache\\windows\\perl\\5.30.3-thr\\x64\\bin" -DCMAKE_INSTALL_PREFIX=./dist
 
       - name: Build
         run: |
           cd darkspore_server/build
           export PATH=/c/Users/runneradmin/nasm:$PATH
-          cmake --build . --config Release
-
-      - name: Preparing artifacts
-        run: |
-          cd darkspore_server
-          mkdir dist
-          mv build/Release/recap_server.exe ./dist/
-          mv build/_deps/openssl-source-build/*.dll ./dist/
-          mv build/_deps/luajit-src/src/*.dll ./dist/
-          mv build/_deps/raknet-build/Lib/DLL/Release/*.dll ./dist/
+          cmake --build . --config Release --target install
 
       - uses: actions/upload-artifact@v4
         with:
