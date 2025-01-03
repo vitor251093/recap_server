@@ -10,7 +10,7 @@ RUN apt-get -y install build-essential
 RUN apt-get -y install git
 
 # Copying ReCap
-COPY . /recap
+COPY ./darkspore_server /recap
 
 # Building ReCap
 WORKDIR /recap
@@ -20,6 +20,6 @@ RUN cmake . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCM
 RUN cmake --build build
 RUN cp -r res/data build/data
 RUN cp -r res/static build/static
-RUN mkdir build/storage
+RUN mkdir -p build/storage
 
 ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
