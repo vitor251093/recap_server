@@ -9,6 +9,7 @@ on:
   pull_request:
     branches:
       - master
+      - original/cmake
 
 jobs:
   build:
