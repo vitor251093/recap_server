@@ -996,6 +996,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/noun/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {
@@ -1033,6 +1038,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/nonplayerclass/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {
@@ -1070,6 +1080,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/playerclass/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {
@@ -1107,6 +1122,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/npcaffix/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {
@@ -1148,6 +1168,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/classattributes/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {
@@ -1185,6 +1210,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/aidefinition/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {
@@ -1222,6 +1252,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/animation/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {
@@ -1259,6 +1294,11 @@ namespace Game {
 		size_t failed = 0;
 
 		const auto& dataPath = "data/phase/";
+		if (!std::filesystem::exists(dataPath)) {
+			std::cout << "Cannot open directory: " << dataPath << std::endl;
+			return false;
+		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
 			const auto& path = entry.path();
 			if (entry.is_regular_file() && path.extension() == ".xml") {

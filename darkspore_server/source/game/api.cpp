@@ -815,8 +815,11 @@ namespace Game {
 		
 		// themes
 		{
-			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) +
-				"www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
+			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) + "www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
+			if (!std::filesystem::exists(themesFolderPath)) {
+				std::cout << "Cannot open directory: " << themesFolderPath << std::endl;
+				return;
+			}
 
 			rapidjson::Value value(rapidjson::kArrayType);
 			for (const auto& entry : std::filesystem::directory_iterator(themesFolderPath)) {
