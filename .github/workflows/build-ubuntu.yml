@@ -33,7 +33,7 @@ jobs:
 
       - name: Build
         run: |
-          cd darkspore_server/build
+          cd darkspore_server
           cmake --build build
           DESTDIR=AppDir cmake --install build
 
