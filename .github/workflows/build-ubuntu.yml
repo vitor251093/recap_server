@@ -69,8 +69,8 @@ jobs:
         run: |
           cd darkspore_server
           mkdir dist_appimage/storage
-          cd -r res/data dist_appimage/data
-          cd -r res/static dist_appimage/storage/static
+          cp -r res/data dist_appimage/data
+          cp -r res/static dist_appimage/storage/static
 
       - uses: actions/upload-artifact@v4
         with:
