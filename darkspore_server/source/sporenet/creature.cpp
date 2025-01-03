@@ -265,6 +265,11 @@ namespace SporeNet {
 	// TemplateDatabase
 	void TemplateDatabase::Load() {
 		const auto& templateCreaturePath = Game::Config::Get(Game::ConfigValue::CONFIG_TEMPLATE_CREATURE_PATH);
+		if (!std::filesystem::exists(templateCreaturePath)) {
+			std::cout << "Cannot open directory: " << templateCreaturePath << std::endl;
+			return;
+		}
+
 		for (const auto& path : std::filesystem::directory_iterator(templateCreaturePath)) {
 			const auto& filePath = path.path();
 			if (path.is_regular_file() && filePath.extension() == ".xml") {
