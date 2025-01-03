@@ -68,7 +68,7 @@ CPMAddPackage(
     VERSION 2.1.0-beta3
     DOWNLOAD_ONLY YES)
 if(luajit_ADDED)
-    add_library(luajit STATIC IMPORTED)
+    add_library(luajit SHARED IMPORTED)
     file(GLOB_RECURSE LUAJIT_SOURCES "${luajit_SOURCE_DIR}/src/*.h" "${luajit_SOURCE_DIR}/src/*.c")
 
     if(MSVC)
