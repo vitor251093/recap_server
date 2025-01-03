@@ -52,9 +52,8 @@ jobs:
       - name: Build the AppImage
         run: |
           cd darkspore_server
-          mkdir -p AppDir/usr/lib/
-          cp build/_deps/openssl-source-build/libssl.so.1.1 AppDir/usr/lib/
-          cp build/_deps/openssl-source-build/libcrypto.so.1.1 AppDir/usr/lib/
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/_deps/openssl-source-build
+          ls "$(pwd)/build/_deps/openssl-source-build"
           ./linuxdeploy-x86_64.AppImage --list-plugins
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
 

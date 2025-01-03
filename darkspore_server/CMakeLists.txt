@@ -27,11 +27,6 @@ if(MSVC)
     target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
 endif()
 
-if (UNIX AND NOT APPLE)
-    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-    set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-endif()
-
 # Boost
 set(BOOST_INCLUDE_LIBRARIES "asio;bind;regex;beast")
 CPMAddPackage(
