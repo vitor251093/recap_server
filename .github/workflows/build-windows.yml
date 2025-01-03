@@ -53,6 +53,12 @@ jobs:
           export PATH=/c/Users/runneradmin/nasm:$PATH
           cmake --build . --config Release --target install
 
+      - name: Preparing artifacts
+        run: |
+          mkdir dist/bin/storage
+          cd -r darkspore_server/res/data dist/bin/data
+          cd -r darkspore_server/res/static dist/bin/storage/static
+
       - uses: actions/upload-artifact@v4
         with:
           name: recap-server-windows-x64
