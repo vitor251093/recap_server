@@ -22,6 +22,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -y install g++-13 cmake libfindbin-libs-perl libstdc++-13-dev build-essential git
+          sudo apt-get -y install libfuse2
 
       - name: Set LDFLAGS environment
         run: echo "LDFLAGS=-Wl,--copy-dt-needed-entries" >> $GITHUB_ENV
