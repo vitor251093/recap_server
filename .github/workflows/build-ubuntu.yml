@@ -36,7 +36,8 @@ jobs:
       - name: Build
         run: |
           cd darkspore_server
-          cmake --build build --target install
+          cmake --build build
+          cmake -DCOMPONENT=recap_server -Pbuild/cmake_install.cmake
 
       - uses: actions/upload-artifact@v4
         with:
