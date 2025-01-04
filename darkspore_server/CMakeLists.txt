@@ -58,13 +58,9 @@ target_include_directories(recap_server PRIVATE "${rapidjson_SOURCE_DIR}/include
 
 # OpenSSL
 CPMAddPackage(
-    GIT_REPOSITORY https://github.com/r0ptr/openssl-cmake.git
-    GIT_TAG 74ec40cedab235d566d4835a85fda5a0b02598df
-    OPTIONS "BUILD_SHARED_LIBS ON"
-            "OPENSSL_TARGET_VERSION 1.1.1b"
-            "OPENSSL_INSTALL ON"
-            "OPENSSL_INSTALL_TARGET install_sw"
-            "OPENSSL_CONFIGURE_OPTIONS --prefix=${CMAKE_INSTALL_PREFIX}"
+    GIT_REPOSITORY https://github.com/jimmy-park/openssl-cmake.git
+    GIT_TAG 9f0eb150763420789a38787554a839447ec5f88c
+    OPTIONS "OPENSSL_TARGET_VERSION 1.1.1b"
             "OPENSSL_ENABLE_PARALLEL OFF"
             "OPENSSL_BUILD_VERBOSE ON"
             "OPENSSL_CONFIGURE_VERBOSE ON")
