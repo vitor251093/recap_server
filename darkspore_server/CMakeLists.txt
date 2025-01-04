@@ -156,9 +156,10 @@ if(raknet_ADDED)
     set(RAKNET_PATCH "${CMAKE_CURRENT_LIST_DIR}/cmake/patches/RakNet-3.902.patch")
     execute_process(COMMAND git init WORKING_DIRECTORY ${raknet_SOURCE_DIR})
     execute_process(COMMAND git apply --ignore-whitespace --verbose ${RAKNET_PATCH} WORKING_DIRECTORY ${raknet_SOURCE_DIR})
-
+    set(RAKNET_BUILD_SHARED OFF)
+    set(RAKNET_BUILD_STATIC ON)
     add_subdirectory(${raknet_SOURCE_DIR} ${raknet_BINARY_DIR})
-    target_link_libraries(recap_server PRIVATE RakNet)
+    target_link_libraries(recap_server PRIVATE RakNetStatic)
 endif()
 
 if (UNIX AND NOT APPLE)
