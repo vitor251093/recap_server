@@ -854,15 +854,15 @@ namespace Game {
 
 		utils::json::Set(document, "success", true);
 
-		/*
-		auto actualPartsSize = Repository::CreatureParts::ListAll().size();
-		auto parts = Repository::Parts::ListAll();
-		uint64_t index = 1;
-		for (auto& part : parts) {
-			Repository::CreatureParts::Add(std::make_shared<Game::CreaturePart>(actualPartsSize + index++, part->rigblock_asset_id, user->get_account().id));
+		auto userParts = user->get_parts().data();
+		const auto& templateCreaturePartsPath = Game::Config::Get(Game::ConfigValue::CONFIG_TEMPLATE_CREATURE_PARTS_PATH);
+		if (std::filesystem::exists(templateCreaturePartsPath)) {
+			auto templatesList = utils::json::FromFile(templateCreaturePartsPath);
+			for (auto& templateNode : templatesList.GetArray()) {
+				auto templatePart = SporeNet::Part(templateNode);
+				userParts.push_back(templatePart);
+			}
 		}
-		Repository::CreatureParts::Save();
-		*/
 
 		// TODO: Unlocking all creatures from start to test; remove that in the future
 		const auto templates = SporeNet::Get().GetTemplateDatabase().List();

@@ -7,6 +7,7 @@
 #include <string_view>
 #include <vector>
 #include <pugixml.hpp>
+#include "utils/json.h"
 
 // SporeNet
 namespace SporeNet {
@@ -33,10 +34,14 @@ namespace SporeNet {
 
 			Part(uint32_t rigblock);
 			Part(const pugi::xml_node& node);
+			Part(rapidjson::Value& object);
 
 			bool Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
 			void WriteApi(pugi::xml_node& node, uint32_t index, bool offer) const;
+
+			bool Read(rapidjson::Value& object);
+			rapidjson::Value Write(rapidjson::Document::AllocatorType& allocator, uint32_t index, bool api = false) const;
 
 			std::string_view GetName() const;
 

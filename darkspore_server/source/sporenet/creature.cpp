@@ -358,12 +358,7 @@ namespace SporeNet {
 			return;
 		}
 
-		FILE* pFile = fopen(templateCreaturePath.c_str(), "rb");
-		char buffer[65536];
-		rapidjson::FileReadStream is(pFile, buffer, sizeof(buffer));
-		rapidjson::Document templatesList;
-		templatesList.ParseStream<0, rapidjson::UTF8<>, rapidjson::FileReadStream>(is);
-
+		auto templatesList = utils::json::FromFile(templateCreaturePath);
 		for (auto& templateNode : templatesList.GetArray()) {
 			TemplateCreaturePtr templateCreature = std::make_shared<TemplateCreature>();
 			templateCreature->ReadJson(templateNode);
