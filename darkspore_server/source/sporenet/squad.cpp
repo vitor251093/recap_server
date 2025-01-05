@@ -142,8 +142,10 @@ namespace SporeNet {
 		}
 
 		auto& squad = mSquads.emplace_back();
-		//squad.id = static_cast<uint32_t>(mSquads.size());
-		//squad.slot = squad.id;
+		// squad.mId = static_cast<uint32_t>(mSquads.size());
+		// squad.mSlot = squad.id;
+		// squad.mName = "Slot " + std::to_string(squad.mSlot);
+		// squad.mLocked = false;
 
 		return &squad;
 	}

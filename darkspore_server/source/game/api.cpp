@@ -846,13 +846,13 @@ namespace Game {
 		const auto& user = SporeNet::Get().GetUserManager().SignUp(name, mail, pass);
 		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
-			utils::json::Set(document, "stat", "error");
+			utils::json::Set(document, "success", false);
 			response.set(boost::beast::http::field::content_type, "application/json");
 			response.body() = utils::json::ToString(document);
 			return;
 		}
 
-		utils::json::Set(document, "stat", "ok");
+		utils::json::Set(document, "success", true);
 
 		/*
 		auto actualPartsSize = Repository::CreatureParts::ListAll().size();
