@@ -839,7 +839,7 @@ namespace Game {
 	void API::recap_game_registration(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto name = request.uri.parameter("name");
-		auto mail = request.uri.parameter("mail");
+		auto mail = request.uri.parameter("email");
 		auto pass = request.uri.parameter("pass");
 		auto avatar = request.uri.parameter("avatar");
 
