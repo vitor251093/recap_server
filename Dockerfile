@@ -18,9 +18,9 @@ ENV LDFLAGS="-Wl,--copy-dt-needed-entries"
 RUN rm -r ./build/ || true
 RUN cmake . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations -Wno-narrowing"
 RUN cmake --build build
+RUN mkdir -p build/storage/www
 RUN cp -r res/data build/data
-RUN cp -r res/static build/static
-RUN mkdir -p build/storage
+RUN cp -r res/static build/storage/www/static
 
 EXPOSE 42127 10041 8443 8999 9988 3659 80 8080 17502
 
