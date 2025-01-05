@@ -1,1 +1,1 @@
-docker build --tag recap-server .
+docker-compose up

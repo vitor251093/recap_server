@@ -9,20 +9,7 @@ RUN apt-get -y install libstdc++-13-dev
 RUN apt-get -y install build-essential
 RUN apt-get -y install git
 
-# Copying ReCap
-COPY ./darkspore_server /recap
-
-# Building ReCap
-WORKDIR /recap
-ENV LDFLAGS="-Wl,--copy-dt-needed-entries"
-RUN rm -r ./build/ || true
-RUN cmake . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations -Wno-narrowing"
-RUN cmake --build build
-RUN mkdir -p build/storage/www
-RUN cp -r res/data build/data
-RUN cp -r res/static build/storage/www/static
-
 EXPOSE 42127 10041 8443 8999 9988 3659 80 8080 17502
 
-WORKDIR /recap/build
-ENTRYPOINT [ "./recap_server" ]
+WORKDIR /recap
+ENTRYPOINT [ "sh", "./build_and_run.sh" ]

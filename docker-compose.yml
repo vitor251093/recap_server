@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  recap-server:
+    build: .
+    volumes:
+      - darkspore_server:/recap
+
+volumes:
+  darkspore_server:
