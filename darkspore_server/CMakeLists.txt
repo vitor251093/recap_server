@@ -27,12 +27,6 @@ if(MSVC)
     target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
 endif()
 
-include(GNUInstallDirs)
-install(TARGETS recap_server
-    EXPORT recap-targets
-    RUNTIME
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
-
 # Boost
 set(BOOST_INCLUDE_LIBRARIES "asio;bind;regex;beast")
 CPMAddPackage(
@@ -158,16 +152,27 @@ if(raknet_ADDED)
     target_link_libraries(recap_server PRIVATE RakNetStatic)
 endif()
 
+include(GNUInstallDirs)
+install(TARGETS recap_server
+    EXPORT recap-targets
+    RUNTIME
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT
+        recap_server)
+
 if (UNIX AND NOT APPLE)
     foreach(SIZE 16 32 48 64 128 256)
-        install(FILES ${CMAKE_SOURCE_DIR}/res/icon/recap_${SIZE}x${SIZE}.png
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/${SIZE}x${SIZE}/apps
-            RENAME com.resurrectioncapsule.server.png)
+        install(FILES res/icon/recap_${SIZE}x${SIZE}.png
+            DESTINATION share/icons/hicolor/${SIZE}x${SIZE}/apps
+            RENAME com.resurrectioncapsule.server.png
+            COMPONENT recap_server)
     endforeach()
 
-    install(FILES ${CMAKE_SOURCE_DIR}/res/com.resurrectioncapsule.server.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
-    install(TARGETS recap_server BUNDLE DESTINATION ${CMAKE_BINARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-
+    install(FILES res/com.resurrectioncapsule.server.desktop
+        DESTINATION share/applications
+        COMPONENT recap_server)
 elseif(APPLE)
-    install(TARGETS recap_server BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}/Applications")
+    install(TARGETS recap_server
+        BUNDLE DESTINATION "Applications"
+        COMPONENT recap_server)
 endif()

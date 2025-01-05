@@ -51,7 +51,8 @@ jobs:
         run: |
           cd darkspore_server/build
           export PATH=/c/Users/runneradmin/nasm:$PATH
-          cmake --build . --config Release --target install
+          cmake --build . --config Release
+          cmake -DCOMPONENT=recap_server -Pcmake_install.cmake
 
       - name: Adding needed files
         run: |
