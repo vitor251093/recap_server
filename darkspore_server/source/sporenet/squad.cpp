@@ -10,6 +10,9 @@ namespace SporeNet {
 	Squad::Squad(uint32_t id, uint32_t slot)
 		: mId(id), mSlot(slot) {}
 
+	Squad::Squad(uint32_t id, uint32_t slot, std::string name, bool locked)
+		: mId(id), mSlot(slot), mName(name), mLocked(locked) {}
+
 	bool Squad::Read(const pugi::xml_node& node) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "squad") {

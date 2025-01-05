@@ -901,18 +901,13 @@ namespace Game {
 		account.grantAllAccess = true;
 		account.grantOnlineAccess = true;
 
-		/*
+		auto squads = user->get_squads();
 		for (uint16_t squadSlot = 1; squadSlot <= 3; squadSlot++) {
 			uint16_t templateId = squadSlot - 1;
-			Squad squad1;
-			squad1.id = squadSlot;
-			squad1.slot = squadSlot;
-			squad1.name = "Slot " + std::to_string(squadSlot);
-			squad1.locked = false;
-			squad1.creatures.Add(templates[templateId]->id);
-			user->get_squads().data().push_back(squad1);
+			auto squad1 = std::make_shared<SporeNet::Squad>(squadSlot, squadSlot, "Slot " + std::to_string(squadSlot), false);
+			squad1->SetCreatureId(0, templates[templateId]->GetNoun());
+			squads.push_back(squad1);
 		}
-		*/
 
 		user->Save();
 
