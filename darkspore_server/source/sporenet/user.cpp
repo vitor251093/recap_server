@@ -614,10 +614,7 @@ namespace SporeNet {
 			srand(time(NULL));
 			user->get_account().id = rand();
 
-			if (user->Save()) {
-				sUsersByEmail.emplace(username, user);
-			}
-			else {
+			if (!user->Save()) {
 				user.reset();
 			}
 		}

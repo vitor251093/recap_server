@@ -7,6 +7,7 @@ cmake --build build || exit 1
 
 mkdir -p build/storage/www
 cp -r res/data build/data
+cp -r res/template_png build/storage/template_png
 cp -r res/static build/storage/www/static
 
 cd build

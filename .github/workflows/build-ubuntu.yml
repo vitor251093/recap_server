@@ -71,6 +71,7 @@ jobs:
           cd darkspore_server
           mkdir -p dist_appimage/storage/www
           cp -r res/data dist_appimage/data
+          cp -r res/template_png dist_appimage/storage/template_png
           cp -r res/static dist_appimage/storage/www/static
 
       - uses: actions/upload-artifact@v4
