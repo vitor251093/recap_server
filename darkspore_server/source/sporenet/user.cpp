@@ -196,6 +196,10 @@ namespace SporeNet {
 		// Empty
 	}
 
+	User::User(const std::string& name, const std::string& username, const std::string& password) : mName(name), mUsername(username), mPassword(password) {
+		// Empty
+	}
+
 	User::~User() {
 		// Empty
 	}
@@ -597,6 +601,29 @@ namespace SporeNet {
 	}
 
 	// UserManager
+	UserPtr UserManager::SignUp(const std::string& name, const std::string& username, const std::string& password) {
+		UserPtr user;
+
+		auto it = sUsersByEmail.find(username);
+		if (it != sUsersByEmail.end()) {
+			return NULL;
+		}
+		else {
+			user = std::make_shared<User>(name, username, password);
+
+			srand(time(NULL));
+			user->get_account().id = rand();
+
+			if (user->Save()) {
+				sUsersByEmail.emplace(username, user);
+			}
+			else {
+				user.reset();
+			}
+		}
+
+		return user;
+	}
 	std::tuple<UserPtr, bool, bool> UserManager::Login(const std::string& username, const std::string& password) {
 		UserPtr user;
 

@@ -111,6 +111,7 @@ namespace SporeNet {
 	class User {
 		public:
 			User(const std::string& username);
+			User(const std::string& name, const std::string& username, const std::string& password);
 			~User();
 
 			//
@@ -216,6 +217,7 @@ namespace SporeNet {
 	// UserManager
 	class UserManager {
 		public:
+			UserPtr SignUp(const std::string& name, const std::string& username, const std::string& password);
 			std::tuple<UserPtr, bool, bool> Login(const std::string& username, const std::string& password);
 
 			std::vector<UserPtr> GetUsers() const;

@@ -14,6 +14,7 @@
 #include "sporenet/vendor.h"
 
 #include "utils/functions.h"
+#include "utils/json.h"
 
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
@@ -836,14 +837,13 @@ namespace Game {
 	}
 
 	void API::recap_game_registration(HTTP::Session& session, HTTP::Response& response) {
-		/*
 		auto& request = session.get_request();
 		auto name = request.uri.parameter("name");
 		auto mail = request.uri.parameter("mail");
 		auto pass = request.uri.parameter("pass");
-		auto avatar = request.uri.parameteri("avatar");
+		auto avatar = request.uri.parameter("avatar");
 
-		const auto& user = Repository::Users::CreateUserWithNameMailAndPassword(name, mail, pass);
+		const auto& user = SporeNet::Get().GetUserManager().SignUp(name, mail, pass);
 		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
 			utils::json::Set(document, "stat", "error");
@@ -854,6 +854,7 @@ namespace Game {
 
 		utils::json::Set(document, "stat", "ok");
 
+		/*
 		auto actualPartsSize = Repository::CreatureParts::ListAll().size();
 		auto parts = Repository::Parts::ListAll();
 		uint64_t index = 1;
@@ -867,7 +868,7 @@ namespace Game {
 		user->get_account().creatureRewards = templates.size();
 		for (auto& templateCreature : templates) {
 			user->UnlockCreature(templateCreature->id);
-		}
+		}*/
 
 		// TODO: Unlocking everything from start to test; remove that in the future
 		SporeNet::Account& account = user->get_account();
@@ -879,7 +880,7 @@ namespace Game {
 		account.defaultDeckPveId = 1;
 		account.defaultDeckPvpId = 1;
 		account.level = 100;
-		account.avatarId = avatar;
+		account.avatarId = stoi(avatar);
 		account.dna = 10000000;
 		account.newPlayerInventory = 1;
 		account.newPlayerProgress = 9500;
@@ -899,6 +900,7 @@ namespace Game {
 		account.grantAllAccess = true;
 		account.grantOnlineAccess = true;
 
+		/*
 		for (uint16_t squadSlot = 1; squadSlot <= 3; squadSlot++) {
 			uint16_t templateId = squadSlot - 1;
 			Squad squad1;
@@ -909,12 +911,12 @@ namespace Game {
 			squad1.creatures.Add(templates[templateId]->id);
 			user->get_squads().data().push_back(squad1);
 		}
+		*/
 
-		Repository::Users::SaveUser(user);
+		user->Save();
 
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
-		*/
 	}
 
 	void API::recap_game_log(HTTP::Session& session, HTTP::Response& response) {
