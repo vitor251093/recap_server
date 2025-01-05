@@ -862,13 +862,14 @@ namespace Game {
 			Repository::CreatureParts::Add(std::make_shared<Game::CreaturePart>(actualPartsSize + index++, part->rigblock_asset_id, user->get_account().id));
 		}
 		Repository::CreatureParts::Save();
+		*/
 
 		// TODO: Unlocking all creatures from start to test; remove that in the future
-		std::vector<Repository::CreatureTemplatePtr> templates = Repository::CreatureTemplates::ListAll();
+		const auto templates = SporeNet::Get().GetTemplateDatabase().List();
 		user->get_account().creatureRewards = templates.size();
 		for (auto& templateCreature : templates) {
-			user->UnlockCreature(templateCreature->id);
-		}*/
+			user->UnlockCreature(templateCreature->GetNoun());
+		}
 
 		// TODO: Unlocking everything from start to test; remove that in the future
 		SporeNet::Account& account = user->get_account();

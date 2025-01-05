@@ -190,6 +190,8 @@ namespace SporeNet {
 			TemplateCreaturePtr Get(const std::string& name) const;
 			TemplateCreaturePtr Get(uint32_t noun) const;
 
+			std::vector<TemplateCreaturePtr> List() const;
+
 		private:
 			std::unordered_map<std::string, TemplateCreaturePtr> mTemplateCreatures;
 	};

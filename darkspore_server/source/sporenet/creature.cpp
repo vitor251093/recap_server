@@ -241,7 +241,7 @@ namespace SporeNet {
 
 	void TemplateCreature::ReadJson(rapidjson::Value& object) {
 		if (!object.IsObject()) return;
-		// mId = utils::json::GetUint(object, "id");
+		mNoun = utils::json::GetUint(object, "id");
 
 		mNameLocaleId = utils::json::GetString(object, "nameLocaleId");
 		mTextLocaleId = utils::json::GetString(object, "descLocaleId");
@@ -288,7 +288,7 @@ namespace SporeNet {
 
 	rapidjson::Value TemplateCreature::WriteJson(rapidjson::Document::AllocatorType& allocator) const {
 		rapidjson::Value object = utils::json::NewObject();
-		// utils::json::Set(object, "id", mId, allocator);
+		utils::json::Set(object, "id", mNoun, allocator);
 		
 		utils::json::Set(object, "nameLocaleId", mNameLocaleId, allocator);
 		utils::json::Set(object, "descLocaleId", mTextLocaleId, allocator);
@@ -383,6 +383,13 @@ namespace SporeNet {
 			}
 		}
 		return nullptr;
+	}
+	std::vector<TemplateCreaturePtr> TemplateDatabase::List() const {
+		std::vector<TemplateCreaturePtr> list;
+		for (const auto& [key, value] : mTemplateCreatures) {
+			list.push_back(value);
+		}
+		return list;
 	}
 
 	// Creature
