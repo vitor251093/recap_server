@@ -57,6 +57,7 @@ CPMAddPackage(
     OPTIONS "OPENSSL_TARGET_VERSION 1.1.1b"
             "OPENSSL_ENABLE_PARALLEL OFF"
             "OPENSSL_BUILD_VERBOSE ON"
+            "OPENSSL_CONFIGURE_OPTIONS enable-ssl3\\\\;enable-ssl3-method\\\\;enable-weak-ssl-ciphers"
             "OPENSSL_CONFIGURE_VERBOSE ON")
 target_link_libraries(recap_server PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL::applink)
 
