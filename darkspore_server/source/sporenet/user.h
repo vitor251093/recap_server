@@ -158,6 +158,8 @@ namespace SporeNet {
 
 			SquadPtr GetSquadById(uint32_t id) const;
 
+			void ResetSquads();
+
 			void UpdateSquad(uint32_t slot, const std::string& creatureStringList, bool pvp);
 
 			// Upgrades

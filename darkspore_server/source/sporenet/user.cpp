@@ -242,6 +242,19 @@ namespace SporeNet {
 		return nullptr;
 	}
 
+	void User::ResetSquads() {
+		mSquads.clear();
+
+		auto& squad1 = mSquads.emplace_back(std::make_shared<Squad>());
+		squad1->Reset(1);
+
+		auto& squad2 = mSquads.emplace_back(std::make_shared<Squad>());
+		squad2->Reset(2);
+
+		auto& squad3 = mSquads.emplace_back(std::make_shared<Squad>());
+		squad3->Reset(3);
+	}
+
 	void User::UpdateSquad(uint32_t slot, const std::string& creatureStringList, bool pvp) {
 		auto squad = GetSquadById(slot);
 		if (!squad) {

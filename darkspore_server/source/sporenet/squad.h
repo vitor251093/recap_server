@@ -12,7 +12,6 @@ namespace SporeNet {
 		public:
 			Squad() = default;
 			Squad(uint32_t id, uint32_t slot);
-			Squad(uint32_t id, uint32_t slot, std::string name, bool locked);
 
 			bool Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
@@ -28,6 +27,7 @@ namespace SporeNet {
 
 			bool IsLocked() const;
 
+			void Reset(uint32_t slot);
 			void Update(const std::string& creatureStringList, bool pvp);
 
 		private:

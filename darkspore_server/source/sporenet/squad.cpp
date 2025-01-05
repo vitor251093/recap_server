@@ -10,9 +10,6 @@ namespace SporeNet {
 	Squad::Squad(uint32_t id, uint32_t slot)
 		: mId(id), mSlot(slot) {}
 
-	Squad::Squad(uint32_t id, uint32_t slot, std::string name, bool locked)
-		: mId(id), mSlot(slot), mName(name), mLocked(locked) {}
-
 	bool Squad::Read(const pugi::xml_node& node) {
 		std::string_view nodeName = node.name();
 		if (nodeName != "squad") {
@@ -86,6 +83,13 @@ namespace SporeNet {
 		return mLocked;
 	}
 
+	void Squad::Reset(uint32_t slot) {
+		mId = slot;
+		mSlot = mId;
+		mName = "Slot " + std::to_string(mSlot);
+		mLocked = false;
+	}
+
 	void Squad::Update(const std::string& creatureStringList, bool pvp) {
 		auto creatureIds = utils::explode_string(creatureStringList, ',');
 		auto length = std::min<size_t>(creatureIds.size(), mCreatureIds.size());
@@ -142,10 +146,7 @@ namespace SporeNet {
 		}
 
 		auto& squad = mSquads.emplace_back();
-		// squad.mId = static_cast<uint32_t>(mSquads.size());
-		// squad.mSlot = squad.id;
-		// squad.mName = "Slot " + std::to_string(squad.mSlot);
-		// squad.mLocked = false;
+		// squad.Reset(mSquads.size() + 1);
 
 		return &squad;
 	}
