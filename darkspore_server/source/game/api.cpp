@@ -291,6 +291,9 @@ namespace Game {
 		auto& request = session.get_request();
 		std::string name = request.uri.resource();
 		if (name.ends_with("/")) name = name + "index.html";
+		if (name.find(".") == std::string::npos) {
+			name = name + "/index.html";
+		}
 		responseWithFileInStorageAtPath(session, response, path + name);
 	}
 
@@ -336,10 +339,6 @@ namespace Game {
 			} else {
 				response.result() = boost::beast::http::status::internal_server_error;
 			}
-		});
-
-		router->add("/assets/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "www/static");
 		});
 
 		// Launcher
@@ -597,15 +596,6 @@ namespace Game {
 			response.body() = std::move(path);
 		});
 
-		// Icon
-		router->add("/favicon.ico", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string storagePath = Config::Get(CONFIG_STORAGE_PATH);
-			std::string path = storagePath + "www/favicon.ico";
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
-		});
-
 		// Survey
 		router->add("/survey/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
@@ -618,22 +608,6 @@ namespace Game {
 			} else {
 				empty_xml_response(response);
 			}
-		});
-
-		// Web
-		router->add("/web/sporelabsgame/announceen", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = "<html><head><title>x</title></head><body>Announces</body></html>";
-		});
-
-		router->add("/web/sporelabsgame/manualen", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = "<html><head><title>Manual test 123</title></head><body>Why won't this game work?</body></html>";
-		});
-
-		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = "";
 		});
 
 		// QOS
@@ -751,41 +725,29 @@ namespace Game {
 			set_response_body(response, document, boost::beast::http::status::ok);
 		});
 
-		// Ingame Webviews
-		router->add("/ingame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) + "www/" + session.get_request().uri.resource();
-			/*
-			utils::string_replace(file_data, "{{isDev}}", "true");
-			utils::string_replace(file_data, "{{recap-version}}", "0.1");
-			utils::string_replace(file_data, "{{host}}", Game::Config::Get(Game::CONFIG_SERVER_HOST));
-			utils::string_replace(file_data, "{{game-mode}}", Game::Config::GetBool(Game::CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
-			*/
+		// Icon
+		router->add("/favicon.ico", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			std::string storagePath = Config::Get(CONFIG_STORAGE_PATH);
+			std::string path = storagePath + "www/favicon.ico";
+
 			response.version() |= 0x1000'0000;
 			response.body() = std::move(path);
+		});
+
+		router->add("/assets/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "www/static");
+		});
+
+		router->add("/web/sporelabsgame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "www/static");
 		});
 
 		router->add("/web/sporelabs/alerts", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// response.body() = utils::EAWebKit::loadFile("www/ingame/announce.html");
 		});
 
-		router->add("/web/sporelabsgame/announceen", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			// response.body() = utils::EAWebKit::loadFile("www/ingame/announce.html");
-		});
-
-		router->add("/web/sporelabsgame/register", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			// response.body() = utils::EAWebKit::loadFile("www/ingame/register.html");
-		});
-
-		router->add("/web/sporelabsgame/persona", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			// response.body() = utils::EAWebKit::loadFile("www/ingame/persona.html");
-		});
-
 		router->add("/web/sporelabs/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// response.body() = utils::EAWebKit::loadFile("www/ingame/resetpassword.html");
-		});
-
-		router->add("/web/sporelabsgame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			// response.body() = utils::EAWebKit::loadFile("www/ingame" + session.get_request().uri.resource().substr(18));
 		});
 
 		router->add("/web/sporelabs/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
