@@ -283,6 +283,24 @@ namespace Game {
 		// Empty
 	}
 
+	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response) {
+		responseWithFileInStorage(session, response, "");
+	}
+
+	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path) {
+		auto& request = session.get_request();
+		std::string name = request.uri.resource();
+		if (name.ends_with("/")) name = name + "index.html";
+		responseWithFileInStorageAtPath(session, response, path + name);
+	}
+
+	void API::responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path) {
+		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + path;
+
+		response.version() |= 0x1000'0000;
+		response.body() = std::move(wholePath);
+	}
+
 	void API::setup() {
 		const auto& router = GetApp().get_http_server()->get_router();
 
@@ -320,6 +338,10 @@ namespace Game {
 			}
 		});
 
+		router->add("/assets/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			responseWithFileInStorage(session, response, "www/static");
+		});
+
 		// Launcher
 		router->add("/bootstrap/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
@@ -349,10 +371,9 @@ namespace Game {
 				response.body() = skipLauncherScript;
 			} else {
 				std::string path = std::format(
-					"{}www/{}{}/index.html",
+					"{}www/{}index.html",
 					Config::Get(CONFIG_STORAGE_PATH),
-					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH),
-					currentTheme
+					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH)
 				);
 
 				std::string client_script(recapClientScript);
@@ -364,23 +385,6 @@ namespace Game {
 				response.set(boost::beast::http::field::content_type, "text/html");
 				response.body() = std::move(file_data);
 			}
-		});
-
-		router->add("/bootstrap/launcher/images/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			auto& request = session.get_request();
-
-			const std::string& resource = request.uri.resource();
-
-			std::string path = std::format(
-				"{}www/{}{}/images/{}",
-				Config::Get(CONFIG_STORAGE_PATH),
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH),
-				currentTheme,
-				resource.substr(resource.rfind('/') + 1)
-			);
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
 		});
 
 		router->add("/bootstrap/launcher/notes", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -397,6 +401,23 @@ namespace Game {
 
 			response.set(boost::beast::http::field::content_type, "text/html");
 			response.body() = std::move(file_data);
+		});
+
+		router->add("/bootstrap/launcher/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			std::string removablePrefix = "/bootstrap/launcher/";
+			auto& request = session.get_request();
+
+			const std::string& resource = request.uri.resource();
+
+			std::string path = std::format(
+				"{}www/{}{}",
+				Config::Get(CONFIG_STORAGE_PATH),
+				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH),
+				resource.substr(removablePrefix.size())
+			);
+
+			response.version() |= 0x1000'0000;
+			response.body() = std::move(path);
 		});
 
 		// Game
@@ -550,10 +571,9 @@ namespace Game {
 			if (auto account_id = request.uri.parameter<int64_t>("account_id"); account_id != 0) {
 				/*
 				std::string path = std::format(
-					"{}www/{}{}/index.html",
+					"{}www/{}index.html",
 					Config::Get(CONFIG_STORAGE_PATH),
-					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH),
-					currentTheme
+					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH)
 				);
 				*/
 			} else {
