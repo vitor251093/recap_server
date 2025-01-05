@@ -300,6 +300,18 @@ namespace Game {
 	void API::responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path) {
 		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + path;
 
+		if (wholePath.ends_with(".js") || wholePath.ends_with(".html")) {
+			std::string fileData = utils::get_file_text(wholePath);
+
+			utils::string_replace(fileData, "{{isDev}}", "true");
+			utils::string_replace(fileData, "{{recap-version}}", Config::RecapVersion());
+			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+			utils::string_replace(fileData, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
+
+			response.body() = fileData;
+			return;
+		}
+
 		response.version() |= 0x1000'0000;
 		response.body() = std::move(wholePath);
 	}

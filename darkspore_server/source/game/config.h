@@ -24,6 +24,8 @@ namespace Game {
 	// Config
 	class Config {
 		public:
+			static std::string RecapVersion();
+
 			static void Load(const std::string& path);
 
 			static const std::string& Get(ConfigValue key);

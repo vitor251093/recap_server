@@ -22,6 +22,10 @@ namespace Game {
 	// Config
 	std::array<std::string, CONFIG_END> Config::mConfig;
 
+	std::string Config::RecapVersion() {
+		return "0.2.3";
+	}
+
 	void Config::Load(const std::string& path) {
 		const auto get_path_value = [](std::string& value) -> std::string& {
 			if (value.back() != '/') {
