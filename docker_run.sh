@@ -1,1 +1,1 @@
-docker run -it recap-server bash
+docker run -P --network=host -it recap-server

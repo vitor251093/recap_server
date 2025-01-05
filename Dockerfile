@@ -24,4 +24,5 @@ RUN cp -r res/static build/storage/www/static
 
 EXPOSE 42127 10041 8443 8999 9988 3659 80 8080 17502
 
-ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+WORKDIR /recap/build
+ENTRYPOINT [ "./recap_server" ]
