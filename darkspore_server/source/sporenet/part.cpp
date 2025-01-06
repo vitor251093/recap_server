@@ -293,6 +293,10 @@ namespace SporeNet {
 		return mItems[index];
 	}
 
+	void Parts::AddPart(Part part) {
+		mItems.push_back(part);
+	}
+
 	void Parts::Read(const pugi::xml_node& node) {
 		for (const auto& part : node.child("parts")) {
 			mItems.emplace_back(part);

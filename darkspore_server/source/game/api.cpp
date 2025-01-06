@@ -844,23 +844,20 @@ namespace Game {
 		auto avatar = request.uri.parameter("avatar");
 
 		const auto& user = SporeNet::Get().GetUserManager().SignUp(name, mail, pass);
-		rapidjson::Document document = utils::json::NewDocumentObject();
 		if (user == NULL) {
+			rapidjson::Document document = utils::json::NewDocumentObject();
 			utils::json::Set(document, "success", false);
 			response.set(boost::beast::http::field::content_type, "application/json");
 			response.body() = utils::json::ToString(document);
 			return;
 		}
 
-		utils::json::Set(document, "success", true);
-
-		auto userParts = user->get_parts().data();
 		const auto& templateCreaturePartsPath = Game::Config::Get(Game::ConfigValue::CONFIG_TEMPLATE_CREATURE_PARTS_PATH);
 		if (std::filesystem::exists(templateCreaturePartsPath)) {
 			auto templatesList = utils::json::FromFile(templateCreaturePartsPath);
 			for (auto& templateNode : templatesList.GetArray()) {
 				auto templatePart = SporeNet::Part(templateNode);
-				userParts.push_back(templatePart);
+				user->AddPart(templatePart);
 			}
 		}
 
@@ -911,6 +908,8 @@ namespace Game {
 
 		user->Save();
 
+		rapidjson::Document document = utils::json::NewDocumentObject();
+		utils::json::Set(document, "success", true);
 		response.set(boost::beast::http::field::content_type, "application/json");
 		response.body() = utils::json::ToString(document);
 	}

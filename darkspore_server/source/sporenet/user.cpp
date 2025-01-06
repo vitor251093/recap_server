@@ -425,6 +425,10 @@ namespace SporeNet {
 		return true;
 	}
 
+	void User::AddPart(Part part) {
+		mParts.AddPart(part);
+	}
+
 	// Rooms
 	const RoomPtr& User::GetRoom() const {
 		return mRoom;

@@ -111,6 +111,8 @@ namespace SporeNet {
 			Part& GetPart(size_t index);
 			const Part& GetPart(size_t index) const;
 
+			void AddPart(Part part);
+
 			void Read(const pugi::xml_node& node);
 			void Write(pugi::xml_node& node) const;
 			void WriteApi(pugi::xml_node& node, bool offer) const;

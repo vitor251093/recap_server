@@ -165,6 +165,9 @@ namespace SporeNet {
 			// Upgrades
 			bool UnlockUpgrade(uint32_t unlockId);
 
+			// Parts
+			void AddPart(Part part);
+
 			// Auth
 			void Logout();
 

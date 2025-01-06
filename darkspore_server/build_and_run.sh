@@ -6,9 +6,9 @@ cmake --build build || exit 1
 #rm -r build/storage || true
 
 mkdir -p build/storage/www
-cp -r res/data build/data
-cp -r res/template_png build/storage/template_png
-cp -r res/static build/storage/www/static
+cp -r res/data build/
+cp -r res/template_png build/storage/
+cp -r res/static build/storage/www/
 
 cd build
 ./recap_server
