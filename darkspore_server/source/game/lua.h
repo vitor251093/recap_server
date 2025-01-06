@@ -116,6 +116,16 @@ namespace Game {
 
 			void RegisterMath();
 			void RegisterUtil();
+			void RegisterClient();
+			void RegisterAbility();
+			void RegisterPhysics();
+			void RegisterGameObject();
+			void RegisterAbilityAnimationSelection();
+			void RegisterDebug();
+			void RegisterNPCType();
+			void RegisterTuning();
+			void RegisterPlayer();
+			void RegisterLocomotion();
 
 		protected:
 			sol::state mState;

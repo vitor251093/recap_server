@@ -1111,6 +1111,16 @@ namespace Game {
 
 		RegisterMath();
 		RegisterUtil();
+		RegisterClient();
+		RegisterAbility();
+		RegisterPhysics();
+		RegisterGameObject();
+		RegisterAbilityAnimationSelection();
+		RegisterDebug();
+		RegisterNPCType();
+		RegisterTuning();
+		RegisterPlayer();
+		RegisterLocomotion();
 	}
 
 	void LuaBase::RegisterMath() {
@@ -1130,6 +1140,63 @@ namespace Game {
 		util["ToGUID"] = [](std::string value) {
 			return utils::to_number<uint64_t>(value, 0);
 		};
+
+		util["GetAsset"] = [](std::string value) {
+			if (value.ends_with(".Noun")) {
+				return value.substr(0, value.size() - 5);
+			}
+			throw std::runtime_error("GetAsset currently only supports .Noun values");
+		};
+	}
+
+	void LuaBase::RegisterClient() {
+		auto client = mState.create_named_table("nClient");
+		
+	}
+
+	void LuaBase::RegisterAbility() {
+		auto ability = mState.create_named_table("nAbility");
+		
+	}
+
+	void LuaBase::RegisterPhysics() {
+		auto physics = mState.create_named_table("nPhysics");
+		
+	}
+
+	void LuaBase::RegisterGameObject() {
+		auto gameObject = mState.create_named_table("nGameObject");
+		
+	}
+
+	void LuaBase::RegisterAbilityAnimationSelection() {
+		auto abilityAnimationSelection = mState.create_named_table("nAbilityAnimationSelection");
+		
+	}
+
+	void LuaBase::RegisterDebug() {
+		auto debug = mState.create_named_table("nDebug");
+		
+	}
+
+	void LuaBase::RegisterNPCType() {
+		auto npcType = mState.create_named_table("nNPCType");
+		
+	}
+
+	void LuaBase::RegisterTuning() {
+		auto tuning = mState.create_named_table("nTuning");
+		
+	}
+
+	void LuaBase::RegisterPlayer() {
+		auto player = mState.create_named_table("nPlayer");
+		
+	}
+
+	void LuaBase::RegisterLocomotion() {
+		auto locomotion = mState.create_named_table("nLocomotion");
+		
 	}
 
 	// Lua
