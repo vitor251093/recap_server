@@ -1141,11 +1141,8 @@ namespace Game {
 			return utils::to_number<uint64_t>(value, 0);
 		};
 
-		util["GetAsset"] = [](std::string value) {
-			if (value.ends_with(".Noun")) {
-				return value.substr(0, value.size() - 5);
-			}
-			throw std::runtime_error("GetAsset currently only supports .Noun values");
+		util["GetAsset"] = [this](std::string value) {
+			return mAssets[value];
 		};
 	}
 
@@ -1197,6 +1194,23 @@ namespace Game {
 	void LuaBase::RegisterLocomotion() {
 		auto locomotion = mState.create_named_table("nLocomotion");
 		
+	}
+
+	void LuaBase::LoadAssetsCatalog() {
+		std::string filepath = "data/assets_catalog.xml";
+
+		pugi::xml_document document;
+		if (!document.load_file(filepath.c_str())) {
+			return;
+		}
+
+		if (auto catalog = document.child("catalog")) {
+			for (const auto& entry : catalog.child("entry")) {
+				auto asset = utils::xml_get_text_node(entry, "asset");
+				auto sourceFile = utils::xml_get_text_node(entry, "source_file");
+				mAssets.insert(std::make_pair(asset, sourceFile));
+			}
+		}
 	}
 
 	// Lua

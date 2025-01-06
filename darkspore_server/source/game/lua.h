@@ -127,10 +127,14 @@ namespace Game {
 			void RegisterPlayer();
 			void RegisterLocomotion();
 
+			void LoadAssetsCatalog();
+
 		protected:
 			sol::state mState;
 
 		private:
+			std::unordered_map<std::string, std::string> mAssets;
+
 			std::vector<std::string> mDefaultPackages;
 	};
 

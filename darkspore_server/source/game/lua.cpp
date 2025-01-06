@@ -1683,6 +1683,8 @@ namespace Game {
 			mDefaultPackages.push_back(name.as<std::string>());
 		}
 
+		LoadAssetsCatalog();
+
 		// register base functions
 		RegisterFunctions();
 	}
