@@ -23,6 +23,55 @@
         <assetOverrideId>0</assetOverrideId>
         <targetMarkerId>1</targetMarkerId>
 
-        <componentData></componentData>
+        <componentData>
+            <teleporter>
+                <destinationMarkerId>1</destinationMarkerId>
+                <deferTriggerCreation>false</deferTriggerCreation>
+
+                <triggerVolume>
+                    <shape>1</shape>
+                    <triggerActivationType>0</triggerActivationType>
+
+                    <offset>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                    </offset>
+
+                    <onEnter></onEnter>
+                    <onExit></onExit>
+                    <onStay></onStay>
+                    <luaCallbackOnEnter></luaCallbackOnEnter>
+                    <luaCallbackOnExit></luaCallbackOnExit>
+                    <luaCallbackOnStay></luaCallbackOnStay>
+
+                    <timeToActivate>100.0</timeToActivate>
+
+                    <useGameObjectDimensions>true</useGameObjectDimensions>
+                    <isKinematic>true</isKinematic>
+                    <persistentTimer>true</persistentTimer>
+                    <triggerOnceOnly>true</triggerOnceOnly>
+                    <triggerIfNotBeaten>true</triggerIfNotBeaten>
+
+                    <boxWidth>10</boxWidth>
+                    <boxHeight>10</boxHeight>
+                    <boxLength>10</boxLength>
+
+                    <events>
+                        <onEnterEvent></onEnterEvent>
+                        <onExitEvent></onExitEvent>
+                    </events>
+                </triggerVolume>
+            </teleporter>
+            <interactable>
+                <interactableAbility></interactableAbility>
+                <startInteractEvent></startInteractEvent>
+                <endInteractEvent></endInteractEvent>
+                <optionalInteractEvent></optionalInteractEvent>
+
+                <numUsesAllowed>0</numUsesAllowed>
+                <challengeValue>0</challengeValue>
+            </interactable>
+        </componentData>
     </markers>
 </markerset>
