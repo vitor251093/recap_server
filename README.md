@@ -7,11 +7,14 @@ Join our [Discord](https://discord.gg/btfTw62) to keep in touch with the latest 
 
 <hr>
 
-## How to play
-You will find detailed instructions on the central repository.
+## How to play?
+You will find detailed instructions on the [central repository](https://github.com/vitor251093/resurrection-capsule).
 
-## How to build from scratch
+## How to build from scratch?
 See [BUILD.md](./BUILD.md) for build instructions.
+
+## How to report a bug or suggest a feature?
+Do it at the [central repository issues](https://github.com/vitor251093/resurrection-capsule/issues/new/choose).
 
 ## Credits
  * dalkon, for migrating the project from Python to C++, and developing the majority of the ReCap server code from 2019 to 2022
