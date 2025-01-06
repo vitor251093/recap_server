@@ -2,6 +2,8 @@ version: "3.8"
 services:
   recap-server:
     build: .
+    image: recap-server
+    container_name: recap-server
     volumes:
       - darkspore_server:/recap
 
