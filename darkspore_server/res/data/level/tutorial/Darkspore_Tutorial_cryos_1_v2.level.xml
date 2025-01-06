@@ -1,6 +1,28 @@
 <?xml version="1.0"?>
 <markerset>
     <markers>
-        
+        <markerName>AAA</markerName>
+        <markerId>1</markerId>
+        <nounDef>BBB</nounDef>
+
+        <pos>
+            <x>0</x>
+            <y>0</y>
+            <z>0</z>
+        </pos>
+        <rotDegrees>
+            <x>0</x>
+            <y>0</y>
+            <z>0</z>
+        </rotDegrees>
+        <scale>1.0</scale>
+
+        <visible>true</visible>
+        <createWithCollision>true</createWithCollision>
+
+        <assetOverrideId>0</assetOverrideId>
+        <targetMarkerId>1</targetMarkerId>
+
+        <componentData></componentData>
     </markers>
 </markerset>
