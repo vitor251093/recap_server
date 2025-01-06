@@ -3,13 +3,10 @@ name: Build ReCap (Ubuntu)
 on:
   push:
     branches:
-      - master
-      - feature/cmake
-      - original/cmake
+      - main
   pull_request:
     branches:
-      - master
-      - original/cmake
+      - main
 
 jobs:
   build:
