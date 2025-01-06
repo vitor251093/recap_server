@@ -12,4 +12,4 @@ RUN apt-get -y install git
 EXPOSE 42127 10041 8443 8999 9988 3659 80 8080 17502
 
 WORKDIR /recap
-ENTRYPOINT [ "sh", "./build_and_run.sh" ]
+ENTRYPOINT [ "sh", "./docker_build_and_run_server.sh" ]
