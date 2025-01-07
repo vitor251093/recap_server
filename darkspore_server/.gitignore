@@ -1,2 +1,5 @@
 # CMake build artifacts
 build/
+
+# User files
+res/data/user/*.xml
