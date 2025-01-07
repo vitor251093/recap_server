@@ -38,11 +38,6 @@ jobs:
           pacman -Syu --noconfirm
           pacman -S --needed --noconfirm git
 
-      - name: Set up rsync
-        run: |
-          pacman -Syu --noconfirm
-          pacman -S --needed --noconfirm rsync
-
       - name: Configure
         run: |
           cd darkspore_server
@@ -60,9 +55,9 @@ jobs:
         run: |
           cd darkspore_server
           mkdir -p dist/bin/storage/www
-          rsync -a res/data dist/bin/data
-          rsync -a res/template_png dist/bin/storage/template_png
-          rsync -a res/static dist/bin/storage/www/static
+          cp -r res/data dist/bin/data
+          cp -r res/template_png dist/bin/storage/template_png
+          cp -r res/static dist/bin/storage/www/static
 
       - uses: actions/upload-artifact@v4
         with:
