@@ -277,14 +277,16 @@ namespace Game {
 			name = name + "index.html";
 		}
 		std::string wholePath = path + name;
-		if (!std::filesystem::exists(wholePath)) {
+		if (!std::filesystem::exists(wholePath) || std::filesystem::is_directory(wholePath)) {
 			if (std::filesystem::exists(wholePath + "/index.html")) {
-				name = name + "/index.html";
+				wholePath = wholePath + "/index.html";
 			}
 			else {
 				return;
 			}
 		}
+
+		// printf("Returning file %s\n", wholePath.c_str());
 
 		if (wholePath.ends_with(".js") || wholePath.ends_with(".html")) {
 			std::string fileData = utils::get_file_text(wholePath);
