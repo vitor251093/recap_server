@@ -8,6 +8,7 @@ rm -r build/data || true
 cp -r res/data build/
 
 mkdir -p build/storage/user
+touch build/storage/user/PLACEHOLDER
 
 cd build
 ./recap_server

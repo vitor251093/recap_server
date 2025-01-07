@@ -58,6 +58,7 @@ jobs:
           cd darkspore_server
           cp -r res/data dist/bin/data
           mkdir -p dist/bin/storage/user
+          touch dist/bin/storage/user/PLACEHOLDER
 
       - uses: actions/upload-artifact@v4
         with:
