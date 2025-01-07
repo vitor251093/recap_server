@@ -3,11 +3,11 @@ cmake . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_
 cmake --build build || exit 1
 
 rm build/config.xml || true
-rm -r build/data || true
-#rm -r build/storage || true
 
+rm -r build/data || true
 cp -r res/data build/
-cp -r res/storage build/
+
+mkdir -p build/storage/user
 
 cd build
 ./recap_server
