@@ -284,22 +284,24 @@ namespace Game {
 		// Empty
 	}
 
-	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response) {
-		responseWithFileInStorage(session, response, "");
-	}
-
 	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path) {
 		auto& request = session.get_request();
 		std::string name = request.uri.resource();
-		if (name.ends_with("/")) name = name + "index.html";
-		if (name.find(".") == std::string::npos) {
-			name = name + "/index.html";
+		if (path.ends_with("/") && name.starts_with("/")) {
+			name = name.substr(1);
 		}
-		responseWithFileInStorageAtPath(session, response, path + name);
-	}
-
-	void API::responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path) {
-		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + path;
+		if (name.ends_with("/")) {
+			name = name + "index.html";
+		}
+		std::string wholePath = path + name;
+		if (!std::filesystem::exists(wholePath)) {
+			if (std::filesystem::exists(wholePath + "/index.html")) {
+				name = name + "/index.html";
+			}
+			else {
+				return;
+			}
+		}
 
 		if (wholePath.ends_with(".js") || wholePath.ends_with(".html")) {
 			std::string fileData = utils::get_file_text(wholePath);
@@ -308,6 +310,9 @@ namespace Game {
 			utils::string_replace(fileData, "{{recap-version}}", Config::RecapVersion());
 			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 			utils::string_replace(fileData, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
+			utils::string_replace(fileData, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
+			utils::string_replace(fileData, "{{display-latest-version}}", "none");
+			utils::string_replace(fileData, "{{latest-version}}", "yes");
 
 			response.body() = fileData;
 			return;
@@ -335,11 +340,7 @@ namespace Game {
 			const auto& request = session.get_request();
 
 			auto method = request.uri.parameter("method");
-			if (method == "api.launcher.setTheme") {
-				recap_launcher_setTheme(session, response);
-			} else if (method == "api.launcher.listThemes") {
-				recap_launcher_listThemes(session, response);
-			} else if (method == "api.game.registration") {
+			if (method == "api.game.registration") {
 				recap_game_registration(session, response);
 			} else if (method == "api.game.log") {
 				recap_game_log(session, response);
@@ -376,60 +377,24 @@ namespace Game {
 
 		router->add("/bootstrap/launcher/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			auto& request = session.get_request();
-
 			auto version = request.uri.parameter("version");
+
 			if (Config::GetBool(CONFIG_SKIP_LAUNCHER)) {
 				response.set(boost::beast::http::field::content_type, "text/html");
 				response.body() = skipLauncherScript;
 			} else {
 				std::string path = std::format(
-					"{}www/{}index.html",
-					Config::Get(CONFIG_STORAGE_PATH),
-					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH)
+					"{}bootstrap/launcher/wrapper.html",
+					Config::Get(CONFIG_WWW_STATIC_PATH)
 				);
 
-				std::string client_script(recapClientScript);
-				utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-
-				std::string file_data = utils::get_file_text(path);
-				utils::string_replace(file_data, "</head>", client_script + "</head>");
-
-				response.set(boost::beast::http::field::content_type, "text/html");
-				response.body() = std::move(file_data);
+				response.version() |= 0x1000'0000;
+				response.body() = std::move(path);
 			}
 		});
 
-		router->add("/bootstrap/launcher/notes", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) +
-				"www/" +
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH);
-
-			std::string file_data = utils::get_file_text(path);
-			utils::string_replace(file_data, "{{recap-version}}", "0.1");
-			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
-			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
-			utils::string_replace(file_data, "{{display-latest-version}}", "none");
-			utils::string_replace(file_data, "{{latest-version}}", "yes");
-
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = std::move(file_data);
-		});
-
 		router->add("/bootstrap/launcher/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string removablePrefix = "/bootstrap/launcher/";
-			auto& request = session.get_request();
-
-			const std::string& resource = request.uri.resource();
-
-			std::string path = std::format(
-				"{}www/{}{}",
-				Config::Get(CONFIG_STORAGE_PATH),
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH),
-				resource.substr(removablePrefix.size())
-			);
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		// Game
@@ -748,11 +713,11 @@ namespace Game {
 		});
 
 		router->add("/assets/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "www/static");
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		router->add("/web/sporelabsgame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "www/static");
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		router->add("/web/sporelabs/alerts", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -776,64 +741,6 @@ namespace Game {
 
 	void API::empty_json_response(HTTP::Response& response) {
 		response.set(boost::beast::http::field::content_type, "application/json");
-	}
-
-	void API::recap_launcher_setTheme(HTTP::Session& session, HTTP::Response& response) {
-		/*
-		theme = requestUtils.get(request, 'theme', str)
-		server.setActiveTheme(theme)
-		*/
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Document document;
-
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
-
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
-		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
-	}
-
-	void API::recap_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Document document;
-		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
-		
-		// themes
-		{
-			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) + "www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
-			if (!std::filesystem::exists(themesFolderPath)) {
-				std::cout << "Cannot open directory: " << themesFolderPath << std::endl;
-				return;
-			}
-
-			rapidjson::Value value(rapidjson::kArrayType);
-			for (const auto& entry : std::filesystem::directory_iterator(themesFolderPath)) {
-				if (entry.is_directory()) {
-					value.PushBack(rapidjson::Value(entry.path().filename().string(), allocator), allocator);
-				}
-			}
-
-			document.AddMember(rapidjson::Value("themes"), value, allocator);
-		}
-
-		// selectedTheme
-		document.AddMember(rapidjson::Value("selectedTheme"), rapidjson::Value(currentTheme, allocator), allocator);
-
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
-		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
 	}
 
 	void API::recap_game_registration(HTTP::Session& session, HTTP::Response& response) {
