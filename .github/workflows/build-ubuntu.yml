@@ -1,12 +1,14 @@
-name: Build ReCap (Ubuntu)
+name: Build ReCap Server (Ubuntu)
 
 on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
   build:
