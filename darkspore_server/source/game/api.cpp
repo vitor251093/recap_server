@@ -262,23 +262,6 @@ namespace Game {
 </html>
 )";
 
-	constexpr std::string_view recapClientScript = R"(
-<script>
-	var ReCapClient = {};
-	ReCapClient.getRequest = function(url, callback) {
-		var xmlHttp = new XMLHttpRequest(); 
-		xmlHttp.onload = function() {
-			callback(xmlHttp.responseText);
-		}
-		xmlHttp.open("GET", url, true);
-		xmlHttp.send(null);
-	};
-	ReCapClient.request = function(name, params, callback) {
-		ReCapClient.getRequest("http://{{host}}/recap/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback);
-	};
-</script>
-)";
-
 	// API
 	API::API(const std::string& version) : mVersion(version) {
 		// Empty
@@ -515,16 +498,7 @@ namespace Game {
 
 		// Png
 		router->add("/template_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			const auto& request = session.get_request();
-
-			std::string storagePath = "data/";
-			std::string path = storagePath + request.uri.resource();
-			if (!std::filesystem::exists(path)) {
-				path = storagePath + "default.png";
-			}
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		router->add("/creature_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
