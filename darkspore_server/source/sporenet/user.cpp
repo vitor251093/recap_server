@@ -3,6 +3,7 @@
 #include "user.h"
 #include "instance.h"
 
+#include "game/config.h"
 #include "blaze/component/associationcomponent.h"
 #include "utils/functions.h"
 
@@ -445,7 +446,7 @@ namespace SporeNet {
 	}
 
 	bool User::Load() {
-		std::string filepath = "data/user/" + mUsername + ".xml";
+		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "user/" + mUsername + ".xml";
 
 		pugi::xml_document document;
 		if (!document.load_file(filepath.c_str())) {
@@ -490,7 +491,7 @@ namespace SporeNet {
 	}
 
 	bool User::Save() {
-		std::string filepath = "data/user/" + mUsername + ".xml";
+		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "user/" + mUsername + ".xml";
 
 		pugi::xml_document document;
 		if (auto docUser = document.append_child("user")) {

@@ -56,10 +56,8 @@ jobs:
       - name: Adding needed files
         run: |
           cd darkspore_server
-          mkdir -p dist/bin/storage/www
           cp -r res/data dist/bin/data
-          cp -r res/template_png dist/bin/storage/template_png
-          cp -r res/static dist/bin/storage/www/static
+          cp -r res/storage dist/bin/storage
 
       - uses: actions/upload-artifact@v4
         with:

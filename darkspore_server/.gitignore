@@ -2,4 +2,4 @@
 build/
 
 # User files
-res/data/user/*.xml
+res/storage/user/*.xml

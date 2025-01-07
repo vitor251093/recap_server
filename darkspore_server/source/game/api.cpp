@@ -517,7 +517,7 @@ namespace Game {
 		router->add("/template_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			const auto& request = session.get_request();
 
-			std::string storagePath = Config::Get(CONFIG_STORAGE_PATH);
+			std::string storagePath = "data/";
 			std::string path = storagePath + request.uri.resource();
 			if (!std::filesystem::exists(path)) {
 				path = storagePath + "default.png";

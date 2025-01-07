@@ -65,7 +65,7 @@ namespace Game {
 		mConfig[CONFIG_SINGLEPLAYER_ONLY] = "true";
 		mConfig[CONFIG_SERVER_HOST] = "127.0.0.1";
 		mConfig[CONFIG_STORAGE_PATH] = "storage/";
-		mConfig[CONFIG_WWW_STATIC_PATH] = "storage/www/static/";
+		mConfig[CONFIG_WWW_STATIC_PATH] = "data/www/static/";
 		mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = "index.html";
 		mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = "data/creature_templates.json";
 		mConfig[CONFIG_TEMPLATE_CREATURE_PARTS_PATH] = "data/creature_parts_templates.json";
