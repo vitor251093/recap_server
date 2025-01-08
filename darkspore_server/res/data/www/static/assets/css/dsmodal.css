@@ -19,6 +19,8 @@
 }
 .modal .modal-window .modal-message {
     margin-top: 10px;
+    height: 0px;
+    padding-bottom: 10px;
 }
 
 .modal .modal-window .modal-title,
