@@ -10,6 +10,8 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 project(recap_server VERSION 1.0.0)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 # CPM package manager setup
 include(cmake/get_cpm.cmake)
 
@@ -21,10 +23,12 @@ add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS -DBOOST_ASIO_DISABLE_CONCEPTS)
 add_definitions(-DRAPIDJSON_HAS_STDSTRING)
 add_definitions(-DSOL_STRINGS_ARE_NUMBERS=1 -DSOL_SAFE_FUNCTION=1 -DSOL_LUAJIT=1 -DSOL_EXCEPTIONS_SAFE_PROPAGATION=1)
 
-add_executable(recap_server ${RECAP_SOURCES} ${RECAP_SOURCES})
+add_executable(recap_server ${RECAP_HEADERS} ${RECAP_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RECAP_HEADERS} ${RECAP_SOURCES})
 target_include_directories(recap_server PRIVATE source)
 if(MSVC)
     target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
+    set_target_properties(recap_server PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE /INCREMENTAL:NO /Brepro")
 endif()
 
 # Boost
