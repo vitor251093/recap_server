@@ -10,12 +10,6 @@
         <link rel="stylesheet" type="text/css" href="style.css">
         <script type="text/javascript">
 
-            /// if the servers are healthy and responding
-            var mServerHealth = false;
-
-            /// if the servers are closed at our whim rather than a down service
-            var mServerMaintenance = false;
-
             var localizedstringmap = {
                 "FAILED_TO_CONNECT" : "CONNECTION FAILED",
                 "PLAY" : "PLAY",
@@ -34,12 +28,11 @@
              * action if appropriate
              * @param bool health if our servers are healthy and reachable
              * @param bool maintenance if the servers are down for maintenance/temporary reasons
-             * @param bool throttle if the game is currently being throttled and not letting eople in
              */
             function setServerStatus(health, maintenance)
             {
-                mServerHealth = health;
-                mServerMaintenance = maintenance;
+                var mServerHealth = health;
+                var mServerMaintenance = maintenance;
 
 
                 // replace the light with our more up to date knowledge
@@ -90,9 +83,6 @@
                 setLocalizedText();
 
                 refreshStatus();
-
-                // refresh the launcher every 5 minutes
-                setInterval("refreshStatus()", 300000);
 
                 $("#darkspore_version").html(DarksporeVersion);
             }
