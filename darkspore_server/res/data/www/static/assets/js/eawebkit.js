@@ -1,4 +1,4 @@
-// Those are required to the index file from the bootstrap/launcher folder doesn't
+// Those are required by the bootstrap/launcher's index file, so it doesn't
 // need to make a manual bridge between itself and the wrapper file
 var Client = (typeof Client === 'undefined') ? (window.parent || {}).Client : Client;
 var DarksporeVersion = (window.parent || {}).DarksporeVersion;

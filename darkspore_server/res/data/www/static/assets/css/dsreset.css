@@ -29,7 +29,8 @@ input, select, textarea {
 }
 
 input[type="text"],
-input[type="email"] {
+input[type="email"],
+input[type="password"] {
 	resize: none;
 	border: transparent;
 	background-color: #282729;
