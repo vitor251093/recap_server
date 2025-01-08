@@ -1675,7 +1675,7 @@ namespace Game {
 		sol::set_default_state(mState);
 
 		// set package path
-		LoadBuffer(R"(package.path = package.path .. ";./data/lua/?.lua")");
+		LoadBuffer(R"(package.path = package.path .. ";./data/serverdata/lua/?.lua")");
 
 		// Get default packages
 		sol::table packagesLoaded = mState["package"]["loaded"];
@@ -1788,7 +1788,7 @@ namespace Game {
 		LuaBase::Initialize();
 
 		// Load defaults & abilities
-		LoadFile("data/lua/global.lua");
+		LoadFile("data/serverdata/lua/global.lua");
 		LoadAbilities();
 	}
 
@@ -1810,7 +1810,7 @@ namespace Game {
 	}
 
 	void GlobalLua::LoadAbilities() {
-		const auto& dataPath = "data/lua/ability/";
+		const auto& dataPath = "data/serverdata/Abilities/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot load scripts." << std::endl;
 			return;
@@ -1867,7 +1867,7 @@ namespace Game {
 		RegisterEnums();
 		RegisterFunctions();
 
-		LoadFile("data/lua/global.lua");
+		LoadFile("data/serverdata/lua/global.lua");
 	}
 
 	void Lua::Reload() {
