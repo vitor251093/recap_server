@@ -895,6 +895,9 @@ namespace Game {
 		const auto& request = session.get_request();
 		const auto& host = Config::Get(CONFIG_SERVER_HOST);
 
+		auto build = request.uri.parameter("build");
+		if (build.empty()) { build = "5.3.0.127"; }
+
 		auto [document, docResponse] = create_xml_response();
 		add_common_keys(docResponse);
 
@@ -910,7 +913,7 @@ namespace Game {
 				utils::xml_add_text_node(config, "http_secure", "N");
 				utils::xml_add_text_node(config, "liferay_host", host);
 				utils::xml_add_text_node(config, "launcher_action", 2);
-				utils::xml_add_text_node(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + mVersion);
+				utils::xml_add_text_node(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + build);
 			}
 		}
 
