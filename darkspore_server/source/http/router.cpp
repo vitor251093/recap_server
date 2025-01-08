@@ -117,7 +117,6 @@ namespace HTTP {
 
 		for (const auto& route : mRoutes) {
 			if (route.mMethod == request.data.method() && route.equals(request.uri.resource())) {
-				response.result() = boost::beast::http::status::ok;
 				response.version() = request.data.version();
 				response.keep_alive() = request.data.keep_alive();
 				response.method() = request.data.method();

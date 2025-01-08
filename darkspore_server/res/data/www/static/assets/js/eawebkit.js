@@ -61,7 +61,7 @@ var Utils = {
 // can't add .onerror, because 5.3.0.15 will always call it
 
 var HTTP = {
-	get: function(url, obj, callback) {
+	get: function(url, obj, onSuccess, onError) {
 		var params = obj;
 		if (params !== undefined && typeof params === 'object') {
 			var str = [];
@@ -74,19 +74,27 @@ var HTTP = {
 
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onreadystatechange = function () {
-			if (xmlHttp.status === 200 && callback !== undefined) {
-				callback(xmlHttp.responseText);
+			if (xmlHttp.readyState === 4) {
+				if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
+					if (onSuccess) onSuccess(xmlHttp.responseText);
+				} else {
+					if (onError) onError(xmlHttp.status, xmlHttp.responseText);
+				}
 			}
 		};
 		xmlHttp.open("GET", url + (params === undefined ? "" : ("?" + params)), true);
 		xmlHttp.send(null);
 	},
-	post: function(url, obj, callback) {
+	post: function(url, obj, onSuccess, onError) {
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onreadystatechange = function () {
-			if (xmlHttp.status === 200 && callback !== undefined) {
-				callback(xmlHttp.responseText);
-			}
+			if (xmlHttp.readyState === 4) {
+                if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
+                    if (onSuccess) onSuccess(xmlHttp.responseText);
+                } else {
+                    if (onError) onError(xmlHttp.status, xmlHttp.responseText);
+                }
+            }
 		};
 		xmlHttp.open("POST", url, true);
 		xmlHttp.setRequestHeader("Content-Type", "application/json");

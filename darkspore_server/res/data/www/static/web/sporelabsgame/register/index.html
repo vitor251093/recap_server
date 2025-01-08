@@ -104,12 +104,11 @@
                     "pass":  $("#password").val(),
                     "avatar": selectedAvatar
                 }, function(data) {
-                    var response = JSON.parse(data);
-                    if (response.success === true) {
-                        showModal('Success', "Account created successfully!", true);
-                    } else {
-                        showModal('Error', "Your account could not be created!", false);
-                    }
+                    showModal('Success', "Account created successfully!", true);
+                }, function(status, errorData) {
+                    var response = JSON.parse(errorData);
+                    var message = response.message
+                    showModal('Error', "Your account could not be created: " + message, false);
                 });
             }
         </script>
