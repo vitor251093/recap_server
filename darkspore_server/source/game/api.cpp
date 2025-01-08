@@ -262,44 +262,32 @@ namespace Game {
 </html>
 )";
 
-	constexpr std::string_view recapClientScript = R"(
-<script>
-	var ReCapClient = {};
-	ReCapClient.getRequest = function(url, callback) {
-		var xmlHttp = new XMLHttpRequest(); 
-		xmlHttp.onload = function() {
-			callback(xmlHttp.responseText);
-		}
-		xmlHttp.open("GET", url, true);
-		xmlHttp.send(null);
-	};
-	ReCapClient.request = function(name, params, callback) {
-		ReCapClient.getRequest("http://{{host}}/recap/api?method=" + name + (params === undefined ? "" : ("&" + params)), callback);
-	};
-</script>
-)";
-
 	// API
 	API::API(const std::string& version) : mVersion(version) {
 		// Empty
 	}
 
-	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response) {
-		responseWithFileInStorage(session, response, "");
-	}
-
 	void API::responseWithFileInStorage(HTTP::Session& session, HTTP::Response& response, std::string path) {
 		auto& request = session.get_request();
 		std::string name = request.uri.resource();
-		if (name.ends_with("/")) name = name + "index.html";
-		if (name.find(".") == std::string::npos) {
-			name = name + "/index.html";
+		if (path.ends_with("/") && name.starts_with("/")) {
+			name = name.substr(1);
 		}
-		responseWithFileInStorageAtPath(session, response, path + name);
-	}
+		if (name.ends_with("/")) {
+			name = name + "index.html";
+		}
+		std::string wholePath = path + name;
+		if (!std::filesystem::exists(wholePath) || std::filesystem::is_directory(wholePath)) {
+			if (std::filesystem::exists(wholePath + "/index.html")) {
+				wholePath = wholePath + "/index.html";
+			}
+			else {
+				response.result() = boost::beast::http::status::not_found;
+				return;
+			}
+		}
 
-	void API::responseWithFileInStorageAtPath(HTTP::Session& session, HTTP::Response& response, std::string path) {
-		std::string wholePath = Config::Get(CONFIG_STORAGE_PATH) + path;
+		// printf("Returning file %s\n", wholePath.c_str());
 
 		if (wholePath.ends_with(".js") || wholePath.ends_with(".html")) {
 			std::string fileData = utils::get_file_text(wholePath);
@@ -308,12 +296,17 @@ namespace Game {
 			utils::string_replace(fileData, "{{recap-version}}", Config::RecapVersion());
 			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
 			utils::string_replace(fileData, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
+			utils::string_replace(fileData, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
+			utils::string_replace(fileData, "{{display-latest-version}}", "none");
+			utils::string_replace(fileData, "{{latest-version}}", "yes");
 
+			response.result() = boost::beast::http::status::ok;
 			response.body() = fileData;
 			return;
 		}
 
 		response.version() |= 0x1000'0000;
+		response.result() = boost::beast::http::status::ok;
 		response.body() = std::move(wholePath);
 	}
 
@@ -322,24 +315,23 @@ namespace Game {
 
 		// Routing
 		router->add("/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [](HTTP::Session& session, HTTP::Response& response) {
+			response.result() = boost::beast::http::status::ok;
 			std::cout << "Got API route." << std::endl;
 		});
 
 		// Telemetry
 		router->add("/telemetryevent", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [](HTTP::Session& session, HTTP::Response& response) {
+			response.result() = boost::beast::http::status::ok;
 			std::cout << "Got telemetry event." << std::endl;
 		});
 
 		// ReCap
 		router->add("/recap/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			response.result() = boost::beast::http::status::ok;
 			const auto& request = session.get_request();
 
 			auto method = request.uri.parameter("method");
-			if (method == "api.launcher.setTheme") {
-				recap_launcher_setTheme(session, response);
-			} else if (method == "api.launcher.listThemes") {
-				recap_launcher_listThemes(session, response);
-			} else if (method == "api.game.registration") {
+			if (method == "api.game.registration") {
 				recap_game_registration(session, response);
 			} else if (method == "api.game.log") {
 				recap_game_log(session, response);
@@ -356,6 +348,7 @@ namespace Game {
 
 		// Launcher
 		router->add("/bootstrap/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			response.result() = boost::beast::http::status::ok;
 			auto& request = session.get_request();
 
 			auto version = request.uri.parameter("version");
@@ -375,65 +368,32 @@ namespace Game {
 		});
 
 		router->add("/bootstrap/launcher/", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			response.result() = boost::beast::http::status::ok;
 			auto& request = session.get_request();
-
 			auto version = request.uri.parameter("version");
+
 			if (Config::GetBool(CONFIG_SKIP_LAUNCHER)) {
 				response.set(boost::beast::http::field::content_type, "text/html");
 				response.body() = skipLauncherScript;
 			} else {
 				std::string path = std::format(
-					"{}www/{}index.html",
-					Config::Get(CONFIG_STORAGE_PATH),
-					Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH)
+					"{}bootstrap/launcher/wrapper.html",
+					Config::Get(CONFIG_WWW_STATIC_PATH)
 				);
 
-				std::string client_script(recapClientScript);
-				utils::string_replace(client_script, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
-
-				std::string file_data = utils::get_file_text(path);
-				utils::string_replace(file_data, "</head>", client_script + "</head>");
-
-				response.set(boost::beast::http::field::content_type, "text/html");
-				response.body() = std::move(file_data);
+				response.version() |= 0x1000'0000;
+				response.body() = std::move(path);
 			}
 		});
 
-		router->add("/bootstrap/launcher/notes", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string path = Config::Get(CONFIG_STORAGE_PATH) +
-				"www/" +
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH);
-
-			std::string file_data = utils::get_file_text(path);
-			utils::string_replace(file_data, "{{recap-version}}", "0.1");
-			utils::string_replace(file_data, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
-			utils::string_replace(file_data, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
-			utils::string_replace(file_data, "{{display-latest-version}}", "none");
-			utils::string_replace(file_data, "{{latest-version}}", "yes");
-
-			response.set(boost::beast::http::field::content_type, "text/html");
-			response.body() = std::move(file_data);
-		});
-
 		router->add("/bootstrap/launcher/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			std::string removablePrefix = "/bootstrap/launcher/";
-			auto& request = session.get_request();
-
-			const std::string& resource = request.uri.resource();
-
-			std::string path = std::format(
-				"{}www/{}{}",
-				Config::Get(CONFIG_STORAGE_PATH),
-				Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH),
-				resource.substr(removablePrefix.size())
-			);
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		// Game
 		router->add("/game/api", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			response.result() = boost::beast::http::status::ok;
+
 			// TODO: fix all of these things, its so ugly
 			auto& request = session.get_request();
 
@@ -536,8 +496,6 @@ namespace Game {
 				game_deck_updateDecks(session, response);
 			} else if (method == "api.leaderboard.getLeaderboard") {
 				game_leaderboard_getLeaderboard(session, response);
-			} else if (method == "api.game.log") {
-				recap_game_log(session, response);
 			} else {
 				std::cout << "Undefined /game/api method: " << method << std::endl;
 				for (const auto& [name, value] : request.uri) {
@@ -550,16 +508,7 @@ namespace Game {
 
 		// Png
 		router->add("/template_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			const auto& request = session.get_request();
-
-			std::string storagePath = Config::Get(CONFIG_STORAGE_PATH);
-			std::string path = storagePath + request.uri.resource();
-			if (!std::filesystem::exists(path)) {
-				path = storagePath + "default.png";
-			}
-
-			response.version() |= 0x1000'0000;
-			response.body() = std::move(path);
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		router->add("/creature_png/([a-zA-Z0-9_.]+)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
@@ -572,6 +521,7 @@ namespace Game {
 			}
 
 			response.version() |= 0x1000'0000;
+			response.result() = boost::beast::http::status::ok;
 			response.body() = std::move(path);
 		});
 
@@ -606,6 +556,7 @@ namespace Game {
 			}
 
 			response.version() |= 0x1000'0000;
+			response.result() = boost::beast::http::status::ok;
 			response.body() = std::move(path);
 		});
 
@@ -625,6 +576,8 @@ namespace Game {
 
 		// QOS
 		router->add("/qos/qos", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
+			response.result() = boost::beast::http::status::ok;
+
 			/* possible structures
 				<qos>
 					<numprobes>0</numprobes> // 109Ch
@@ -744,27 +697,31 @@ namespace Game {
 			std::string path = storagePath + "www/favicon.ico";
 
 			response.version() |= 0x1000'0000;
+			response.result() = boost::beast::http::status::ok;
 			response.body() = std::move(path);
 		});
 
 		router->add("/assets/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "www/static");
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		router->add("/web/sporelabsgame/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
-			responseWithFileInStorage(session, response, "www/static");
+			responseWithFileInStorage(session, response, Config::Get(CONFIG_WWW_STATIC_PATH));
 		});
 
 		router->add("/web/sporelabs/alerts", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// response.body() = utils::EAWebKit::loadFile("www/ingame/announce.html");
+			response.result() = boost::beast::http::status::not_found;
 		});
 
 		router->add("/web/sporelabs/resetpassword", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// response.body() = utils::EAWebKit::loadFile("www/ingame/resetpassword.html");
+			response.result() = boost::beast::http::status::not_found;
 		});
 
 		router->add("/web/sporelabs/([/a-zA-Z0-9\\-_.]*)", { boost::beast::http::verb::get, boost::beast::http::verb::post }, [this](HTTP::Session& session, HTTP::Response& response) {
 			// response.body() = utils::EAWebKit::loadFile("www/ingame" + session.get_request().uri.resource().substr(14));
+			response.result() = boost::beast::http::status::not_found;
 		});
 	}
 
@@ -778,64 +735,6 @@ namespace Game {
 		response.set(boost::beast::http::field::content_type, "application/json");
 	}
 
-	void API::recap_launcher_setTheme(HTTP::Session& session, HTTP::Response& response) {
-		/*
-		theme = requestUtils.get(request, 'theme', str)
-		server.setActiveTheme(theme)
-		*/
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Document document;
-
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), document.GetAllocator());
-
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
-		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
-	}
-
-	void API::recap_launcher_listThemes(HTTP::Session& session, HTTP::Response& response) {
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Document document;
-		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-		// stat
-		document.AddMember(rapidjson::Value("stat"), rapidjson::Value("ok"), allocator);
-		
-		// themes
-		{
-			std::string themesFolderPath = Config::Get(CONFIG_STORAGE_PATH) + "www/" + Config::Get(CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH);
-			if (!std::filesystem::exists(themesFolderPath)) {
-				std::cout << "Cannot open directory: " << themesFolderPath << std::endl;
-				return;
-			}
-
-			rapidjson::Value value(rapidjson::kArrayType);
-			for (const auto& entry : std::filesystem::directory_iterator(themesFolderPath)) {
-				if (entry.is_directory()) {
-					value.PushBack(rapidjson::Value(entry.path().filename().string(), allocator), allocator);
-				}
-			}
-
-			document.AddMember(rapidjson::Value("themes"), value, allocator);
-		}
-
-		// selectedTheme
-		document.AddMember(rapidjson::Value("selectedTheme"), rapidjson::Value(currentTheme, allocator), allocator);
-
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
-		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = buffer.GetString();
-	}
-
 	void API::recap_game_registration(HTTP::Session& session, HTTP::Response& response) {
 		auto& request = session.get_request();
 		auto name = request.uri.parameter("name");
@@ -843,85 +742,84 @@ namespace Game {
 		auto pass = request.uri.parameter("pass");
 		auto avatar = request.uri.parameter("avatar");
 
-		const auto& user = SporeNet::Get().GetUserManager().SignUp(name, mail, pass);
-		if (user == NULL) {
+		try {
+			const auto& user = SporeNet::Get().GetUserManager().SignUp(name, mail, pass);
+		
+			const auto& templateCreaturePartsPath = Game::Config::Get(Game::ConfigValue::CONFIG_TEMPLATE_CREATURE_PARTS_PATH);
+			if (std::filesystem::exists(templateCreaturePartsPath)) {
+				auto templatesList = utils::json::FromFile(templateCreaturePartsPath);
+				for (auto& templateNode : templatesList.GetArray()) {
+					auto templatePart = SporeNet::Part(templateNode);
+					user->AddPart(templatePart);
+				}
+			}
+
+			// TODO: Unlocking all creatures from start to test; remove that in the future
+			const auto templates = SporeNet::Get().GetTemplateDatabase().List();
+			user->get_account().creatureRewards = templates.size();
+			for (auto& templateCreature : templates) {
+				user->UnlockCreature(templateCreature->GetNoun());
+			}
+
+			// TODO: Unlocking everything from start to test; remove that in the future
+			SporeNet::Account& account = user->get_account();
+			account.tutorialCompleted = false;
+			account.chainProgression = 24;
+			account.creatureRewards = 100;
+			account.currentGameId = 1;
+			account.currentPlaygroupId = 1;
+			account.defaultDeckPveId = 1;
+			account.defaultDeckPvpId = 1;
+			account.level = 100;
+			account.avatarId = stoi(avatar);
+			account.dna = 10000000;
+			account.newPlayerInventory = 1;
+			account.newPlayerProgress = 9500;
+			account.cashoutBonusTime = 1;
+			account.starLevel = 10;
+			account.unlockCatalysts = 1;
+			account.unlockDiagonalCatalysts = 1;
+			account.unlockFuelTanks = 1;
+			account.unlockInventory = 1;
+			account.unlockPveDecks = 2;
+			account.unlockPvpDecks = 1;
+			account.unlockStats = 1;
+			account.unlockInventoryIdentify = 2500;
+			account.unlockEditorFlairSlots = 1;
+			account.upsell = 1;
+			account.xp = 10000;
+			account.grantAllAccess = true;
+			account.grantOnlineAccess = true;
+
+			user->ResetSquads();
+			auto squads = user->get_squads();
+			for (uint16_t squadSlot = 1; squadSlot <= 3; squadSlot++) {
+				uint16_t templateId = squadSlot - 1;
+				auto squad1 = squads[squadSlot - 1];
+				squad1->SetCreatureId(0, templates[templateId]->GetNoun());
+			}
+
+			user->Save();
+
 			rapidjson::Document document = utils::json::NewDocumentObject();
-			utils::json::Set(document, "success", false);
+			utils::json::Set(document, "success", true);
+			response.result() = boost::beast::http::status::ok;
 			response.set(boost::beast::http::field::content_type, "application/json");
 			response.body() = utils::json::ToString(document);
-			return;
 		}
-
-		const auto& templateCreaturePartsPath = Game::Config::Get(Game::ConfigValue::CONFIG_TEMPLATE_CREATURE_PARTS_PATH);
-		if (std::filesystem::exists(templateCreaturePartsPath)) {
-			auto templatesList = utils::json::FromFile(templateCreaturePartsPath);
-			for (auto& templateNode : templatesList.GetArray()) {
-				auto templatePart = SporeNet::Part(templateNode);
-				user->AddPart(templatePart);
-			}
+		catch (const std::runtime_error& e) {
+			rapidjson::Document document = utils::json::NewDocumentObject();
+			utils::json::Set(document, "message", std::string(e.what()));
+			response.result() = boost::beast::http::status::internal_server_error;
+			response.set(boost::beast::http::field::content_type, "application/json");
+			response.body() = utils::json::ToString(document);
 		}
-
-		// TODO: Unlocking all creatures from start to test; remove that in the future
-		const auto templates = SporeNet::Get().GetTemplateDatabase().List();
-		user->get_account().creatureRewards = templates.size();
-		for (auto& templateCreature : templates) {
-			user->UnlockCreature(templateCreature->GetNoun());
-		}
-
-		// TODO: Unlocking everything from start to test; remove that in the future
-		SporeNet::Account& account = user->get_account();
-		account.tutorialCompleted = false;
-		account.chainProgression = 24;
-		account.creatureRewards = 100;
-		account.currentGameId = 1;
-		account.currentPlaygroupId = 1;
-		account.defaultDeckPveId = 1;
-		account.defaultDeckPvpId = 1;
-		account.level = 100;
-		account.avatarId = stoi(avatar);
-		account.dna = 10000000;
-		account.newPlayerInventory = 1;
-		account.newPlayerProgress = 9500;
-		account.cashoutBonusTime = 1;
-		account.starLevel = 10;
-		account.unlockCatalysts = 1;
-		account.unlockDiagonalCatalysts = 1;
-		account.unlockFuelTanks = 1;
-		account.unlockInventory = 1;
-		account.unlockPveDecks = 2;
-		account.unlockPvpDecks = 1;
-		account.unlockStats = 1;
-		account.unlockInventoryIdentify = 2500;
-		account.unlockEditorFlairSlots = 1;
-		account.upsell = 1;
-		account.xp = 10000;
-		account.grantAllAccess = true;
-		account.grantOnlineAccess = true;
-
-		user->ResetSquads();
-		auto squads = user->get_squads();
-		for (uint16_t squadSlot = 1; squadSlot <= 3; squadSlot++) {
-			uint16_t templateId = squadSlot - 1;
-			auto squad1 = squads[squadSlot - 1];
-			squad1->SetCreatureId(0, templates[templateId]->GetNoun());
-		}
-
-		user->Save();
-
-		rapidjson::Document document = utils::json::NewDocumentObject();
-		utils::json::Set(document, "success", true);
-		response.set(boost::beast::http::field::content_type, "application/json");
-		response.body() = utils::json::ToString(document);
 	}
 
 	void API::recap_game_log(HTTP::Session& session, HTTP::Response& response) {
 		const auto& request = session.get_request();
-		/*
 		auto postBody = request.data.body();
 		std::cout << "js.console.log: " << postBody << std::endl;
-		*/
-		std::cout << "js.console.log: " << request.uri.parameter("message") << std::endl;
-		// logger::log(postBody);
 	}
 
 	void API::recap_panel_listUsers(HTTP::Session& session, HTTP::Response& response) {
@@ -1012,6 +910,9 @@ namespace Game {
 		const auto& request = session.get_request();
 		const auto& host = Config::Get(CONFIG_SERVER_HOST);
 
+		auto build = request.uri.parameter("build");
+		if (build.empty()) { build = "5.3.0.127"; }
+
 		auto [document, docResponse] = create_xml_response();
 		add_common_keys(docResponse);
 
@@ -1027,7 +928,7 @@ namespace Game {
 				utils::xml_add_text_node(config, "http_secure", "N");
 				utils::xml_add_text_node(config, "liferay_host", host);
 				utils::xml_add_text_node(config, "launcher_action", 2);
-				utils::xml_add_text_node(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + mVersion);
+				utils::xml_add_text_node(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + build);
 			}
 		}
 

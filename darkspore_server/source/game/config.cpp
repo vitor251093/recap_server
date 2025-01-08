@@ -47,12 +47,10 @@ namespace Game {
 				mConfig[CONFIG_SERVER_HOST] = value;
 			} else if (name == "STORAGE_PATH") {
 				mConfig[CONFIG_STORAGE_PATH] = get_path_value(value);
+			} else if (name == "WWW_STATIC_PATH") {
+				mConfig[CONFIG_WWW_STATIC_PATH] = value;
 			} else if (name == "DARKSPORE_INDEX_PAGE_PATH") {
 				mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = value;
-			} else if (name == "DARKSPORE_LAUNCHER_NOTES_PATH") {
-				mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = value;
-			} else if (name == "DARKSPORE_LAUNCHER_THEMES_PATH") {
-				mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = get_path_value(value);
 			} else if (name == "TEMPLATE_CREATURE_PATH") {
 				mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = value;
 			} else if (name == "TEMPLATE_CREATURE_PARTS_PATH") {
@@ -67,9 +65,8 @@ namespace Game {
 		mConfig[CONFIG_SINGLEPLAYER_ONLY] = "true";
 		mConfig[CONFIG_SERVER_HOST] = "127.0.0.1";
 		mConfig[CONFIG_STORAGE_PATH] = "storage/";
+		mConfig[CONFIG_WWW_STATIC_PATH] = "data/www/static/";
 		mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = "index.html";
-		mConfig[CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH] = "static/bootstrap/launcher/notes.html";
-		mConfig[CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH] = "static/bootstrap/launcher/";
 		mConfig[CONFIG_TEMPLATE_CREATURE_PATH] = "data/creature_templates.json";
 		mConfig[CONFIG_TEMPLATE_CREATURE_PARTS_PATH] = "data/creature_parts_templates.json";
 
@@ -110,9 +107,8 @@ namespace Game {
 				case CONFIG_SINGLEPLAYER_ONLY: return "SINGLEPLAYER_ONLY";
 				case CONFIG_SERVER_HOST: return "SERVER_HOST";
 				case CONFIG_STORAGE_PATH: return "STORAGE_PATH";
+				case CONFIG_WWW_STATIC_PATH: return "WWW_STATIC_PATH";
 				case CONFIG_DARKSPORE_INDEX_PAGE_PATH: return "DARKSPORE_INDEX_PAGE_PATH";
-				case CONFIG_DARKSPORE_LAUNCHER_NOTES_PATH: return "DARKSPORE_LAUNCHER_NOTES_PATH";
-				case CONFIG_DARKSPORE_LAUNCHER_THEMES_PATH: return "DARKSPORE_LAUNCHER_THEMES_PATH";
 				case CONFIG_TEMPLATE_CREATURE_PATH: return "TEMPLATE_CREATURE_PATH";
 				case CONFIG_TEMPLATE_CREATURE_PARTS_PATH: return "TEMPLATE_CREATURE_PARTS_PATH";
 				default: return "UNKNOWN";

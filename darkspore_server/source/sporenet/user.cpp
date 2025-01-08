@@ -3,11 +3,13 @@
 #include "user.h"
 #include "instance.h"
 
+#include "game/config.h"
 #include "blaze/component/associationcomponent.h"
 #include "utils/functions.h"
 
 #include <algorithm>
 #include <array>
+#include <filesystem>
 
 /*
 <feed>
@@ -445,7 +447,7 @@ namespace SporeNet {
 	}
 
 	bool User::Load() {
-		std::string filepath = "data/user/" + mUsername + ".xml";
+		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "user/" + mUsername + ".xml";
 
 		pugi::xml_document document;
 		if (!document.load_file(filepath.c_str())) {
@@ -490,7 +492,7 @@ namespace SporeNet {
 	}
 
 	bool User::Save() {
-		std::string filepath = "data/user/" + mUsername + ".xml";
+		std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "user/" + mUsername + ".xml";
 
 		pugi::xml_document document;
 		if (auto docUser = document.append_child("user")) {
@@ -623,7 +625,7 @@ namespace SporeNet {
 
 		auto it = sUsersByEmail.find(username);
 		if (it != sUsersByEmail.end()) {
-			return NULL;
+			throw std::runtime_error("There is already a registered user with that e-mail");
 		}
 		else {
 			user = std::make_shared<User>(name, username, password);
@@ -631,8 +633,13 @@ namespace SporeNet {
 			srand(time(NULL));
 			user->get_account().id = rand();
 
+			std::string filepath = Game::Config::Get(Game::CONFIG_STORAGE_PATH) + "user/" + username + ".xml";
+			if (std::filesystem::exists(filepath)) {
+				throw std::runtime_error("There is already a registered user with that e-mail");
+			}
+
 			if (!user->Save()) {
-				user.reset();
+				throw std::runtime_error("Failed to save new user");
 			}
 		}
 

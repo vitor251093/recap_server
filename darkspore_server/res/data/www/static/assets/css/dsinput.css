@@ -1,0 +1,13 @@
+.dstextfield {
+    width: 288px;
+    background-image: url("../images/TextField.png");
+}
+
+.dstextfield:hover:not(:active) {
+    background-image: url("../images/TextField-hover.png");
+}
+
+.dstextfield input {
+    width: 100%;
+}
+

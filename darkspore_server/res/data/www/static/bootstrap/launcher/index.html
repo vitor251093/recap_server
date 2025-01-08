@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="/assets/css/dsbutton.css">
+        <link rel="stylesheet" type="text/css" href="/assets/css/dstitlebar.css">
+        <script src="/assets/js/eawebkit.js"></script>
+        <script src="/assets/js/eawebkit.ui.js"></script>
+        <script src="/assets/js/recapclient.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script type="text/javascript">
+
+            var localizedstringmap = {
+                "FAILED_TO_CONNECT" : "CONNECTION FAILED",
+                "PLAY" : "PLAY",
+                "SERVER_STATUS" : "SERVER STATUS",
+                "SUPPORT_STRING" : "SUPPORT STRING", // ?
+                "LOST_CONNECTION" : "DISCONNECTED",
+                "SERVER_GOOD" : "CONNECTED",
+                "SERVER_UNAVAILABLE" : "UNAVAILABLE",
+                "CONTACTING" : "CONTACTING...",
+                "REFRESH" : "REFRESH",
+                "VALIDATE_INSTALL" : "VALIDATE&nbsp;&nbsp;INSTALL"
+            };
+
+            /**
+             * Set the current state of the servers, and having the launcher take
+             * action if appropriate
+             * @param bool health if our servers are healthy and reachable
+             * @param bool maintenance if the servers are down for maintenance/temporary reasons
+             */
+            function setServerStatus(health, maintenance)
+            {
+                var mServerHealth = health;
+                var mServerMaintenance = maintenance;
+
+
+                // replace the light with our more up to date knowledge
+                var container = document.getElementById("Server_condition");
+                var innervar;
+                if (mServerHealth) {
+                    innervar = '<div style="color:#FFFFFF;font-family:Arial;font-size:11px;" align="right">'+localizedstringmap['SERVER_GOOD'];
+                    innervar += '<img src="images/icon_light_green.png" style="position: relative;top: 3px; left: 2px;" /></div>';
+                }
+                else if (mServerMaintenance) {
+                    innervar = '<div style="color:#FFFFFF;font-family:Arial;font-size:11px;" align="right">'+localizedstringmap['SERVER_UNAVAILABLE'];
+                    innervar += '<img src="images/icon_light_yellow.png" style="position: relative;top: 3px; left: 2px;"  /></div>';
+                } else {
+                    innervar = '<div style="color:#FFFFFF;font-family:Arial;font-size:11px;" align="right">'+localizedstringmap['SERVER_UNAVAILABLE'];
+                    innervar += '<img src="images/icon_light_red.png" style="position: relative;top: 3px; left: 2px;"  /></div>';
+                }
+
+                container.innerHTML = innervar;
+
+            } //end setServerStatus
+
+            /**
+             * request a server side refresh
+             */
+            function refreshStatus() {
+                setServerStatus(true, false, 0);
+            }
+
+            /**
+             * Our text needs to be localized!
+             */
+            function setLocalizedText(){
+                // server status
+                document.getElementById("Server_Header").innerHTML = localizedstringmap['SERVER_STATUS'];
+
+                // server condition
+                var container = document.getElementById("Server_condition");
+                var innervar;
+                innervar = '<div style="color:#FFFFFF;font-family:Arial;font-size:11px;" align="right">'+localizedstringmap['CONTACTING'];
+                innervar += '<img src="images/icon_light_yellow.png" style="position: relative;top: 3px; left: 2px;" /></div>';
+                container.innerHTML = innervar;
+
+            }
+
+            window.onload = function()
+            {
+                // localized material
+                setLocalizedText();
+
+                refreshStatus();
+
+                $("#darkspore_version").html(DarksporeVersion);
+            }
+
+        </script>
+    </head>
+    <body id="Main_Body">
+
+        <table>
+            <tr>
+                <td><div class="dstitlebar-min-button" onclick="Client.minCurrentApp()"></div></td>
+                <td><div class="dstitlebar-close-button" onclick="Client.closeCurrentApp()"></div></td>
+            </tr>
+        </table>
+
+        <!-- Server status -->
+        <div id="server_notes">
+            <div id="Server_status">
+                <div id="Server_Status_Header" align="right">
+                    <span id="Server_Header"></span>
+                </div>
+                <span id="Server_condition">
+                     <div style="color:#FFFFFF;font-family:Arial;font-size:11px;" align="right">
+                     </div>
+                </span>
+            </div>
+        </div>
+
+        <div class="darkspore-logo"></div>
+
+        <div id="buttons">
+            <div class="dsbutton" id="SingleplayerButton" onclick="Client.playCurrentApp()">
+                <div class="left-side"></div>
+                <div class="text">singleplayer</div>
+                <div class="right-side"></div>
+            </div>
+            <div class="dsbutton" id="MultiplayerButton" disabled="disabled">
+                <div class="left-side"></div>
+                <div class="text">multiplayer</div>
+                <div class="right-side"></div>
+            </div>
+            <div class="dsbutton" id="SettingsButton" disabled="disabled">
+                <div class="left-side"></div>
+                <div class="text">settings</div>
+                <div class="right-side"></div>
+            </div>
+            <div class="dsbutton" id="ExitButton" onclick="Client.closeCurrentApp()">
+                <div class="left-side"></div>
+                <div class="text">exit</div>
+                <div class="right-side"></div>
+            </div>
+        </div>
+
+        <div id="darkspore_version"></div>
+    </body>
+</html>
