@@ -1,5 +1,5 @@
 // Those are required by the bootstrap/launcher's index file, so it doesn't
-// need to make a manual bridge between itself and the wrapper file
+// need to make a manual bridge between itself and the wrapper.html file
 var Client = (typeof Client === 'undefined') ? (window.parent || {}).Client : Client;
 var DarksporeVersion = (window.parent || {}).DarksporeVersion;
 
@@ -20,36 +20,6 @@ var EAWebKit = {
 		} else {
 			window.open(url);
 		}
-	}
-};
-
-var Utils = {
-	type: function(obj) {
-		return Object.prototype.toString.call(obj);
-	},
-	isString: function(obj) {
-		return Utils.type(obj) === '[object String]';
-	},
-	isArray: function(obj) {
-		return Utils.type(obj) === '[object Array]';
-	},
-	splitVersionString: function(version) {
-		if (version === undefined) return [];
-		return version.split(".").map(function(num){ return parseInt(num); });
-	},
-	compareVersions: function(versionParts, versionArray) {
-		if (Utils.isString(versionParts)) versionParts = Utils.splitVersionString(versionParts);
-		if (Utils.isString(versionArray)) versionArray = Utils.splitVersionString(versionArray);
-
-		var min = Math.min(versionParts.length, versionArray.length);
-		for (var i = 0; i < min; i++) {
-			if (versionParts[i] > versionArray[i]) return -1;
-			if (versionParts[i] < versionArray[i]) return  1;
-		}
-
-		if (versionParts.length > versionArray.length) return -1;
-		if (versionParts.length < versionArray.length) return  1;
-		return 0;
 	}
 };
 
