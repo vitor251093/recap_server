@@ -28,6 +28,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RECAP_HEADERS} ${RECAP_SOU
 target_include_directories(recap_server PRIVATE source)
 if(MSVC)
     target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
+    set_target_properties(recap_server PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE /INCREMENTAL:NO /Brepro")
 endif()
 
 # Boost
