@@ -10,7 +10,7 @@ namespace QoS {
 	// Server
 	class Server {
 		public:
-			Server(boost::asio::io_context& io_service, uint16_t port);
+			Server(boost::asio::io_context& io_service, const std::string& ip, uint16_t port);
 			~Server();
 
 			void try_read();
@@ -18,6 +18,7 @@ namespace QoS {
 			void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
 			void handle_write(const boost::system::error_code& error);
 
+			boost::asio::ip::address get_address() const;
 			uint16_t get_port() const;
 
 		private:

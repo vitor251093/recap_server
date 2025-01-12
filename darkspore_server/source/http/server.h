@@ -11,9 +11,10 @@ namespace HTTP {
 	// Server
 	class Server {
 		public:
-			Server(boost::asio::io_context& io_service, uint16_t port);
+			Server(boost::asio::io_context& io_service, const std::string& ip, uint16_t port);
 			~Server();
 
+			boost::asio::ip::address get_address() const;
 			uint16_t get_port() const;
 
 			const std::shared_ptr<Router>& get_router() const;
@@ -25,6 +26,7 @@ namespace HTTP {
 
 		private:
 			boost::asio::io_context& mIoService;
+			boost::asio::ip::tcp::endpoint mEndpoint;
 			boost::asio::ip::tcp::acceptor mAcceptor;
 
 			std::shared_ptr<Router> mRouter;

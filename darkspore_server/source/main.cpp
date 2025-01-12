@@ -68,21 +68,24 @@ bool Application::OnInit() {
 	// Game
 	mGameAPI = std::make_unique<Game::API>("5.3.0.127");
 
-	// Blaze
-	mRedirectorServer = std::make_unique<Blaze::Server>(mIoService, 42127);
-	mBlazeServer = std::make_unique<Blaze::Server>(mIoService, 10041);
+	const auto host = Game::Config::Get(Game::ConfigKey::CONFIG_SERVER_HOST);
+	const auto port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_PORT);
 
-	mPssServer = std::make_unique<Blaze::Server>(mIoService, 8443);
-	mTickServer = std::make_unique<Blaze::Server>(mIoService, 8999);
-	mTelemetryServer = std::make_unique<Blaze::Server>(mIoService, 9988);
+	// Blaze
+	mRedirectorServer = std::make_unique<Blaze::Server>(mIoService, host, 42127);
+	mBlazeServer = std::make_unique<Blaze::Server>(mIoService, host, 10041);
+
+	mPssServer = std::make_unique<Blaze::Server>(mIoService, host, 8443);
+	mTickServer = std::make_unique<Blaze::Server>(mIoService, host, 8999);
+	mTelemetryServer = std::make_unique<Blaze::Server>(mIoService, host, 9988);
 
 	// QoS
-	mQosServer = std::make_unique<QoS::Server>(mIoService, 3659);
+	mQosServer = std::make_unique<QoS::Server>(mIoService, host, 3659);
 
 	// HTTP
-	mHttpServer = std::make_unique<HTTP::Server>(mIoService, 80);
-	mHttpTelemetryServer = std::make_unique<HTTP::Server>(mIoService, 8080);
-	mHttpQosServer = std::make_unique<HTTP::Server>(mIoService, 17502);
+	mHttpServer = std::make_unique<HTTP::Server>(mIoService, host, port);
+	mHttpTelemetryServer = std::make_unique<HTTP::Server>(mIoService, host, 8080);
+	mHttpQosServer = std::make_unique<HTTP::Server>(mIoService, host, 17502);
 
 	const auto& router = mHttpServer->get_router();
 	mHttpTelemetryServer->set_router(router);
@@ -159,6 +162,10 @@ Blaze::Server* Application::get_telemetry_server() const {
 
 HTTP::Server* Application::get_http_server() const {
 	return mHttpServer.get();
+}
+
+HTTP::Server* Application::get_http_qos_server() const {
+	return mHttpQosServer.get();
 }
 
 QoS::Server* Application::get_qos_server() const {

@@ -10,8 +10,8 @@
 // QoS
 namespace QoS {
 	// Server
-	Server::Server(boost::asio::io_context& io_service, uint16_t port)
-		: mIoService(io_service), mSocket(mIoService, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port))
+	Server::Server(boost::asio::io_context& io_service, const std::string& ip, uint16_t port)
+		: mIoService(io_service), mSocket(mIoService, boost::asio::ip::udp::endpoint(boost::asio::ip::make_address(ip), port))
 	{
 		mReadBuffer.resize(10240);
 		try_read();
@@ -106,6 +106,10 @@ namespace QoS {
 		} else {
 			std::cout << "Error: " << error.message() << std::endl;
 		}
+	}
+
+	boost::asio::ip::address Server::get_address() const {
+		return mSocket.local_endpoint().address();
 	}
 
 	uint16_t Server::get_port() const {
