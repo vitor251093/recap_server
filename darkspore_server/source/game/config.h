@@ -3,8 +3,9 @@
 #define _GAME_CONFIG_HEADER
 
 // Include
-#include <string>
 #include <array>
+#include <cstdint>
+#include <string>
 
 // Game
 namespace Game {
