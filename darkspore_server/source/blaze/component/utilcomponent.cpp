@@ -277,7 +277,7 @@ namespace Blaze {
 		TickerServer tick;
 		tick.address = tickServer->get_address().to_string();
 		tick.port = tickServer->get_port();
-		tick.key = std::format("0,%s:%hu,darkspore-pc,10,50,50,50,50,0,0", tick.address, tick.port);
+		tick.key = std::format("0,{}:{},darkspore-pc,10,50,50,50,50,0,0", tick.address, tick.port);
 
 		UserOptions options;
 		options.value = TelemetryOpt::OptIn;

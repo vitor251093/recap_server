@@ -294,7 +294,7 @@ namespace Game {
 
 			utils::string_replace(fileData, "{{isDev}}", "true");
 			utils::string_replace(fileData, "{{recap-version}}", Config::RecapVersion());
-			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST) + ":" + Config::Get(CONFIG_SERVER_PORT));
 			utils::string_replace(fileData, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
 			utils::string_replace(fileData, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
 			utils::string_replace(fileData, "{{display-latest-version}}", "none");
@@ -910,6 +910,8 @@ namespace Game {
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
 		const auto& request = session.get_request();
 		const auto& host = Config::Get(CONFIG_SERVER_HOST);
+		const auto& port = Config::Get(CONFIG_SERVER_PORT);
+		const auto hostaddr = std::format("{}:{}", host, port);
 
 		auto build = request.uri.parameter("build");
 		if (build.empty()) { build = "5.3.0.127"; }
@@ -929,7 +931,7 @@ namespace Game {
 				utils::xml_add_text_node(config, "http_secure", "N");
 				utils::xml_add_text_node(config, "liferay_host", host);
 				utils::xml_add_text_node(config, "launcher_action", 2);
-				utils::xml_add_text_node(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + build);
+				utils::xml_add_text_node(config, "launcher_url", "http://" + hostaddr + "/bootstrap/launcher/?version=" + build);
 			}
 		}
 
@@ -2071,7 +2073,7 @@ version = 1
 		const auto address = httpServer->get_address().to_string();
 		const auto port = httpServer->get_port();
 
-		response.set(boost::beast::http::field::host, address);
+		response.set(boost::beast::http::field::host, std::format("{}:{}", address, port));
 		// "%s/%s (Pollinator; %s)" (name, version, os_version)
 		// response.set(boost::beast::http::field::user_agent, "Darkspore/5.3.0.127 (Pollinator; 6.2.9200)");
 		// response.set(boost::beast::http::field::date, utils::get_utc_date_string());
@@ -2081,7 +2083,7 @@ version = 1
 		// response.set(boost::beast::http::field::content_type, "text/xml; charset=utf-8");
 
 		if (result == boost::beast::http::status::created) {
-			response.set(boost::beast::http::field::location, std::format("http://%s:%hu/api", address, port));
+			response.set(boost::beast::http::field::location, std::format("http://{}:{}/api", address, port));
 		}
 
 		response.result() = result;
