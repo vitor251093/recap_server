@@ -12,7 +12,7 @@ namespace Blaze {
 	// Server
 	class Server {
 		public:
-			Server(boost::asio::io_context& io_service, const std::string& ip, uint16_t port);
+			Server(boost::asio::io_context& io_service, boost::asio::ip::address ip, uint16_t port);
 			~Server();
 
 			void handle_accept(Client* client, const boost::system::error_code& error);

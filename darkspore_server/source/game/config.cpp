@@ -45,8 +45,24 @@ namespace Game {
 				mConfig[CONFIG_SINGLEPLAYER_ONLY] = value;
 			} else if (name == "SERVER_HOST") {
 				mConfig[CONFIG_SERVER_HOST] = value;
-			} else if (name == "SERVER_PORT") {
-				mConfig[CONFIG_SERVER_PORT] = value;
+			} else if (name == "SERVER_REDIRECTOR_PORT") {
+				mConfig[CONFIG_SERVER_REDIRECTOR_PORT] = value;
+			} else if (name == "SERVER_BLAZE_PORT") {
+				mConfig[CONFIG_SERVER_BLAZE_PORT] = value;
+			} else if (name == "SERVER_PSS_PORT") {
+				mConfig[CONFIG_SERVER_PSS_PORT] = value;
+			} else if (name == "SERVER_TICK_PORT") {
+				mConfig[CONFIG_SERVER_TICK_PORT] = value;
+			} else if (name == "SERVER_TELEMETRY_PORT") {
+				mConfig[CONFIG_SERVER_TELEMETRY_PORT] = value;
+			} else if (name == "SERVER_QOS_PORT") {
+				mConfig[CONFIG_SERVER_QOS_PORT] = value;
+			} else if (name == "SERVER_HTTP_PORT") {
+				mConfig[CONFIG_SERVER_HTTP_PORT] = value;
+			} else if (name == "SERVER_HTTP_TELEMETRY_PORT") {
+				mConfig[CONFIG_SERVER_HTTP_TELEMETRY_PORT] = value;
+			} else if (name == "SERVER_HTTP_QOS_PORT") {
+				mConfig[CONFIG_SERVER_HTTP_QOS_PORT] = value;
 			} else if (name == "STORAGE_PATH") {
 				mConfig[CONFIG_STORAGE_PATH] = get_path_value(value);
 			} else if (name == "WWW_STATIC_PATH") {
@@ -66,7 +82,15 @@ namespace Game {
 		mConfig[CONFIG_VERSION_LOCKED] = "false";
 		mConfig[CONFIG_SINGLEPLAYER_ONLY] = "true";
 		mConfig[CONFIG_SERVER_HOST] = "127.0.0.1";
-		mConfig[CONFIG_SERVER_PORT] = "80";
+		mConfig[CONFIG_SERVER_REDIRECTOR_PORT] = "42127";
+		mConfig[CONFIG_SERVER_BLAZE_PORT] = "10041";
+		mConfig[CONFIG_SERVER_PSS_PORT] = "8443";
+		mConfig[CONFIG_SERVER_TICK_PORT] = "8999";
+		mConfig[CONFIG_SERVER_TELEMETRY_PORT] = "9988";
+		mConfig[CONFIG_SERVER_QOS_PORT] = "3659";
+		mConfig[CONFIG_SERVER_HTTP_PORT] = "80";
+		mConfig[CONFIG_SERVER_HTTP_TELEMETRY_PORT] = "8080";
+		mConfig[CONFIG_SERVER_HTTP_QOS_PORT] = "17502";
 		mConfig[CONFIG_STORAGE_PATH] = "storage/";
 		mConfig[CONFIG_WWW_STATIC_PATH] = "data/www/static/";
 		mConfig[CONFIG_DARKSPORE_INDEX_PAGE_PATH] = "index.html";
@@ -133,7 +157,15 @@ namespace Game {
 				case CONFIG_VERSION_LOCKED: return "VERSION_LOCKED";
 				case CONFIG_SINGLEPLAYER_ONLY: return "SINGLEPLAYER_ONLY";
 				case CONFIG_SERVER_HOST: return "SERVER_HOST";
-				case CONFIG_SERVER_PORT: return "SERVER_PORT";
+				case CONFIG_SERVER_REDIRECTOR_PORT: return "SERVER_REDIRECTOR_PORT";
+				case CONFIG_SERVER_BLAZE_PORT: return "SERVER_BLAZE_PORT";
+				case CONFIG_SERVER_PSS_PORT: return "SERVER_PSS_PORT";
+				case CONFIG_SERVER_TICK_PORT: return "SERVER_TICK_PORT";
+				case CONFIG_SERVER_TELEMETRY_PORT: return "SERVER_TELEMETRY_PORT";
+				case CONFIG_SERVER_QOS_PORT: return "SERVER_QOS_PORT";
+				case CONFIG_SERVER_HTTP_PORT: return "SERVER_HTTP_PORT";
+				case CONFIG_SERVER_HTTP_TELEMETRY_PORT: return "SERVER_HTTP_TELEMETRY_PORT";
+				case CONFIG_SERVER_HTTP_QOS_PORT: return "SERVER_HTTP_QOS_PORT";
 				case CONFIG_STORAGE_PATH: return "STORAGE_PATH";
 				case CONFIG_WWW_STATIC_PATH: return "WWW_STATIC_PATH";
 				case CONFIG_DARKSPORE_INDEX_PAGE_PATH: return "DARKSPORE_INDEX_PAGE_PATH";

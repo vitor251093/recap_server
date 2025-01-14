@@ -11,6 +11,8 @@
 #include "game/noun.h"
 #include "game/lua.h"
 
+#include "utils/net.h"
+
 #include <iostream>
 
 /*
@@ -69,23 +71,33 @@ bool Application::OnInit() {
 	mGameAPI = std::make_unique<Game::API>("5.3.0.127");
 
 	const auto host = Game::Config::Get(Game::ConfigKey::CONFIG_SERVER_HOST);
-	const auto port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_PORT);
+	const auto redirector_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_REDIRECTOR_PORT);
+	const auto blaze_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_BLAZE_PORT);
+	const auto pss_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_PSS_PORT);
+	const auto tick_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_TICK_PORT);
+	const auto telemetry_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_TELEMETRY_PORT);
+	const auto qos_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_QOS_PORT);
+	const auto http_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_HTTP_PORT);
+	const auto http_telemetry_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_HTTP_TELEMETRY_PORT);
+	const auto http_qos_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_HTTP_QOS_PORT);
+
+	const auto ip = utils::net::resolve_ip(host, http_port);
 
 	// Blaze
-	mRedirectorServer = std::make_unique<Blaze::Server>(mIoService, host, 42127);
-	mBlazeServer = std::make_unique<Blaze::Server>(mIoService, host, 10041);
+	mRedirectorServer = std::make_unique<Blaze::Server>(mIoService, ip, redirector_port);
+	mBlazeServer = std::make_unique<Blaze::Server>(mIoService, ip, blaze_port);
 
-	mPssServer = std::make_unique<Blaze::Server>(mIoService, host, 8443);
-	mTickServer = std::make_unique<Blaze::Server>(mIoService, host, 8999);
-	mTelemetryServer = std::make_unique<Blaze::Server>(mIoService, host, 9988);
+	mPssServer = std::make_unique<Blaze::Server>(mIoService, ip, pss_port);
+	mTickServer = std::make_unique<Blaze::Server>(mIoService, ip, tick_port);
+	mTelemetryServer = std::make_unique<Blaze::Server>(mIoService, ip, telemetry_port);
 
 	// QoS
-	mQosServer = std::make_unique<QoS::Server>(mIoService, host, 3659);
+	mQosServer = std::make_unique<QoS::Server>(mIoService, ip, qos_port);
 
 	// HTTP
-	mHttpServer = std::make_unique<HTTP::Server>(mIoService, host, port);
-	mHttpTelemetryServer = std::make_unique<HTTP::Server>(mIoService, host, 8080);
-	mHttpQosServer = std::make_unique<HTTP::Server>(mIoService, host, 17502);
+	mHttpServer = std::make_unique<HTTP::Server>(mIoService, ip, http_port);
+	mHttpTelemetryServer = std::make_unique<HTTP::Server>(mIoService, ip, http_telemetry_port);
+	mHttpQosServer = std::make_unique<HTTP::Server>(mIoService, ip, http_qos_port);
 
 	const auto& router = mHttpServer->get_router();
 	mHttpTelemetryServer->set_router(router);

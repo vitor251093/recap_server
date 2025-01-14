@@ -9,9 +9,9 @@
 // HTTP
 namespace HTTP {
 	// Server
-	Server::Server(boost::asio::io_context& io_service, const std::string& ip, uint16_t port) :
+	Server::Server(boost::asio::io_context& io_service, boost::asio::ip::address ip, uint16_t port) :
 		mIoService(io_service),
-		mAcceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::make_address(ip), port))
+		mAcceptor(io_service, boost::asio::ip::tcp::endpoint(ip, port))
 	{
 		boost::beast::error_code error;
 		mAcceptor.set_option(boost::asio::socket_base::reuse_address(true), error);

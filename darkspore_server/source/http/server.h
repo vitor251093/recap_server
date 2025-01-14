@@ -11,7 +11,7 @@ namespace HTTP {
 	// Server
 	class Server {
 		public:
-			Server(boost::asio::io_context& io_service, const std::string& ip, uint16_t port);
+			Server(boost::asio::io_context& io_service, boost::asio::ip::address ip, uint16_t port);
 			~Server();
 
 			boost::asio::ip::address get_address() const;

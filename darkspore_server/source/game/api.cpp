@@ -294,7 +294,7 @@ namespace Game {
 
 			utils::string_replace(fileData, "{{isDev}}", "true");
 			utils::string_replace(fileData, "{{recap-version}}", Config::RecapVersion());
-			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST) + ":" + Config::Get(CONFIG_SERVER_PORT));
+			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST) + ":" + Config::Get(CONFIG_SERVER_HTTP_PORT));
 			utils::string_replace(fileData, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
 			utils::string_replace(fileData, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
 			utils::string_replace(fileData, "{{display-latest-version}}", "none");
@@ -910,7 +910,7 @@ namespace Game {
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
 		const auto& request = session.get_request();
 		const auto& host = Config::Get(CONFIG_SERVER_HOST);
-		const auto& port = Config::Get(CONFIG_SERVER_PORT);
+		const auto& port = Config::Get(CONFIG_SERVER_HTTP_PORT);
 		const auto hostaddr = std::format("{}:{}", host, port);
 
 		auto build = request.uri.parameter("build");
