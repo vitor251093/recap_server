@@ -195,7 +195,7 @@ namespace Blaze {
 		auto blazeServer = GetApp().get_blaze_server();
 
 		TDF::Packet packet;
-		WriteServerInstanceInfo(packet, Game::Config::Get(Game::CONFIG_SERVER_HOST), blazeServer->get_port());
+		WriteServerInstanceInfo(packet, blazeServer->get_address().to_string(), blazeServer->get_port());
 		
 		request.reply(packet);
 	}

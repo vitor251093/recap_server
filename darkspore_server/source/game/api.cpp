@@ -294,7 +294,7 @@ namespace Game {
 
 			utils::string_replace(fileData, "{{isDev}}", "true");
 			utils::string_replace(fileData, "{{recap-version}}", Config::RecapVersion());
-			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST));
+			utils::string_replace(fileData, "{{host}}", Config::Get(CONFIG_SERVER_HOST) + ":" + Config::Get(CONFIG_SERVER_HTTP_PORT));
 			utils::string_replace(fileData, "{{game-mode}}", Config::GetBool(CONFIG_SINGLEPLAYER_ONLY) ? "singleplayer" : "multiplayer");
 			utils::string_replace(fileData, "{{version-lock}}", Config::GetBool(CONFIG_VERSION_LOCKED) ? "5.3.0.127" : "no");
 			utils::string_replace(fileData, "{{display-latest-version}}", "none");
@@ -636,6 +636,7 @@ namespace Game {
 			*/
 
 			const auto& request = session.get_request();
+			const auto qosServer = GetApp().get_qos_server();
 
 			auto interfaceCount = request.uri.parameter<uint32_t>("nint");
 
@@ -648,13 +649,13 @@ namespace Game {
 			// Ips
 			auto ipsNode = docResponse.append_child("ips");
 			for (uint32_t i = 0; i < interfaceCount; ++i) {
-				utils::xml_add_text_node(ipsNode, "ips", boost::asio::ip::address_v4::from_string("127.0.0.1").to_ulong());
+				utils::xml_add_text_node(ipsNode, "ips", qosServer->get_address().to_v4().to_ulong());
 			}
 
 			// Ports
 			auto portsNode = docResponse.append_child("ports");
 			for (uint32_t i = 0; i < interfaceCount; ++i) {
-				utils::xml_add_text_node(portsNode, "ports", 3659);
+				utils::xml_add_text_node(portsNode, "ports", qosServer->get_port());
 			}
 
 			// Request data
@@ -745,7 +746,7 @@ namespace Game {
 		try {
 			const auto& user = SporeNet::Get().GetUserManager().SignUp(name, mail, pass);
 		
-			const auto& templateCreaturePartsPath = Game::Config::Get(Game::ConfigValue::CONFIG_TEMPLATE_CREATURE_PARTS_PATH);
+			const auto& templateCreaturePartsPath = Game::Config::Get(Game::ConfigKey::CONFIG_TEMPLATE_CREATURE_PARTS_PATH);
 			if (std::filesystem::exists(templateCreaturePartsPath)) {
 				auto templatesList = utils::json::FromFile(templateCreaturePartsPath);
 				for (auto& templateNode : templatesList.GetArray()) {
@@ -909,6 +910,8 @@ namespace Game {
 	void API::bootstrap_config_getConfig(HTTP::Session& session, HTTP::Response& response) {
 		const auto& request = session.get_request();
 		const auto& host = Config::Get(CONFIG_SERVER_HOST);
+		const auto& port = Config::Get(CONFIG_SERVER_HTTP_PORT);
+		const auto hostaddr = std::format("{}:{}", host, port);
 
 		auto build = request.uri.parameter("build");
 		if (build.empty()) { build = "5.3.0.127"; }
@@ -928,7 +931,7 @@ namespace Game {
 				utils::xml_add_text_node(config, "http_secure", "N");
 				utils::xml_add_text_node(config, "liferay_host", host);
 				utils::xml_add_text_node(config, "launcher_action", 2);
-				utils::xml_add_text_node(config, "launcher_url", "http://" + host + "/bootstrap/launcher/?version=" + build);
+				utils::xml_add_text_node(config, "launcher_url", "http://" + hostaddr + "/bootstrap/launcher/?version=" + build);
 			}
 		}
 
@@ -2066,7 +2069,11 @@ version = 1
 		xml_string_writer writer;
 		xmlDocument.save(writer, "\t", pugi::format_default | pugi::format_write_bom, pugi::encoding_latin1);
 
-		response.set(boost::beast::http::field::host, "127.0.0.1");
+		const auto httpServer = GetApp().get_http_server();
+		const auto address = httpServer->get_address().to_string();
+		const auto port = httpServer->get_port();
+
+		response.set(boost::beast::http::field::host, std::format("{}:{}", address, port));
 		// "%s/%s (Pollinator; %s)" (name, version, os_version)
 		// response.set(boost::beast::http::field::user_agent, "Darkspore/5.3.0.127 (Pollinator; 6.2.9200)");
 		// response.set(boost::beast::http::field::date, utils::get_utc_date_string());
@@ -2076,7 +2083,7 @@ version = 1
 		// response.set(boost::beast::http::field::content_type, "text/xml; charset=utf-8");
 
 		if (result == boost::beast::http::status::created) {
-			response.set(boost::beast::http::field::location, "http://127.0.0.1/api");
+			response.set(boost::beast::http::field::location, std::format("http://{}:{}/api", address, port));
 		}
 
 		response.result() = result;
