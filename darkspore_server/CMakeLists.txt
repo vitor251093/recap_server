@@ -42,7 +42,7 @@ CPMAddPackage(
 target_link_libraries(recap_server PRIVATE boost_regex boost_asio boost_beast boost_bind)
 
 # pugixml
-CPMAddPackage("gh:zeux/pugixml@1.14")
+CPMAddPackage("gh:zeux/pugixml@1.15")
 target_link_libraries(recap_server PRIVATE pugixml)
 
 # RapidJSON
