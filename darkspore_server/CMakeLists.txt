@@ -48,7 +48,7 @@ target_link_libraries(recap_server PRIVATE pugixml)
 # RapidJSON
 CPMAddPackage(NAME rapidjson
     GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
-    GIT_TAG v1.1.0
+    GIT_TAG ebd87cb468fb4cb060b37e579718c4a4125416c1
     OPTIONS "RAPIDJSON_BUILD_EXAMPLES OFF"
             "RAPIDJSON_BUILD_TESTS OFF"
             "RAPIDJSON_BUILD_DOC OFF")
