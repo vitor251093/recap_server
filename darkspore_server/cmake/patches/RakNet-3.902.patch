@@ -4,7 +4,7 @@ index 9fe7f18..525d768 100644
 +++ b/CMakeLists.txt
 @@ -1,4 +1,4 @@
 -cmake_minimum_required(VERSION 2.6)
-+cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5)
  
  IF(WIN32 AND NOT UNIX)
  	set(CMAKE_SUPPRESS_REGENERATION TRUE) #Gets rid of ZERO_CHECK 
