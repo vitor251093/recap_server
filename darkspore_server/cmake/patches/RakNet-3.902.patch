@@ -161,6 +161,13 @@ index dd2d5d2..0a5d78f 100644
  ENDIF(WIN32 AND NOT UNIX)
  
  
+diff --git a/Source/CMakeLists.txt b/Source/CMakeLists.txt
+index 65660a1..99c8cbd 100644
+--- a/Source/CMakeLists.txt
++++ b/Source/CMakeLists.txt
+@@ -1 +1 @@
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.5)
 diff --git a/Source/DS_BinarySearchTree.h b/Source/DS_BinarySearchTree.h
 index 49aad44..af3ccd2 100644
 --- a/Source/DS_BinarySearchTree.h
