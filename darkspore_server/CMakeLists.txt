@@ -105,7 +105,7 @@ target_link_libraries(recap_server PRIVATE sol2)
 # GLM
 CPMAddPackage(
     GIT_REPOSITORY https://github.com/g-truc/glm.git
-    GIT_TAG 0.9.9.8)
+    GIT_TAG 8b94f970d9666f77f4400103e31aaa4a79a7edef)
 target_link_libraries(recap_server PRIVATE glm::glm)
 
 # cpp-base64
