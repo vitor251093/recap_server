@@ -352,7 +352,7 @@ namespace SporeNet {
 
 	// TemplateDatabase
 	void TemplateDatabase::Load() {
-		const auto& templateCreaturePath = Game::Config::Get(Game::ConfigValue::CONFIG_TEMPLATE_CREATURE_PATH);
+		const auto& templateCreaturePath = Game::Config::Get(Game::ConfigKey::CONFIG_TEMPLATE_CREATURE_PATH);
 		if (!std::filesystem::exists(templateCreaturePath)) {
 			std::cout << "File not found: " << templateCreaturePath << std::endl;
 			return;

@@ -163,7 +163,7 @@ namespace Blaze {
 		auto telemetryServer = application.get_telemetry_server();
 
 		TelemetryServer telemetry;
-		telemetry.address = "127.0.0.1";
+		telemetry.address = telemetryServer->get_address().to_string();
 		telemetry.anonymous = true;
 		telemetry.disable = "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ";
 		telemetry.filter = "";
@@ -194,9 +194,8 @@ namespace Blaze {
 			UtilComponent::Id
 		};
 
-		// decltype(auto) application = GetApp();
-
-		// auto httpQosServer = application.get_http_qos_server();
+		decltype(auto) application = GetApp();
+		const auto httpQosServer = application.get_http_qos_server();
 
 		const auto& clientInfo = request["CINF"];
 
@@ -234,8 +233,8 @@ namespace Blaze {
 			qosConfig.serviceId = 1161889797;
 			
 			QosPingSiteInfo& qosPingSiteInfo = qosConfig.pingSiteInfoByAlias.try_emplace("ams").first->second;
-			qosPingSiteInfo.address = "127.0.0.1";
-			qosPingSiteInfo.port = 80;
+			qosPingSiteInfo.address = httpQosServer->get_address().to_string();
+			qosPingSiteInfo.port = httpQosServer->get_port();
 			qosPingSiteInfo.name = "ams";
 
 			qosConfig.Write(packet);
@@ -256,14 +255,14 @@ namespace Blaze {
 		auto tickServer = application.get_tick_server();
 
 		PssConfig pss;
-		pss.address = "127.0.0.1";
+		pss.address = pssServer->get_address().to_string();
 		pss.pjid = "123071"; // Random numbers (means nothing)
 		pss.port = pssServer->get_port();
 		pss.rprt = 9;
 		pss.tiid = 0;
 
 		TelemetryServer telemetry;
-		telemetry.address = "127.0.0.1";
+		telemetry.address = telemetryServer->get_address().to_string();
 		telemetry.anonymous = false;
 		telemetry.disable = "AD,AF,AG,AI,AL,AM,AN,AO,AQ,AR,AS,AW,AX,AZ,BA,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BV,BW,BY,BZ,CC,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,CX,DJ,DM,DO,DZ,EC,EG,EH,ER,ET,FJ,FK,FM,FO,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GS,GT,GU,GW,GY,HM,HN,HT,ID,IL,IM,IN,IO,IQ,IR,IS,JE,JM,JO,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LY,MA,MC,MD,ME,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MY,MZ,NA,NC,NE,NF,NG,NI,NP,NR,NU,OM,PA,PE,PF,PG,PH,PK,PM,PN,PS,PW,PY,QA,RE,RS,RW,SA,SB,SC,SD,SG,SH,SJ,SL,SM,SN,SO,SR,ST,SV,SY,SZ,TC,TD,TF,TG,TH,TJ,TK,TL,TM,TN,TO,TT,TV,TZ,UA,UG,UM,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,YE,YT,ZM,ZW,ZZ";
 		telemetry.filter = "";
@@ -276,9 +275,9 @@ namespace Blaze {
 		telemetry.sendPercentage = 75;
 
 		TickerServer tick;
-		tick.address = "127.0.0.1";
+		tick.address = tickServer->get_address().to_string();
 		tick.port = tickServer->get_port();
-		tick.key = "0,127.0.0.1:8999,darkspore-pc,10,50,50,50,50,0,0";
+		tick.key = std::format("0,{}:{},darkspore-pc,10,50,50,50,50,0,0", tick.address, tick.port);
 
 		UserOptions options;
 		options.value = TelemetryOpt::OptIn;

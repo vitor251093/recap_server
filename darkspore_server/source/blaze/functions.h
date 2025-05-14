@@ -67,7 +67,7 @@ namespace Blaze {
 		std::string address;
 		std::string key;
 
-		uint32_t port;
+		uint16_t port;
 
 		void Write(TDF::Packet& packet) const;
 	};

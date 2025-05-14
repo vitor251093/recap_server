@@ -3,16 +3,27 @@
 #define _GAME_CONFIG_HEADER
 
 // Include
-#include <string>
 #include <array>
+#include <cstdint>
+#include <string>
 
 // Game
 namespace Game {
-	enum ConfigValue {
+	// Config
+	enum ConfigKey {
 		CONFIG_SKIP_LAUNCHER = 0,
 		CONFIG_VERSION_LOCKED,
 		CONFIG_SINGLEPLAYER_ONLY,
 		CONFIG_SERVER_HOST,
+		CONFIG_SERVER_REDIRECTOR_PORT,
+		CONFIG_SERVER_BLAZE_PORT,
+		CONFIG_SERVER_PSS_PORT,
+		CONFIG_SERVER_TICK_PORT,
+		CONFIG_SERVER_TELEMETRY_PORT,
+		CONFIG_SERVER_QOS_PORT,
+		CONFIG_SERVER_HTTP_PORT,
+		CONFIG_SERVER_HTTP_TELEMETRY_PORT,
+		CONFIG_SERVER_HTTP_QOS_PORT,
 		CONFIG_STORAGE_PATH,
 		CONFIG_WWW_STATIC_PATH,
 		CONFIG_DARKSPORE_INDEX_PAGE_PATH,
@@ -21,16 +32,21 @@ namespace Game {
 		CONFIG_END
 	};
 
-	// Config
 	class Config {
 		public:
 			static std::string RecapVersion();
 
 			static void Load(const std::string& path);
 
-			static const std::string& Get(ConfigValue key);
-			static bool GetBool(ConfigValue key);
-			static void Set(ConfigValue key, const std::string& value);
+			static const std::string& Get(ConfigKey key);
+			static bool GetBool(ConfigKey key);
+			static int16_t GetI16(ConfigKey key);
+			static int32_t GetI32(ConfigKey key);
+			static int64_t GetI64(ConfigKey key);
+			static uint16_t GetU16(ConfigKey key);
+			static uint32_t GetU32(ConfigKey key);
+			static uint64_t GetU64(ConfigKey key);
+			static void Set(ConfigKey key, const std::string& value);
 
 		private:
 			static void GenerateDefault(const std::string& path);

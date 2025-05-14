@@ -42,13 +42,13 @@ CPMAddPackage(
 target_link_libraries(recap_server PRIVATE boost_regex boost_asio boost_beast boost_bind)
 
 # pugixml
-CPMAddPackage("gh:zeux/pugixml@1.14")
+CPMAddPackage("gh:zeux/pugixml@1.15")
 target_link_libraries(recap_server PRIVATE pugixml)
 
 # RapidJSON
 CPMAddPackage(NAME rapidjson
     GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
-    GIT_TAG v1.1.0
+    GIT_TAG ebd87cb468fb4cb060b37e579718c4a4125416c1
     OPTIONS "RAPIDJSON_BUILD_EXAMPLES OFF"
             "RAPIDJSON_BUILD_TESTS OFF"
             "RAPIDJSON_BUILD_DOC OFF")
@@ -105,7 +105,7 @@ target_link_libraries(recap_server PRIVATE sol2)
 # GLM
 CPMAddPackage(
     GIT_REPOSITORY https://github.com/g-truc/glm.git
-    GIT_TAG 0.9.9.8)
+    GIT_TAG 8b94f970d9666f77f4400103e31aaa4a79a7edef)
 target_link_libraries(recap_server PRIVATE glm::glm)
 
 # cpp-base64

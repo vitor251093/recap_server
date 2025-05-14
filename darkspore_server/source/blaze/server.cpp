@@ -45,9 +45,9 @@ bhzYZC4FokU2LZWUUDUCQCOdlEVsk42T36t837wE4HCpfw4Zdk1+ZgumkKXJmt+c
 )";
 
 	// Server
-	Server::Server(boost::asio::io_context& io_service, uint16_t port) :
+	Server::Server(boost::asio::io_context& io_service, boost::asio::ip::address ip, uint16_t port) :
 		mIoService(io_service),
-		mAcceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
+		mAcceptor(io_service, boost::asio::ip::tcp::endpoint(ip, port)),
 		mContext(boost::asio::ssl::context::sslv3)
 	{
 		auto nativeHandle = mContext.native_handle();
@@ -87,6 +87,10 @@ bhzYZC4FokU2LZWUUDUCQCOdlEVsk42T36t837wE4HCpfw4Zdk1+ZgumkKXJmt+c
 			std::cout << error.message() << std::endl;
 			delete client;
 		}
+	}
+
+	boost::asio::ip::address Server::get_address() const {
+		return mAcceptor.local_endpoint().address();
 	}
 
 	uint16_t Server::get_port() const {

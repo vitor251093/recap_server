@@ -4,7 +4,7 @@ index 9fe7f18..525d768 100644
 +++ b/CMakeLists.txt
 @@ -1,4 +1,4 @@
 -cmake_minimum_required(VERSION 2.6)
-+cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5)
  
  IF(WIN32 AND NOT UNIX)
  	set(CMAKE_SUPPRESS_REGENERATION TRUE) #Gets rid of ZERO_CHECK 
@@ -86,7 +86,7 @@ index 472dabd..cec46a6 100644
 @@ -1,18 +1,25 @@
 -cmake_minimum_required(VERSION 2.6)
 -project(DLL)
-+cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5)
 +project(DLL VERSION 3.902)
  FILE(GLOB ALL_HEADER_SRCS ${RakNet_SOURCE_DIR}/Source/*.h)
  FILE(GLOB ALL_CPP_SRCS ${RakNet_SOURCE_DIR}/Source/*.cpp)
@@ -128,7 +128,7 @@ index dd2d5d2..0a5d78f 100644
 @@ -1,27 +1,20 @@
 -cmake_minimum_required(VERSION 2.6)
 -project(LibStatic)
-+cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5)
 +project(LibStatic VERSION 3.902)
  
  FILE(GLOB ALL_HEADER_SRCS ${RakNet_SOURCE_DIR}/Source/*.h)
@@ -161,6 +161,13 @@ index dd2d5d2..0a5d78f 100644
  ENDIF(WIN32 AND NOT UNIX)
  
  
+diff --git a/Source/CMakeLists.txt b/Source/CMakeLists.txt
+index 65660a1..99c8cbd 100644
+--- a/Source/CMakeLists.txt
++++ b/Source/CMakeLists.txt
+@@ -1 +1 @@
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.5)
 diff --git a/Source/DS_BinarySearchTree.h b/Source/DS_BinarySearchTree.h
 index 49aad44..af3ccd2 100644
 --- a/Source/DS_BinarySearchTree.h
