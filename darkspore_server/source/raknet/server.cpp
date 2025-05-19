@@ -1024,7 +1024,7 @@ namespace RakNet {
 		uint64_t time;
 		Read<uint64_t>(mInStream, time);
 
-		/*
+		
 		std::string timeString(0x20, '\0');
 		if (const auto* timePtr = _gmtime64(reinterpret_cast<const __time64_t*>(&time))) {
 			strftime(&timeString[0], 0x20, "%H:%M:%S", timePtr);
@@ -1035,7 +1035,7 @@ namespace RakNet {
 		std::cout << "-- DebugPing --" << std::endl;
 		std::cout << timeString << ", 0x" << std::hex << time << std::dec << std::endl;
 		std::cout << "---------------" << std::endl;
-		*/
+		
 
 		// Schedule other packets?
 		switch (client->GetGameState()) {
@@ -2170,7 +2170,7 @@ namespace RakNet {
 			Write<uint32_t>(outStream, newSlot);
 		}
 
-		/*
+		
 		Write<uint32_t>(outStream, moveType);
 		Write<uint8_t>(outStream, 0);
 		Write<uint32_t>(outStream, 0);
@@ -2179,7 +2179,7 @@ namespace RakNet {
 		Write<uint32_t>(outStream, slot);
 		Write<uint32_t>(outStream, newSlot);
 		Write<uint32_t>(outStream, 0);
-		*/
+		
 
 		Send(outStream, client);
 	}
