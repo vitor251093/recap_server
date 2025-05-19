@@ -437,7 +437,7 @@ namespace RakNet {
 			return;
 		}
 #if 1 // logging
-		// std::cout << std::endl << "--- packet: " << (int)packetType << ", length: " << (packet->bitSize >> 3) << " gotten from raknet ---" << std::endl << std::endl;
+		std::cout << std::endl << "--- packet: " << (int)packetType << ", length: " << (packet->bitSize >> 3) << " gotten from raknet ---" << std::endl << std::endl;
 		std::cout << std::format("Recieved packet '{}', length: 0x{:02X}", to_string(static_cast<PacketID>(packetType)), packet->bitSize >> 3) << std::endl;
 #endif
 		switch (static_cast<PacketID>(packetType)) {
@@ -640,7 +640,7 @@ namespace RakNet {
 		player->GetStatus(oldStatus, oldProgress);
 		player->SetStatus(status, progress);
 
-		// std::cout << "OnPlayerStatusUpdate: old(" << oldStatus << ", " << oldProgress << "); new(" << status << ", " << progress << ")" << std::endl;
+		std::cout << "OnPlayerStatusUpdate: old(" << oldStatus << ", " << oldProgress << "); new(" << status << ", " << progress << ")" << std::endl;
 		switch (status) {
 			case 0x02: {
 				break;
