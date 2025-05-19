@@ -14,6 +14,7 @@
 #include "utils/net.h"
 
 #include <iostream>
+#include <cstring>
 
 /*
 
@@ -25,13 +26,29 @@
 // Application
 Application* Application::sApplication = nullptr;
 
+bool Application::sVerboseTimestamps = false;
+
 Application::Application() : mIoService(), mSignals(mIoService, SIGINT, SIGTERM) {
 	mSignals.async_wait([&](auto, auto) { mIoService.stop(); });
 }
 
 Application& Application::InitApp(int argc, char* argv[]) {
 	if (!sApplication) {
-		sApplication = new Application;
+        for (int i = 1; i < argc; i++) {
+            if (strcmp(argv[i], "--timestamps") == 0 || 
+                strcmp(argv[i], "-ts") == 0) {
+                sVerboseTimestamps = true;
+            } else if (strcmp(argv[i], "--help") == 0 || 
+                      strcmp(argv[i], "-h") == 0) {
+                std::cout << "Usage: " << argv[0] << " [options]\n";
+                std::cout << "Options:\n";
+                std::cout << "  --timestamps, -ts    timestamp log\n";
+                std::cout << "  --help, -h                   Shows this help\n";
+                exit(0);
+            }
+        }
+        
+        sApplication = new Application;
 #ifdef _WIN32
 		/*
 		SetConsoleCtrlHandler([](DWORD) -> BOOL {

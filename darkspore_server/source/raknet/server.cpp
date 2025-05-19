@@ -2171,14 +2171,14 @@ namespace RakNet {
 		}
 
 		
-		Write<uint32_t>(outStream, moveType);
+		/* Write<uint32_t>(outStream, moveType);
 		Write<uint8_t>(outStream, 0);
 		Write<uint32_t>(outStream, 0);
 		Write<uint32_t>(outStream, static_cast<uint32_t>(color));
 		Write<uint32_t>(outStream, static_cast<uint32_t>(rarity));
 		Write<uint32_t>(outStream, slot);
 		Write<uint32_t>(outStream, newSlot);
-		Write<uint32_t>(outStream, 0);
+		Write<uint32_t>(outStream, 0); */
 		
 
 		Send(outStream, client);
