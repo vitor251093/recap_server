@@ -70,7 +70,7 @@
 */
 
 // TEMPORARY VARIABLES, TESTING ONLY!
-static bool teleportMovement = true;
+static bool teleportMovement = false;
 
 // RakNet
 namespace RakNet {
