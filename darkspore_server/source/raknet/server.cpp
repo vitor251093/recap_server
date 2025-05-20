@@ -740,7 +740,7 @@ namespace RakNet {
 			}
 
 			// Ability
-			case ActionCommand::UseCharacterAbility: {
+			/* case ActionCommand::UseCharacterAbility: {
 				Read<ActionCommandAbilityData>(mInStream, command.ability);
 
 				//
@@ -778,7 +778,26 @@ namespace RakNet {
 				}
 
 				break;
+			} */
+
+			case ActionCommand::UseCharacterAbility: {
+				Read<ActionCommandAbilityData>(mInStream, command.ability);
+				
+				// Configura resposta básica
+				AbilityCommandResponse actionResponse;
+				actionResponse.abilityId = player->GetAbilityId(player->GetCurrentDeckIndex(), command.ability.index);
+				actionResponse.cooldown = 100;  // cooldown curto
+				actionResponse.timeImmobilized = 0;  // sem imobilização
+				actionResponse.userData = command.ability.userData;
+				
+				// Responde sem tentar realmente usar a habilidade
+				SendActionCommandResponse(client, actionResponse);
+				
+				// Opcionalmente, avisa no console
+				std::cout << "DEBUG: Enviando resposta básica para UseCharacterAbility" << std::endl;
+				break;
 			}
+
 
 			// Squad ability
 			case ActionCommand::UseSquadAbility: {
@@ -823,6 +842,17 @@ namespace RakNet {
 			// Catalyst pickup
 			case ActionCommand::CatalystPickup: {
 				Read<ActionCommandCatalystData>(mInStream, command.catalyst);
+				
+				// Envia uma mensagem de client event para mostrar feedback visual
+				Game::ClientEvent clientEvent;
+				clientEvent.SetCatalystPickup(player->GetId());
+				SendServerEvent(client, clientEvent);
+				
+				std::cout << "DEBUG: Enviando resposta básica para CatalystPickup" << std::endl;
+				break;
+			}
+			/* case ActionCommand::CatalystPickup: {
+				Read<ActionCommandCatalystData>(mInStream, command.catalyst);
 
 				mGame.InteractWithObject(player, command.catalyst.objectId);
 				break;
@@ -834,7 +864,7 @@ namespace RakNet {
 
 				mGame.CancelAction(player, object);
 				break;
-			}
+			} */
 
 			// Interactable
 			case ActionCommand::UseInteractableObject: {

@@ -1207,11 +1207,11 @@ namespace Game {
 			if (request.uri.parameter<bool>("include_settings")) {
 				if (auto settingsDoc = docResponse.append_child("settings")) {
 					// Values can be an integer(long) or "on/off"
-					
+					/*
 					utils::xml_add_text_node(settingsDoc, "showConfigAlerts", "on");
 					utils::xml_add_text_node(settingsDoc, "cheat", "on");
 					utils::xml_add_text_node(settingsDoc, "safeMode", "on");
-					
+					*/
 				}
 			}
 
@@ -1304,7 +1304,7 @@ namespace Game {
 				itemstore_cost_multiplier_rareunique
 				itemstore_cost_multiplier_epicunique
 		*/
-		
+		/*
 		pugi::xml_document document;
 		if (auto docResponse = document.append_child("response")) {
 			utils::xml_add_text_node(docResponse, "timestamp", utils::get_unix_time());
@@ -1382,7 +1382,7 @@ namespace Game {
 
 			add_common_keys(docResponse);
 		}
-		
+		*/
 
 		set_response_body(response, document, boost::beast::http::status::ok);
 	}
@@ -1451,7 +1451,7 @@ namespace Game {
 						auto stat = stats.append_child("stat");
 						utils::xml_add_text_node(stat, "wins", 0);
 
-						
+						/*
 							if(detailstats.childNodes[i].tagName != 'pve_swaps'
 							  && detailstats.childNodes[i].tagName != 'pve_overcharges'
 							  && detailstats.childNodes[i].tagName != 'pve_dna'
@@ -1470,7 +1470,7 @@ namespace Game {
 							  && detailstats.childNodes[i].tagName != 'pvp_glickoSkill'
 							  && detailstats.childNodes[i].tagName != 'pvp_glickoRD'
 							  && detailstats.childNodes[i].tagName != 'pve_progression'
-						
+						*/
 					}
 				} else {
 					utils::xml_add_text_node(docResponse, "blaze_id", account.id);
@@ -1609,10 +1609,10 @@ namespace Game {
 			
 			if (auto players = game.append_child("players")) {
 				if (auto player = players.append_child("player")) {
-					
+					/*
 					utils::xml_add_text_node(player, "deaths", 0);
 					utils::xml_add_text_node(player, "kills", 0);
-					
+					*/
 					utils::xml_add_text_node(player, "account_id", 1);
 					utils::xml_add_text_node(player, "result", 0);
 					utils::xml_add_text_node(player, "creature1_id", 1);
@@ -1774,7 +1774,7 @@ namespace Game {
 	}
 
 	void API::game_creature_updateCreature(HTTP::Session& session, HTTP::Response& response) {
-		
+		/*
 cost = 0
 gear = 1.000
 id = 10
@@ -1789,7 +1789,7 @@ thumb = iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAgAElEQVR4nGy9abBtx3kdtlb3
 thumb_crc = 2819438930
 token = 100
 version = 1
-	
+	*/
 
 		const auto& request = session.get_request();
 		const auto& uri = request.uri;
