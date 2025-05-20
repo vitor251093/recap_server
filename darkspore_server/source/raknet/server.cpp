@@ -740,40 +740,21 @@ namespace RakNet {
 			}
 
 			// Ability
-			case ActionCommand::UseCharacterAbility:
-			{
-				std::cout << "DEBUG: Processando UseCharacterAbility" << std::endl;
-
+			/* case ActionCommand::UseCharacterAbility: {
 				Read<ActionCommandAbilityData>(mInStream, command.ability);
-				std::cout << "DEBUG: Leitura de ActionCommandAbilityData completa" << std::endl;
-
-				// Log dos dados recebidos
-				std::cout << "DEBUG: command.ability - targetId: " << command.ability.targetId
-									<< ", index: " << command.ability.index
-									<< ", rank: " << command.ability.rank
-									<< ", userData: " << command.ability.userData << std::endl;
-				std::cout << "DEBUG: cursorPosition: (" << command.ability.cursorPosition.x << ", "
-									<< command.ability.cursorPosition.y << ", "
-									<< command.ability.cursorPosition.z << ")" << std::endl;
 
 				//
 				object->SetOrientation(command.data.orientation);
-				std::cout << "DEBUG: Orientação do objeto atualizada" << std::endl;
 
 				//
-				CombatData combatData{};
+				CombatData combatData {};
 				combatData.targetId = command.ability.targetId;
 				combatData.cursorPosition = command.ability.cursorPosition;
 				combatData.targetPosition = command.ability.targetPosition;
 
 				auto currentSquadIndex = player->GetCurrentDeckIndex();
-				std::cout << "DEBUG: currentSquadIndex: " << currentSquadIndex << std::endl;
-
 				combatData.abilityId = player->GetAbilityId(currentSquadIndex, command.ability.index);
-				std::cout << "DEBUG: abilityId obtido: " << combatData.abilityId << std::endl;
-
 				combatData.abilityRank = player->GetAbilityRank(currentSquadIndex, command.ability.index);
-				std::cout << "DEBUG: abilityRank obtido: " << combatData.abilityRank << std::endl;
 
 				combatData.unk[0] = command.ability.rank;
 				combatData.unk[1] = command.ability.unk;
@@ -784,44 +765,38 @@ namespace RakNet {
 				actionResponse.cooldown = 100;
 				actionResponse.timeImmobilized = 100;
 				actionResponse.userData = 0x1234;
-
-				std::cout << "DEBUG: AbilityCommandResponse preparada" << std::endl;
-
+				
 				combatData.targetIsInRange = command.data.unk[1] > 0;
-				std::cout << "DEBUG: targetIsInRange: " << (combatData.targetIsInRange ? "true" : "false") << std::endl;
-
-				if (combatData.targetIsInRange)
-				{
-					std::cout << "DEBUG: Alvo está ao alcance, chamada UseAbility foi comentada" << std::endl;
-
-					// COMENTADO: linha problemática que estava causando o crash
-					// mGame.UseAbility(object, combatData);
-
-					// Apenas enviamos a resposta para o cliente
+				if (combatData.targetIsInRange) {
+					mGame.UseAbility(object, combatData);
 					SendActionCommandResponse(client, actionResponse);
-					std::cout << "DEBUG: ActionCommandResponse enviada" << std::endl;
-
-					// Atualizamos o objeto e o jogador para manter a sincronização
-					SendObjectUpdate(client, object);
-					std::cout << "DEBUG: ObjectUpdate enviado" << std::endl;
-
-					SendLabsPlayerUpdate(client, player);
-					std::cout << "DEBUG: LabsPlayerUpdate enviado" << std::endl;
-				}
-				else if (object->HasLocomotionData())
-				{
-					std::cout << "DEBUG: Alvo fora de alcance, movendo objeto" << std::endl;
-
-					const auto &locomotionData = object->GetLocomotionData();
-					locomotionData->MoveToPointWhileFacingTarget(
-							combatData.cursorPosition,
-							mGame.GetObjectManager().Get(combatData.targetId));
+				} else if (object->HasLocomotionData()) {
+					const auto& locomotionData = object->GetLocomotionData();
+					locomotionData->MoveToPointWhileFacingTarget(combatData.cursorPosition, mGame.GetObjectManager().Get(combatData.targetId));
 
 					mGame.MoveObject(object, *locomotionData);
-					std::cout << "DEBUG: Movimento do objeto completado" << std::endl;
 				}
 
-				std::cout << "DEBUG: Processamento de UseCharacterAbility concluído" << std::endl;
+				break;
+			} */
+
+			case ActionCommand::UseCharacterAbility:
+			{
+				// Ler os dados do comando
+				Read<ActionCommandAbilityData>(mInStream, command.ability);
+
+				// Configurar a resposta básica
+				AbilityCommandResponse actionResponse;
+				actionResponse.abilityId = player->GetAbilityId(player->GetCurrentDeckIndex(), command.ability.index);
+				actionResponse.cooldown = 100;
+				actionResponse.timeImmobilized = 0;
+				actionResponse.userData = command.ability.userData;
+
+				// Enviar apenas a resposta básica, sem tentar fazer nada mais complexo
+				SendActionCommandResponse(client, actionResponse);
+
+				// Log simples
+				std::cout << "DEBUG: Resposta básica enviada para UseCharacterAbility" << std::endl;
 				break;
 			}
 
@@ -851,10 +826,10 @@ namespace RakNet {
 				actionResponse.cooldown = 2000;
 				actionResponse.userData = 0x4321;
 
-				
+				/*
 				mGame.UseAbility(object, combatData);
 				SendCooldownUpdate(client, object, actionResponse.abilityId, actionResponse.cooldown);
-				
+				*/
 
 				// SendModifierCreated(client, object);
 
