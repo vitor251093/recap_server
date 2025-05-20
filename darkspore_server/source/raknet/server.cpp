@@ -792,17 +792,16 @@ namespace RakNet {
 
 				if (combatData.targetIsInRange)
 				{
-					std::cout << "DEBUG: Alvo está ao alcance, chamando UseAbility" << std::endl;
+					std::cout << "DEBUG: Alvo está ao alcance, chamada UseAbility foi comentada" << std::endl;
 
-					// MODIFICAÇÃO: Comente esta linha que pode estar causando o crash
+					// COMENTADO: linha problemática que estava causando o crash
 					// mGame.UseAbility(object, combatData);
-					std::cout << "DEBUG: Chamada a UseAbility pulada (comentada)" << std::endl;
 
-					// Apenas envia a resposta
+					// Apenas enviamos a resposta para o cliente
 					SendActionCommandResponse(client, actionResponse);
 					std::cout << "DEBUG: ActionCommandResponse enviada" << std::endl;
 
-					// Adicione outras atualizações que podem ser esperadas pelo cliente
+					// Atualizamos o objeto e o jogador para manter a sincronização
 					SendObjectUpdate(client, object);
 					std::cout << "DEBUG: ObjectUpdate enviado" << std::endl;
 
