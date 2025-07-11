@@ -807,26 +807,6 @@ namespace RakNet {
 					break;
 			}
 
-			case ActionCommand::UseCharacterAbility:
-			{
-				// Ler os dados do comando
-				Read<ActionCommandAbilityData>(mInStream, command.ability);
-
-				// Configurar a resposta básica
-				AbilityCommandResponse actionResponse;
-				actionResponse.abilityId = player->GetAbilityId(player->GetCurrentDeckIndex(), command.ability.index);
-				actionResponse.cooldown = 100;
-				actionResponse.timeImmobilized = 0;
-				actionResponse.userData = command.ability.userData;
-
-				// Enviar apenas a resposta básica, sem tentar fazer nada mais complexo
-				SendActionCommandResponse(client, actionResponse);
-
-				// Log simples
-				std::cout << "DEBUG: Resposta básica enviada para UseCharacterAbility" << std::endl;
-				break;
-			}
-
 			// Squad ability
 			case ActionCommand::UseSquadAbility: {
 				Read<ActionCommandAbilityData>(mInStream, command.ability);
