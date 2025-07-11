@@ -740,45 +740,72 @@ namespace RakNet {
 			}
 
 			// Ability
-			/* case ActionCommand::UseCharacterAbility: {
-				Read<ActionCommandAbilityData>(mInStream, command.ability);
+			case ActionCommand::UseCharacterAbility: {
+					Read<ActionCommandAbilityData>(mInStream, command.ability);
+					
+					// ============ DEBUG E VALIDAÇÃO ============
+					std::cout << "=== UseCharacterAbility Debug ===" << std::endl;
+					std::cout << "Target ID: " << command.ability.targetId << std::endl;
+					std::cout << "Ability Index: " << command.ability.index << std::endl;
+					std::cout << "Cursor: (" << command.ability.cursorPosition.x << "," 
+										<< command.ability.cursorPosition.y << "," 
+										<< command.ability.cursorPosition.z << ")" << std::endl;
+					
+					// VALIDAÇÃO CRÍTICA - PARA O CRASH:
+					auto targetObject = mGame.GetObjectManager().Get(command.ability.targetId);
+					if (!targetObject) {
+							std::cout << "ERROR: Target ID " << command.ability.targetId << " not found!" << std::endl;
+							std::cout << "Available objects count: " << mGame.GetObjectManager().GetActiveObjects().size() << std::endl;
+							
+							// Debug: List all valid IDs
+							std::cout << "Valid Object IDs: ";
+							for (const auto& obj : mGame.GetObjectManager().GetActiveObjects()) {
+									std::cout << obj->GetId() << " ";
+							}
+							std::cout << std::endl;
+							
+							// Enviar resposta de erro ao cliente:
+							AbilityCommandResponse errorResponse;
+							errorResponse.cooldown = 0;
+							errorResponse.timeImmobilized = 0;
+							errorResponse.abilityId = 0; // Indica erro
+							errorResponse.userData = command.ability.userData;
+							
+							SendActionCommandResponse(client, errorResponse);
+							std::cout << "DEBUG: Resposta de erro enviada para UseCharacterAbility" << std::endl;
+							break; // SAIR SEM CRASHAR!
+					}
+					
+					std::cout << "SUCCESS: Target found - ID=" << command.ability.targetId 
+										<< ", Noun=" << targetObject->GetNoun() << std::endl;
+					// ==========================================
+					
+					// Código original continua APENAS se target é válido:
+					object->SetOrientation(command.data.orientation);
 
-				//
-				object->SetOrientation(command.data.orientation);
+					CombatData combatData {};
+					combatData.targetId = command.ability.targetId;
+					combatData.cursorPosition = command.ability.cursorPosition;
+					combatData.targetPosition = command.ability.targetPosition;
 
-				//
-				CombatData combatData {};
-				combatData.targetId = command.ability.targetId;
-				combatData.cursorPosition = command.ability.cursorPosition;
-				combatData.targetPosition = command.ability.targetPosition;
+					auto currentSquadIndex = player->GetCurrentDeckIndex();
+					combatData.abilityId = player->GetAbilityId(currentSquadIndex, command.ability.index);
+					combatData.abilityRank = player->GetAbilityRank(currentSquadIndex, command.ability.index);
 
-				auto currentSquadIndex = player->GetCurrentDeckIndex();
-				combatData.abilityId = player->GetAbilityId(currentSquadIndex, command.ability.index);
-				combatData.abilityRank = player->GetAbilityRank(currentSquadIndex, command.ability.index);
+					combatData.unk[0] = command.ability.rank;
+					combatData.unk[1] = command.ability.unk;
+					combatData.valueFromActionResponse = command.ability.userData;
 
-				combatData.unk[0] = command.ability.rank;
-				combatData.unk[1] = command.ability.unk;
-				combatData.valueFromActionResponse = command.ability.userData;
-
-				AbilityCommandResponse actionResponse;
-				actionResponse.abilityId = combatData.abilityId;
-				actionResponse.cooldown = 100;
-				actionResponse.timeImmobilized = 100;
-				actionResponse.userData = 0x1234;
-				
-				combatData.targetIsInRange = command.data.unk[1] > 0;
-				if (combatData.targetIsInRange) {
-					mGame.UseAbility(object, combatData);
+					AbilityCommandResponse actionResponse;
+					actionResponse.cooldown = 0;
+					actionResponse.timeImmobilized = 0;
+					actionResponse.abilityId = combatData.abilityId;
+					actionResponse.userData = combatData.valueFromActionResponse;
+					
 					SendActionCommandResponse(client, actionResponse);
-				} else if (object->HasLocomotionData()) {
-					const auto& locomotionData = object->GetLocomotionData();
-					locomotionData->MoveToPointWhileFacingTarget(combatData.cursorPosition, mGame.GetObjectManager().Get(combatData.targetId));
-
-					mGame.MoveObject(object, *locomotionData);
-				}
-
-				break;
-			} */
+					std::cout << "DEBUG: Resposta de sucesso enviada para UseCharacterAbility" << std::endl;
+					break;
+			}
 
 			case ActionCommand::UseCharacterAbility:
 			{
