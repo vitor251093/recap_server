@@ -805,10 +805,21 @@ namespace RakNet {
 				combatData.unk[1] = command.ability.unk;
 				combatData.valueFromActionResponse = command.ability.userData;
 
+				std::cout << "🔄 Criando ActionResponse..." << std::endl;
+				std::cout << "Combat Data - Ability ID: " << combatData.abilityId << std::endl;
+				std::cout << "Combat Data - Target ID: " << combatData.targetId << std::endl;
+
+
 				AbilityCommandResponse actionResponse;
 				actionResponse.abilityId = combatData.abilityId;
 				actionResponse.cooldown = 2000;
 				actionResponse.userData = 0x4321;
+
+				std::cout << "✅ ActionResponse criado - Ability ID: " << actionResponse.abilityId << std::endl;
+
+				std::cout << "🔄 Enviando ActionCommandResponse..." << std::endl;
+				SendActionCommandResponse(client, actionResponse);
+				std::cout << "✅ ActionCommandResponse enviado!" << std::endl;
 
 				/*
 				mGame.UseAbility(object, combatData);
@@ -817,10 +828,16 @@ namespace RakNet {
 
 				// SendModifierCreated(client, object);
 
+				std::cout << "🔄 Criando Director..." << std::endl;
 				cAIDirector director;
 				director.mbBossComplete = true;
+				std::cout << "✅ Director criado!" << std::endl;
 
+				std::cout << "🔄 Enviando DirectorState..." << std::endl;
 				SendDirectorState(client, director);
+				std::cout << "✅ DirectorState enviado!" << std::endl;
+
+				std::cout << "=== UseCharacterAbility COMPLETO ===" << std::endl;
 				break;
 			}
 
