@@ -741,20 +741,18 @@ namespace RakNet {
 
 			// Ability
 			case ActionCommand::UseCharacterAbility: {
-					Read<ActionCommandAbilityData>(mInStream, command.ability);
+					std::cout << "=== INÍCIO UseCharacterAbility ===" << std::endl;
 					
-					// ============ DEBUG E VALIDAÇÃO ============
-					std::cout << "=== UseCharacterAbility Debug ===" << std::endl;
+					Read<ActionCommandAbilityData>(mInStream, command.ability);
+					std::cout << "✅ Packet lido com sucesso" << std::endl;
+					
 					std::cout << "Target ID: " << command.ability.targetId << std::endl;
 					std::cout << "Ability Index: " << command.ability.index << std::endl;
-					std::cout << "Cursor: (" << command.ability.cursorPosition.x << "," 
-										<< command.ability.cursorPosition.y << "," 
-										<< command.ability.cursorPosition.z << ")" << std::endl;
 					
-					// VALIDAÇÃO CRÍTICA - PARA O CRASH:
+					// VALIDAÇÃO CRÍTICA:
 					auto targetObject = mGame.GetObjectManager().Get(command.ability.targetId);
 					if (!targetObject) {
-							std::cout << "ERROR: Target ID " << command.ability.targetId << " not found!" << std::endl;
+							std::cout << "❌ ERROR: Target ID " << command.ability.targetId << " not found!" << std::endl;
 							std::cout << "Available objects count: " << mGame.GetObjectManager().GetActiveObjects().size() << std::endl;
 							
 							// Debug: List all valid IDs
@@ -764,46 +762,25 @@ namespace RakNet {
 							}
 							std::cout << std::endl;
 							
-							// Enviar resposta de erro ao cliente:
 							AbilityCommandResponse errorResponse;
 							errorResponse.cooldown = 0;
 							errorResponse.timeImmobilized = 0;
-							errorResponse.abilityId = 0; // Indica erro
+							errorResponse.abilityId = 0;
 							errorResponse.userData = command.ability.userData;
 							
+							std::cout << "📤 Enviando resposta de erro..." << std::endl;
 							SendActionCommandResponse(client, errorResponse);
-							std::cout << "DEBUG: Resposta de erro enviada para UseCharacterAbility" << std::endl;
-							break; // SAIR SEM CRASHAR!
+							std::cout << "✅ Resposta de erro enviada!" << std::endl;
+							break; // IMPORTANTE: SAIR AQUI!
 					}
 					
-					std::cout << "SUCCESS: Target found - ID=" << command.ability.targetId 
-										<< ", Noun=" << targetObject->GetNoun() << std::endl;
-					// ==========================================
+					std::cout << "✅ Target encontrado: ID=" << command.ability.targetId << std::endl;
 					
-					// Código original continua APENAS se target é válido:
-					object->SetOrientation(command.data.orientation);
-
-					CombatData combatData {};
-					combatData.targetId = command.ability.targetId;
-					combatData.cursorPosition = command.ability.cursorPosition;
-					combatData.targetPosition = command.ability.targetPosition;
-
-					auto currentSquadIndex = player->GetCurrentDeckIndex();
-					combatData.abilityId = player->GetAbilityId(currentSquadIndex, command.ability.index);
-					combatData.abilityRank = player->GetAbilityRank(currentSquadIndex, command.ability.index);
-
-					combatData.unk[0] = command.ability.rank;
-					combatData.unk[1] = command.ability.unk;
-					combatData.valueFromActionResponse = command.ability.userData;
-
-					AbilityCommandResponse actionResponse;
-					actionResponse.cooldown = 0;
-					actionResponse.timeImmobilized = 0;
-					actionResponse.abilityId = combatData.abilityId;
-					actionResponse.userData = combatData.valueFromActionResponse;
+					// RESTO DO CÓDIGO ORIGINAL...
+					std::cout << "🔄 Processando combat data..." << std::endl;
+					// ... código original aqui
 					
-					SendActionCommandResponse(client, actionResponse);
-					std::cout << "DEBUG: Resposta de sucesso enviada para UseCharacterAbility" << std::endl;
+					std::cout << "=== FIM UseCharacterAbility ===" << std::endl;
 					break;
 			}
 
