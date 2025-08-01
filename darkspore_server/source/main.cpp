@@ -175,12 +175,12 @@ void Application::LoadDarksporeData()
 		darksporeInstallPath = "";
 	}
 
-	std::cout << "Darkspore version: " << darksporeInstallVersion << "\n";
+	std::cout << "Darkspore version: " << darksporeInstallVersion;
 	if (!darksporeInstallPath.empty()) {
-		std::cout << "Darkspore install path: " << darksporeInstallPath << "\n";
+		std::cout << "Darkspore install path: " << darksporeInstallPath;
 
-		const auto& serverDataPath = "data/serverdata/version_bin.txt";
-		if (std::filesystem::exists(serverDataPath)) {
+		const auto& serverDataVersionBinPath = "data/serverdata/version_bin.txt";
+		if (std::filesystem::exists(serverDataVersionBinPath)) {
 			std::cout << "Server files are ready." << std::endl;
 			return;
 		}
@@ -212,7 +212,7 @@ void Application::LoadDarksporeData()
 		}
 
 		// Step 3: Parse binary assets
-		RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data ./AssetData_Binary");
+		RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
 
 		// Step 4: Cleanup intermediate directories
 		std::filesystem::remove_all("./AssetData_Binary");
@@ -223,7 +223,9 @@ void Application::LoadDarksporeData()
 		MergeDirectories("./ServerData_final/Abilities", "./data/serverdata/Abilities");
 		std::filesystem::remove_all("./ServerData_final");
 
-		std::cout << "Processing completed successfully." << std::endl;
+		std::ofstream(serverDataVersionBinPath) << darksporeInstallVersion;
+
+		std::cout << "Darkspore Data extraction completed successfully." << std::endl;
 	}
 }
 

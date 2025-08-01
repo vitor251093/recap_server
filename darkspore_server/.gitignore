@@ -1,2 +1,8 @@
 # CMake build artifacts
 build/
+
+# Darkspore install for tests
+darkspore/
+
+# Modules for tests
+modules/

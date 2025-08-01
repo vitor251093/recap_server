@@ -7,8 +7,11 @@ rm build/config.xml || true
 rm -r build/data || true
 cp -r res/data build/
 
+cp -r darkspore build/ || true
+cp modules/* build/ || true
+
 mkdir -p build/storage/user
 touch build/storage/user/PLACEHOLDER
 
 cd build
-./recap_server
+./recap_server --darkspore-path "./darkspore"
