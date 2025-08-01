@@ -1045,7 +1045,8 @@ namespace RakNet {
 		uint64_t time;
 		Read<uint64_t>(mInStream, time);
 
-		
+
+#ifdef _WIN32
 		std::string timeString(0x20, '\0');
 		if (const auto* timePtr = _gmtime64(reinterpret_cast<const __time64_t*>(&time))) {
 			strftime(&timeString[0], 0x20, "%H:%M:%S", timePtr);
@@ -1056,6 +1057,7 @@ namespace RakNet {
 		std::cout << "-- DebugPing --" << std::endl;
 		std::cout << timeString << ", 0x" << std::hex << time << std::dec << std::endl;
 		std::cout << "---------------" << std::endl;
+#endif
 		
 
 		// Schedule other packets?
