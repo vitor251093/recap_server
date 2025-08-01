@@ -8,6 +8,7 @@ cmake -DCOMPONENT=recap_server -Pbuild/cmake_install.cmake || exit 1
 
 mkdir -p build/storage/www
 cp -r res/data build/
+cp modules/* build/ || true
 cp -r res/template_png build/storage/
 cp -r res/static build/storage/www/
 

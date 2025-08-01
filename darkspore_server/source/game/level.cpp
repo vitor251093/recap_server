@@ -10,7 +10,7 @@
 
 // Game
 namespace Game {
-	const std::string levelDataPath = "data/level/";
+	const std::string levelDataPath = "data/serverdata/level/";
 
 	const auto read_list = [](pugi::xml_node node, std::string_view nodeName, auto& list) {
 		for (const auto& child : node.child(nodeName.data())) {
