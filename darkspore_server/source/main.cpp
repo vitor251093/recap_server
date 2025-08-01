@@ -136,7 +136,21 @@ bool Application::OnInit() {
 	mGameAPI->setup();
 
 	// Preparing the data folder
-	LoadDarksporeData();
+	if (!darksporeInstallPath.empty())
+	{
+		std::thread t([this]() {
+			this->LoadDarksporeData();
+
+			// Load noun files
+			(void)Game::NounDatabase::Instance();
+
+			// Load scripts
+			Game::GlobalLua::Instance().Initialize();
+		});
+		t.detach();
+
+		return true;
+	}
 
 	// Load noun files
 	(void)Game::NounDatabase::Instance();
@@ -186,83 +200,81 @@ void Application::LoadDarksporeVersionAndPath()
 
 void Application::LoadDarksporeData()
 {
-	if (!darksporeInstallPath.empty()) {
-		const auto& serverDataVersionBinPath = "data/serverdata/version_bin.txt";
-		if (std::filesystem::exists(serverDataVersionBinPath)) {
-			std::cout << "Server files are ready." << std::endl;
-			return;
-		}
+	const auto& serverDataVersionBinPath = "data/serverdata/version_bin.txt";
+	if (std::filesystem::exists(serverDataVersionBinPath)) {
+		std::cout << "Server files are ready." << std::endl;
+		return;
+	}
 
 #ifdef _WIN32
-		std::string dbpf_unpacker = "dbpf_unpacker.exe";
-		std::string unluac        = "unluac.exe";
-		std::string recap_parser  = "recap_parser.exe";
+	std::string dbpf_unpacker = "dbpf_unpacker.exe";
+	std::string unluac        = "unluac.exe";
+	std::string recap_parser  = "recap_parser.exe";
 
-		// Step 1: Unpack packages
-		std::cout << "Unpacking ServerData.package..." << std::endl;
-		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\ServerData.package ServerData\)");
-		std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
-		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\AssetData_Binary.package AssetData_Binary\)");
+	// Step 1: Unpack packages
+	std::cout << "Unpacking ServerData.package..." << std::endl;
+	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\ServerData.package ServerData\)");
+	std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
+	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\AssetData_Binary.package AssetData_Binary\)");
 
-		// Step 2: Decompile .lua files
-		std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
-		for (auto& entry : std::filesystem::recursive_directory_iterator("ServerData")) {
-			if (entry.is_regular_file() && entry.path().extension() == ".lua") {
-				std::string relativePath = std::filesystem::relative(entry.path(), "ServerData").string();
-				std::filesystem::path outputPath = std::filesystem::path("ServerData_final") / relativePath;
-				std::filesystem::create_directories(outputPath.parent_path());
+	// Step 2: Decompile .lua files
+	std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
+	for (auto& entry : std::filesystem::recursive_directory_iterator("ServerData")) {
+		if (entry.is_regular_file() && entry.path().extension() == ".lua") {
+			std::string relativePath = std::filesystem::relative(entry.path(), "ServerData").string();
+			std::filesystem::path outputPath = std::filesystem::path("ServerData_final") / relativePath;
+			std::filesystem::create_directories(outputPath.parent_path());
 
-				std::string command = unluac + " \"" + entry.path().string() + "\" > \"" + outputPath.string() + "\"";
-				RunCommand(command);
-			}
+			std::string command = unluac + " \"" + entry.path().string() + "\" > \"" + outputPath.string() + "\"";
+			RunCommand(command);
 		}
+	}
 
-		// Step 3: Parse binary assets
-		std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
-		RunCommand(recap_parser + " --recursive --sort-ext --xml -o data\\serverdata AssetData_Binary");
+	// Step 3: Parse binary assets
+	std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
+	RunCommand(recap_parser + " --recursive --sort-ext --xml -o data\\serverdata AssetData_Binary");
 #else
-		std::string dbpf_unpacker = "./dbpf_unpacker";
-		std::string unluac        = "./unluac";
-		std::string recap_parser  = "./recap_parser";
+	std::string dbpf_unpacker = "./dbpf_unpacker";
+	std::string unluac        = "./unluac";
+	std::string recap_parser  = "./recap_parser";
 
-		// Step 1: Unpack packages
-		std::cout << "Unpacking ServerData.package..." << std::endl;
-		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/ServerData.package ./ServerData/");
-		std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
-		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/AssetData_Binary.package ./AssetData_Binary/");
+	// Step 1: Unpack packages
+	std::cout << "Unpacking ServerData.package..." << std::endl;
+	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/ServerData.package ./ServerData/");
+	std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
+	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/AssetData_Binary.package ./AssetData_Binary/");
 
-		// Step 2: Decompile .lua files
-		std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
-		for (auto& entry : std::filesystem::recursive_directory_iterator("./ServerData")) {
-			if (entry.is_regular_file() && entry.path().extension() == ".lua") {
-				std::string relativePath = std::filesystem::relative(entry.path(), "./ServerData").string();
-				std::filesystem::path outputPath = std::filesystem::path("./ServerData_final") / relativePath;
-				std::filesystem::create_directories(outputPath.parent_path());
+	// Step 2: Decompile .lua files
+	std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
+	for (auto& entry : std::filesystem::recursive_directory_iterator("./ServerData")) {
+		if (entry.is_regular_file() && entry.path().extension() == ".lua") {
+			std::string relativePath = std::filesystem::relative(entry.path(), "./ServerData").string();
+			std::filesystem::path outputPath = std::filesystem::path("./ServerData_final") / relativePath;
+			std::filesystem::create_directories(outputPath.parent_path());
 
-				std::string command = unluac + " \"" + entry.path().string() + "\" > \"" + outputPath.string() + "\"";
-				RunCommand(command);
-			}
+			std::string command = unluac + " \"" + entry.path().string() + "\" > \"" + outputPath.string() + "\"";
+			RunCommand(command);
 		}
+	}
 
-		// Step 3: Parse binary assets
-		std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
-		RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
+	// Step 3: Parse binary assets
+	std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
+	RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
 #endif
 
-		// Step 4: Cleanup intermediate directories
-		std::cout << "Cleaning temporary folders..." << std::endl;
-		std::filesystem::remove_all("./AssetData_Binary");
-		std::filesystem::remove_all("./ServerData");
+	// Step 4: Cleanup intermediate directories
+	std::cout << "Cleaning temporary folders..." << std::endl;
+	std::filesystem::remove_all("./AssetData_Binary");
+	std::filesystem::remove_all("./ServerData");
 
-		// Step 5: Move final data into place
-		MergeDirectories("./ServerData_final/lua", "./data/serverdata/lua");
-		MergeDirectories("./ServerData_final/Abilities", "./data/serverdata/Abilities");
-		std::filesystem::remove_all("./ServerData_final");
+	// Step 5: Move final data into place
+	MergeDirectories("./ServerData_final/lua", "./data/serverdata/lua");
+	MergeDirectories("./ServerData_final/Abilities", "./data/serverdata/Abilities");
+	std::filesystem::remove_all("./ServerData_final");
 
-		std::ofstream(serverDataVersionBinPath) << darksporeInstallVersion;
+	std::ofstream(serverDataVersionBinPath) << darksporeInstallVersion;
 
-		std::cout << "Darkspore Data extraction completed successfully." << std::endl;
-	}
+	std::cout << "Darkspore Data extraction completed successfully." << std::endl;
 }
 
 std::string Application::LoadVersionFromDarksporeInstall()
