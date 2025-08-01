@@ -175,9 +175,9 @@ void Application::LoadDarksporeData()
 		darksporeInstallPath = "";
 	}
 
-	std::cout << "Darkspore version: " << darksporeInstallVersion;
+	std::cout << "Darkspore version: " << darksporeInstallVersion << std::endl;
 	if (!darksporeInstallPath.empty()) {
-		std::cout << "Darkspore install path: " << darksporeInstallPath;
+		std::cout << "Darkspore install path: " << darksporeInstallPath << std::endl;
 
 		const auto& serverDataVersionBinPath = "data/serverdata/version_bin.txt";
 		if (std::filesystem::exists(serverDataVersionBinPath)) {
@@ -196,7 +196,10 @@ void Application::LoadDarksporeData()
 		std::string recap_parser  = "./recap_parser" + binaryExtension;
 
 		// Step 1: Unpack packages
+		std::cout << dbpf_unpacker << " " << darksporeInstallPath << "/Data/ServerData.package ./ServerData/" << std::endl;
 		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/ServerData.package ./ServerData/");
+
+		std::cout << dbpf_unpacker << " " << darksporeInstallPath << "/Data/AssetData_Binary.package ./AssetData_Binary/" << std::endl;
 		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/AssetData_Binary.package ./AssetData_Binary/");
 
 		// Step 2: Decompile .lua files
@@ -207,11 +210,13 @@ void Application::LoadDarksporeData()
 				std::filesystem::create_directories(outputPath.parent_path());
 
 				std::string command = unluac + " \"" + entry.path().string() + "\" > \"" + outputPath.string() + "\"";
+				std::cout << command << std::endl;
 				RunCommand(command);
 			}
 		}
 
 		// Step 3: Parse binary assets
+		std::cout << recap_parser << " --recursive --sort-ext --xml -o ./data/serverdata ./AssetData_Binary" << std::endl;
 		RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
 
 		// Step 4: Cleanup intermediate directories
