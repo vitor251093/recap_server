@@ -10,6 +10,8 @@
 #include "qos/server.h"
 #include "game/api.h"
 
+#include <filesystem>
+
 // Application
 class Application {
 	private:
@@ -69,6 +71,9 @@ class Application {
 
 		std::unique_ptr<QoS::Server> mQosServer;
 
+		void LoadDarksporeData();
+		void RunCommand(const std::string& cmd);
+		void MergeDirectories(const std::filesystem::path& source, const std::filesystem::path& destination);
 		std::string LoadVersionFromDarksporeInstall();
 };
 

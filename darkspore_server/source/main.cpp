@@ -84,18 +84,8 @@ bool Application::OnInit() {
 	SetConsoleOutputCP(CP_UTF8);
 #endif
 
-	darksporeInstallPath = std::filesystem::absolute(darksporeInstallPath).string();
-	std::string newDarksporeInstallVersion = LoadVersionFromDarksporeInstall();
-	if (!newDarksporeInstallVersion.empty()) {
-		darksporeInstallVersion = newDarksporeInstallVersion;
-	} else {
-		darksporeInstallPath = "";
-	}
-
-	std::cout << "Darkspore version: " << darksporeInstallVersion << "\n";
-	if (!darksporeInstallPath.empty()) {
-		std::cout << "Darkspore install path: " << darksporeInstallPath << "\n";
-	}
+	// Preparing the data folder
+	LoadDarksporeData();
 
 	// Config
 	Game::Config::Load("config.xml");
@@ -175,6 +165,68 @@ void Application::Run() {
 	}
 }
 
+void Application::LoadDarksporeData()
+{
+	darksporeInstallPath = std::filesystem::absolute(darksporeInstallPath).string();
+	std::string newDarksporeInstallVersion = LoadVersionFromDarksporeInstall();
+	if (!newDarksporeInstallVersion.empty()) {
+		darksporeInstallVersion = newDarksporeInstallVersion;
+	} else {
+		darksporeInstallPath = "";
+	}
+
+	std::cout << "Darkspore version: " << darksporeInstallVersion << "\n";
+	if (!darksporeInstallPath.empty()) {
+		std::cout << "Darkspore install path: " << darksporeInstallPath << "\n";
+
+		const auto& serverDataPath = "data/serverdata/version_bin.txt";
+		if (std::filesystem::exists(serverDataPath)) {
+			std::cout << "Server files are ready." << std::endl;
+			return;
+		}
+
+#ifdef _WIN32
+		const std::string binaryExtension = ".exe";
+#else
+		const std::string binaryExtension;
+#endif
+
+		std::string dbpf_unpacker = "./dbpf_unpacker" + binaryExtension;
+		std::string unluac        = "./unluac" + binaryExtension;
+		std::string recap_parser  = "./recap_parser" + binaryExtension;
+
+		// Step 1: Unpack packages
+		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/ServerData.package ./ServerData/");
+		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/AssetData_Binary.package ./AssetData_Binary/");
+
+		// Step 2: Decompile .lua files
+		for (auto& entry : std::filesystem::recursive_directory_iterator("./ServerData")) {
+			if (entry.is_regular_file() && entry.path().extension() == ".lua") {
+				std::string relativePath = std::filesystem::relative(entry.path(), "./ServerData").string();
+				std::filesystem::path outputPath = std::filesystem::path("./ServerData_final") / relativePath;
+				std::filesystem::create_directories(outputPath.parent_path());
+
+				std::string command = unluac + " \"" + entry.path().string() + "\" > \"" + outputPath.string() + "\"";
+				RunCommand(command);
+			}
+		}
+
+		// Step 3: Parse binary assets
+		RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data ./AssetData_Binary");
+
+		// Step 4: Cleanup intermediate directories
+		std::filesystem::remove_all("./AssetData_Binary");
+		std::filesystem::remove_all("./ServerData");
+
+		// Step 5: Move final data into place
+		MergeDirectories("./ServerData_final/lua", "./data/serverdata/lua");
+		MergeDirectories("./ServerData_final/Abilities", "./data/serverdata/Abilities");
+		std::filesystem::remove_all("./ServerData_final");
+
+		std::cout << "Processing completed successfully." << std::endl;
+	}
+}
+
 std::string Application::LoadVersionFromDarksporeInstall()
 {
 	std::filesystem::path darksporeInstall(darksporeInstallPath);
@@ -183,6 +235,28 @@ std::string Application::LoadVersionFromDarksporeInstall()
 	if (!file) return "";
 	return std::string(std::istreambuf_iterator<char>(file),
 		std::istreambuf_iterator<char>());
+}
+
+void Application::RunCommand(const std::string& cmd) {
+	int result = std::system(cmd.c_str());
+	if (result != 0) {
+		std::cerr << "Command failed: " << cmd << std::endl;
+		exit(result);
+	}
+}
+
+void Application::MergeDirectories(const std::filesystem::path& source, const std::filesystem::path& destination) {
+	for (const auto& entry : std::filesystem::recursive_directory_iterator(source)) {
+		if (entry.is_directory()) continue;
+
+		std::filesystem::path relativePath = std::filesystem::relative(entry.path(), source);
+		std::filesystem::path destPath = destination / relativePath;
+
+		if (!std::filesystem::exists(destPath)) {
+			std::filesystem::create_directories(destPath.parent_path());
+			std::filesystem::copy_file(entry.path(), destPath);
+		}
+	}
 }
 
 boost::asio::io_context& Application::get_io_service() {
