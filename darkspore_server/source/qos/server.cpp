@@ -1,6 +1,7 @@
 
 // Include
 #include "server.h"
+#include "main.h"
 
 #include <boost/bind/bind.hpp>
 #include <iostream>
@@ -45,6 +46,7 @@ namespace QoS {
 				auto tp = std::chrono::time_point<std::chrono::system_clock>(std::chrono::milliseconds(ticks));
 				auto t = std::chrono::system_clock::to_time_t(tp);
 
+			if (Application::IsVerboseTimestamps()) {
 				std::cout << "QoS(" << bytes_transferred << "): ";
 				std::cout << "id(" << id << "); ";
 				std::cout << "request_secret(" << requestSecret << "); ";
@@ -52,6 +54,7 @@ namespace QoS {
 				std::cout << "version(" << version << "); ";
 				std::cout << "timestamp(" << std::put_time(std::localtime(&t), "%T") << ");";
 				std::cout << std::endl;
+			}
 
 				mWriteBuffer.write_u32_be(id);
 				mWriteBuffer.write_u32_be(version);

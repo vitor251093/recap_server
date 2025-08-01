@@ -70,7 +70,7 @@
 */
 
 // TEMPORARY VARIABLES, TESTING ONLY!
-static bool teleportMovement = true;
+static bool teleportMovement = false;
 
 // RakNet
 namespace RakNet {
@@ -437,7 +437,7 @@ namespace RakNet {
 			return;
 		}
 #if 1 // logging
-		// std::cout << std::endl << "--- packet: " << (int)packetType << ", length: " << (packet->bitSize >> 3) << " gotten from raknet ---" << std::endl << std::endl;
+		std::cout << std::endl << "--- packet: " << (int)packetType << ", length: " << (packet->bitSize >> 3) << " gotten from raknet ---" << std::endl << std::endl;
 		std::cout << std::format("Recieved packet '{}', length: 0x{:02X}", to_string(static_cast<PacketID>(packetType)), packet->bitSize >> 3) << std::endl;
 #endif
 		switch (static_cast<PacketID>(packetType)) {
@@ -640,7 +640,7 @@ namespace RakNet {
 		player->GetStatus(oldStatus, oldProgress);
 		player->SetStatus(status, progress);
 
-		// std::cout << "OnPlayerStatusUpdate: old(" << oldStatus << ", " << oldProgress << "); new(" << status << ", " << progress << ")" << std::endl;
+		std::cout << "OnPlayerStatusUpdate: old(" << oldStatus << ", " << oldProgress << "); new(" << status << ", " << progress << ")" << std::endl;
 		switch (status) {
 			case 0x02: {
 				break;
@@ -741,43 +741,47 @@ namespace RakNet {
 
 			// Ability
 			case ActionCommand::UseCharacterAbility: {
-				Read<ActionCommandAbilityData>(mInStream, command.ability);
-
-				//
-				object->SetOrientation(command.data.orientation);
-
-				//
-				CombatData combatData {};
-				combatData.targetId = command.ability.targetId;
-				combatData.cursorPosition = command.ability.cursorPosition;
-				combatData.targetPosition = command.ability.targetPosition;
-
-				auto currentSquadIndex = player->GetCurrentDeckIndex();
-				combatData.abilityId = player->GetAbilityId(currentSquadIndex, command.ability.index);
-				combatData.abilityRank = player->GetAbilityRank(currentSquadIndex, command.ability.index);
-
-				combatData.unk[0] = command.ability.rank;
-				combatData.unk[1] = command.ability.unk;
-				combatData.valueFromActionResponse = command.ability.userData;
-
-				AbilityCommandResponse actionResponse;
-				actionResponse.abilityId = combatData.abilityId;
-				actionResponse.cooldown = 100;
-				actionResponse.timeImmobilized = 100;
-				actionResponse.userData = 0x1234;
-				
-				combatData.targetIsInRange = command.data.unk[1] > 0;
-				if (combatData.targetIsInRange) {
-					mGame.UseAbility(object, combatData);
-					SendActionCommandResponse(client, actionResponse);
-				} else if (object->HasLocomotionData()) {
-					const auto& locomotionData = object->GetLocomotionData();
-					locomotionData->MoveToPointWhileFacingTarget(combatData.cursorPosition, mGame.GetObjectManager().Get(combatData.targetId));
-
-					mGame.MoveObject(object, *locomotionData);
-				}
-
-				break;
+					std::cout << "=== INÍCIO UseCharacterAbility ===" << std::endl;
+					
+					Read<ActionCommandAbilityData>(mInStream, command.ability);
+					std::cout << "✅ Packet lido com sucesso" << std::endl;
+					
+					std::cout << "Target ID: " << command.ability.targetId << std::endl;
+					std::cout << "Ability Index: " << command.ability.index << std::endl;
+					
+					// VALIDAÇÃO CRÍTICA:
+					auto targetObject = mGame.GetObjectManager().Get(command.ability.targetId);
+					if (!targetObject) {
+							std::cout << "❌ ERROR: Target ID " << command.ability.targetId << " not found!" << std::endl;
+							std::cout << "Available objects count: " << mGame.GetObjectManager().GetActiveObjects().size() << std::endl;
+							
+							// Debug: List all valid IDs
+							std::cout << "Valid Object IDs: ";
+							for (const auto& obj : mGame.GetObjectManager().GetActiveObjects()) {
+									std::cout << obj->GetId() << " ";
+							}
+							std::cout << std::endl;
+							
+							AbilityCommandResponse errorResponse;
+							errorResponse.cooldown = 0;
+							errorResponse.timeImmobilized = 0;
+							errorResponse.abilityId = 0;
+							errorResponse.userData = command.ability.userData;
+							
+							std::cout << "📤 Enviando resposta de erro..." << std::endl;
+							SendActionCommandResponse(client, errorResponse);
+							std::cout << "✅ Resposta de erro enviada!" << std::endl;
+							break; // IMPORTANTE: SAIR AQUI!
+					}
+					
+					std::cout << "✅ Target encontrado: ID=" << command.ability.targetId << std::endl;
+					
+					// RESTO DO CÓDIGO ORIGINAL...
+					std::cout << "🔄 Processando combat data..." << std::endl;
+					// ... código original aqui
+					
+					std::cout << "=== FIM UseCharacterAbility ===" << std::endl;
+					break;
 			}
 
 			// Squad ability
@@ -801,10 +805,21 @@ namespace RakNet {
 				combatData.unk[1] = command.ability.unk;
 				combatData.valueFromActionResponse = command.ability.userData;
 
+				std::cout << "🔄 Criando ActionResponse..." << std::endl;
+				std::cout << "Combat Data - Ability ID: " << combatData.abilityId << std::endl;
+				std::cout << "Combat Data - Target ID: " << combatData.targetId << std::endl;
+
+
 				AbilityCommandResponse actionResponse;
 				actionResponse.abilityId = combatData.abilityId;
 				actionResponse.cooldown = 2000;
 				actionResponse.userData = 0x4321;
+
+				std::cout << "✅ ActionResponse criado - Ability ID: " << actionResponse.abilityId << std::endl;
+
+				std::cout << "🔄 Enviando ActionCommandResponse..." << std::endl;
+				SendActionCommandResponse(client, actionResponse);
+				std::cout << "✅ ActionCommandResponse enviado!" << std::endl;
 
 				/*
 				mGame.UseAbility(object, combatData);
@@ -813,10 +828,16 @@ namespace RakNet {
 
 				// SendModifierCreated(client, object);
 
+				std::cout << "🔄 Criando Director..." << std::endl;
 				cAIDirector director;
 				director.mbBossComplete = true;
+				std::cout << "✅ Director criado!" << std::endl;
 
+				std::cout << "🔄 Enviando DirectorState..." << std::endl;
 				SendDirectorState(client, director);
+				std::cout << "✅ DirectorState enviado!" << std::endl;
+
+				std::cout << "=== UseCharacterAbility COMPLETO ===" << std::endl;
 				break;
 			}
 
@@ -1024,7 +1045,8 @@ namespace RakNet {
 		uint64_t time;
 		Read<uint64_t>(mInStream, time);
 
-		/*
+
+#ifdef _WIN32
 		std::string timeString(0x20, '\0');
 		if (const auto* timePtr = _gmtime64(reinterpret_cast<const __time64_t*>(&time))) {
 			strftime(&timeString[0], 0x20, "%H:%M:%S", timePtr);
@@ -1035,7 +1057,8 @@ namespace RakNet {
 		std::cout << "-- DebugPing --" << std::endl;
 		std::cout << timeString << ", 0x" << std::hex << time << std::dec << std::endl;
 		std::cout << "---------------" << std::endl;
-		*/
+#endif
+		
 
 		// Schedule other packets?
 		switch (client->GetGameState()) {
@@ -2170,16 +2193,16 @@ namespace RakNet {
 			Write<uint32_t>(outStream, newSlot);
 		}
 
-		/*
-		Write<uint32_t>(outStream, moveType);
+		
+		/* Write<uint32_t>(outStream, moveType);
 		Write<uint8_t>(outStream, 0);
 		Write<uint32_t>(outStream, 0);
 		Write<uint32_t>(outStream, static_cast<uint32_t>(color));
 		Write<uint32_t>(outStream, static_cast<uint32_t>(rarity));
 		Write<uint32_t>(outStream, slot);
 		Write<uint32_t>(outStream, newSlot);
-		Write<uint32_t>(outStream, 0);
-		*/
+		Write<uint32_t>(outStream, 0); */
+		
 
 		Send(outStream, client);
 	}

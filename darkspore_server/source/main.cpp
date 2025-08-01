@@ -14,6 +14,10 @@
 #include "utils/net.h"
 
 #include <iostream>
+#include <cstring>
+#include <fstream>
+#include <filesystem>
+#include <string>
 
 /*
 
@@ -25,13 +29,35 @@
 // Application
 Application* Application::sApplication = nullptr;
 
+bool Application::sVerboseTimestamps = false;
+
+std::string Application::darksporeInstallPath = "../..";
+std::string Application::darksporeInstallVersion = "5.3.0.127";
+
 Application::Application() : mIoService(), mSignals(mIoService, SIGINT, SIGTERM) {
 	mSignals.async_wait([&](auto, auto) { mIoService.stop(); });
 }
 
 Application& Application::InitApp(int argc, char* argv[]) {
 	if (!sApplication) {
-		sApplication = new Application;
+        for (int i = 1; i < argc; i++) {
+            if (strcmp(argv[i], "--timestamps") == 0 || 
+                strcmp(argv[i], "-ts") == 0) {
+                sVerboseTimestamps = true;
+            } else if (strcmp(argv[i], "--darkspore-path") == 0) {
+        		i++;
+        		darksporeInstallPath = std::string(argv[i]);
+			} else if (strcmp(argv[i], "--help") == 0 ||
+                       strcmp(argv[i], "-h") == 0) {
+                std::cout << "Usage: " << argv[0] << " [options]\n";
+                std::cout << "Options:\n";
+                std::cout << "  --timestamps, -ts    timestamp log\n";
+                std::cout << "  --help, -h                   Shows this help\n";
+                exit(0);
+            }
+        }
+        
+        sApplication = new Application;
 #ifdef _WIN32
 		/*
 		SetConsoleCtrlHandler([](DWORD) -> BOOL {
@@ -58,6 +84,10 @@ bool Application::OnInit() {
 	SetConsoleOutputCP(CP_UTF8);
 #endif
 
+	darksporeInstallPath = std::filesystem::absolute(darksporeInstallPath).string();
+	darksporeInstallVersion = LoadVersionFromDarksporeInstall();
+	std::cout << "Darkspore version: " << darksporeInstallVersion << "\n";
+
 	// Config
 	Game::Config::Load("config.xml");
 
@@ -68,7 +98,7 @@ bool Application::OnInit() {
 	mSporeNet = std::make_unique<SporeNet::Instance>();
 
 	// Game
-	mGameAPI = std::make_unique<Game::API>("5.3.0.127");
+	mGameAPI = std::make_unique<Game::API>(darksporeInstallVersion);
 
 	const auto host = Game::Config::Get(Game::ConfigKey::CONFIG_SERVER_HOST);
 	const auto redirector_port = Game::Config::GetU16(Game::ConfigKey::CONFIG_SERVER_REDIRECTOR_PORT);
@@ -134,6 +164,16 @@ void Application::Run() {
 	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}
+}
+
+std::string Application::LoadVersionFromDarksporeInstall()
+{
+	std::filesystem::path darksporeInstall(darksporeInstallPath);
+	std::filesystem::path appended = darksporeInstall / "DarksporeBin" / "version_bin.txt";
+	std::ifstream file(appended.string(), std::ios::in | std::ios::binary);
+	if (!file) return darksporeInstallVersion;
+	return std::string(std::istreambuf_iterator<char>(file),
+		std::istreambuf_iterator<char>());
 }
 
 boost::asio::io_context& Application::get_io_service() {
