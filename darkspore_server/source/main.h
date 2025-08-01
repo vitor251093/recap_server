@@ -14,10 +14,12 @@
 class Application {
 	private:
 		Application();
-
+		static bool sVerboseTimestamps;
+		
 	public:
 		static Application& InitApp(int argc, char* argv[]);
 		static Application& GetApp();
+		static bool IsVerboseTimestamps() { return sVerboseTimestamps; }
 
 		bool OnInit();
 		int OnExit();
