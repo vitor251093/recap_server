@@ -288,9 +288,15 @@ std::string Application::LoadVersionFromDarksporeInstall()
 }
 
 void Application::RunCommand(const std::string& cmd) {
-	int result = std::system(cmd.c_str());
+#ifdef _WIN32
+	std::string silent_cmd = cmd + " > NUL 2>&1";
+#else
+	std::string silent_cmd = cmd + " > /dev/null 2>&1";
+#endif
+
+	int result = std::system(silent_cmd.c_str());
 	if (result != 0) {
-		std::cerr << "Command failed: " << cmd << std::endl;
+		std::cerr << "Command failed: " << silent_cmd << std::endl;
 		exit(result);
 	}
 }
