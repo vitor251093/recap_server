@@ -84,8 +84,8 @@ bool Application::OnInit() {
 	SetConsoleOutputCP(CP_UTF8);
 #endif
 
-	// Preparing the data folder
-	LoadDarksporeData();
+	// Loading Darkspore version and path
+	LoadDarksporeVersionAndPath();
 
 	// Config
 	Game::Config::Load("config.xml");
@@ -135,6 +135,9 @@ bool Application::OnInit() {
 	//
 	mGameAPI->setup();
 
+	// Preparing the data folder
+	LoadDarksporeData();
+
 	// Load noun files
 	(void)Game::NounDatabase::Instance();
 
@@ -165,7 +168,7 @@ void Application::Run() {
 	}
 }
 
-void Application::LoadDarksporeData()
+void Application::LoadDarksporeVersionAndPath()
 {
 	darksporeInstallPath = std::filesystem::absolute(darksporeInstallPath).string();
 	std::string newDarksporeInstallVersion = LoadVersionFromDarksporeInstall();
@@ -178,7 +181,12 @@ void Application::LoadDarksporeData()
 	std::cout << "Darkspore version: " << darksporeInstallVersion << std::endl;
 	if (!darksporeInstallPath.empty()) {
 		std::cout << "Darkspore install path: " << darksporeInstallPath << std::endl;
+	}
+}
 
+void Application::LoadDarksporeData()
+{
+	if (!darksporeInstallPath.empty()) {
 		const auto& serverDataVersionBinPath = "data/serverdata/version_bin.txt";
 		if (std::filesystem::exists(serverDataVersionBinPath)) {
 			std::cout << "Server files are ready." << std::endl;
@@ -191,10 +199,13 @@ void Application::LoadDarksporeData()
 		std::string recap_parser  = "recap_parser.exe";
 
 		// Step 1: Unpack packages
+		std::cout << "Unpacking ServerData.package..." << std::endl;
 		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\ServerData.package ServerData\)");
+		std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
 		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\AssetData_Binary.package AssetData_Binary\)");
 
 		// Step 2: Decompile .lua files
+		std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
 		for (auto& entry : std::filesystem::recursive_directory_iterator("ServerData")) {
 			if (entry.is_regular_file() && entry.path().extension() == ".lua") {
 				std::string relativePath = std::filesystem::relative(entry.path(), "ServerData").string();
@@ -207,6 +218,7 @@ void Application::LoadDarksporeData()
 		}
 
 		// Step 3: Parse binary assets
+		std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
 		RunCommand(recap_parser + " --recursive --sort-ext --xml -o data\\serverdata AssetData_Binary");
 #else
 		std::string dbpf_unpacker = "./dbpf_unpacker";
@@ -214,10 +226,13 @@ void Application::LoadDarksporeData()
 		std::string recap_parser  = "./recap_parser";
 
 		// Step 1: Unpack packages
+		std::cout << "Unpacking ServerData.package..." << std::endl;
 		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/ServerData.package ./ServerData/");
+		std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
 		RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/AssetData_Binary.package ./AssetData_Binary/");
 
 		// Step 2: Decompile .lua files
+		std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
 		for (auto& entry : std::filesystem::recursive_directory_iterator("./ServerData")) {
 			if (entry.is_regular_file() && entry.path().extension() == ".lua") {
 				std::string relativePath = std::filesystem::relative(entry.path(), "./ServerData").string();
@@ -230,10 +245,12 @@ void Application::LoadDarksporeData()
 		}
 
 		// Step 3: Parse binary assets
+		std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
 		RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
 #endif
 
 		// Step 4: Cleanup intermediate directories
+		std::cout << "Cleaning temporary folders..." << std::endl;
 		std::filesystem::remove_all("./AssetData_Binary");
 		std::filesystem::remove_all("./ServerData");
 

@@ -71,6 +71,7 @@ class Application {
 
 		std::unique_ptr<QoS::Server> mQosServer;
 
+		void LoadDarksporeVersionAndPath();
 		void LoadDarksporeData();
 		void RunCommand(const std::string& cmd);
 		void MergeDirectories(const std::filesystem::path& source, const std::filesystem::path& destination);
