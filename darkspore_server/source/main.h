@@ -15,11 +15,14 @@ class Application {
 	private:
 		Application();
 		static bool sVerboseTimestamps;
+		static std::string darksporeInstallPath;
+		static std::string darksporeInstallVersion;
 		
 	public:
 		static Application& InitApp(int argc, char* argv[]);
 		static Application& GetApp();
 		static bool IsVerboseTimestamps() { return sVerboseTimestamps; }
+		static std::string GetDarksporeInstallPath() { return darksporeInstallPath; }
 
 		bool OnInit();
 		int OnExit();
@@ -65,6 +68,8 @@ class Application {
 		std::unique_ptr<HTTP::Server> mHttpQosServer;
 
 		std::unique_ptr<QoS::Server> mQosServer;
+
+		std::string LoadVersionFromDarksporeInstall();
 };
 
 static Application& GetApp() {
