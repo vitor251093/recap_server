@@ -85,8 +85,17 @@ bool Application::OnInit() {
 #endif
 
 	darksporeInstallPath = std::filesystem::absolute(darksporeInstallPath).string();
-	darksporeInstallVersion = LoadVersionFromDarksporeInstall();
+	std::string newDarksporeInstallVersion = LoadVersionFromDarksporeInstall();
+	if (!newDarksporeInstallVersion.empty()) {
+		darksporeInstallVersion = newDarksporeInstallVersion;
+	} else {
+		darksporeInstallPath = "";
+	}
+
 	std::cout << "Darkspore version: " << darksporeInstallVersion << "\n";
+	if (!darksporeInstallPath.empty()) {
+		std::cout << "Darkspore install path: " << darksporeInstallPath << "\n";
+	}
 
 	// Config
 	Game::Config::Load("config.xml");
@@ -171,7 +180,7 @@ std::string Application::LoadVersionFromDarksporeInstall()
 	std::filesystem::path darksporeInstall(darksporeInstallPath);
 	std::filesystem::path appended = darksporeInstall / "DarksporeBin" / "version_bin.txt";
 	std::ifstream file(appended.string(), std::ios::in | std::ios::binary);
-	if (!file) return darksporeInstallVersion;
+	if (!file) return "";
 	return std::string(std::istreambuf_iterator<char>(file),
 		std::istreambuf_iterator<char>());
 }
