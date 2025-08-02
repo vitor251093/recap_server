@@ -2,6 +2,7 @@
 // Include
 #include "main.h"
 #include "scheduler.h"
+#include "version.h"
 
 #include "sporenet/instance.h"
 
@@ -41,18 +42,23 @@ Application::Application() : mIoService(), mSignals(mIoService, SIGINT, SIGTERM)
 Application& Application::InitApp(int argc, char* argv[]) {
 	if (!sApplication) {
         for (int i = 1; i < argc; i++) {
-            if (strcmp(argv[i], "--timestamps") == 0 || 
+            if (strcmp(argv[i], "--timestamps") == 0 ||
                 strcmp(argv[i], "-ts") == 0) {
                 sVerboseTimestamps = true;
+            } else if (strcmp(argv[i], "--version") == 0 ||
+                strcmp(argv[i], "-v") == 0) {
+                std::cout << RECAP_VERSION_STRING << std::endl;
+                exit(0);
             } else if (strcmp(argv[i], "--darkspore-path") == 0) {
-        		i++;
-        		darksporeInstallPath = std::string(argv[i]);
-			} else if (strcmp(argv[i], "--help") == 0 ||
+                i++;
+                darksporeInstallPath = std::string(argv[i]);
+            } else if (strcmp(argv[i], "--help") == 0 ||
                        strcmp(argv[i], "-h") == 0) {
                 std::cout << "Usage: " << argv[0] << " [options]\n";
                 std::cout << "Options:\n";
-                std::cout << "  --timestamps, -ts    timestamp log\n";
-                std::cout << "  --help, -h                   Shows this help\n";
+                std::cout << "  --timestamps, -ts    Timestamp log\n";
+                std::cout << "  --version, -v        Display server version\n";
+                std::cout << "  --help, -h           Shows this help\n";
                 exit(0);
             }
         }
@@ -83,6 +89,8 @@ bool Application::OnInit() {
 	(void)freopen("CONOUT$", "w", stderr);
 	SetConsoleOutputCP(CP_UTF8);
 #endif
+
+	std::cout << "Starting recap server v" << RECAP_VERSION_STRING << std::endl;
 
 	// Loading Darkspore version and path
 	LoadDarksporeVersionAndPath();
