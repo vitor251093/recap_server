@@ -379,7 +379,7 @@ namespace Game {
 			
 		}
 
-		// mLua->LoadFile("data/lua/player_start.lua");
+		// mLua->LoadFile("data/serverdata/lua/player_start.lua");
 
 		// Set objectives
 		const auto& client = mServer->GetClient(player->GetId());

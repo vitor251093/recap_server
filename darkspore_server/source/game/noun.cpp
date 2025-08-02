@@ -995,7 +995,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/noun/";
+		const auto& dataPath = "data/serverdata/noun/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;
@@ -1037,7 +1037,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/nonplayerclass/";
+		const auto& dataPath = "data/serverdata/nonplayerclass/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;
@@ -1079,7 +1079,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/playerclass/";
+		const auto& dataPath = "data/serverdata/playerclass/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;
@@ -1121,7 +1121,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/npcaffix/";
+		const auto& dataPath = "data/serverdata/npcaffix/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;
@@ -1167,7 +1167,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/classattributes/";
+		const auto& dataPath = "data/serverdata/classattributes/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;
@@ -1209,7 +1209,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/aidefinition/";
+		const auto& dataPath = "data/serverdata/aidefinition/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;
@@ -1251,7 +1251,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/animation/";
+		const auto& dataPath = "data/serverdata/characteranimation/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;
@@ -1293,7 +1293,7 @@ namespace Game {
 
 		size_t failed = 0;
 
-		const auto& dataPath = "data/phase/";
+		const auto& dataPath = "data/serverdata/phase/";
 		if (!std::filesystem::exists(dataPath)) {
 			std::cout << "Cannot open directory: " << dataPath << std::endl;
 			return false;

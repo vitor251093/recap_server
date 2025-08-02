@@ -1,7 +1,13 @@
+// Polyfills
+
+// Array.isArray
+//   Reference:
+//   https://github.com/inexorabletash/polyfill/blob/master/es5.js
+Array.isArray = Array.isArray || function (o) { return Boolean(o && Object.prototype.toString.call(Object(o)) === '[object Array]'); };
 
 var _arrayOfElementsWithIdentifier = function(domId) {
 	var _dom = null;
-	if (Utils.isString(domId)) {
+	if ($.type(domId) === "string") {
 		var prefix = domId.substr(0,1);
 		var realId = domId.substr(1);
 		     if (prefix === '#') _dom = [document.getElementById(realId)];
@@ -9,7 +15,7 @@ var _arrayOfElementsWithIdentifier = function(domId) {
 		else if (prefix === '<') _dom = [document.createElement(realId.substr(0, realId.length - 1))];
 		else _dom = [];
 	}
-	else if (Utils.isArray(domId)) {
+	else if (Array.isArray(domId)) {
 		_dom = domId;
 	} 
 	else {
@@ -162,3 +168,8 @@ var $ = function(domId) {
 
 	return obj;
 };
+
+$.type = function() {
+	var val = Object.prototype.toString.call(obj); // eg. '[object String]'
+	return val.substr(8, val.length - 9).toLowerCase();
+}
