@@ -11,6 +11,7 @@
 // Game
 namespace Game {
 	const std::string levelDataPath = "data/serverdata/level/";
+	const std::string markersetDataPath = "data/serverdata/markerset/";
 
 	const auto read_list = [](pugi::xml_node node, std::string_view nodeName, auto& list) {
 		for (const auto& child : node.child(nodeName.data())) {
@@ -241,8 +242,8 @@ namespace Game {
 	}
 
 	// Markerset
-	bool Markerset::Load(const std::string& path) {
-		const std::string fullPath = levelDataPath + path;
+	bool Markerset::Load(const std::string& difficultyName, const std::string& markersetAsset) {
+		const std::string fullPath = markersetDataPath + markersetAsset + ".xml";
 		if (!std::filesystem::exists(fullPath)) {
 			std::cout << "Markerset: Could not find '" << fullPath << "'." << std::endl;
 			return false;
@@ -256,7 +257,7 @@ namespace Game {
 				return true;
 			}
 		} else {
-			std::cout << "Markerset: Could not load '" << path << "'." << std::endl;
+			std::cout << "Markerset: Could not load '" << fullPath << "'." << std::endl;
 		}
 		return false;
 	}
@@ -351,7 +352,7 @@ namespace Game {
 	}
 
 	bool Level::Load(const std::string& difficultyName, const std::string& levelName) {
-		const std::string fullPath = levelDataPath + difficultyName + "/" + levelName + ".level.xml";
+		const std::string fullPath = levelDataPath + levelName + ".level.xml";
 		if (!std::filesystem::exists(fullPath)) {
 			std::cout << "Level: Could not find '" << fullPath << "'." << std::endl;
 			return false;
@@ -377,7 +378,7 @@ namespace Game {
 				const auto& [it, added] = mMarkersets.try_emplace(utils::hash_id(markersetAsset));
 				if (added) {
 					it->second.mName = markersetAsset;
-					it->second.Load(difficultyName + "/" + markersetAsset + ".xml");
+					it->second.Load(difficultyName, markersetAsset);
 				}
 			}
 

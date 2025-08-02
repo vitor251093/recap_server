@@ -167,7 +167,7 @@ namespace Game {
 	// Markerset
 	class Markerset {
 		public:
-			bool Load(const std::string& path);
+			bool Load(const std::string& difficultyName, const std::string& markersetAsset);
 
 			void Read(pugi::xml_node node);
 
