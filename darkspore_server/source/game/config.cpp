@@ -23,7 +23,7 @@ namespace Game {
 	std::array<std::string, CONFIG_END> Config::mConfig;
 
 	std::string Config::RecapVersion() {
-		return "0.2.3";
+		return "0.7.0";
 	}
 
 	void Config::Load(const std::string& path) {

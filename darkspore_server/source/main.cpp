@@ -136,27 +136,19 @@ bool Application::OnInit() {
 	mGameAPI->setup();
 
 	// Preparing the data folder
-	if (!darksporeInstallPath.empty())
-	{
-		std::thread t([this]() {
+	std::thread t([this]() {
+		if (!darksporeInstallPath.empty())
+		{
 			this->LoadDarksporeData();
+		}
 
-			// Load noun files
-			(void)Game::NounDatabase::Instance();
+		// Load noun files
+		(void)Game::NounDatabase::Instance();
 
-			// Load scripts
-			Game::GlobalLua::Instance().Initialize();
-		});
-		t.detach();
-
-		return true;
-	}
-
-	// Load noun files
-	(void)Game::NounDatabase::Instance();
-
-	// Load scripts
-	Game::GlobalLua::Instance().Initialize();
+		// Load scripts
+		Game::GlobalLua::Instance().Initialize();
+	});
+	t.detach();
 
 	return true;
 }
