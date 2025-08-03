@@ -1,0 +1,6 @@
+#pragma once
+
+#define RECAP_MAJOR_VERSION 0
+#define RECAP_MINOR_VERSION 8
+#define RECAP_PATCH_VERSION 0
+#define RECAP_VERSION_STRING "0.8.0"
