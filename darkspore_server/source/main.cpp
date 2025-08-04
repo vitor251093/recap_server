@@ -251,7 +251,7 @@ void Application::LoadDarksporeData()
 
 	// Step 3: Parse binary assets
 	std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
-	RunCommand(recap_parser + " --recursive --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
+	RunCommand(recap_parser + " --recursive --silent --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
 #endif
 
 	// Step 4: Cleanup intermediate directories
