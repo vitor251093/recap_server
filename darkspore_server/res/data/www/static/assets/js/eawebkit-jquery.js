@@ -7,7 +7,7 @@ Array.isArray = Array.isArray || function (o) { return Boolean(o && Object.proto
 
 var _arrayOfElementsWithIdentifier = function(domId) {
 	var _dom = null;
-	if ($.type(domId) === "string") {
+	if (Object.prototype.toString.call(domId) === '[object String]') {
 		var prefix = domId.substr(0,1);
 		var realId = domId.substr(1);
 		     if (prefix === '#') _dom = [document.getElementById(realId)];
@@ -107,6 +107,9 @@ var $ = function(domId) {
 		}
 		return this.forEach(function(dom){dom[attrName] = attrValue});
 	};
+	obj.removeAttr = function(attrName) {
+		return this.forEach(function(dom){dom.removeAttribute(attrName)});
+	};
 	obj.children = function() {
 		var newArray = [];
 		this._dom.forEach(function(dom){ newArray = newArray.concat(Array.prototype.slice.call(dom.childNodes)) });
@@ -172,4 +175,4 @@ var $ = function(domId) {
 $.type = function() {
 	var val = Object.prototype.toString.call(obj); // eg. '[object String]'
 	return val.substr(8, val.length - 9).toLowerCase();
-}
+};

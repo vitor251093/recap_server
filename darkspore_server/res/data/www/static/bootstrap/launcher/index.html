@@ -53,6 +53,11 @@
 
                 container.innerHTML = innervar;
 
+                if (mServerHealth) {
+                    $("#SingleplayerButton").removeAttr("disabled");
+                } else {
+                    $("#SingleplayerButton").attr("disabled", "disabled");
+                }
                 $("#darkspore_status").html(progressLabel);
 
             } //end setServerStatus
