@@ -205,9 +205,9 @@ void Application::LoadDarksporeData()
 
 	// Step 1: Unpack packages
 	std::cout << "Unpacking ServerData.package..." << std::endl;
-	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\ServerData.package ServerData\)");
+	RunCommand(dbpf_unpacker + " \"" + darksporeInstallPath + R"(\Data\ServerData.package)" + "\" " + R"(ServerData\)");
 	std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
-	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + R"(\Data\AssetData_Binary.package AssetData_Binary\)");
+	RunCommand(dbpf_unpacker + " \"" + darksporeInstallPath + R"(\Data\AssetData_Binary.package)" + "\" " + R"(AssetData_Binary\)");
 
 	// Step 2: Decompile .lua files
 	std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
@@ -232,9 +232,9 @@ void Application::LoadDarksporeData()
 
 	// Step 1: Unpack packages
 	std::cout << "Unpacking ServerData.package..." << std::endl;
-	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/ServerData.package ./ServerData/");
+	RunCommand(dbpf_unpacker + " \"" + darksporeInstallPath + "/Data/ServerData.package\" ./ServerData/");
 	std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
-	RunCommand(dbpf_unpacker + " " + darksporeInstallPath + "/Data/AssetData_Binary.package ./AssetData_Binary/");
+	RunCommand(dbpf_unpacker + " \"" + darksporeInstallPath + "/Data/AssetData_Binary.package\" ./AssetData_Binary/");
 
 	// Step 2: Decompile .lua files
 	std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
@@ -280,15 +280,15 @@ std::string Application::LoadVersionFromDarksporeInstall()
 }
 
 void Application::RunCommand(const std::string& cmd) {
-#ifdef _WIN32
-	std::string silent_cmd = cmd + " > NUL 2>&1";
-#else
-	std::string silent_cmd = cmd + " > /dev/null 2>&1";
-#endif
+	std::filesystem::path log_path = std::filesystem::path("data") / "serverdata" / "debug.log";
+	std::string log_cmd = cmd + " >> " + log_path.string() + " 2>&1";
 
-	int result = std::system(silent_cmd.c_str());
+	int result = std::system(log_cmd.c_str());
 	if (result != 0) {
-		std::cerr << "Command failed: " << silent_cmd << std::endl;
+		std::ofstream log(log_path, std::ios::app);
+		if (log.is_open()) {
+			log << "Command failed: " << log_cmd << std::endl;
+		}
 		exit(result);
 	}
 }
