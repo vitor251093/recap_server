@@ -49,7 +49,7 @@ void Installer::LoadDarksporeData(std::string darksporeInstallPath, std::string 
 
 	// Step 3: Parse binary assets
 	std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
-	RunCommand(recap_parser + " --recursive --sort-ext --xml -o data\\serverdata AssetData_Binary");
+	RunCommand(recap_parser + " --game-version " + darksporeInstallVersion + " --recursive --sort-ext --xml -o data\\serverdata AssetData_Binary");
 #else
 	std::string dbpf_unpacker = "./dbpf_unpacker";
 	std::string unluac        = "./unluac";
@@ -80,7 +80,7 @@ void Installer::LoadDarksporeData(std::string darksporeInstallPath, std::string 
 	// Step 3: Parse binary assets
 	label = "Parsing binary assets from AssetData_Binary...";
 	std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
-	RunCommand(recap_parser + " --recursive --silent --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
+	RunCommand(recap_parser + " --game-version " + darksporeInstallVersion + " --recursive --silent --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
 #endif
 
 	// Step 4: Cleanup intermediate directories
