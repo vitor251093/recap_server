@@ -30,6 +30,7 @@ namespace Game {
 			// recap
 			void recap_launcher_setTheme(HTTP::Session& session, HTTP::Response& response);
 			void recap_launcher_listThemes(HTTP::Session& session, HTTP::Response& response);
+			void recap_game_status(HTTP::Session& session, HTTP::Response& response);
 			void recap_game_registration(HTTP::Session& session, HTTP::Response& response);
 			void recap_game_log(HTTP::Session& session, HTTP::Response& response);
 			void recap_panel_listUsers(HTTP::Session& session, HTTP::Response& response);

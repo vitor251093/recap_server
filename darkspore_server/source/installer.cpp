@@ -9,13 +9,19 @@
 #include <filesystem>
 #include <string>
 
+bool Installer::running = false;
+std::string Installer::label = "";
+
 void Installer::LoadDarksporeData(std::string darksporeInstallPath, std::string darksporeInstallVersion)
 {
 	const auto& serverDataVersionBinPath = "data/serverdata/version_bin.txt";
 	if (std::filesystem::exists(serverDataVersionBinPath)) {
+		label = "Server files are ready.";
 		std::cout << "Server files are ready." << std::endl;
 		return;
 	}
+
+	running = true;
 
 #ifdef _WIN32
 	std::string dbpf_unpacker = "dbpf_unpacker.exe";
@@ -50,12 +56,15 @@ void Installer::LoadDarksporeData(std::string darksporeInstallPath, std::string 
 	std::string recap_parser  = "./recap_parser";
 
 	// Step 1: Unpack packages
+	label = "Unpacking ServerData.package...";
 	std::cout << "Unpacking ServerData.package..." << std::endl;
 	RunCommand(dbpf_unpacker + " \"" + darksporeInstallPath + "/Data/ServerData.package\" ./ServerData/");
+	label = "Unpacking AssetData_Binary.package...";
 	std::cout << "Unpacking AssetData_Binary.package..." << std::endl;
 	RunCommand(dbpf_unpacker + " \"" + darksporeInstallPath + "/Data/AssetData_Binary.package\" ./AssetData_Binary/");
 
 	// Step 2: Decompile .lua files
+	label = "Decompiling Lua scripts from ServerData...";
 	std::cout << "Decompiling Lua scripts from ServerData..." << std::endl;
 	for (auto& entry : std::filesystem::recursive_directory_iterator("./ServerData")) {
 		if (entry.is_regular_file() && entry.path().extension() == ".lua") {
@@ -69,23 +78,28 @@ void Installer::LoadDarksporeData(std::string darksporeInstallPath, std::string 
 	}
 
 	// Step 3: Parse binary assets
+	label = "Parsing binary assets from AssetData_Binary...";
 	std::cout << "Parsing binary assets from AssetData_Binary..." << std::endl;
 	RunCommand(recap_parser + " --recursive --silent --sort-ext --xml -o ./data/serverdata ./AssetData_Binary");
 #endif
 
 	// Step 4: Cleanup intermediate directories
+	label = "Cleaning temporary folders...";
 	std::cout << "Cleaning temporary folders..." << std::endl;
 	std::filesystem::remove_all("./AssetData_Binary");
 	std::filesystem::remove_all("./ServerData");
 
 	// Step 5: Move final data into place
+	label = "Moving new files to the correct place...";
 	MergeDirectories("./ServerData_final/lua", "./data/serverdata/lua");
 	MergeDirectories("./ServerData_final/Abilities", "./data/serverdata/Abilities");
 	std::filesystem::remove_all("./ServerData_final");
 
 	std::ofstream(serverDataVersionBinPath) << darksporeInstallVersion;
 
-	std::cout << "Darkspore Data extraction completed successfully." << std::endl;
+	running = false;
+	label = "Server files are ready.";
+	std::cout << "Server files are ready." << std::endl;
 }
 
 void Installer::RunCommand(const std::string& cmd) {
