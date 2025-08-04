@@ -1,6 +1,6 @@
 body{
     background: url(images/background.png) no-repeat 0 0;
-    height: 600;
+    height: 600px;
     width: 800px;
     margin: 0;
     -moz-user-select: none;
@@ -81,4 +81,17 @@ body{
     color:#FFFFFF;
     font-family:Arial;
     font-size:11px;
+}
+
+#darkspore_status {
+    display:block;
+    position:absolute;
+    top: 557px;
+    left: 25px;
+    width: 750px;
+    overflow:hidden;
+    color:#FFFFFF;
+    font-family:Arial;
+    font-size:11px;
+    text-align: right;
 }

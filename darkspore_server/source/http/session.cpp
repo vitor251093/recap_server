@@ -85,7 +85,7 @@ namespace HTTP {
 	) {
 		auto& request = session.get_request().data;
 
-		std::cout << request.target() << std::endl;
+		// std::cout << request.target() << std::endl;
 
 		// Returns a bad request response
 		const auto bad_request = [&request](boost::beast::string_view why) {
