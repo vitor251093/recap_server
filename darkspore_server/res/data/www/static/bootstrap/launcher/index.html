@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/assets/css/dsbutton.css">
         <link rel="stylesheet" type="text/css" href="/assets/css/dstitlebar.css">
+        <script src="/assets/js/json2.js"></script>
         <script src="/assets/js/eawebkit.js"></script>
         <script src="/assets/js/eawebkit-jquery.js"></script>
         <script src="/assets/js/recapclient.js"></script>
@@ -29,7 +30,7 @@
              * @param bool health if our servers are healthy and reachable
              * @param bool maintenance if the servers are down for maintenance/temporary reasons
              */
-            function setServerStatus(health, maintenance)
+            function setServerStatus(health, maintenance, progressLabel)
             {
                 var mServerHealth = health;
                 var mServerMaintenance = maintenance;
@@ -52,13 +53,41 @@
 
                 container.innerHTML = innervar;
 
+                if (mServerHealth) {
+                    $("#SingleplayerButton").removeAttr("disabled");
+                } else {
+                    $("#SingleplayerButton").attr("disabled", "disabled");
+                }
+                $("#darkspore_status").html(progressLabel);
+
             } //end setServerStatus
+
+            function serverStatus(callback, errorCallback) {
+                if (EAWebKit.isUserAgent()) {
+                    ReCapClient.getRequest("api.game.status", {}, function(dataStr) {
+                        callback(JSON.parse(dataStr));
+                    }, errorCallback);
+                }
+                else {
+                    callback({
+                        enablePlayButton: true,
+                        progressLabel: ""
+                    });
+                }
+            }
+
 
             /**
              * request a server side refresh
              */
             function refreshStatus() {
-                setServerStatus(true, false, 0);
+                serverStatus(function(data) {
+                    var health = data['enablePlayButton'];
+                    var maintenance = !data['enablePlayButton'];
+                    setServerStatus(health, maintenance, data['progressLabel']);
+                }, function(status, responseText) {
+                    setServerStatus(false, false, "");
+                });
             }
 
             /**
@@ -82,7 +111,9 @@
                 // localized material
                 setLocalizedText();
 
-                refreshStatus();
+                setInterval(function() {
+                    refreshStatus();
+                }, 200);
 
                 $("#darkspore_version").html(DarksporeVersion);
             }
@@ -114,7 +145,7 @@
         <div class="darkspore-logo"></div>
 
         <div id="buttons">
-            <div class="dsbutton" id="SingleplayerButton" onclick="Client.playCurrentApp()">
+            <div class="dsbutton" id="SingleplayerButton" disabled="disabled" onclick="Client.playCurrentApp()">
                 <div class="left-side"></div>
                 <div class="text">singleplayer</div>
                 <div class="right-side"></div>
@@ -137,5 +168,6 @@
         </div>
 
         <div id="darkspore_version"></div>
+        <div id="darkspore_status"></div>
     </body>
 </html>

@@ -110,7 +110,11 @@ var $ = function(domId) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0][attrName];
 		}
+		// TODO: It seems like this isn't working
 		return this.forEach(function(dom){dom[attrName] = attrValue});
+	};
+	obj.removeAttr = function(attrName) {
+		return this.forEach(function(dom){dom.removeAttribute(attrName)});
 	};
 	obj.children = function() {
 		var newArray = [];

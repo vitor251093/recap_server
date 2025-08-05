@@ -45,7 +45,9 @@ var HTTP = {
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onreadystatechange = function () {
 			if (xmlHttp.readyState === 4) {
-				if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
+				// Sometimes, for some confusing reason, the EAWebKit will say that a
+				// request was responded with the -1 status code, despite being a success
+				if (xmlHttp.status === -1 || (xmlHttp.status >= 200 && xmlHttp.status < 300)) {
 					if (onSuccess) onSuccess(xmlHttp.responseText);
 				} else {
 					if (onError) onError(xmlHttp.status, xmlHttp.responseText);
@@ -59,7 +61,9 @@ var HTTP = {
 		var xmlHttp = new XMLHttpRequest(); 
 		xmlHttp.onreadystatechange = function () {
 			if (xmlHttp.readyState === 4) {
-                if (xmlHttp.status >= 200 && xmlHttp.status < 300) {
+				// Sometimes, for some confusing reason, the EAWebKit will say that a
+				// request was responded with the -1 status code, despite being a success
+                if (xmlHttp.status === -1 || (xmlHttp.status >= 200 && xmlHttp.status < 300)) {
                     if (onSuccess) onSuccess(xmlHttp.responseText);
                 } else {
                     if (onError) onError(xmlHttp.status, xmlHttp.responseText);

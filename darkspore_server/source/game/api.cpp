@@ -16,6 +16,8 @@
 #include "utils/functions.h"
 #include "utils/json.h"
 
+#include "installer.h"
+
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
@@ -333,6 +335,8 @@ namespace Game {
 			auto method = request.uri.parameter("method");
 			if (method == "api.game.registration") {
 				recap_game_registration(session, response);
+			} else if (method == "api.game.status") {
+				recap_game_status(session, response);
 			} else if (method == "api.game.log") {
 				recap_game_log(session, response);
 			} else if (method == "api.panel.listUsers") {
@@ -815,6 +819,15 @@ namespace Game {
 			response.set(boost::beast::http::field::content_type, "application/json");
 			response.body() = utils::json::ToString(document);
 		}
+	}
+
+	void API::recap_game_status(HTTP::Session& session, HTTP::Response& response) {
+		rapidjson::Document document = utils::json::NewDocumentObject();
+		utils::json::Set(document, "enablePlayButton", !Installer::isRunning());
+		utils::json::Set(document, "progressLabel", Installer::getLabel());
+		response.result() = boost::beast::http::status::ok;
+		response.set(boost::beast::http::field::content_type, "application/json");
+		response.body() = utils::json::ToString(document);
 	}
 
 	void API::recap_game_log(HTTP::Session& session, HTTP::Response& response) {
