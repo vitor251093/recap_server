@@ -5,9 +5,14 @@
 //   https://github.com/inexorabletash/polyfill/blob/master/es5.js
 Array.isArray = Array.isArray || function (o) { return Boolean(o && Object.prototype.toString.call(Object(o)) === '[object Array]'); };
 
+var _typeOf = function(obj) {
+	var val = Object.prototype.toString.call(obj); // eg. '[object String]'
+	return val.substr(8, val.length - 9).toLowerCase();
+}
+
 var _arrayOfElementsWithIdentifier = function(domId) {
 	var _dom = null;
-	if (Object.prototype.toString.call(domId) === '[object String]') {
+	if (_typeOf(domId) === "string") {
 		var prefix = domId.substr(0,1);
 		var realId = domId.substr(1);
 		     if (prefix === '#') _dom = [document.getElementById(realId)];
@@ -173,7 +178,4 @@ var $ = function(domId) {
 	return obj;
 };
 
-$.type = function() {
-	var val = Object.prototype.toString.call(obj); // eg. '[object String]'
-	return val.substr(8, val.length - 9).toLowerCase();
-};
+$.type = _typeOf;

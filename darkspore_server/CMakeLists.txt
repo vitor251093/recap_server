@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-fconcepts")
 # set(CMAKE_CXX_FLAGS_RELEASE "-fconcepts")
 
-project(recap_server VERSION 1.0.0)
+project(recap_server VERSION 0.8.0)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -26,9 +26,34 @@ add_definitions(-DSOL_STRINGS_ARE_NUMBERS=1 -DSOL_SAFE_FUNCTION=1 -DSOL_LUAJIT=1
 add_executable(recap_server ${RECAP_HEADERS} ${RECAP_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RECAP_HEADERS} ${RECAP_SOURCES})
 target_include_directories(recap_server PRIVATE source)
+set_target_properties(recap_server PROPERTIES
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+
 if(MSVC)
     target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
     set_target_properties(recap_server PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE /INCREMENTAL:NO /Brepro")
+endif()
+
+# Version info
+include(cmake/version_info.cmake)
+generate_version_header(
+    OUTPUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/source/version.h"
+    PREFIX "RECAP"
+    MAJOR ${PROJECT_VERSION_MAJOR}
+    MINOR ${PROJECT_VERSION_MINOR}
+    PATCH ${PROJECT_VERSION_PATCH})
+if(WIN32)
+    get_target_property(TARGET_BINARY_DIR recap_server BINARY_DIR)
+    set(version_output_file "${TARGET_BINARY_DIR}/version.rc")
+    generate_version_resource(recap_server
+        OUTPUT_FILE "${version_output_file}"
+        NAME "Resurrection Capsule Server"
+        FILENAME "recap_server.exe"
+        MAJOR_VERSION ${PROJECT_VERSION_MAJOR}
+        MINOR_VERSION ${PROJECT_VERSION_MINOR}
+        PATCH_VERSION ${PROJECT_VERSION_PATCH})
+    target_sources(recap_server PRIVATE ${version_output_file})
 endif()
 
 # Boost
