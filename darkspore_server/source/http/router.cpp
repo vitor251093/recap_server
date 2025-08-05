@@ -48,8 +48,29 @@ namespace HTTP {
 			body.open(mBody.c_str(), boost::beast::file_mode::scan, error);
 			if (error == boost::beast::errc::no_such_file_or_directory) {
 				std::cout << "Could not find file " << mBody << std::endl;
+				boost::beast::http::response<boost::beast::http::string_body> response{
+					boost::beast::http::status::not_found, realVersion
+				};
+				response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
+				response.set(boost::beast::http::field::content_type, "text/html");
+				response.keep_alive(mKeepAlive);
+				response.body() = "The resource '" + mBody + "' was not found.";
+				response.prepare_payload();
+				session.send(std::move(response));
+				return;
 			} else if (error) {
 				std::cout << "Something error finding file " << mBody << std::endl;
+				boost::beast::http::response<boost::beast::http::string_body> response{
+					boost::beast::http::status::internal_server_error, realVersion
+				};
+
+				response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
+				response.set(boost::beast::http::field::content_type, "text/html");
+				response.keep_alive(mKeepAlive);
+				response.body() = "An error occurred: '" + error.message() + "'";
+				response.prepare_payload();
+				session.send(std::move(response));
+				return;
 			}
 
 			const auto size = body.size();
