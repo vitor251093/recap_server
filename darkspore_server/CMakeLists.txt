@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-fconcepts")
 # set(CMAKE_CXX_FLAGS_RELEASE "-fconcepts")
 
-project(recap_server VERSION 0.8.0)
+project(recap_server VERSION 0.7.1)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
