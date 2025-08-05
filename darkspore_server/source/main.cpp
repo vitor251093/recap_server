@@ -20,6 +20,8 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
+#include <algorithm>
+#include <cctype>
 
 /*
 
@@ -198,8 +200,22 @@ std::string Application::LoadVersionFromDarksporeInstall()
 	std::filesystem::path appended = darksporeInstall / "DarksporeBin" / "version_bin.txt";
 	std::ifstream file(appended.string(), std::ios::in | std::ios::binary);
 	if (!file) return "";
-	return std::string(std::istreambuf_iterator<char>(file),
+	std::string version = std::string(std::istreambuf_iterator<char>(file),
 		std::istreambuf_iterator<char>());
+	trim(version);
+	return version;
+}
+
+void Application::trim(std::string& s) {
+	// Trim leading spaces and newlines
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+		return ch != ' ' && ch != '\n';
+	}));
+
+	// Trim trailing spaces and newlines
+	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+		return ch != ' ' && ch != '\n';
+	}).base(), s.end());
 }
 
 boost::asio::io_context& Application::get_io_service() {

@@ -73,6 +73,8 @@ class Application {
 
 		void LoadDarksporeVersionAndPath();
 		std::string LoadVersionFromDarksporeInstall();
+
+		void trim(std::string& s);
 };
 
 static Application& GetApp() {
