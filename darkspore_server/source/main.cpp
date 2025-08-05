@@ -283,8 +283,9 @@ std::string Application::LoadVersionFromDarksporeInstall()
 	std::filesystem::path appended = darksporeInstall / "DarksporeBin" / "version_bin.txt";
 	std::ifstream file(appended.string(), std::ios::in | std::ios::binary);
 	if (!file) return "";
-	return std::string(std::istreambuf_iterator<char>(file),
-		std::istreambuf_iterator<char>());
+	std::string version;
+	file >> version;
+	return version;
 }
 
 void Application::RunCommand(const std::string& cmd) {
