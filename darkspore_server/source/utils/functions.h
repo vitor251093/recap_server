@@ -53,6 +53,8 @@ namespace utils {
 	bool string_iequals(std::string_view lhs, std::string_view rhs);
 	bool string_iequals(const char* lhs, const char* rhs);
 
+	std::string string_tolower(std::string_view str);
+
 	void string_replace(std::string& str, const std::string& old_str, const std::string& new_str);
 
 	std::vector<std::string> explode_string(const std::string& str, char delim, int32_t limit = -1);
