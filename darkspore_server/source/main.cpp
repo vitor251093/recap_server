@@ -210,20 +210,7 @@ std::string Application::LoadVersionFromDarksporeInstall()
 	if (!file) return "";
 	std::string version;
 	file >> version;
-	trim(version);
 	return version;
-}
-
-void Application::trim(std::string& s) {
-	// Trim leading spaces and newlines
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-		return ch != ' ' && ch != '\n';
-	}));
-
-	// Trim trailing spaces and newlines
-	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-		return ch != ' ' && ch != '\n';
-	}).base(), s.end());
 }
 
 boost::asio::io_context& Application::get_io_service() {
