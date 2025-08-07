@@ -1,9 +1,12 @@
-// Polyfills
-
-// Array.isArray
-//   Reference:
-//   https://github.com/inexorabletash/polyfill/blob/master/es5.js
-Array.isArray = Array.isArray || function (o) { return Boolean(o && Object.prototype.toString.call(Object(o)) === '[object Array]'); };
+//
+// EAWebKit jQuery
+//
+//   You may be wondering: why is there a custom jQuery for EAWebKit, instead of just using
+//   an old version of jQuery? Well, I will tell you. EAWebKit is so different in some ways
+//   that even older jQuery versions won't work properly in it.
+//
+//   This jQuery implementation was made specifically to support EAWebKit, and nothing else.
+//
 
 var _typeOf = function(obj) {
 	var val = Object.prototype.toString.call(obj); // eg. '[object String]'
@@ -110,8 +113,9 @@ var $ = function(domId) {
 			if (this._dom.length == 0) return null;
 			return this._dom[0][attrName];
 		}
-		// TODO: It seems like this isn't working
-		return this.forEach(function(dom){dom[attrName] = attrValue});
+		// TODO: setAttribute does exist in browsers older than IE9, but with
+		//  some inconsistent behaviors. It may need a polyfill on EAWebKit
+		return this.forEach(function(dom){dom.setAttribute(attrName, attrValue)});
 	};
 	obj.removeAttr = function(attrName) {
 		return this.forEach(function(dom){dom.removeAttribute(attrName)});
