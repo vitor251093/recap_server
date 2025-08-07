@@ -50,11 +50,7 @@ namespace Game {
 			2149500, 2225500, 2310500, 2410500, 2510500
 		};
 
-		if (level > xpTable.size()) {
-			return 0;
-		}
-
-		return xpTable[level];
+		return (level < xpTable.size() ? xpTable[level] : 0);
 	}
 
 	Player::Player(Instance& instance, const SporeNet::UserPtr& user, uint8_t playerIndex) : mInstance(instance), mUser(user) {
