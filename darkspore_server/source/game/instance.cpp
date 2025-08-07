@@ -133,19 +133,25 @@ namespace Game {
 			const auto& nounDatabase = NounDatabase::Instance();
 			for (uint32_t i = 0; i < 3; ++i) {
 				const auto& minion = config.GetMinion(i);
-				mChainData.SetEnemyNoun(minion.GetNounName(), i);
+				const auto& minionNounName = minion.GetNounName();
+				mChainData.SetEnemyNoun(minionNounName, i);
 
 				const auto& special = config.GetSpecial(i);
-				mChainData.SetEnemyNoun(special.GetNounName(), i + 3);
+				const auto& specialNounName = special.GetNounName();
+				mChainData.SetEnemyNoun(specialNounName, i + 3);
 
-				auto noun = nounDatabase.Get(utils::hash_id(minion.GetNounName()));
-				if (auto npcData = noun->GetNonPlayerClassData()) {
-					std::cout << npcData->GetName() << std::endl;
+				if (!minionNounName.empty()) {
+					auto noun = nounDatabase.Get(utils::hash_id(minionNounName));
+					if (auto npcData = noun->GetNonPlayerClassData()) {
+						std::cout << npcData->GetName() << std::endl;
+					}
 				}
 
-				noun = nounDatabase.Get(utils::hash_id(special.GetNounName()));
-				if (auto npcData = noun->GetNonPlayerClassData()) {
-					std::cout << npcData->GetName() << std::endl;
+				if (!specialNounName.empty()) {
+					auto noun = nounDatabase.Get(utils::hash_id(special.GetNounName()));
+					if (auto npcData = noun->GetNonPlayerClassData()) {
+						std::cout << npcData->GetName() << std::endl;
+					}
 				}
 			}
 
