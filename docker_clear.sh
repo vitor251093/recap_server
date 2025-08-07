@@ -1,1 +1,2 @@
-docker rm $(docker ps -a | grep recap-server | awk '{print $1;}')
+#!/usr/bin/env sh
+docker rm "$(docker ps -a | grep recap-server | awk '{print $1;}')"
