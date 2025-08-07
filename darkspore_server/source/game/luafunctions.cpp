@@ -1213,8 +1213,14 @@ namespace Game {
 				if (sourceFilePathComps.size() == 2) {
 					std::string folderName = utils::string_tolower(sourceFilePathComps[1]);
 					std::string sourceFileFullPath = "data/serverdata/" + folderName + "/" + sourceFilePath + ".xml";
-					std::string sourceFile = utils::get_file_text(sourceFileFullPath);
-					mAssets.insert(std::make_pair(asset, sourceFile));
+					if (std::filesystem::exists(sourceFileFullPath)) {
+						std::string sourceFile = utils::get_file_text(sourceFileFullPath);
+						mAssets.insert(std::make_pair(asset, sourceFile));
+					}
+					else
+					{
+						std::cout << "Asset " << sourceFilePath << " not found inside serverdata folder" << std::endl;
+					}
 				}
 			}
 		}
