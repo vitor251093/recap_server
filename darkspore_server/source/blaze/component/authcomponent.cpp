@@ -557,7 +557,7 @@ namespace Blaze {
 		LoginTokenType tokenType = static_cast<LoginTokenType>(request["TYPE"].GetUint());
 
 		const auto& [user, success, alreadyLoggedIn] = SporeNet::Get().GetUserManager().Login(username, password);
-		if (!success) {
+		if (!success && !alreadyLoggedIn) {
 			std::cout << "User '" << username << "' not found." << std::endl;
 
 			request.reply(ErrorCode::AUTH_ERR_INVALID_USER);
