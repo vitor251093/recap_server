@@ -3,7 +3,7 @@
 //
 //   You may be wondering: why is there a custom jQuery for EAWebKit, instead of just using
 //   an old version of jQuery? Well, I will tell you. EAWebKit is so different in some ways
-//   that even older jQuery versions won't work properly in it.
+//   that even older jQuery versions won't work properly in it. Even with es5-shim and es6-shim.
 //
 //   This jQuery implementation was made specifically to support EAWebKit, and nothing else.
 //
