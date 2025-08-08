@@ -9,7 +9,8 @@
         <script type="text/javascript" src="/assets/js/es6-shim.min.js"></script>
         <script type="text/javascript" src="/assets/js/es6-sham.min.js"></script>
 
-        <script type="text/javascript" src="/assets/js/eawebkit.js"></script>
+        <script type="text/javascript" src="/assets/js/eawebkit-shim.js"></script>
+        <script type="text/javascript" src="/assets/js/eawebkit-http.js"></script>
         <script type="text/javascript" src="/assets/js/eawebkit-jquery.js"></script>
         <script type="text/javascript" src="/assets/js/recapclient.js"></script>
 
@@ -70,7 +71,7 @@
             } //end setServerStatus
 
             function serverStatus(callback, errorCallback) {
-                if (EAWebKit.isUserAgent()) {
+                if (window.isEAWebKit) {
                     ReCapClient.getRequest("api.game.status", {}, function(dataStr) {
                         callback(JSON.parse(dataStr));
                     }, errorCallback);
@@ -131,8 +132,8 @@
 
         <table>
             <tr>
-                <td><div class="dstitlebar-min-button" onclick="Client.minCurrentApp()"></div></td>
-                <td><div class="dstitlebar-close-button" onclick="Client.closeCurrentApp()"></div></td>
+                <td><div class="dstitlebar-min-button" onclick="window.minimize()"></div></td>
+                <td><div class="dstitlebar-close-button" onclick="window.close()"></div></td>
             </tr>
         </table>
 
@@ -167,7 +168,7 @@
                 <div class="text">settings</div>
                 <div class="right-side"></div>
             </div>
-            <div class="dsbutton" id="ExitButton" onclick="Client.closeCurrentApp()">
+            <div class="dsbutton" id="ExitButton" onclick="window.close()">
                 <div class="left-side"></div>
                 <div class="text">exit</div>
                 <div class="right-side"></div>

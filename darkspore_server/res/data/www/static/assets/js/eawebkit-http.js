@@ -1,30 +1,3 @@
-// Those are required by the bootstrap/launcher's index file, so it doesn't
-// need to make a manual bridge between itself and the wrapper.html file
-var Client = (typeof Client === 'undefined') ? (window.parent || {}).Client : Client;
-var DarksporeVersion = (window.parent || {}).DarksporeVersion;
-
-var EAWebKit = {
-	isUserAgent: function() {
-		return navigator.userAgent.indexOf("EAWebKit") != -1;
-	},
-	closeWindow: function() {
-		if (EAWebKit.isUserAgent()) {
-			Client.closeWindow();
-		} else {
-			window.close();
-		}
-	},
-	openExternalBrowser: function(url) {
-		if (EAWebKit.isUserAgent()) {
-			Client.openExternalBrowser(url);
-		} else {
-			window.open(url);
-		}
-	}
-};
-
-
-
 // Originally, we used .onload, but Darkspore 5.3.0.15 never
 // calls .onload, and the readyState here never changes to 4,
 // so it's done that way for backwards compatibility. We also

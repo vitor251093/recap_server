@@ -9,16 +9,17 @@
         <script type="text/javascript" src="/assets/js/es6-shim.min.js"></script>
         <script type="text/javascript" src="/assets/js/es6-sham.min.js"></script>
 
-        <script type="text/javascript" src="/assets/js/eawebkit.js"></script>
+        <script type="text/javascript" src="/assets/js/eawebkit-shim.js"></script>
+        <script type="text/javascript" src="/assets/js/eawebkit-http.js"></script>
         <script type="text/javascript" src="/assets/js/eawebkit-jquery.js"></script>
         <script type="text/javascript" src="/assets/js/recapclient.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="/assets/css/dsfonts.css">
-        <link rel="stylesheet" type="text/css" href="/assets/css/dscheckbox.css">
         <link rel="stylesheet" type="text/css" href="/assets/css/dsbutton.css">
+        <link rel="stylesheet" type="text/css" href="/assets/css/dscheckbox.css">
+        <link rel="stylesheet" type="text/css" href="/assets/css/dsfonts.css">
         <link rel="stylesheet" type="text/css" href="/assets/css/dsinput.css">
-        <link rel="stylesheet" type="text/css" href="/assets/css/dsreset.css">
         <link rel="stylesheet" type="text/css" href="/assets/css/dsmodal.css">
+        <link rel="stylesheet" type="text/css" href="/assets/css/dsreset.css">
         <link rel="stylesheet" type="text/css" href="/assets/css/dswindow.css">
         <link rel="stylesheet" type="text/css" href="/web/sporelabsgame/register/style.css">
     </head>
@@ -85,7 +86,7 @@
                 $('#ok-error-button').hide();
                 
                 if (closingWindow) {
-                    EAWebKit.closeWindow();
+                    window.close();
                 }
             }
 
@@ -147,7 +148,7 @@
                             <span class="input-checkbox-container">
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
                                 <span class="checkmark" onMouseUp="$('#agree-term').toggleChecked();"></span>
-								<label class="label-agree-term">I understand & accept the <a href="#" class="term-service" onMouseUp="EAWebKit.openExternalBrowser('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a></label>
+								<label class="label-agree-term">I understand & accept the <a href="#" class="term-service" onMouseUp="window.open('http://tos.ea.com/legalapp/WEBTERMS/us/en/PC/Darkspore')">Terms of service</a></label>
                             </span>
                         </div>
                         <div class="form-group form-group-button">

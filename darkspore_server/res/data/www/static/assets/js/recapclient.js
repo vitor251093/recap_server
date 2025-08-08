@@ -10,7 +10,7 @@ ReCapClient.postRequest = function(name, params, onSuccess, onError) {
     HTTP.post(ReCapClient.recapApiUrl + "?method=" + name, params, onSuccess, onError);
 };
 ReCapClient.log = function(str) {
-    if (EAWebKit.isUserAgent()) {
+    if (window.isEAWebKit) {
         var isDev = ("{{isDev}}" === "true");    
         if (isDev) ReCapClient.postRequest("api.game.log", str);
     }
@@ -18,3 +18,19 @@ ReCapClient.log = function(str) {
         console.log(str);
     }
 };
+
+if (window.isEAWebKit) {
+    var console = {}
+    console.log = function(str) {
+        ReCapClient.log(str)
+    }
+    console.info = function(str) {
+        ReCapClient.log(str)
+    }
+    console.warn = function(str) {
+        ReCapClient.log(str)
+    }
+    console.error = function(str) {
+        ReCapClient.log(str)
+    }
+}
