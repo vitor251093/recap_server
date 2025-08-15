@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-fconcepts")
 # set(CMAKE_CXX_FLAGS_RELEASE "-fconcepts")
 
-project(recap_server VERSION 0.7.1)
+project(recap_server VERSION 0.7.2)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -33,6 +33,7 @@ set_target_properties(recap_server PROPERTIES
 if(MSVC)
     target_compile_options(recap_server PRIVATE $<$<CONFIG:Debug>:/bigobj>)
     set_target_properties(recap_server PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE /INCREMENTAL:NO /Brepro")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
 
 # Version info
@@ -63,7 +64,8 @@ CPMAddPackage(
     VERSION 1.84.0
     URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
     URL_HASH SHA256=2e64e5d79a738d0fa6fb546c6e5c2bd28f88d268a2a080546f74e5ff98f29d0e
-    OPTIONS "BOOST_ENABLE_CMAKE ON")
+    OPTIONS "BOOST_ENABLE_CMAKE ON"
+            "BOOST_RUNTIME_LINK shared")
 target_link_libraries(recap_server PRIVATE boost_regex boost_asio boost_beast boost_bind)
 
 # pugixml
