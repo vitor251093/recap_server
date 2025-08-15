@@ -580,7 +580,7 @@ namespace RakNet {
 
 	void Server::OnHelloPlayerRequest(const ClientPtr& client) {
 		// Set user
-		int64_t blazeId;
+		uint64_t blazeId;
 		Read(mInStream, blazeId);
 
 		client->SetUser(SporeNet::Get().GetUserManager().GetUserById(blazeId));
