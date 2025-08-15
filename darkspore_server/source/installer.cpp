@@ -104,11 +104,14 @@ void Installer::LoadDarksporeData(std::string darksporeInstallPath, std::string 
 
 void Installer::RunCommand(const std::string& cmd) {
 	std::filesystem::path log_path = std::filesystem::path("data") / "serverdata" / "debug.log";
-	std::string log_cmd = cmd + " >> " + log_path.string() + " 2>&1";
+	std::string log_cmd = cmd + " 2>&1";
+	std::ofstream log(log_path, std::ios::app);
+	if (log.is_open()) {
+		log << log_cmd << std::endl;
+	}
 
 	int result = std::system(log_cmd.c_str());
 	if (result != 0) {
-		std::ofstream log(log_path, std::ios::app);
 		if (log.is_open()) {
 			log << "Command failed: " << log_cmd << std::endl;
 		}
