@@ -741,46 +741,38 @@ namespace RakNet {
 
 			// Ability
 			case ActionCommand::UseCharacterAbility: {
-					std::cout << "=== INÍCIO UseCharacterAbility ===" << std::endl;
+					std::cout << "=== Start UseCharacterAbility ===" << std::endl;
 					
 					Read<ActionCommandAbilityData>(mInStream, command.ability);
-					std::cout << "✅ Packet lido com sucesso" << std::endl;
 					
 					std::cout << "Target ID: " << command.ability.targetId << std::endl;
 					std::cout << "Ability Index: " << command.ability.index << std::endl;
-					
-					// VALIDAÇÃO CRÍTICA:
+
+					CombatData combatData{};
+					combatData.targetId = command.ability.targetId;
+					combatData.cursorPosition = command.ability.cursorPosition;
+					combatData.targetPosition = command.ability.targetPosition;
+					// TODO: find creature index, can be in range of [0..2] i.e. one of three characters in squad
+					const uint32_t creatureIndex = 0;
+					combatData.abilityId = player->GetAbilityId(creatureIndex, command.ability.index);
+					combatData.abilityRank = command.ability.rank;
+					combatData.unk[0] = command.ability.rank;
+					combatData.unk[1] = command.ability.unk;
+					combatData.valueFromActionResponse = command.ability.userData;
+
+					mGame.UseAbility(object, combatData);
+
 					auto targetObject = mGame.GetObjectManager().Get(command.ability.targetId);
-					if (!targetObject) {
-							std::cout << "❌ ERROR: Target ID " << command.ability.targetId << " not found!" << std::endl;
-							std::cout << "Available objects count: " << mGame.GetObjectManager().GetActiveObjects().size() << std::endl;
-							
-							// Debug: List all valid IDs
-							std::cout << "Valid Object IDs: ";
-							for (const auto& obj : mGame.GetObjectManager().GetActiveObjects()) {
-									std::cout << obj->GetId() << " ";
-							}
-							std::cout << std::endl;
-							
-							AbilityCommandResponse errorResponse;
-							errorResponse.cooldown = 0;
-							errorResponse.timeImmobilized = 0;
-							errorResponse.abilityId = 0;
-							errorResponse.userData = command.ability.userData;
-							
-							std::cout << "📤 Enviando resposta de erro..." << std::endl;
-							SendActionCommandResponse(client, errorResponse);
-							std::cout << "✅ Resposta de erro enviada!" << std::endl;
-							break; // IMPORTANTE: SAIR AQUI!
+					if (targetObject) {
+						//AbilityCommandResponse actionResponse;
+						//actionResponse.abilityId = combatData.abilityId;
+						//actionResponse.cooldown = 0;
+						//actionResponse.timeImmobilized = 0;
+						//actionResponse.userData = command.ability.userData;
+						//SendActionCommandResponse(client, actionResponse);
 					}
 					
-					std::cout << "✅ Target encontrado: ID=" << command.ability.targetId << std::endl;
-					
-					// RESTO DO CÓDIGO ORIGINAL...
-					std::cout << "🔄 Processando combat data..." << std::endl;
-					// ... código original aqui
-					
-					std::cout << "=== FIM UseCharacterAbility ===" << std::endl;
+					std::cout << "=== End UseCharacterAbility ===" << std::endl;
 					break;
 			}
 
