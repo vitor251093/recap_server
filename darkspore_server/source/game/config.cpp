@@ -1,6 +1,7 @@
 
 // Include
 #include "config.h"
+#include "version.h"
 
 #include <pugixml.hpp>
 
