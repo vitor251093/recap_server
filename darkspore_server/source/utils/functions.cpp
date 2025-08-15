@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <fstream>
 #include <array>
+#include <cctype>
 
 // utils
 namespace utils {
@@ -60,6 +61,13 @@ namespace utils {
 
 	bool string_iequals(const char* lhs, const char* rhs) {
 		return string_iequals(std::string_view(lhs), std::string_view(rhs));
+	}
+
+	std::string string_tolower(std::string_view str) {
+		std::string result(str);
+		std::transform(result.begin(), result.end(), result.begin(),
+					   [](unsigned char c) { return std::tolower(c); });
+		return result;
 	}
 
 	void string_replace(std::string& str, const std::string& old_str, const std::string& new_str) {
